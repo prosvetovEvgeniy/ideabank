@@ -32,6 +32,7 @@ class Company extends ActiveRecord
         return [
             [['name'], 'required'],
             [['name'], 'string', 'min' => 3, 'max' => 255],
+            [['name'], 'unique'],
             [['created_at', 'updated_at'], 'safe']
         ];
     }

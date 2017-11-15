@@ -12,20 +12,21 @@ use yii\db\Expression;
  *
  * @property integer $id
  * @property string $username
- * @property string $password_hash
- * @property string $password_reset_token
+ * @property string $password
  * @property string $email
+ * @property string $telephone_code
+ * @property string $first_name
+ * @property string $second_name
+ * @property string $last_name
+ * @property string $avatar
  * @property string $auth_key
- * @property integer $status
- * @property integer $created_at
- * @property integer $updated_at
- * @property string $password write-only password
+ * @property string $password_reset_token
+ * @property integer created_at
+ * @property integer updated_at
+ * @property boolean deleted
  */
 class Users extends ActiveRecord
 {
-    const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
-
     /**
      * @inheritdoc
      */

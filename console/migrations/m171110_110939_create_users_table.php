@@ -17,7 +17,7 @@ class m171110_110939_create_users_table extends Migration
             'username' => $this->string()->notNull()->unique(),
             'password' => $this->string(64)->notNull(),
             'email' => $this->string()->notNull()->unique(),
-            'telephone_number' => $this->string()->defaultValue(null),
+            'phone' => $this->string()->defaultValue(null),
             'first_name' => $this->string()->defaultValue(null),
             'second_name' => $this->string()->defaultValue(null),
             'last_name' => $this->string()->defaultValue(null),
