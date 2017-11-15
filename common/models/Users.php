@@ -27,6 +27,8 @@ use yii\db\Expression;
  */
 class Users extends ActiveRecord
 {
+    const STATUS_ACTIVE = 0;
+
     /**
      * @inheritdoc
      */

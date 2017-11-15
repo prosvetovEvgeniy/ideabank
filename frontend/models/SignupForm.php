@@ -5,6 +5,7 @@ use common\models\Company;
 use common\models\Participant;
 use common\models\Users;
 use yii\base\Model;
+use Yii;
 
 /**
  * Signup form
@@ -22,7 +23,6 @@ class SignupForm extends Model
     public $secondName;
     public $lastName;
     public $companyName;
-
 
     public function rules()
     {
@@ -113,7 +113,6 @@ class SignupForm extends Model
 
             if($user->save() && $company->save())
             {
-
                 $participant = new Participant();
                 $participant->user_id = $user->id;
                 $participant->company_id = $company->id;
@@ -122,6 +121,10 @@ class SignupForm extends Model
                 {
                     return null;
                 }
+
+                $auth = Yii::$app->authManager;
+                $director = $auth->getRole('director');
+                $auth->assign($director, $participant->id);
 
                 $participant = new Participant();
                 $participant->user_id = $user->id;

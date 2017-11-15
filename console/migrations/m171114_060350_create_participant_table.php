@@ -15,13 +15,12 @@ class m171114_060350_create_participant_table extends Migration
         $this->createTable('participant', [
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->notNull(),
-            'company_id' => $this->integer(),
+            'company_id' => $this->integer()->defaultValue(null),
             'approved' => $this->boolean()->defaultValue(false),
             'approved_at' => $this->integer(),
             'blocked' => $this->boolean()->defaultValue(false),
             'blocked_at' => $this->integer(),
             'created_at' => $this->integer(),
-
         ]);
 
         $this->addForeignKey('participant_users_id','participant','user_id','users','id');

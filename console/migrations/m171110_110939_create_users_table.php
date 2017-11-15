@@ -22,6 +22,7 @@ class m171110_110939_create_users_table extends Migration
             'second_name' => $this->string()->defaultValue(null),
             'last_name' => $this->string()->defaultValue(null),
             'avatar' => $this->string()->defaultValue(null),
+            'status' => $this->integer()->defaultValue(0),
             'auth_key' => $this->string()->defaultValue(null),
             'password_reset_token' => $this->string()->defaultValue(null),
             'created_at' => $this->integer()->defaultValue(null),

@@ -23,7 +23,7 @@ class m171114_053705_create_auth_item_table extends Migration
             'PRIMARY KEY ([[name]])',
         ]);
 
-        $this->addForeignKey('auth_item_rule_name_fkey','auth_item','name','auth_rule','name','SET NULL','CASCADE');
+        $this->addForeignKey('auth_item_rule_name_fkey','auth_item','rule_name','auth_rule','name','SET NULL','CASCADE');
         $this->createIndex('idx-auth_item-type', 'auth_item', 'type');
     }
 

@@ -1,15 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: evgeniy
- * Date: 15.11.17
- * Time: 13:05
- */
 
 namespace frontend\controllers;
 
 
-class AccountController
-{
+use yii\web\Controller;
 
+class AccountController extends Controller
+{
+    public function actionIndex()
+    {
+        return $this->render('index');
+    }
 }

@@ -43,15 +43,23 @@ AppAsset::register($this);
         ]];
         $menuItems[] = ['label' => 'Войти', 'url' => ['/site/login']];
     } else {
-        $menuItems[] = ['label' => 'Личный кабинет', 'url' => ['/site/index']];
-        $menuItems[] = '<li>'
-            . Html::beginForm(['/site/logout'], 'post')
-            . Html::submitButton(
-                'Выйти (' . Yii::$app->user->identity->profile->username . ')',
-                ['class' => 'btn btn-link logout']
-            )
-            . Html::endForm()
-            . '</li>';
+
+        $participants = \common\models\Participant::find()->where(['user_id' => Yii::$app->user->identity->profile->id])
+                                                         ->andWhere(['is not', 'company_id', null])->all();
+        $companyes = [];
+
+        foreach ($participants as $participant)
+        {
+            $companyes[] = ['label' => $participant->company->name, 'url' => ['/site/index', 'companyName' => $participant->company->name], 'active' => false];
+        }
+
+        $menuItems[] = ['label' => 'Мои компании', 'items' => $companyes];
+
+        $menuItems[] = ['label' => 'Аккаунт (' . Yii::$app->user->identity->profile->username . ')', 'items' => [
+            ['label' => 'Профиль', 'url' => ['/account/index']],
+
+            ['label' => 'Выход', 'url' => ['/site/logout']],
+        ]];
     }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],

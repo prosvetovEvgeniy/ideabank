@@ -27,7 +27,6 @@ class m171114_052626_create_auth_rule_table extends Migration
      */
     public function down()
     {
-
         $this->dropTable('auth_rule');
     }
 }
