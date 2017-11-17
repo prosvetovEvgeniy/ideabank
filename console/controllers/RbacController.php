@@ -12,11 +12,13 @@ class RbacController extends Controller
         $auth = Yii::$app->authManager;
         $auth->removeAll();
 
-        $director = $auth->createRole('director');
+        $companyDirector = $auth->createRole('companyDirector');
+        $projectDirector = $auth->createRole('projectDirector');
         $manager = $auth->createRole('manager');
         $user = $auth->createRole('user');
 
-        $auth->add($director);
+        $auth->add($companyDirector);
+        $auth->add($projectDirector);
         $auth->add($manager);
         $auth->add($user);
 
@@ -59,6 +61,12 @@ class RbacController extends Controller
         $useRbac = $auth->createPermission('useRbac');
         $useRbac->description = 'Использовать систему управления ролями';
 
+        $createProjects = $auth->createPermission('createProjects');
+        $createProjects->description = 'Создавать проекты';
+
+        $addProjectDirectors = $auth->createPermission('addProjectDirectors');
+        $addProjectDirectors->description = 'Добавлять руководителей проекта в проекты';
+
         $auth->add($createTask);
         $auth->add($viewProfile);
         $auth->add($sendMessages);
@@ -72,6 +80,8 @@ class RbacController extends Controller
         $auth->add($blockUsers);
         $auth->add($addUsers);
         $auth->add($useRbac);
+        $auth->add($createProjects);
+        $auth->add($addProjectDirectors);
 
         $auth->addChild($user, $viewProfile);
         $auth->addChild($user, $createTask);
@@ -85,11 +95,14 @@ class RbacController extends Controller
         $auth->addChild($manager, $usePrivateComments);
         $auth->addChild($manager, $sendNotice);
         $auth->addChild($manager, $blockUsers);
-        $auth->addChild($director, $manager);
-        $auth->addChild($director, $addUsers);
-        $auth->addChild($director, $useRbac);
+        $auth->addChild($projectDirector, $manager);
+        $auth->addChild($projectDirector, $addUsers);
+        $auth->addChild($projectDirector, $useRbac);
+        $auth->addChild($companyDirector, $projectDirector);
+        $auth->addChild($companyDirector, $createProjects);
+        $auth->addChild($companyDirector, $addProjectDirectors);
 
-        $this->stdout("Done!\n");
+        $this->stdout("***\nDone!\n***\n");
     }
 
     public function actionClear()

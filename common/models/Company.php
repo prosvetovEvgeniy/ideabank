@@ -6,6 +6,14 @@ use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
 
+/**
+ * Company model
+ *
+ * @property integer $id
+ * @property string $name
+ * @property integer $created_at
+ * @property integer $updated_at
+ */
 class Company extends ActiveRecord
 {
     public function behaviors()

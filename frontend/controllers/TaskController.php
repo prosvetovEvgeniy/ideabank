@@ -5,7 +5,7 @@ namespace frontend\controllers;
 
 use yii\web\Controller;
 
-class AccountController extends Controller
+class TaskController extends Controller
 {
     public function actionIndex()
     {

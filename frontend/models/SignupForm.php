@@ -1,14 +1,25 @@
 <?php
 namespace frontend\models;
 
-use common\models\Company;
-use common\models\Participant;
-use common\models\Users;
+use common\components\managers\CompanyManager;
+use common\components\managers\UserManager;
+use common\components\managers\ParticipantManager;
 use yii\base\Model;
 use Yii;
+use yii\db\Exception;
 
 /**
  * Signup form
+ *
+ * @property integer $id
+ * @property string $username
+ * @property string $password
+ * @property string $email
+ * @property string $phone
+ * @property string $firstName
+ * @property string $secondName
+ * @property string $lastName
+ * @property string $companyName
  */
 class SignupForm extends Model
 {
@@ -74,9 +85,8 @@ class SignupForm extends Model
     }
 
     /**
-     * Signs user up.
-     *
-     * @return Participant|null the saved model or null if saving fails
+     * @return null
+     * @throws Exception
      */
     public function signup()
     {
@@ -84,52 +94,48 @@ class SignupForm extends Model
             return null;
         }
 
-        $user = new Users();
-        $user->username = $this->username;
-        $user->email = $this->email;
-        $user->setPassword($this->password);
-        $user->generateAuthKey();
-
         if($this->scenario === self::SCENARIO_USER_SIGNUP)
         {
-            if($user->save())
+            $transaction = Yii::$app->db->beginTransaction();
+
+            try
             {
-                $participant = new Participant();
-                $participant->user_id = $user->id;
+                $user = Yii::createObject(UserManager::class)->createUser($this->username, $this->email, $this->password);
+                $participant = Yii::createObject(ParticipantManager::class)->attachUser($user);
 
-                return $participant->save() ? $participant : null;
+                $transaction->commit();
+
+                return $participant;
             }
-        }
+            catch (Exception $e)
+            {
+                $transaction->rollBack();
+                throw $e;
+            }
 
+        }
         else if($this->scenario === self::SCENARIO_DIRECTOR_SIGNUP)
         {
-            $user->first_name = $this->firstName;
-            $user->second_name = $this->secondName;
-            $user->last_name = $this->lastName;
-            $user->phone = $this->phone;
+            $transaction = Yii::$app->db->beginTransaction();
 
-            $company = new Company();
-            $company->name = $this->companyName;
-
-            if($user->save() && $company->save())
+            try
             {
-                $participant = new Participant();
-                $participant->user_id = $user->id;
-                $participant->company_id = $company->id;
+                $user = Yii::createObject(UserManager::class)->createUser(
+                    $this->username, $this->email, $this->password, $this->phone,
+                    $this->firstName, $this->secondName, $this->lastName
+                );
 
-                if(!$participant->save())
-                {
-                    return null;
-                }
+                $company = Yii::createObject(CompanyManager::class)->createCompany($this->companyName);
+                $participant = Yii::createObject(ParticipantManager::class)->attachDirector($user, $company);
 
-                $auth = Yii::$app->authManager;
-                $director = $auth->getRole('director');
-                $auth->assign($director, $participant->id);
+                $transaction->commit();
 
-                $participant = new Participant();
-                $participant->user_id = $user->id;
-
-                return $participant->save() ? $participant : null;
+                return $participant;
+            }
+            catch (Exception $e)
+            {
+                $transaction->rollBack();
+                throw $e;
             }
         }
 

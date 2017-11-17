@@ -14,7 +14,7 @@ use yii\db\Expression;
  * @property string $username
  * @property string $password
  * @property string $email
- * @property string $telephone_code
+ * @property string $phone
  * @property string $first_name
  * @property string $second_name
  * @property string $last_name

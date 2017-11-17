@@ -28,8 +28,11 @@ AppAsset::register($this);
 
 <div class="wrap">
     <?php
+
+
+
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
+        'brandLabel' => 'Idea Bank',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -44,20 +47,15 @@ AppAsset::register($this);
         $menuItems[] = ['label' => 'Войти', 'url' => ['/site/login']];
     } else {
 
-        $participants = \common\models\Participant::find()->where(['user_id' => Yii::$app->user->identity->profile->id])
-                                                         ->andWhere(['is not', 'company_id', null])->all();
-        $companyes = [];
 
-        foreach ($participants as $participant)
-        {
-            $companyes[] = ['label' => $participant->company->name, 'url' => ['/site/index', 'companyName' => $participant->company->name], 'active' => false];
-        }
+        $menuItems[] = ['label' => 'Уведомления', 'url' => '/notice/index'];
 
-        $menuItems[] = ['label' => 'Мои компании', 'items' => $companyes];
+        $menuItems[] = ['label' => 'Проекты', 'url' => '/project/index'];
 
         $menuItems[] = ['label' => 'Аккаунт (' . Yii::$app->user->identity->profile->username . ')', 'items' => [
-            ['label' => 'Профиль', 'url' => ['/account/index']],
-
+            ['label' => 'Профиль', 'url' => ['/profile/index']],
+            ['label' => 'Настройки', 'url' => ['/settings/index']],
+            ['label' => 'Помощь', 'url' => ['/help/index']],
             ['label' => 'Выход', 'url' => ['/site/logout']],
         ]];
     }
