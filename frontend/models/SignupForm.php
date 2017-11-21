@@ -42,13 +42,13 @@ class SignupForm extends Model
             [['username', 'email', 'password', 'phone', 'firstName', 'secondName', 'lastName', 'companyName'], 'required', 'on' => self::SCENARIO_DIRECTOR_SIGNUP],
 
             [['username'], 'trim'],
-            [['username'], 'unique', 'targetClass' => '\common\models\Users', 'message' => 'Такой логин уже занят'],
+            [['username'], 'unique', 'targetClass' => '\common\models\activerecords\Users', 'message' => 'Такой логин уже занят'],
             [['username'], 'string', 'min' => 2, 'max' => 255],
 
             [['email'], 'trim'],
             [['email'], 'email'],
             [['email'], 'string', 'max' => 255],
-            [['email'], 'unique', 'targetClass' => '\common\models\Users', 'message' => 'Такой email уже занят'],
+            [['email'], 'unique', 'targetClass' => '\common\models\activerecords\Users', 'message' => 'Такой email уже занят'],
 
             [['password'], 'string', 'min' => 6],
 
@@ -57,7 +57,7 @@ class SignupForm extends Model
 
             [['firstName', 'secondName', 'lastName'], 'string', 'length' => [2,30]],
 
-            [['companyName'], 'unique', 'targetClass' => '\common\models\Company', 'targetAttribute' => ['companyName' => 'name'] , 'message' => 'Такая компания уже зарегистрирована']
+            [['companyName'], 'unique', 'targetClass' => '\common\models\activerecords\Company', 'targetAttribute' => ['companyName' => 'name'] , 'message' => 'Такая компания уже зарегистрирована']
         ];
     }
 

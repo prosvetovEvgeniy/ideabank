@@ -1,7 +1,10 @@
 <?php
 
-namespace common\models;
+namespace common\models\activerecords;
 
+use common\models\activerecords\Company;
+use common\models\activerecords\Project;
+use common\models\activerecords\Users;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
@@ -23,6 +26,11 @@ use yii\behaviors\TimestampBehavior;
  */
 class Participant extends ActiveRecord implements IdentityInterface
 {
+    const USER_ROLE = 'user';
+    const MANAGER_ROLE = 'manager';
+    const PROJECT_DIRECTOR_ROLE = 'projectDirector';
+    const COMPANY_DIRCTOR_ROLE = 'companyDirector';
+
     /**
      * @inheritdoc
      */
@@ -117,5 +125,13 @@ class Participant extends ActiveRecord implements IdentityInterface
     public function getProfile()
     {
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
+    }
+
+    /**
+     * @return \yii\rbac\Role[]
+     */
+    public function getRole()
+    {
+        return Yii::$app->authManager->getRolesByUser($this->id);
     }
 }

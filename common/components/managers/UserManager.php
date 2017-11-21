@@ -2,7 +2,7 @@
 
 namespace common\components\managers;
 
-use common\models\Users;
+use common\models\activerecords\Users;
 use yii\db\Exception;
 
 class UserManager

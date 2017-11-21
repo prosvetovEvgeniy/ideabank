@@ -1,6 +1,7 @@
 <?php
-namespace common\models;
+namespace common\models\forms;
 
+use common\models\activerecords\Participant;
 use Yii;
 use yii\base\Model;
 
@@ -74,7 +75,7 @@ class LoginForm extends Model
     /**
      * Finds user by [[username]]
      *
-     * @return Users|null
+     * @return Participant|null
      */
     protected function getUser()
     {

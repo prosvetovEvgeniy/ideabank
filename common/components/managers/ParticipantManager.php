@@ -2,9 +2,9 @@
 
 namespace common\components\managers;
 
-use common\models\Company;
-use common\models\Participant;
-use common\models\Users;
+use common\models\activerecords\Company;
+use common\models\activerecords\Participant;
+use common\models\activerecords\Users;
 use Yii;
 use yii\db\Exception;
 

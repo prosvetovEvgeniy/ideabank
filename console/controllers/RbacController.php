@@ -2,6 +2,7 @@
 
 namespace console\controllers;
 
+use common\models\activerecords\Participant;
 use yii\console\Controller;
 use Yii;
 
@@ -12,10 +13,10 @@ class RbacController extends Controller
         $auth = Yii::$app->authManager;
         $auth->removeAll();
 
-        $companyDirector = $auth->createRole('companyDirector');
-        $projectDirector = $auth->createRole('projectDirector');
-        $manager = $auth->createRole('manager');
-        $user = $auth->createRole('user');
+        $companyDirector = $auth->createRole(Participant::COMPANY_DIRCTOR_ROLE);
+        $projectDirector = $auth->createRole(Participant::PROJECT_DIRECTOR_ROLE);
+        $manager = $auth->createRole(Participant::MANAGER_ROLE);
+        $user = $auth->createRole(Participant::USER_ROLE);
 
         $auth->add($companyDirector);
         $auth->add($projectDirector);

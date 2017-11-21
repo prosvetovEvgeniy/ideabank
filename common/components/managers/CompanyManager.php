@@ -2,7 +2,7 @@
 
 namespace common\components\managers;
 
-use common\models\Company;
+use common\models\activerecords\Company;
 use yii\db\Exception;
 
 class CompanyManager
