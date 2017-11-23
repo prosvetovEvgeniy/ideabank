@@ -19,11 +19,18 @@ class TestdataController extends Controller
 
     public function actionInit()
     {
-        $this->db->createCommand("TRUNCATE company CASCADE")->execute();
+        /*$this->db->createCommand("TRUNCATE company CASCADE")->execute();
         $this->db->createCommand("TRUNCATE project CASCADE")->execute();
         $this->db->createCommand("TRUNCATE users CASCADE")->execute();
         $this->db->createCommand("TRUNCATE participant CASCADE")->execute();
         $this->db->createCommand("TRUNCATE auth_assignment CASCADE")->execute();
+        $this->db->createCommand("TRUNCATE task CASCADE")->execute();
+        $this->db->createCommand("TRUNCATE comment CASCADE")->execute();
+        $this->db->createCommand("TRUNCATE task_like CASCADE")->execute();
+        $this->db->createCommand("TRUNCATE comment_like CASCADE")->execute();
+        $this->db->createCommand("TRUNCATE message CASCADE")->execute();
+        $this->db->createCommand("TRUNCATE notice CASCADE")->execute();
+        */
 
         $auth = Yii::$app->authManager;
 
@@ -31,6 +38,13 @@ class TestdataController extends Controller
         $projectIds = [];
         $userIds = [];
         $participantIds = [];
+        $tasksIds = [];
+        $commentsIds = [];
+        $taskLikesIds = [];
+        $commentLikeIds = [];
+        $messageIds = [];
+        $noticeIds = [];
+
 
         $companyIds['infSysId'] = $this->addCompany('Современные информационные системы');
         $companyIds['eCompanyId'] = $this->addCompany('E-company');
@@ -71,6 +85,33 @@ class TestdataController extends Controller
         $auth->assign($director,$participantIds['edirectorGithub']);
         $auth->assign($director,$participantIds['edirectorVk']);
         $auth->assign($director,$participantIds['edirectorXabr']);
+
+        $tasksIds['firstTask'] = $this->addTask('Первая задача','Текст первой задачи', $userIds['evgeniy'], $projectIds['github']);
+        $tasksIds['secondTask'] = $this->addTask('Вторая задача','Текст второй задачи', $userIds['evgeniy'], $projectIds['vk']);
+        $tasksIds['thirdTask'] = $this->addTask('Третья задача','Текст третьей задачи', $userIds['evgeniy'], $projectIds['xabr']);
+
+        $commentsIds['firstComment'] = $this->addComment($tasksIds['firstTask'], $userIds['evgeniy'],'Первый комментарий');
+        $commentsIds['secondComment'] = $this->addComment($tasksIds['secondTask'], $userIds['evgeniy'],'Второй комментарий');
+        $commentsIds['thirdComment'] = $this->addComment($tasksIds['thirdTask'], $userIds['evgeniy'],'Третьи комментарий');
+
+        $taskLikesIds['firstLikeToFirstTask'] = $this->addLikeToTask($tasksIds['firstTask'], $userIds['evgeniy'], true);
+        $taskLikesIds['firstLikeToSecondTask'] = $this->addLikeToTask($tasksIds['secondTask'], $userIds['evgeniy'], true);
+        $taskLikesIds['firstDislikeToThirdTask'] = $this->addLikeToTask($tasksIds['thirdTask'], $userIds['evgeniy'], false);
+
+        $commentLikeIds['firstLikeToFirstComment'] = $this->addLikeToComment($commentsIds['firstComment'], $userIds['evgeniy'], true);
+        $commentLikeIds['firstLikeToSecondComment'] = $this->addLikeToComment($commentsIds['secondComment'], $userIds['evgeniy'], true);
+        $commentLikeIds['firstDislikeToThirdComment'] = $this->addLikeToComment($commentsIds['secondComment'], $userIds['evgeniy'], false);
+
+        $messageIds['fromEvgeniyToEdirector'] = $this->addMessage($userIds['evgeniy'], $userIds['edirector'],true,'Привет');
+        $messageIds['fromEdirectorToEvgeniy'] = $this->addMessage($userIds['edirector'], $userIds['evgeniy'],false,'Привет');
+        $messageIds['fromEdirectorToEvgeniy'] = $this->addMessage($userIds['edirector'], $userIds['evgeniy'],true,'Пока');
+        $messageIds['fromEvgeniyToEdirector'] = $this->addMessage($userIds['evgeniy'], $userIds['edirector'],false,'Пока');
+
+        $noticeIds['firstNoticeToEvgeniy'] = $this->addNotice($userIds['edirector'], 'Первая заметка', false);
+        $noticeIds['secondNoticeToEvgeniy'] = $this->addNotice($userIds['edirector'], 'Вторая заметка', true);
+        $noticeIds['thirdNoticeToEvgeniy'] = $this->addNotice($userIds['edirector'], 'Третья заметка', false);
+
+        $this->stdout("\nTest data was init\n");
     }
 
     private function addCompany($name)
@@ -102,28 +143,88 @@ class TestdataController extends Controller
         $this->db->createCommand("INSERT INTO users (username, password, email, phone, first_name, second_name, last_name, created_at, updated_at)
                                        VALUES ('{$username}', '{$password}', '{$email}', '{$phone}', '{$firstName}', '{$secondName}', '{$lastName}',
                                                {$this->getTime()}, {$this->getTime()})")->execute();
+
         return $this->db->getLastInsertID('users_id_seq');
+    }
+
+    private function addTask($title, $content, $authorId, $projectId)
+    {
+        $this->db->createCommand("INSERT INTO task (title, content, author_id, project_id, created_at, updated_at) VALUES
+                                      ('{$title}', '{$content}', {$authorId}, {$projectId}, {$this->getTime()}, {$this->getTime()})")
+                                ->execute();
+
+        return $this->db->getLastInsertID('task_id_seq');
+    }
+
+    public function addComment($taskId, $senderId, $content)
+    {
+        $this->db->createCommand("INSERT INTO comment (task_id, sender_id, content, created_at, updated_at) VALUES 
+                                      ({$taskId}, {$senderId}, '{$content}', {$this->getTime()}, {$this->getTime()})")->execute();
+
+        return $this->db->getLastInsertID('comment_id_seq');
+    }
+
+    public function addLikeToTask($taskId, $userId, $liked)
+    {
+        $liked = $liked ? 'true' : 'false';
+        $this->db->createCommand("INSERT INTO task_like (task_id, user_id, liked, created_at, updated_at) VALUES 
+                                      ({$taskId}, {$userId}, {$liked}, {$this->getTime()}, {$this->getTime()})")->execute();
+
+        return $this->db->getLastInsertID('task_like_id_seq');
+    }
+
+    public function addLikeToComment($commentId, $userId, $liked)
+    {
+        $liked = $liked ? 'true' : 'false';
+        $this->db->createCommand("INSERT INTO comment_like (comment_id, user_id, liked, created_at, updated_at) VALUES 
+                                      ({$commentId}, {$userId}, {$liked}, {$this->getTime()}, {$this->getTime()})")->execute();
+
+        return $this->db->getLastInsertID('comment_like_id_seq');
+    }
+
+    public function addMessage($selfId, $companionId, $isSender, $content)
+    {
+        $isSender = $isSender ? 'true' : 'false';
+        $this->db->createCommand("INSERT INTO message (self_id, companion_id, content, is_sender, created_at) VALUES 
+                                      ({$selfId}, {$companionId}, '{$content}', {$isSender}, {$this->getTime()})")
+                                ->execute();
+
+        return $this->db->getLastInsertID('message_id_seq');
+    }
+
+    public function addNotice($recipientId, $content, $viewed)
+    {
+        $viewed = $viewed ? 'true' : 'false';
+        $this->db->createCommand("INSERT INTO notice (recipient_id, content, viewed,created_at) VALUES 
+                                      ({$recipientId}, '{$content}', {$viewed} ,{$this->getTime()})")->execute();
+
+        return $this->db->getLastInsertID('notice_id_seq');
     }
 
     public function addParticipantStub($userId)
     {
-        $this->db->createCommand("INSERT INTO participant (user_id, created_at) VALUES ({$userId}, {$this->getTime()})")->execute();
+        $this->db->createCommand("INSERT INTO participant (user_id, created_at, updated_at) 
+                                      VALUES ({$userId}, {$this->getTime()}, {$this->getTime()})")->execute();
         return $this->db->getLastInsertID('participant_id_seq');
     }
 
     public function addParticipant($userId, $companyId, $projectId)
     {
-        $this->db->createCommand("INSERT INTO participant (user_id, company_id, project_id, approved, approved_at,created_at) 
-                                      VALUES ({$userId},{$companyId}, {$projectId}, TRUE, {$this->getTime()},{$this->getTime()})")->execute();
+        $this->db->createCommand("INSERT INTO participant (user_id, company_id, project_id, approved, approved_at,created_at, updated_at) 
+                                      VALUES ({$userId},{$companyId}, {$projectId}, TRUE, {$this->getTime()},{$this->getTime()}, {$this->getTime()})")
+                                ->execute();
+
         return $this->db->getLastInsertID('participant_id_seq');
     }
 
     public function addParticipantDirector($userId, $companyId)
     {
-        $this->db->createCommand("INSERT INTO participant (user_id, company_id, approved, approved_at,created_at) 
-                                      VALUES ({$userId},{$companyId}, TRUE, {$this->getTime()},{$this->getTime()})")->execute();
+        $this->db->createCommand("INSERT INTO participant (user_id, company_id, approved, approved_at,created_at, updated_at) 
+                                      VALUES ({$userId},{$companyId}, TRUE, {$this->getTime()},{$this->getTime()}, {$this->getTime()})")->execute();
+
         return $this->db->getLastInsertID('participant_id_seq');
     }
+
     
     private function getTime()
     {

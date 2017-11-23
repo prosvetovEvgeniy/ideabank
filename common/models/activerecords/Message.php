@@ -3,6 +3,8 @@
 namespace common\models\activerecords;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "message".
@@ -28,13 +30,33 @@ class Message extends \yii\db\ActiveRecord
         return 'message';
     }
 
+    public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+
+        $this->deleted = false;
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at'],
+                ],
+                'value' => time(),
+            ],
+        ];
+    }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['self_id', 'companion_id', 'is_sender'], 'required'],
+            [['self_id', 'companion_id', 'is_sender', 'content'], 'required'],
             [['self_id', 'companion_id', 'created_at'], 'integer'],
             [['content'], 'string'],
             [['is_sender', 'deleted'], 'boolean'],

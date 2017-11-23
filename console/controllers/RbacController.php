@@ -103,7 +103,8 @@ class RbacController extends Controller
         $auth->addChild($companyDirector, $createProjects);
         $auth->addChild($companyDirector, $addProjectDirectors);
 
-        $this->stdout("***\nDone!\n***\n");
+        $this->stdout("\nRbac was init\n");
+
     }
 
     public function actionClear()

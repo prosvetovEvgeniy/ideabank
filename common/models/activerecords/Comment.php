@@ -3,6 +3,8 @@
 namespace common\models\activerecords;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "comment".
@@ -33,6 +35,26 @@ class Comment extends \yii\db\ActiveRecord
         return 'comment';
     }
 
+    public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+
+        $this->deleted = false;
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => time(),
+            ],
+        ];
+    }
     /**
      * @inheritdoc
      */

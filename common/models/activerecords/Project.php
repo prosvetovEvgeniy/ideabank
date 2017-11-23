@@ -3,6 +3,8 @@
 namespace common\models\activerecords;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "project".
@@ -13,6 +15,7 @@ use Yii;
  * @property integer $default_visibility_area
  * @property integer $created_at
  * @property integer $updated_at
+ * @property boolean $deleted
  *
  * @property Participant[] $participants
  * @property Company $company
@@ -28,6 +31,27 @@ class Project extends \yii\db\ActiveRecord
         return 'project';
     }
 
+    public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+
+        $this->deleted = false;
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => time(),
+            ],
+        ];
+    }
+
     /**
      * @inheritdoc
      */
@@ -38,6 +62,7 @@ class Project extends \yii\db\ActiveRecord
             [['company_id', 'default_visibility_area', 'created_at', 'updated_at'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['name'], 'unique'],
+            [['deleted'], 'boolean'],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Company::className(), 'targetAttribute' => ['company_id' => 'id']],
         ];
     }
@@ -54,6 +79,7 @@ class Project extends \yii\db\ActiveRecord
             'default_visibility_area' => 'Default Visibility Area',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'deleted' => 'Deleted',
         ];
     }
 

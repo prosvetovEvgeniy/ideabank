@@ -18,7 +18,8 @@ class m171110_114017_create_project_table extends Migration
             'company_id' => $this->integer()->notNull(),
             'default_visibility_area' => $this->integer()->defaultValue(0),
             'created_at' => $this->integer()->defaultValue(null),
-            'updated_at' => $this->integer()->defaultValue(null)
+            'updated_at' => $this->integer()->defaultValue(null),
+            'deleted' => $this->boolean()->defaultValue(false)
         ]);
 
         $this->addForeignKey('project_company_id_fk','project', 'company_id','company','id');

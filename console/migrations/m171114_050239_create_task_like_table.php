@@ -16,7 +16,7 @@ class m171114_050239_create_task_like_table extends Migration
             'id' => $this->primaryKey(),
             'task_id' => $this->integer()->notNull(),
             'user_id' => $this->integer()->notNull(),
-            'liked' => $this->boolean(),
+            'liked' => $this->boolean()->notNull(),
             'created_at' => $this->integer(),
             'updated_at' => $this->integer()
         ]);

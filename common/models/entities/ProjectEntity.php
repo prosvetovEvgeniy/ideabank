@@ -4,9 +4,20 @@ namespace common\models\entities;
 
 
 use common\models\repositories\CompanyRepository;
-use yii\db\ActiveRecord;
 
-class ProjectEntity extends ActiveRecord
+/**
+ * Class ProjectEntity
+ * @package common\models\entities
+ *
+ * @property int $id
+ * @property string $name
+ * @property int $companyId
+ * @property int $defaultVisibilityArea
+ * @property int $createdAt
+ * @property int $updatedAt
+ * @property bool $deleted
+ */
+class ProjectEntity
 {
     protected $id;
     protected $name;
@@ -14,10 +25,21 @@ class ProjectEntity extends ActiveRecord
     protected $defaultVisibilityArea;
     protected $createdAt;
     protected $updatedAt;
+    protected $deleted;
 
 
+    /**
+     * ProjectEntity constructor.
+     * @param string $name
+     * @param int $companyId
+     * @param int|null $id
+     * @param int|null $defaultVisibilityArea
+     * @param int|null $createdAt
+     * @param int|null $updatedAt
+     * @param bool|null $deleted
+     */
     public function __construct(string $name, int $companyId, int $id = null, int $defaultVisibilityArea = null,
-                                int $createdAt = null, int $updatedAt = null)
+                                int $createdAt = null, int $updatedAt = null, bool $deleted = null)
     {
         $this->id = $id;
         $this->name = $name;
@@ -25,15 +47,73 @@ class ProjectEntity extends ActiveRecord
         $this->defaultVisibilityArea = $defaultVisibilityArea;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
-
-        parent::__construct();
+        $this->deleted = $deleted;
     }
 
+
+    // #################### SECTION OF GETTERS ######################
+
+    /**
+     * @return int | null
+     */
     public function getId() { return $this->id; }
+
+    /**
+     * @return string
+     */
     public function getName() { return $this->name; }
+
+    /**
+     * @return int
+     */
     public function getCompanyId() { return $this->companyId; }
-    public function getVisibilityArea() { return $this->defaultVisibilityArea; }
+
+    /**
+     * @return int | null
+     */
+    public function getDefaultVisibilityArea() { return $this->defaultVisibilityArea; }
+
+    /**
+     * @return int | null
+     */
     public function getCreatedAt() { return $this->createdAt; }
+
+    /**
+     * @return int | null
+     */
     public function getUpdatedAt() { return $this->updatedAt; }
-    public function getCompany() { return (new CompanyRepository())->get($this->companyId); }
+
+    /**
+     * @return boolean | null
+     */
+    public function getDeleted() { return $this->deleted; }
+
+
+    // #################### SECTION OF SETTERS ######################
+
+    /**
+     * @param string $value
+     */
+    public function setName (string $value) { $this->name = $value; }
+
+    /**
+     * @param integer $value
+     */
+    public function setCompanyId (int $value) { $this->companyId = $value; }
+
+    /**
+     * @param integer $value
+     */
+    public function setDefaultVisibilityArea (int $value) { $this->defaultVisibilityArea = $value; }
+
+
+    // #################### SECTION OF RELATIONS ######################
+
+    /**
+     * @return CompanyEntity
+     */
+    public function getCompany() { return CompanyRepository::instance()->get($this->companyId); }
+
+
+    // #################### SECTION OF LOGIC ######################
 }

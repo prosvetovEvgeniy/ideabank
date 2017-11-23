@@ -16,7 +16,7 @@ class m171114_040101_create_message_table extends Migration
             'id' => $this->primaryKey(),
             'self_id' => $this->integer()->notNull(),
             'companion_id' => $this->integer()->notNull(),
-            'content' => $this->text(),
+            'content' => $this->text()->notNull(),
             'is_sender' => $this->boolean()->notNull(),
             'created_at' => $this->integer(),
             'deleted' => $this->boolean()->defaultValue(false)

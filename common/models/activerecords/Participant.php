@@ -17,9 +17,13 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $id
  * @property integer $user_id
  * @property integer $company_id
+ * @property integer $project_id
  * @property boolean $approved
  * @property integer $approved_at
  * @property boolean $blocked
+ * @property integer $blocked_at
+ * @property integer $created_at
+ * @property integer $updated_at
  *
  * @property Company $company
  * @property Users $profile
@@ -39,13 +43,21 @@ class Participant extends ActiveRecord implements IdentityInterface
         return '{{%participant}}';
     }
 
+    public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+
+        $this->blocked = false;
+    }
+
     public function behaviors()
     {
         return [
             [
                 'class' => TimestampBehavior::className(),
                 'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at'],
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at']
                 ],
                 'value' => time(),
             ],
@@ -59,7 +71,7 @@ class Participant extends ActiveRecord implements IdentityInterface
     {
         return [
             [['user_id'], 'required'],
-            [['user_id', 'company_id'], 'integer'],
+            [['user_id', 'company_id', 'project_id'], 'integer'],
             [['approved', 'blocked'], 'boolean'],
             [['approved_at', 'blocked_at','created_at', 'updated_at'], 'safe'],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Company::className(), 'targetAttribute' => ['company_id' => 'id']],

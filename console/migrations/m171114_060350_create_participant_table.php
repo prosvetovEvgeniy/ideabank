@@ -19,6 +19,7 @@ class m171114_060350_create_participant_table extends Migration
             'blocked' => $this->boolean()->defaultValue(false),
             'blocked_at' => $this->integer(),
             'created_at' => $this->integer(),
+            'updated_at' => $this->integer()
         ]);
 
         $this->addForeignKey('participant_users_id','participant','user_id','users','id');

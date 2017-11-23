@@ -3,6 +3,8 @@
 namespace common\models\activerecords;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "company".
@@ -11,6 +13,7 @@ use Yii;
  * @property string $name
  * @property integer $created_at
  * @property integer $updated_at
+ * @property boolean $deleted
  *
  * @property Participant[] $participants
  * @property Project[] $projects
@@ -25,6 +28,27 @@ class Company extends \yii\db\ActiveRecord
         return 'company';
     }
 
+    public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+
+        $this->deleted = false;
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => time(),
+            ],
+        ];
+    }
+
     /**
      * @inheritdoc
      */
@@ -35,6 +59,7 @@ class Company extends \yii\db\ActiveRecord
             [['created_at', 'updated_at'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['name'], 'unique'],
+            [['deleted'], 'boolean'],
         ];
     }
 
@@ -48,6 +73,7 @@ class Company extends \yii\db\ActiveRecord
             'name' => 'Name',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'deleted' => 'Deleted'
         ];
     }
 

@@ -1,14 +1,18 @@
 <?php
 namespace frontend\controllers;
 
-use common\models\activerecords\Company;
-use common\models\activerecords\Project;
+
 use common\models\entities\CompanyEntity;
-use common\models\entities\ProjectEntity;
+use common\models\entities\NoticeEntity;
+use common\models\entities\ParticipantEntity;
+use common\models\entities\UserEntity;
 use common\models\repositories\CompanyRepository;
-use common\models\repositories\ProjectRepository;
+use common\models\repositories\NoticeRepository;
+use common\models\repositories\ParticipantRepository;
+use common\models\repositories\UserRepository;
 use Yii;
 use yii\base\InvalidParamException;
+use yii\db\Exception;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -77,10 +81,9 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $company = (new CompanyRepository())->get(1);
+        $participant = ParticipantRepository::instance()->findOne(['id' => 11]);
 
-        debug($company->getProjects());
-
+        dump(ParticipantRepository::instance()->block($participant));
 
         return $this->render('index');
     }

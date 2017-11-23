@@ -8,3 +8,10 @@ function debug($data)
 
     exit();
 }
+
+function dump($data)
+{
+    var_dump($data);
+
+    exit();
+}

@@ -11,6 +11,8 @@ use Yii;
 class ProjectRepository
 {
     /**
+     * Возвращает экземпляр класса
+     *
      * @return ProjectRepository
      */
     public static function instance()
@@ -19,86 +21,44 @@ class ProjectRepository
     }
 
     /**
-     * @param $id
+     * Возвращает сущность по условию
+     *
+     * @param array $condition
      * @return ProjectEntity
      * @throws Exception
      */
-    public function get($id)
+    public function findOne(array $condition)
     {
-        $model = Project::findOne(['id' => $id]);
+        $model = Project::findOne($condition);
 
         if(!$model)
         {
-            throw new Exception('Project with id = ' . $id . ' does not exists');
+            throw new Exception('Project with ' . json_encode($condition) . ' does not exists');
+        }
+
+        if($model->deleted)
+        {
+            throw new Exception('Project with ' . json_encode($condition) . ' already deleted');
         }
 
         return $this->buildEntity($model);
     }
 
     /**
-     * @param ProjectEntity $project
+     * Возвращает сущности по условию
+     *
+     * @param array $condition
+     * @return array ProjectEntity
      * @throws Exception
      */
-    public function add($project)
-    {
-        $model = new Project();
-
-        $model->name = $project->getName();
-        $model->company_id = $project->getCompanyId();
-
-        if(!$model->save())
-        {
-            Yii::error($model->errors);
-            throw new Exception('Cannot save project with name = ' . $project->getName());
-        }
-    }
-
-    /**
-     * @param ProjectEntity $project
-     * @throws Exception
-     */
-    public function update($project)
-    {
-        $model = Project::findOne(['id' => $project->getId()]);
-
-        $model->name = $project->getName();
-        $model->company_id = $project->getCompanyId();
-        $model->default_visibility_area = $project->getVisibilityArea();
-
-        if(!$model->update())
-        {
-            Yii::error($model->errors);
-            throw new Exception('Cannot update company with id = ' . $project->getId());
-        }
-    }
-
-    /**
-     * @param ProjectEntity $project
-     * @throws Exception
-     */
-    public function delete($project)
-    {
-        $model = Project::findOne(['id' => $project->getId()]);
-
-        if(!$model->delete())
-        {
-            Yii::error($model->errors);
-            throw new Exception('Cannot delete company with id = ' . $project->getId());
-        }
-    }
-
-    /**
-     * @param integer $id
-     * @return ProjectEntity[]
-     */
-    public function getByCompanyId($id)
+    public function findAll(array $condition)
     {
         /** @var Project[] $models */
-        $models = Project::find()->where(['company_id' => $id])->all();
+        $models = Project::findAll($condition);
 
         if(!$models)
         {
-            throw new Exception('Cannot find project with company_id = ' . $id);
+            return [];
         }
 
         $entities = [];
@@ -112,12 +72,106 @@ class ProjectRepository
     }
 
     /**
+     * Добавляет сущность в БД
+     *
+     * @param ProjectEntity $project
+     * @return ProjectEntity
+     * @throws Exception
+     */
+    public function add(ProjectEntity $project)
+    {
+        $model = new Project();
+
+        $this->assignProperties($model, $project);
+
+        if(!$model->save())
+        {
+            Yii::error($model->errors);
+            throw new Exception('Cannot save project with name = ' . $project->getName());
+        }
+
+        return $this->buildEntity($model);
+    }
+
+    /**
+     * Обновляет сущность в БД
+     *
+     * @param ProjectEntity $project
+     * @return ProjectEntity
+     * @throws Exception
+     */
+    public function update(ProjectEntity $project)
+    {
+        $model = Project::findOne(['id' => $project->getId()]);
+
+        if(!$model)
+        {
+            throw new Exception('Project with id = ' . $project->getId() . ' does not exists');
+        }
+
+        $this->assignProperties($model, $project);
+
+        if(!$model->save())
+        {
+            Yii::error($model->errors);
+            throw new Exception('Cannot update project with id = ' . $project->getId());
+        }
+
+        return $this->buildEntity($model);
+    }
+
+    /**
+     * Помечает сущность как удаленную в БД
+     *
+     * @param ProjectEntity $project
+     * @return ProjectEntity
+     * @throws Exception
+     */
+    public function delete(ProjectEntity $project)
+    {
+        $model = Project::findOne(['id' => $project->getId()]);
+
+        if(!$model)
+        {
+            throw new Exception('Project with id = ' . $project->getId() . ' does not exists');
+        }
+
+        if($model->deleted)
+        {
+            throw new Exception('Project with id = ' . $project->getId() . ' already deleted');
+        }
+
+        $model->deleted = true;
+
+        if(!$model->save())
+        {
+            Yii::error($model->errors);
+            throw new Exception('Cannot delete project with id = ' . $project->getId());
+        }
+
+        return $this->buildEntity($model);
+    }
+
+    /**
+     * Присваивает свойства сущности к модели
+     *
+     * @param Project $model
+     * @param ProjectEntity $project
+     */
+    protected function assignProperties(&$model, &$project)
+    {
+        $model->name = $project->getName();
+        $model->company_id = $project->getCompanyId();
+        $model->default_visibility_area = $project->getDefaultVisibilityArea();
+    }
+
+    /**
      * @param Project $model
      * @return ProjectEntity
      */
-    protected function buildEntity($model)
+    protected function buildEntity(Project $model)
     {
         return new ProjectEntity($model->name,$model->company_id, $model->id, $model->default_visibility_area,
-                                 $model->created_at, $model->updated_at);
+                                 $model->created_at, $model->updated_at, $model->deleted);
     }
 }
