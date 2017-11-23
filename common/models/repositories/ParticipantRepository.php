@@ -48,7 +48,7 @@ class ParticipantRepository
      * Возвращает сущности по условию
      *
      * @param array $condition
-     * @return array ParticipantEntity
+     * @return ParticipantEntity[]
      * @throws Exception
      */
     public function findAll(array $condition)

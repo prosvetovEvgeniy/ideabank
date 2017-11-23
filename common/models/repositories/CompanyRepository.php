@@ -47,7 +47,7 @@ class CompanyRepository
      * Возвращает сущности по условию
      *
      * @param array $condition
-     * @return array CompanyEntity
+     * @return CompanyEntity[]
      * @throws Exception
      */
     public function findAll(array $condition)

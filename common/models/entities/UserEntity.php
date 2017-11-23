@@ -1,6 +1,13 @@
 <?php
 
 namespace common\models\entities;
+use common\models\repositories\CommentLikeRepository;
+use common\models\repositories\CommentRepository;
+use common\models\repositories\MessageRepository;
+use common\models\repositories\NoticeRepository;
+use common\models\repositories\ParticipantRepository;
+use common\models\repositories\TaskLikeRepository;
+use common\models\repositories\TaskRepository;
 
 /**
  * Class UserEntity
@@ -206,6 +213,63 @@ class UserEntity
 
 
     // #################### SECTION OF RELATIONS ######################
+
+    /**
+     * @return ParticipantEntity[]
+     */
+    public function getParticipants()
+    {
+        return ParticipantRepository::instance()->findAll(['user_id' => $this->getId()]);
+    }
+
+    /**
+     * @return CommentLikeEntity[]
+     */
+    public function getCommentLikes()
+    {
+        return CommentLikeRepository::instance()->findAll(['user_id' => $this->getId()]);
+    }
+
+    /**
+     * @return CommentEntity[]
+     */
+    public function getComments()
+    {
+        return CommentRepository::instance()->findAll(['sender_id' => $this->getId()]);
+    }
+
+    /**
+     * @return TaskEntity[]
+     */
+    public function getTasks()
+    {
+        return TaskRepository::instance()->findAll(['author_id' => $this->getId()]);
+    }
+
+    /**
+     * @return TaskLikeEntity[]
+     */
+    public function getTaskLikes()
+    {
+        return TaskLikeRepository::instance()->findAll(['user_id' => $this->getId()]);
+    }
+
+    /**
+     * @return NoticeEntity[]
+     */
+    public function getNotices()
+    {
+        return NoticeRepository::instance()->findAll(['recipient_id' => $this->getId()]);
+    }
+
+    /**
+     * @return MessageEntity[]
+     */
+    public function getMessages()
+    {
+        return MessageRepository::instance()->findAll(['self_id' => $this->getId()]);
+    }
+
 
     // #################### SECTION OF LOGIC ######################
 }

@@ -2,6 +2,7 @@
 
 
 namespace common\models\entities;
+use common\models\repositories\UserRepository;
 
 /**
  * Class MessageEntity
@@ -58,7 +59,7 @@ class MessageEntity
     /**
      * @return int
      */
-    public function getSeldIf() { return $this->selfId; }
+    public function getSelfId() { return $this->selfId; }
 
     /**
      * @return int
@@ -87,7 +88,28 @@ class MessageEntity
 
 
     // #################### SECTION OF SETTERS ######################
+
+
+
     // #################### SECTION OF RELATIONS ######################
+
+    /**
+     * @return UserEntity
+     */
+    public function getSelf()
+    {
+        return UserRepository::instance()->findOne(['id' => $this->getSelfId()]);
+    }
+
+    /**
+     * @return UserEntity
+     */
+    public function getCompanion()
+    {
+        return UserRepository::instance()->findOne(['id' => $this->getCompanionId()]);
+    }
+
+
     // #################### SECTION OF LOGIC ######################
 
 }

@@ -1,6 +1,8 @@
 <?php
 
 namespace common\models\entities;
+use common\models\repositories\CommentRepository;
+use common\models\repositories\UserRepository;
 
 /**
  * Class CommentLikeEntity
@@ -80,6 +82,21 @@ class CommentLikeEntity
 
 
     // #################### SECTION OF RELATIONS ######################
+    /**
+     * @return UserEntity
+     */
+    public function getUser()
+    {
+        return UserRepository::instance()->findOne(['id' => $this->getUserId()]);
+    }
+
+    /**
+     * @return CommentEntity
+     */
+    public function getComment()
+    {
+        return CommentRepository::instance()->findOne(['id' => $this->getCommentId()]);
+    }
 
 
     // #################### SECTION OF LOGIC ######################

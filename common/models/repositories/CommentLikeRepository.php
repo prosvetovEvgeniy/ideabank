@@ -43,7 +43,7 @@ class CommentLikeRepository
      * Возвращает сущности по условию
      *
      * @param array $condition
-     * @return array CommentLikeEntity
+     * @return CommentLikeEntity[]
      * @throws Exception
      */
     public function findAll(array $condition)

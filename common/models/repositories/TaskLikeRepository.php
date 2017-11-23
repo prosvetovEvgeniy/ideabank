@@ -43,7 +43,7 @@ class TaskLikeRepository
      * Возвращает сущности по условию
      *
      * @param array $condition
-     * @return array TaskLikeEntity
+     * @return TaskLikeEntity[]
      * @throws Exception
      */
     public function findAll(array $condition)

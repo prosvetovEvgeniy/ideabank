@@ -1,6 +1,10 @@
 <?php
 
 namespace common\models\entities;
+use common\models\repositories\CommentLikeRepository;
+use common\models\repositories\CommentRepository;
+use common\models\repositories\TaskRepository;
+use common\models\repositories\UserRepository;
 
 /**
  * Class CommentEntity
@@ -123,5 +127,44 @@ class CommentEntity
 
 
     // #################### SECTION OF RELATIONS ######################
+
+    /**
+     * @return array|CommentEntity
+     */
+    public function getComment()
+    {
+        if($this->getCommentId() === null)
+        {
+            return [];
+        }
+
+        return CommentRepository::instance()->findOne(['id' => $this->getCommentId()]);
+    }
+
+    /**
+     * @return TaskEntity
+     */
+    public function getTask()
+    {
+        return TaskRepository::instance()->findOne(['id' => $this->getTaskId()]);
+    }
+
+    /**
+     * @return UserEntity
+     */
+    public function getUser()
+    {
+        return UserRepository::instance()->findOne(['id' => $this->getSenderId()]);
+    }
+
+    /**
+     * @return CommentLikeEntity[]
+     */
+    public function getCommentLikes()
+    {
+        return CommentLikeRepository::instance()->findAll(['comment_id' => $this->getId()]);
+    }
+
+
     // #################### SECTION OF LOGIC ######################
 }

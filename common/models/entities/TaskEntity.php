@@ -2,6 +2,12 @@
 
 namespace common\models\entities;
 
+
+use common\models\repositories\CommentRepository;
+use common\models\repositories\ProjectRepository;
+use common\models\repositories\TaskLikeRepository;
+use common\models\repositories\UserRepository;
+
 /**
  * Class TaskEntity
  * @package common\models\entities
@@ -186,6 +192,39 @@ class TaskEntity
 
     // #################### SECTION OF RELATIONS ######################
 
+    /**
+     * @return ProjectEntity
+     */
+    public function getProject()
+    {
+        return ProjectRepository::instance()->findOne(['id' => $this->getProjectId()]);
+    }
+
+    /**
+     * @return UserEntity
+     */
+    public function getUser()
+    {
+        return UserRepository::instance()->findOne(['id' => $this->getAuthorId()]);
+    }
+
+    /**
+     * @return TaskLikeEntity[]
+     */
+    public function getTaskLikes()
+    {
+        return TaskLikeRepository::instance()->findAll(['task_id' => $this->getId()]);
+    }
+
+    /**
+     * @return CommentEntity[]
+     */
+    public function getComments()
+    {
+        return CommentRepository::instance()->findAll(['task_id' => $this->getId()]);
+    }
 
     // #################### SECTION OF LOGIC ######################
+
+
 }

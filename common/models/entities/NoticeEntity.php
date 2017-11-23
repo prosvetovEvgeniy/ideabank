@@ -1,6 +1,7 @@
 <?php
 
 namespace common\models\entities;
+use common\models\repositories\UserRepository;
 
 /**
  * Class NoticeEntity
@@ -81,6 +82,16 @@ class NoticeEntity
 
 
     // #################### SECTION OF RELATIONS ######################
+
+    /**
+     * @return UserEntity
+     */
+    public function getUser()
+    {
+        return UserRepository::instance()->findOne(['id' => $this->getRecipientId()]);
+    }
+
+
     // #################### SECTION OF LOGIC ######################
 }
 

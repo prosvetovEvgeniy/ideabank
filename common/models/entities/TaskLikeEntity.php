@@ -1,6 +1,8 @@
 <?php
 
 namespace common\models\entities;
+use common\models\repositories\TaskRepository;
+use common\models\repositories\UserRepository;
 
 /**
  * Class TaskLikeEntity
@@ -81,6 +83,22 @@ class TaskLikeEntity
 
 
     // #################### SECTION OF RELATIONS ######################
+
+    /**
+     * @return TaskEntity
+     */
+    public function getTask()
+    {
+        return TaskRepository::instance()->findOne(['id' => $this->getTaskId()]);
+    }
+
+    /**
+     * @return UserEntity
+     */
+    public function getUser()
+    {
+        return UserRepository::instance()->findOne(['id' => $this->getUserId()]);
+    }
 
 
     // #################### SECTION OF LOGIC ######################

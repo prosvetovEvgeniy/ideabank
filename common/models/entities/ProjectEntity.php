@@ -4,6 +4,7 @@ namespace common\models\entities;
 
 
 use common\models\repositories\CompanyRepository;
+use common\models\repositories\TaskRepository;
 
 /**
  * Class ProjectEntity
@@ -112,8 +113,18 @@ class ProjectEntity
     /**
      * @return CompanyEntity
      */
-    public function getCompany() { return CompanyRepository::instance()->get($this->companyId); }
+    public function getCompany()
+    {
+        return CompanyRepository::instance()->findOne(['id' => $this->getCompanyId()]);
+    }
 
+    /**
+     * @return TaskEntity[]
+     */
+    public function getTasks()
+    {
+        return TaskRepository::instance()->findAll(['project_id' => $this->getId()]);
+    }
 
     // #################### SECTION OF LOGIC ######################
 }

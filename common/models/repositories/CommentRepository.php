@@ -48,7 +48,7 @@ class CommentRepository
      * Возвращает сущности по условию
      *
      * @param array $condition
-     * @return array CommentEntity
+     * @return CommentEntity[]
      * @throws Exception
      */
     public function findAll(array $condition)

@@ -48,7 +48,7 @@ class ProjectRepository
      * Возвращает сущности по условию
      *
      * @param array $condition
-     * @return array ProjectEntity
+     * @return ProjectEntity[]
      * @throws Exception
      */
     public function findAll(array $condition)

@@ -48,7 +48,7 @@ class TaskRepository
      * Возвращает сущности по условию
      *
      * @param array $condition
-     * @return array TaskEntity
+     * @return TaskEntity[]
      * @throws Exception
      */
     public function findAll(array $condition)

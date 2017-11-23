@@ -48,7 +48,7 @@ class UserRepository
      * Возвращает сущности по условию
      *
      * @param array $condition
-     * @return array UserEntity
+     * @return UserEntity[]
      * @throws Exception
      */
     public function findAll(array $condition)

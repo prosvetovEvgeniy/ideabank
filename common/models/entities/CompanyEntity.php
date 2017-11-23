@@ -2,6 +2,7 @@
 
 namespace common\models\entities;
 
+use common\models\repositories\ParticipantRepository;
 use common\models\repositories\ProjectRepository;
 
 /**
@@ -85,6 +86,14 @@ class CompanyEntity
     public function getProjects()
     {
         return ProjectRepository::instance()->findAll(['company_id' => $this->getId()]);
+    }
+
+    /**
+     * @return ParticipantEntity[]
+     */
+    public function getParticipants()
+    {
+        return ParticipantRepository::instance()->findAll(['company_id' => $this->getId()]);
     }
 
     // #################### SECTION OF LOGIC ######################

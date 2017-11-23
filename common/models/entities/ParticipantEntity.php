@@ -1,6 +1,9 @@
 <?php
 
 namespace common\models\entities;
+use common\models\repositories\CompanyRepository;
+use common\models\repositories\ProjectRepository;
+use common\models\repositories\UserRepository;
 
 
 /**
@@ -139,7 +142,20 @@ class ParticipantEntity
 
     // #################### SECTION OF RELATIONS ######################
 
+    public function getCompany()
+    {
+        return CompanyRepository::instance()->findOne(['id' => $this->getCompanyId()]);
+    }
 
+    public function getProject()
+    {
+        return ProjectRepository::instance()->findOne(['id' => $this->getProjectId()]);
+    }
+
+    public function getUser()
+    {
+        return UserRepository::instance()->findOne(['id' => $this->getUserId()]);
+    }
 
 
     // #################### SECTION OF LOGIC ######################

@@ -47,7 +47,7 @@ class NoticeRepository
      * Возвращает сущности по условию
      *
      * @param array $condition
-     * @return array NoticeEntity
+     * @return NoticeEntity[]
      * @throws Exception
      */
     public function findAll(array $condition)

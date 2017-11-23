@@ -48,7 +48,7 @@ class MessageRepository
      * Возвращает сущности по условию
      *
      * @param array $condition
-     * @return array MessageEntity
+     * @return MessageEntity[]
      * @throws Exception
      */
     public function findAll(array $condition)
