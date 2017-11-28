@@ -59,9 +59,9 @@ class TaskEntity
      * @param bool|null $deleted
      */
     public function __construct(string $title, string $content, int $authorId, int $projectId,
-                                int $id = null, int $status = null, int $visibilityArea = null,
-                                int $parentId = null, int $plannedEndAt = null, int $endAt = null,
-                                int $createdAt = null, int $updatedAt = null, bool $deleted = null)
+                                int $status = null, int $visibilityArea = null, int $parentId = null,
+                                int $plannedEndAt = null, int $endAt = null, int $id = null,
+                                 int $createdAt = null, int $updatedAt = null, bool $deleted = null)
     {
         $this->id = $id;
         $this->title = $title;
@@ -160,32 +160,37 @@ class TaskEntity
     public function setContent (string $value) { $this->content = $value; }
 
     /**
-     * @param integer $value
+     * @param int $value
      */
     public function setAuthorId (int $value) { $this->authorId = $value; }
 
     /**
-     * @param integer $value
+     * @param int $value
      */
     public function setProjectId (int $value) { $this->projectId = $value; }
 
     /**
-     * @param integer $value
+     * @param int $value
+     */
+    public function setStatus (int $value) { $this->status = $value; }
+
+    /**
+     * @param int $value
      */
     public function setVisibilityArea (int $value) { $this->visibilityArea = $value; }
 
     /**
-     * @param integer $value
+     * @param int $value
      */
     public function setParentId (int $value) { $this->parentId = $value; }
 
     /**
-     * @param integer $value
+     * @param int $value
      */
     public function setPlannedEndAt (int $value) { $this->plannedEndAt = $value; }
 
     /**
-     * @param integer $value
+     * @param int $value
      */
     public function setEndAt (int $value) { $this->endAt = $value; }
 

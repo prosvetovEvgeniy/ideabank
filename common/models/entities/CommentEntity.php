@@ -44,8 +44,8 @@ class CommentEntity
      * @param int|null $updatedAt
      * @param bool|null $deleted
      */
-    public function __construct(int $taskId, int $senderId, string $content, int $id = null,
-                                int $commentId = null, bool $private = null, int $createdAt = null,
+    public function __construct(int $taskId, int $senderId, string $content,int $commentId = null,
+                                bool $private = null, int $id = null, int $createdAt = null,
                                 int $updatedAt = null, bool $deleted = null)
     {
         $this->id = $id;
@@ -129,15 +129,10 @@ class CommentEntity
     // #################### SECTION OF RELATIONS ######################
 
     /**
-     * @return array|CommentEntity
+     * @return CommentEntity
      */
     public function getComment()
     {
-        if($this->getCommentId() === null)
-        {
-            return [];
-        }
-
         return CommentRepository::instance()->findOne(['id' => $this->getCommentId()]);
     }
 

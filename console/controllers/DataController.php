@@ -6,7 +6,7 @@ use yii\console\Controller;
 use Yii;
 use yii\base\Module;
 
-class TestdataController extends Controller
+class DataController extends Controller
 {
     private $db;
 
@@ -19,7 +19,7 @@ class TestdataController extends Controller
 
     public function actionInit()
     {
-        /*$this->db->createCommand("TRUNCATE company CASCADE")->execute();
+        $this->db->createCommand("TRUNCATE company CASCADE")->execute();
         $this->db->createCommand("TRUNCATE project CASCADE")->execute();
         $this->db->createCommand("TRUNCATE users CASCADE")->execute();
         $this->db->createCommand("TRUNCATE participant CASCADE")->execute();
@@ -30,7 +30,7 @@ class TestdataController extends Controller
         $this->db->createCommand("TRUNCATE comment_like CASCADE")->execute();
         $this->db->createCommand("TRUNCATE message CASCADE")->execute();
         $this->db->createCommand("TRUNCATE notice CASCADE")->execute();
-        */
+
 
         $auth = Yii::$app->authManager;
 
@@ -91,7 +91,7 @@ class TestdataController extends Controller
         $tasksIds['thirdTask'] = $this->addTask('Третья задача','Текст третьей задачи', $userIds['evgeniy'], $projectIds['xabr']);
 
         $commentsIds['firstComment'] = $this->addComment($tasksIds['firstTask'], $userIds['evgeniy'],'Первый комментарий');
-        $commentsIds['secondComment'] = $this->addComment($tasksIds['secondTask'], $userIds['evgeniy'],'Второй комментарий');
+        $commentsIds['secondComment'] = $this->addComment($tasksIds['secondTask'], $userIds['evgeniy'],'Второй комментарий', $commentsIds['firstComment']);
         $commentsIds['thirdComment'] = $this->addComment($tasksIds['thirdTask'], $userIds['evgeniy'],'Третьи комментарий');
 
         $taskLikesIds['firstLikeToFirstTask'] = $this->addLikeToTask($tasksIds['firstTask'], $userIds['evgeniy'], true);
@@ -107,9 +107,9 @@ class TestdataController extends Controller
         $messageIds['fromEdirectorToEvgeniy'] = $this->addMessage($userIds['edirector'], $userIds['evgeniy'],true,'Пока');
         $messageIds['fromEvgeniyToEdirector'] = $this->addMessage($userIds['evgeniy'], $userIds['edirector'],false,'Пока');
 
-        $noticeIds['firstNoticeToEvgeniy'] = $this->addNotice($userIds['edirector'], 'Первая заметка', false);
-        $noticeIds['secondNoticeToEvgeniy'] = $this->addNotice($userIds['edirector'], 'Вторая заметка', true);
-        $noticeIds['thirdNoticeToEvgeniy'] = $this->addNotice($userIds['edirector'], 'Третья заметка', false);
+        $noticeIds['firstNoticeToEvgeniy'] = $this->addNotice($userIds['evgeniy'], 'Первая заметка', false);
+        $noticeIds['secondNoticeToEvgeniy'] = $this->addNotice($userIds['evgeniy'], 'Вторая заметка', true);
+        $noticeIds['thirdNoticeToEvgeniy'] = $this->addNotice($userIds['evgeniy'], 'Третья заметка', false);
 
         $this->stdout("\nTest data was init\n");
     }
@@ -156,10 +156,11 @@ class TestdataController extends Controller
         return $this->db->getLastInsertID('task_id_seq');
     }
 
-    public function addComment($taskId, $senderId, $content)
+    public function addComment($taskId, $senderId, $content, $commentId = null)
     {
-        $this->db->createCommand("INSERT INTO comment (task_id, sender_id, content, created_at, updated_at) VALUES 
-                                      ({$taskId}, {$senderId}, '{$content}', {$this->getTime()}, {$this->getTime()})")->execute();
+        $commentId = $commentId ?? 'NULL';
+        $this->db->createCommand("INSERT INTO comment (task_id, sender_id, content, comment_id,created_at, updated_at) VALUES 
+                                      ({$taskId}, {$senderId}, '{$content}', {$commentId},{$this->getTime()}, {$this->getTime()})")->execute();
 
         return $this->db->getLastInsertID('comment_id_seq');
     }

@@ -176,8 +176,8 @@ class ParticipantRepository
      */
     protected function buildEntity(Participant $model)
     {
-        return new ParticipantEntity($model->user_id, $model->id, $model->company_id, $model->project_id,
+        return new ParticipantEntity($model->user_id, $model->company_id, $model->project_id,
                                      $model->approved, $model->approved_at, $model->blocked, $model->blocked_at,
-                                     $model->created_at, $model->updated_at);
+                                     $model->id, $model->created_at, $model->updated_at);
     }
 }

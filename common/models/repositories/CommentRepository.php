@@ -175,8 +175,8 @@ class CommentRepository
      */
     protected function buildEntity(Comment $model)
     {
-        return new CommentEntity($model->task_id, $model->sender_id,$model->content, $model->id,
-                                 $model->comment_id, $model->private, $model->created_at, $model->updated_at,
+        return new CommentEntity($model->task_id, $model->sender_id,$model->content, $model->comment_id,
+                                 $model->private, $model->id, $model->created_at, $model->updated_at,
                                  $model->deleted);
     }
 }

@@ -94,6 +94,33 @@ class MessageRepository
     }
 
     /**
+     * Обновляет сущность в БД
+     *
+     * @param MessageEntity $message
+     * @return MessageEntity
+     * @throws Exception
+     */
+    public function update(MessageEntity $message)
+    {
+        $model = Message::findOne(['id' => $message->getId()]);
+
+        if(!$model)
+        {
+            throw new Exception('Message with id = ' . $message->getId() . ' does not exists');
+        }
+
+        $this->assignProperties($model, $message);
+
+        if(!$model->save())
+        {
+            Yii::error($model->errors);
+            throw new Exception('Cannot update message with id = ' . $message->getId());
+        }
+
+        return $this->buildEntity($model);
+    }
+
+    /**
      * Помечает сущность как удаленную в БД
      *
      * @param MessageEntity $message
@@ -133,7 +160,7 @@ class MessageRepository
      */
     protected function assignProperties(&$model, &$message)
     {
-        $model->self_id = $message->getSeldIf();
+        $model->self_id = $message->getSelfId();
         $model->companion_id = $message->getCompanionId();
         $model->is_sender = $message->getIsSender();
         $model->content = $message->getContent();

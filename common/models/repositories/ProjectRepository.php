@@ -171,7 +171,7 @@ class ProjectRepository
      */
     protected function buildEntity(Project $model)
     {
-        return new ProjectEntity($model->name,$model->company_id, $model->id, $model->default_visibility_area,
-                                 $model->created_at, $model->updated_at, $model->deleted);
+        return new ProjectEntity($model->name,$model->company_id, $model->default_visibility_area,
+                                 $model->id, $model->created_at, $model->updated_at, $model->deleted);
     }
 }

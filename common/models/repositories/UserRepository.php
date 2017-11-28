@@ -178,10 +178,10 @@ class UserRepository
      */
     protected function buildEntity(Users $model)
     {
-        return new UserEntity($model->username, $model->password, $model->email, $model->id,
+        return new UserEntity($model->username, $model->password, $model->email,
                               $model->phone, $model->first_name, $model->second_name,
                               $model->last_name, $model->avatar, $model->auth_key,
-                              $model->password_reset_token, $model->created_at, $model->updated_at,
-                              $model->deleted);
+                              $model->password_reset_token, $model->id, $model->created_at,
+                              $model->updated_at, $model->deleted);
     }
 }

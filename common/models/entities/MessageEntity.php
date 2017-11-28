@@ -89,7 +89,10 @@ class MessageEntity
 
     // #################### SECTION OF SETTERS ######################
 
-
+    /**
+     * @param string $value
+     */
+    public function setCompanionId(string $value) { $this->companionId = $value; }
 
     // #################### SECTION OF RELATIONS ######################
 

@@ -47,9 +47,9 @@ class ParticipantEntity
      * @param int|null $createdAt
      * @param int|null $updatedAt
      */
-    public function __construct(int $userId, int $id = null, int $companyId = null, int $projectId = null,
-                                bool $approved = null, int $approvedAt = null, bool $blocked = null,
-                                int $blockedAt = null, int $createdAt = null, int $updatedAt = null)
+    public function __construct(int $userId, int $companyId = null, int $projectId = null, bool $approved = null,
+                                int $approvedAt = null, bool $blocked = null, int $blockedAt = null,
+                                int $id = null, int $createdAt = null, int $updatedAt = null)
     {
         $this->id = $id;
         $this->userId = $userId;

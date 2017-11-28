@@ -39,7 +39,7 @@ class ProjectEntity
      * @param int|null $updatedAt
      * @param bool|null $deleted
      */
-    public function __construct(string $name, int $companyId, int $id = null, int $defaultVisibilityArea = null,
+    public function __construct(string $name, int $companyId, int $defaultVisibilityArea = null, int $id = null,
                                 int $createdAt = null, int $updatedAt = null, bool $deleted = null)
     {
         $this->id = $id;

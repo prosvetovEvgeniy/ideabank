@@ -63,11 +63,10 @@ class UserEntity
      * @param int|null $updatedAt
      * @param bool|null $deleted
      */
-    public function __construct(string $username, string $password, string $email, int $id = null,
-                                string $phone = null, string $firstName = null, string $secondName = null,
-                                string $lastName = null, string $avatar = null, string $authKey = null,
-                                string $passwordResetToken = null, int $createdAt = null,
-                                int $updatedAt = null, bool $deleted = null)
+    public function __construct(string $username, string $password, string $email, string $phone = null,
+                                string $firstName = null, string $secondName = null, string $lastName = null,
+                                string $avatar = null, string $authKey = null, string $passwordResetToken = null,
+                                int $id = null, int $createdAt = null,  int $updatedAt = null, bool $deleted = null)
     {
         $this->id = $id;
         $this->username = $username;

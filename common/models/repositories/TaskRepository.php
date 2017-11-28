@@ -180,8 +180,8 @@ class TaskRepository
     protected function buildEntity(Task $model)
     {
         return new TaskEntity($model->title, $model->content, $model->author_id, $model->project_id,
-                              $model->id, $model->status, $model->visibility_area, $model->parent_id,
-                              $model->planned_end_at, $model->end_at, $model->created_at, $model->updated_at,
-                              $model->deleted);
+                              $model->status, $model->visibility_area, $model->parent_id,
+                              $model->planned_end_at, $model->end_at, $model->id, $model->created_at,
+                              $model->updated_at, $model->deleted);
     }
 }
