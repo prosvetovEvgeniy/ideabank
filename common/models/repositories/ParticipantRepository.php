@@ -10,6 +10,9 @@ use Yii;
 
 class ParticipantRepository
 {
+
+    // #################### STANDARD METHODS ######################
+
     /**
      * Возвращает экземпляр класса
      *
@@ -49,26 +52,12 @@ class ParticipantRepository
      *
      * @param array $condition
      * @return ParticipantEntity[]
-     * @throws Exception
      */
     public function findAll(array $condition)
     {
-        /** @var Participant[] $models */
         $models = Participant::findAll($condition);
 
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->buildEntities($models);
     }
 
     /**
@@ -179,5 +168,48 @@ class ParticipantRepository
         return new ParticipantEntity($model->user_id, $model->company_id, $model->project_id,
                                      $model->approved, $model->approved_at, $model->blocked, $model->blocked_at,
                                      $model->id, $model->created_at, $model->updated_at);
+    }
+
+    /**
+     * Создает экземпляры сущностей
+     *
+     * @param Participant[] $models
+     * @return ParticipantEntity[]
+     */
+    protected function buildEntities(array $models)
+    {
+        if(!$models)
+        {
+            return [];
+        }
+
+        $entities = [];
+
+        foreach ($models as $model)
+        {
+            $entities[] = $this->buildEntity($model);
+        }
+
+        return $entities;
+    }
+
+
+    // #################### UNIQUE METHODS OF CLASS ######################
+
+
+    /**
+     * Возвращает проекты, в которым присоединен пользователь
+     *
+     * @return ParticipantEntity[]
+     */
+    public function getParticipantsInProjects()
+    {
+        /** @var Participant[] $models */
+        $models = Participant::find()->where(['user_id' => Yii::$app->user->identity->profile->id])
+                                     ->andWhere(['is not', 'company_id', null])
+                                     ->andWhere(['is not', 'project_id', null])
+                                     ->all();
+
+        return $this->buildEntities($models);
     }
 }

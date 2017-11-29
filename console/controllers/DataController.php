@@ -65,9 +65,11 @@ class DataController extends Controller
         $participantIds['evgeniyVk'] = $this->addParticipant($userIds['evgeniy'], $companyIds['eCompanyId'], $projectIds['vk']);
         $participantIds['evgeniyXabr'] = $this->addParticipant($userIds['evgeniy'], $companyIds['eCompanyId'], $projectIds['xabr']);
 
+        $participantIds['adminStub'] = $this->addParticipantStub($userIds['admin']);
         $participantIds['adminDirector'] = $this->addParticipantDirector($userIds['admin'], $companyIds['infSysId']);
         $participantIds['adminVulcan'] = $this->addParticipant($userIds['admin'], $companyIds['infSysId'], $projectIds['vulcan']);
 
+        $participantIds['edirectorStub'] = $this->addParticipantStub($userIds['edirector']);
         $participantIds['edirectorDirector'] = $this->addParticipantDirector($userIds['edirector'], $companyIds['eCompanyId']);
         $participantIds['edirectorGithub'] = $this->addParticipant($userIds['edirector'], $companyIds['eCompanyId'], $projectIds['github']);
         $participantIds['edirectorVk'] = $this->addParticipant($userIds['edirector'], $companyIds['eCompanyId'], $projectIds['vk']);

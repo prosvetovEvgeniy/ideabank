@@ -10,6 +10,9 @@ use Yii;
 
 class TaskLikeRepository
 {
+
+    // #################### STANDARD METHODS ######################
+
     /**
      * Возвращает экземпляр класса
      *
@@ -44,26 +47,12 @@ class TaskLikeRepository
      *
      * @param array $condition
      * @return TaskLikeEntity[]
-     * @throws Exception
      */
     public function findAll(array $condition)
     {
-        /** @var TaskLike[] $models */
         $models = TaskLike::findAll($condition);
 
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->buildEntities($models);
     }
 
     /**
@@ -163,4 +152,32 @@ class TaskLikeRepository
         return new TaskLikeEntity($model->task_id, $model->user_id, $model->liked,$model->id,
                                   $model->created_at, $model->updated_at);
     }
+
+    /**
+     * Создает экземпляры сущностей
+     *
+     * @param TaskLike[] $models
+     * @return TaskLikeEntity[]
+     */
+    protected function buildEntities(array $models)
+    {
+        if(!$models)
+        {
+            return [];
+        }
+
+        $entities = [];
+
+        foreach ($models as $model)
+        {
+            $entities[] = $this->buildEntity($model);
+        }
+
+        return $entities;
+    }
+
+
+    // #################### UNIQUE METHODS OF CLASS ######################
+
+
 }

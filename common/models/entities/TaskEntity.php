@@ -28,6 +28,11 @@ use common\models\repositories\UserRepository;
  */
 class TaskEntity
 {
+    public const STATUS_ON_CONSIDERATION = 0;
+    public const STATUS_IN_PROGRESS = 1;
+    public const STATUS_COMPLETED = 2;
+    public const STATUS_MERGED = 3;
+
     protected $id;
     protected $title;
     protected $content;

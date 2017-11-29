@@ -2,22 +2,14 @@
 
 namespace frontend\controllers;
 
-
-use common\components\helpers\ParticipantHelper;
-use common\models\activerecords\Participant;
-use common\models\activerecords\Project;
+use common\models\repositories\ParticipantRepository;
 use yii\web\Controller;
-use Yii;
 
 class ProjectController extends Controller
 {
     public function actionIndex()
     {
-        $participants = Participant::find()->where(['user_id' => Yii::$app->user->identity->profile->id])
-                                            ->andWhere(['is not', 'company_id', null])
-                                            ->andWhere(['is not', 'project_id', null])
-                                            ->all();
-
+        $participants = ParticipantRepository::instance()->getParticipantsInProjects();
 
         return $this->render('index', ['participants' => $participants]);
     }

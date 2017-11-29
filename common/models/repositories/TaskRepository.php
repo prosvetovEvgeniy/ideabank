@@ -4,12 +4,16 @@ namespace common\models\repositories;
 
 
 use common\models\activerecords\Task;
+use common\models\entities\ProjectEntity;
 use common\models\entities\TaskEntity;
 use yii\db\Exception;
 use Yii;
 
 class TaskRepository
 {
+
+    // #################### STANDARD METHODS ######################
+
     /**
      * Возвращает экземпляр класса
      *
@@ -49,26 +53,12 @@ class TaskRepository
      *
      * @param array $condition
      * @return TaskEntity[]
-     * @throws Exception
      */
     public function findAll(array $condition)
     {
-        /** @var Task[] $models */
         $models = Task::findAll($condition);
 
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->buildEntities($models);
     }
 
     /**
@@ -184,4 +174,74 @@ class TaskRepository
                               $model->planned_end_at, $model->end_at, $model->id, $model->created_at,
                               $model->updated_at, $model->deleted);
     }
+
+    /**
+     * Создает экземпляры сущностей
+     *
+     * @param Task[] $models
+     * @return TaskEntity[]
+     */
+    protected function buildEntities(array $models)
+    {
+        if(!$models)
+        {
+            return [];
+        }
+
+        $entities = [];
+
+        foreach ($models as $model)
+        {
+            $entities[] = $this->buildEntity($model);
+        }
+
+        return $entities;
+    }
+
+
+    // #################### UNIQUE METHODS OF CLASS ######################
+
+
+    /**
+     * Возвращает массив сущностей завершенных задач
+     *
+     * @param ProjectEntity $project
+     * @return TaskEntity[]
+     */
+    public function findCompletedTasks(ProjectEntity $project)
+    {
+        return $this->findAll(['project_id' => $project->getId(), 'status' => TaskEntity::STATUS_COMPLETED,
+                               'deleted' => false]);
+    }
+
+    /**
+     * Возвращает массив сущностей не завершенных задач
+     *
+     * @param ProjectEntity $project
+     * @return TaskEntity[]
+     */
+    public function findNotCompletedTasks(ProjectEntity $project)
+    {
+        /** @var Task[] $models */
+        $models = Task::find()->where(['project_id' => $project->getId()])
+                              ->andWhere(['deleted' => false])
+                              ->andWhere(['status' => TaskEntity::STATUS_ON_CONSIDERATION])
+                              ->orWhere(['status' => TaskEntity::STATUS_IN_PROGRESS])
+                              ->all();
+
+        return $this->buildEntities($models);
+    }
+
+    /**
+     * Возвращает массив объединенных сущностей
+     *
+     * @param ProjectEntity $project
+     * @return TaskEntity[]
+     */
+    public function findMergedTasks(ProjectEntity $project)
+    {
+        return $this->findAll(['project_id' => $project->getId(), 'status' => TaskEntity::STATUS_MERGED,
+                               'deleted' => false]);
+    }
+
 }

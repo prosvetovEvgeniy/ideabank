@@ -10,6 +10,9 @@ use Yii;
 
 class CommentLikeRepository
 {
+
+    // #################### STANDARD METHODS ######################
+
     /**
      * Возвращает экземпляр класса
      *
@@ -44,26 +47,13 @@ class CommentLikeRepository
      *
      * @param array $condition
      * @return CommentLikeEntity[]
-     * @throws Exception
      */
     public function findAll(array $condition)
     {
         /** @var CommentLike[] $models */
         $models = CommentLike::findAll($condition);
 
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->buildEntities($models);
     }
 
     /**
@@ -164,4 +154,32 @@ class CommentLikeRepository
         return new CommentLikeEntity($model->comment_id, $model->user_id, $model->liked,$model->id,
             $model->created_at, $model->updated_at);
     }
+
+    /**
+     * Создает экземпляры сущностей
+     *
+     * @param CommentLike[] $models
+     * @return CommentLikeEntity[]
+     */
+    protected function buildEntities(array $models)
+    {
+        if(!$models)
+        {
+            return [];
+        }
+
+        $entities = [];
+
+        foreach ($models as $model)
+        {
+            $entities[] = $this->buildEntity($model);
+        }
+
+        return $entities;
+    }
+
+
+    // #################### UNIQUE METHODS OF CLASS ######################
+
+
 }

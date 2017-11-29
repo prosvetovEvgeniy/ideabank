@@ -10,6 +10,9 @@ use Yii;
 
 class CommentRepository
 {
+
+    // #################### STANDARD METHODS ######################
+
     /**
      * Возвращает экземпляр класса
      *
@@ -49,26 +52,12 @@ class CommentRepository
      *
      * @param array $condition
      * @return CommentEntity[]
-     * @throws Exception
      */
     public function findAll(array $condition)
     {
-        /** @var Comment[] $models */
         $models = Comment::findAll($condition);
 
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->buildEntities($models);
     }
 
     /**
@@ -179,4 +168,32 @@ class CommentRepository
                                  $model->private, $model->id, $model->created_at, $model->updated_at,
                                  $model->deleted);
     }
+
+    /**
+     * Создает экземпляры сущностей
+     *
+     * @param Comment[] $models
+     * @return CommentEntity[]
+     */
+    protected function buildEntities(array $models)
+    {
+        if(!$models)
+        {
+            return [];
+        }
+
+        $entities = [];
+
+        foreach ($models as $model)
+        {
+            $entities[] = $this->buildEntity($model);
+        }
+
+        return $entities;
+    }
+
+
+    // #################### UNIQUE METHODS OF CLASS ######################
+
+
 }

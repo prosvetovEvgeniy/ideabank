@@ -10,6 +10,9 @@ use Yii;
 
 class MessageRepository
 {
+
+    // #################### STANDARD METHODS ######################
+
     /**
      * Возвращает экземпляр класса
      *
@@ -49,26 +52,12 @@ class MessageRepository
      *
      * @param array $condition
      * @return MessageEntity[]
-     * @throws Exception
      */
     public function findAll(array $condition)
     {
-        /** @var Message[] $models */
         $models = Message::findAll($condition);
 
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->buildEntities($models);
     }
 
     /**
@@ -175,4 +164,31 @@ class MessageRepository
         return new MessageEntity($model->self_id, $model->companion_id, $model->is_sender, $model->content,
                                  $model->id, $model->created_at, $model->deleted);
     }
+
+    /**
+     * Создает экземпляры сущностей
+     *
+     * @param Message[] $models
+     * @return MessageEntity[]
+     */
+    protected function buildEntities(array $models)
+    {
+        if(!$models)
+        {
+            return [];
+        }
+
+        $entities = [];
+
+        foreach ($models as $model)
+        {
+            $entities[] = $this->buildEntity($model);
+        }
+
+        return $entities;
+    }
+
+    // #################### UNIQUE METHODS OF CLASS ######################
+
+
 }

@@ -10,6 +10,9 @@ use Yii;
 
 class UserRepository
 {
+
+    // #################### STANDARD METHODS ######################
+
     /**
      * Возвращает экземпляр класса
      *
@@ -49,26 +52,12 @@ class UserRepository
      *
      * @param array $condition
      * @return UserEntity[]
-     * @throws Exception
      */
     public function findAll(array $condition)
     {
-        /** @var Users[] $models */
         $models = Users::findAll($condition);
 
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->buildEntities($models);
     }
 
     /**
@@ -184,4 +173,32 @@ class UserRepository
                               $model->password_reset_token, $model->id, $model->created_at,
                               $model->updated_at, $model->deleted);
     }
+
+    /**
+     * Создает экземпляры сущностей
+     *
+     * @param Users[] $models
+     * @return UserEntity[]
+     */
+    protected function buildEntities(array $models)
+    {
+        if(!$models)
+        {
+            return [];
+        }
+
+        $entities = [];
+
+        foreach ($models as $model)
+        {
+            $entities[] = $this->buildEntity($model);
+        }
+
+        return $entities;
+    }
+
+
+    // #################### UNIQUE METHODS OF CLASS ######################
+
+
 }

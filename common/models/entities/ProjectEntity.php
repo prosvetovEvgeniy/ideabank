@@ -115,7 +115,7 @@ class ProjectEntity
      */
     public function getCompany()
     {
-        return CompanyRepository::instance()->findOne(['id' => $this->getCompanyId()]);
+        return CompanyRepository::instance()->findOne(['id' => $this->getCompanyId(), 'deleted' => false]);
     }
 
     /**
@@ -123,8 +123,48 @@ class ProjectEntity
      */
     public function getTasks()
     {
-        return TaskRepository::instance()->findAll(['project_id' => $this->getId()]);
+        return TaskRepository::instance()->findAll(['project_id' => $this->getId(), 'deleted' => false]);
     }
 
     // #################### SECTION OF LOGIC ######################
+
+    /**
+     * @return int
+     */
+    public function getAmountTasks()
+    {
+        return count($this->getTasks());
+    }
+
+    /**
+     * @return int
+     */
+    public function getAmountCompletedTasks()
+    {
+        $tasks = TaskRepository::instance()->findCompletedTasks($this);
+
+        return count($tasks);
+    }
+
+    /**
+     * @return int
+     */
+    public function getAmountNotCompletedTasks()
+    {
+        $tasks = TaskRepository::instance()->findNotCompletedTasks($this);
+
+        return count($tasks);
+    }
+
+    /**
+     * @param UserEntity $user
+     * @return int
+     */
+    public function getAmountTasksByUser(UserEntity $user)
+    {
+        $tasks = TaskRepository::instance()->findAll(['project_id' => $this->getId(),
+                                                      'author_id' => $user->getId(),
+                                                      'deleted' => false]);
+        return count($tasks);
+    }
 }

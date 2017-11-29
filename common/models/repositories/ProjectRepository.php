@@ -10,6 +10,9 @@ use Yii;
 
 class ProjectRepository
 {
+
+    // #################### STANDARD METHODS ######################
+
     /**
      * Возвращает экземпляр класса
      *
@@ -49,26 +52,12 @@ class ProjectRepository
      *
      * @param array $condition
      * @return ProjectEntity[]
-     * @throws Exception
      */
     public function findAll(array $condition)
     {
-        /** @var Project[] $models */
         $models = Project::findAll($condition);
 
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->buildEntities($models);
     }
 
     /**
@@ -174,4 +163,32 @@ class ProjectRepository
         return new ProjectEntity($model->name,$model->company_id, $model->default_visibility_area,
                                  $model->id, $model->created_at, $model->updated_at, $model->deleted);
     }
+
+    /**
+     * Создает экземпляры сущностей
+     *
+     * @param Project[] $models
+     * @return ProjectEntity[]
+     */
+    protected function buildEntities(array $models)
+    {
+        if(!$models)
+        {
+            return [];
+        }
+
+        $entities = [];
+
+        foreach ($models as $model)
+        {
+            $entities[] = $this->buildEntity($model);
+        }
+
+        return $entities;
+    }
+
+
+    // #################### UNIQUE METHODS OF CLASS ######################
+
+
 }

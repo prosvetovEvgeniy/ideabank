@@ -9,6 +9,9 @@ use Yii;
 
 class NoticeRepository
 {
+
+    // #################### STANDARD METHODS ######################
+
     /**
      * Возвращает экземпляр класса
      *
@@ -48,26 +51,12 @@ class NoticeRepository
      *
      * @param array $condition
      * @return NoticeEntity[]
-     * @throws Exception
      */
     public function findAll(array $condition)
     {
-        /** @var Notice[] $models */
         $models = Notice::findAll($condition);
 
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->buildEntities($models);
     }
 
     /**
@@ -172,4 +161,32 @@ class NoticeRepository
         return new NoticeEntity($model->recipient_id, $model->content, $model->id, $model->created_at,
                                 $model->viewed);
     }
+
+    /**
+     * Создает экземпляры сущностей
+     *
+     * @param Notice[] $models
+     * @return NoticeEntity[]
+     */
+    protected function buildEntities(array $models)
+    {
+        if(!$models)
+        {
+            return [];
+        }
+
+        $entities = [];
+
+        foreach ($models as $model)
+        {
+            $entities[] = $this->buildEntity($model);
+        }
+
+        return $entities;
+    }
+
+
+    // #################### UNIQUE METHODS OF CLASS ######################
+
+
 }

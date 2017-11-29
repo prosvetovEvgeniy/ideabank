@@ -9,6 +9,9 @@ use Yii;
 
 class CompanyRepository
 {
+
+    // #################### STANDARD METHODS ######################
+
     /**
      * Возвращает экземпляр класса
      *
@@ -48,26 +51,12 @@ class CompanyRepository
      *
      * @param array $condition
      * @return CompanyEntity[]
-     * @throws Exception
      */
     public function findAll(array $condition)
     {
-        /** @var Company[] $models */
         $models = Company::findAll($condition);
 
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->buildEntities($models);
     }
 
     /**
@@ -172,4 +161,33 @@ class CompanyRepository
     {
         return new CompanyEntity($model->name, $model->id, $model->created_at, $model->updated_at, $model->deleted);
     }
+
+    /**
+     * Создает экземпляры сущностей
+     *
+     * @param Company[] $models
+     * @return CompanyEntity[]
+     */
+    protected function buildEntities(array $models)
+    {
+        if(!$models)
+        {
+            return [];
+        }
+
+        $entities = [];
+
+        foreach ($models as $model)
+        {
+            $entities[] = $this->buildEntity($model);
+        }
+
+        return $entities;
+    }
+
+
+    // #################### UNIQUE METHODS OF CLASS ######################
+
+
+
 }

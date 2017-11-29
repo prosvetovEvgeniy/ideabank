@@ -5,6 +5,8 @@ namespace common\models\activerecords;
 use common\models\activerecords\Company;
 use common\models\activerecords\Project;
 use common\models\activerecords\Users;
+use common\models\entities\UserEntity;
+use common\models\repositories\UserRepository;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
@@ -140,10 +142,10 @@ class Participant extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @return \yii\rbac\Role[]
+     * @return UserEntity
      */
-    public function getRole()
+    public function getEntity()
     {
-        return Yii::$app->authManager->getRolesByUser($this->id);
+        return UserRepository::instance()->findOne(['id' => $this->user_id]);
     }
 }
