@@ -48,14 +48,16 @@ class UserRepository
     }
 
     /**
-     * Возвращает сущности по условию
+     * Возвращает массив сущностей по условию
      *
      * @param array $condition
+     * @param int $limit
+     * @param int|null $offset
      * @return UserEntity[]
      */
-    public function findAll(array $condition)
+    public function findAll(array $condition, int $limit = 20, int $offset = null)
     {
-        $models = Users::findAll($condition);
+        $models = Users::find()->where($condition)->offset($offset)->limit($limit)->all();
 
         return $this->buildEntities($models);
     }

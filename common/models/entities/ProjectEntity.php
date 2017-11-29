@@ -17,6 +17,8 @@ use common\models\repositories\TaskRepository;
  * @property int $createdAt
  * @property int $updatedAt
  * @property bool $deleted
+ *
+ * @property TaskRepository $taskRepository
  */
 class ProjectEntity
 {
@@ -27,6 +29,8 @@ class ProjectEntity
     protected $createdAt;
     protected $updatedAt;
     protected $deleted;
+
+    protected $taskRepository;
 
 
     /**
@@ -49,10 +53,13 @@ class ProjectEntity
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->deleted = $deleted;
+
+        $this->taskRepository = new TaskRepository();
     }
 
 
     // #################### SECTION OF GETTERS ######################
+
 
     /**
      * @return int | null
@@ -92,6 +99,7 @@ class ProjectEntity
 
     // #################### SECTION OF SETTERS ######################
 
+
     /**
      * @param string $value
      */
@@ -110,6 +118,7 @@ class ProjectEntity
 
     // #################### SECTION OF RELATIONS ######################
 
+
     /**
      * @return CompanyEntity
      */
@@ -126,14 +135,57 @@ class ProjectEntity
         return TaskRepository::instance()->findAll(['project_id' => $this->getId(), 'deleted' => false]);
     }
 
+
     // #################### SECTION OF LOGIC ######################
+
+
+    /**
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return TaskEntity[]
+     */
+    public function getCompletedTasks(int $limit = null, int $offset = null)
+    {
+        return $this->taskRepository->findCompletedTasks($this, $limit, $offset);
+    }
+
+    /**
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return TaskEntity[]
+     */
+    public function getNotCompletedTasks(int $limit = null, int $offset = null)
+    {
+        return $this->taskRepository->findNotCompletedTasks($this, $limit, $offset);
+    }
+
+    /**
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return TaskEntity[]
+     */
+    public function getMergedTasks(int $limit = null, int $offset = null)
+    {
+        return $this->taskRepository->findMergedTasks($this, $limit, $offset);
+    }
+
+    /**
+     * @param UserEntity $user
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return TaskEntity[]
+     */
+    public function getTasksByAuthor(UserEntity $user, int $limit = null, int $offset = null)
+    {
+        return $this->taskRepository->findTasksByAuthor($this, $user, $limit, $offset);
+    }
 
     /**
      * @return int
      */
     public function getAmountTasks()
     {
-        return count($this->getTasks());
+        return $this->taskRepository->getAmountTasks($this);
     }
 
     /**
@@ -141,9 +193,7 @@ class ProjectEntity
      */
     public function getAmountCompletedTasks()
     {
-        $tasks = TaskRepository::instance()->findCompletedTasks($this);
-
-        return count($tasks);
+        return $this->taskRepository->getAmountCompletedTasks($this);
     }
 
     /**
@@ -151,20 +201,15 @@ class ProjectEntity
      */
     public function getAmountNotCompletedTasks()
     {
-        $tasks = TaskRepository::instance()->findNotCompletedTasks($this);
-
-        return count($tasks);
+        return $this->taskRepository->getAmountNotCompletedTasks($this);
     }
 
     /**
      * @param UserEntity $user
      * @return int
      */
-    public function getAmountTasksByUser(UserEntity $user)
+    public function getAmountTasksByAuthor(UserEntity $user)
     {
-        $tasks = TaskRepository::instance()->findAll(['project_id' => $this->getId(),
-                                                      'author_id' => $user->getId(),
-                                                      'deleted' => false]);
-        return count($tasks);
+        return $this->taskRepository->getAmountTasksByAuthor($this, $user);
     }
 }

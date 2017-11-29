@@ -48,14 +48,16 @@ class CommentRepository
     }
 
     /**
-     * Возвращает сущности по условию
+     * Возвращает массив сущностей по условию
      *
      * @param array $condition
+     * @param int|null $offset
+     * @param int|null $limit
      * @return CommentEntity[]
      */
-    public function findAll(array $condition)
+    public function findAll(array $condition, int $offset = null, int $limit = null)
     {
-        $models = Comment::findAll($condition);
+        $models = Comment::find()->where($condition)->offset($offset)->limit($limit)->all();
 
         return $this->buildEntities($models);
     }

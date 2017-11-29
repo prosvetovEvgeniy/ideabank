@@ -47,14 +47,16 @@ class NoticeRepository
     }
 
     /**
-     * Возвращает сущности по условию
+     * Возвращает массив сущностей по условию
      *
      * @param array $condition
+     * @param int $limit
+     * @param int|null $offset
      * @return NoticeEntity[]
      */
-    public function findAll(array $condition)
+    public function findAll(array $condition, int $limit = 20, int $offset = null)
     {
-        $models = Notice::findAll($condition);
+        $models = Notice::find()->where($condition)->offset($offset)->limit($limit)->all();
 
         return $this->buildEntities($models);
     }

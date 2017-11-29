@@ -47,14 +47,16 @@ class CompanyRepository
     }
 
     /**
-     * Возвращает сущности по условию
+     * Возвращает массив сущностей по условию
      *
      * @param array $condition
+     * @param int $limit
+     * @param int|null $offset
      * @return CompanyEntity[]
      */
-    public function findAll(array $condition)
+    public function findAll(array $condition, int $limit = 20, int $offset = null)
     {
-        $models = Company::findAll($condition);
+        $models = Company::find()->where($condition)->offset($offset)->limit($limit)->all();
 
         return $this->buildEntities($models);
     }

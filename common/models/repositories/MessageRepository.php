@@ -4,6 +4,7 @@ namespace common\models\repositories;
 
 
 use common\models\activerecords\Message;
+use common\models\entities\CompanyEntity;
 use common\models\entities\MessageEntity;
 use yii\db\Exception;
 use Yii;
@@ -48,14 +49,16 @@ class MessageRepository
     }
 
     /**
-     * Возвращает сущности по условию
+     * Возвращает массив сущностей по условию
      *
      * @param array $condition
+     * @param int $limit
+     * @param int|null $offset
      * @return MessageEntity[]
      */
-    public function findAll(array $condition)
+    public function findAll(array $condition, int $limit = 20, int $offset = null)
     {
-        $models = Message::findAll($condition);
+        $models = Message::find()->where($condition)->offset($offset)->limit($limit)->all();
 
         return $this->buildEntities($models);
     }

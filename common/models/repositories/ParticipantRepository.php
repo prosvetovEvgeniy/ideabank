@@ -5,6 +5,7 @@ namespace common\models\repositories;
 
 use common\models\activerecords\Participant;
 use common\models\entities\ParticipantEntity;
+use common\models\entities\UserEntity;
 use yii\db\Exception;
 use Yii;
 
@@ -48,14 +49,16 @@ class ParticipantRepository
     }
 
     /**
-     * Возвращает сущности по условию
+     * Возвращает массив сущностей по условию
      *
      * @param array $condition
+     * @param int $limit
+     * @param int|null $offset
      * @return ParticipantEntity[]
      */
-    public function findAll(array $condition)
+    public function findAll(array $condition, int $limit = 20, int $offset = null)
     {
-        $models = Participant::findAll($condition);
+        $models = Participant::find()->where($condition)->offset($offset)->limit($limit)->all();
 
         return $this->buildEntities($models);
     }
@@ -200,16 +203,16 @@ class ParticipantRepository
     /**
      * Возвращает проекты, в которым присоединен пользователь
      *
+     * @param UserEntity $user
      * @return ParticipantEntity[]
      */
-    public function getParticipantsInProjects()
+    public function getParticipantsInProjects(UserEntity $user)
     {
-        /** @var Participant[] $models */
-        $models = Participant::find()->where(['user_id' => Yii::$app->user->identity->profile->id])
-                                     ->andWhere(['is not', 'company_id', null])
-                                     ->andWhere(['is not', 'project_id', null])
-                                     ->all();
-
-        return $this->buildEntities($models);
+        return $this::findAll([
+            'and',
+            ['user_id'=>$user->getId()],
+            ['not', ['company_id'=> null]],
+            ['not', ['project_id'=> null]]
+        ]);
     }
 }

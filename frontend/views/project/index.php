@@ -31,7 +31,7 @@ use yii\helpers\Html;
                     <p><?= Html::a('Количество задач : ' . $project->getAmountTasks() , ['#'], ['target' => '_blank']) ?></p>
                     <p><?= Html::a('Завершенные : ' . $project->getAmountCompletedTasks(), ['#'], ['target' => '_blank']) ?></p>
                     <p><?= Html::a('Не завершенные : ' . $project->getAmountNotCompletedTasks(), ['#'], ['target' => '_blank']) ?></p>
-                    <p><?= Html::a('Мои задачи : ' . $project->getAmountTasksByUser($participant->getUser()), ['#'], ['target' => '_blank']) ?></p>
+                    <p><?= Html::a('Мои задачи : ' . $project->getAmountTasksByAuthor($participant->getUser()), ['#'], ['target' => '_blank']) ?></p>
                 </div>
             </div>
         </div>
