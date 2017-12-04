@@ -25,6 +25,8 @@ use common\models\repositories\UserRepository;
  * @property int $createdAt
  * @property int $updatedAt
  * @property bool $deleted
+ *
+ * @property array $listStatusesAsText
  */
 class TaskEntity
 {
@@ -32,6 +34,15 @@ class TaskEntity
     public const STATUS_IN_PROGRESS = 1;
     public const STATUS_COMPLETED = 2;
     public const STATUS_MERGED = 3;
+
+    public const LIST_STATUSES_AS_TEXT = [
+        self::STATUS_ON_CONSIDERATION => 'на рассмотрении',
+        self::STATUS_IN_PROGRESS      => 'в процессе',
+        self::STATUS_COMPLETED        => 'завершена',
+        self::STATUS_MERGED           => 'объединена с другой'
+    ];
+
+    protected const DATE_FORMAT = 'Y-m-d';
 
     protected $id;
     protected $title;
@@ -234,7 +245,38 @@ class TaskEntity
         return CommentRepository::instance()->findAll(['task_id' => $this->getId()]);
     }
 
+
     // #################### SECTION OF LOGIC ######################
 
+    /**
+     * @return false|string
+     */
+    public function getCreatedDate()
+    {
+        return date(self::DATE_FORMAT, $this->createdAt);
+    }
 
+    /**
+     * @return false|string
+     */
+    public function getPlannedEndDate()
+    {
+        return date(self::DATE_FORMAT, $this->plannedEndAt);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEndDate()
+    {
+        return date(self::DATE_FORMAT, $this->endAt);
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getStatusAsText()
+    {
+        return self::LIST_STATUSES_AS_TEXT[$this->status] ?? 'статус не определен';
+    }
 }

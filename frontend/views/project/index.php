@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use common\models\searchmodels\TaskEntitySearch;
 
 /**
  * @var \common\models\entities\ParticipantEntity[] $participants
@@ -23,15 +24,16 @@ use yii\helpers\Html;
             <div class="panel panel-info">
                 <div class="panel-heading">
 
-                    <?= $project->getName() ?>
+                    <?= Html::a(HTML::encode($project->getName()), ['project/view', 'name' => $project->getName()], ['target' => '_blank']) ?>
 
+                    <div><span class="label label-success"><?= $participant->getRoleName() ?></span></div>
                 </div>
 
                 <div class="panel-body">
-                    <p><?= Html::a('Количество задач : ' . $project->getAmountTasks() , ['#'], ['target' => '_blank']) ?></p>
-                    <p><?= Html::a('Завершенные : ' . $project->getAmountCompletedTasks(), ['#'], ['target' => '_blank']) ?></p>
-                    <p><?= Html::a('Не завершенные : ' . $project->getAmountNotCompletedTasks(), ['#'], ['target' => '_blank']) ?></p>
-                    <p><?= Html::a('Мои задачи : ' . $project->getAmountTasksByAuthor($participant->getUser()), ['#'], ['target' => '_blank']) ?></p>
+                    <p><?= Html::a('Количество задач : ' . $project->getAmountTasks() , ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_ALL], ['target' => '_blank']) ?></p>
+                    <p><?= Html::a('Завершенные : ' . $project->getAmountCompletedTasks(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_COMPLETED], ['target' => '_blank']) ?></p>
+                    <p><?= Html::a('Не завершенные : ' . $project->getAmountNotCompletedTasks(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_NOT_COMPLETED], ['target' => '_blank']) ?></p>
+                    <p><?= Html::a('Мои задачи : ' . $project->getAmountTasksByAuthor($participant->getUser()), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(),'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_OWN], ['target' => '_blank']) ?></p>
                 </div>
             </div>
         </div>

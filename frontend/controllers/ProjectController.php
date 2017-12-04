@@ -2,8 +2,9 @@
 
 namespace frontend\controllers;
 
-use common\models\activerecords\Participant;
 use common\models\repositories\ParticipantRepository;
+use common\models\repositories\ProjectRepository;
+use yii\db\Exception;
 use yii\web\Controller;
 use Yii;
 
@@ -18,7 +19,18 @@ class ProjectController extends Controller
 
     public function actionView()
     {
-        return $this->render('view');
+        $projectName = Yii::$app->request->get('name');
+
+        try
+        {
+            $project = ProjectRepository::instance()->findOne(['name' => $projectName]);
+        }
+        catch (Exception $e)
+        {
+            return $this->render('/site/error');
+        }
+
+        return $this->render('view', ['project' => $project]);
     }
 
     public function actionSearch()

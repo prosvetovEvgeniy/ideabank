@@ -57,8 +57,10 @@ class TaskRepository
      * @param int|null $offset
      * @return TaskEntity[]
      */
-    public function findAll(array $condition, int $limit = 20, int $offset = null)
+    public function findAll(array $condition, int $limit = null, int $offset = null)
     {
+        $limit = $limit ?? 20;
+
         $models = Task::find()->where($condition)->offset($offset)->limit($limit)->all();
 
         return $this->buildEntities($models);
@@ -215,8 +217,9 @@ class TaskRepository
      */
     public function findCompletedTasks(ProjectEntity $project, int $limit = null, int $offset = null)
     {
-        return $this->findAll(['project_id' => $project->getId(), 'status' => TaskEntity::STATUS_COMPLETED,
-                               'deleted' => false], $offset, $limit);
+        $condition = $this->getConditionOnCompletedTasks($project);
+
+        return $this->findAll($condition, $offset, $limit);
     }
 
     /**
@@ -229,12 +232,9 @@ class TaskRepository
      */
     public function findNotCompletedTasks(ProjectEntity $project, int $limit = null, int $offset = null)
     {
-        return $this->findAll([
-            'and',
-            ['project_id' => $project->getId()],
-            ['deleted' => false],
-            ['or', ['status' => [TaskEntity::STATUS_ON_CONSIDERATION, TaskEntity::STATUS_IN_PROGRESS]]]
-        ], $offset, $limit);
+        $condition = $this->getConditionOnNotCompletedTasks($project);
+
+        return $this->findAll($condition, $offset, $limit);
     }
 
     /**
@@ -247,8 +247,9 @@ class TaskRepository
      */
     public function findMergedTasks(ProjectEntity $project, int $limit = null, int $offset = null)
     {
-        return $this->findAll(['project_id' => $project->getId(), 'status' => TaskEntity::STATUS_MERGED,
-                               'deleted' => false], $offset, $limit);
+        $condition = $this->getConditionOnMergedTasks($project);
+
+        return $this->findAll($condition, $offset, $limit);
     }
 
     /**
@@ -262,8 +263,9 @@ class TaskRepository
      */
     public function findTasksByAuthor(ProjectEntity $project, UserEntity $user, int $limit = null, int $offset = null)
     {
-        return $this->findAll(['project_id' => $project->getId(), 'author_id' => $user->getId(),
-                               'deleted' => false], $offset, $limit);
+        $condition = $this->getConditionByAuthorForProject($project, $user);
+
+        return $this->findAll($condition, $offset, $limit);
     }
 
     /**
@@ -272,9 +274,9 @@ class TaskRepository
      */
     public function getAmountTasks(ProjectEntity $project)
     {
-        return Task::find()->where(['project_id' => $project->getId()])
-                           ->andWhere(['deleted' => false])
-                           ->count();
+        $condition = $this->getConditionOnAllTasks($project);
+
+        return Task::find()->where($condition)->count();
     }
 
     /**
@@ -283,10 +285,9 @@ class TaskRepository
      */
     public function getAmountCompletedTasks(ProjectEntity $project)
     {
-        return Task::find()->where(['project_id' => $project->getId()])
-                           ->andWhere(['status' => TaskEntity::STATUS_COMPLETED])
-                           ->andWhere(['deleted' => false])
-                           ->count();
+        $condition = $this->getConditionOnCompletedTasks($project);
+
+        return Task::find()->where($condition)->count();
     }
 
     /**
@@ -295,11 +296,9 @@ class TaskRepository
      */
     public function getAmountNotCompletedTasks(ProjectEntity $project)
     {
-        return Task::find()->where(['project_id' => $project->getId()])
-                           ->andWhere(['deleted' => false])
-                           ->andWhere(['status' => TaskEntity::STATUS_ON_CONSIDERATION])
-                           ->orWhere(['status' => TaskEntity::STATUS_IN_PROGRESS])
-                           ->count();
+        $condition = $this->getConditionOnNotCompletedTasks($project);
+
+        return Task::find()->where($condition)->count();
     }
 
     /**
@@ -308,10 +307,9 @@ class TaskRepository
      */
     public function getAmountMergedTasks(ProjectEntity $project)
     {
-        return Task::find()->where(['project_id' => $project->getId()])
-                           ->andWhere(['status' => TaskEntity::STATUS_MERGED])
-                           ->andWhere(['deleted' => false])
-                           ->count();
+        $condition = $this->getConditionOnMergedTasks($project);
+
+        return Task::find()->where($condition)->count();
     }
 
     /**
@@ -319,11 +317,85 @@ class TaskRepository
      * @param UserEntity $user
      * @return int
      */
-    public function getAmountTasksByAuthor(ProjectEntity $project, UserEntity $user)
+    public function getAmountTasksByAuthorForProject(ProjectEntity $project, UserEntity $user)
     {
-        return Task::find()->where(['project_id' => $project->getId()])
-                           ->andWhere(['author_id' => $user->getId()])
-                           ->andWhere(['deleted' => false])
-                           ->count();
+        $condition = $this->getConditionByAuthorForProject($project, $user);
+
+        return Task::find()->where($condition)->count();
+    }
+
+    /**
+     * @param ProjectEntity $project
+     * @return array
+     */
+    public function getConditionOnAllTasks(ProjectEntity $project)
+    {
+        return [
+            'project_id' => $project->getId(),
+            'deleted' => false
+        ];
+    }
+
+    /**
+     * @param ProjectEntity $project
+     * @return array
+     */
+    public function getConditionOnCompletedTasks(ProjectEntity $project)
+    {
+        return [
+            'project_id' => $project->getId(),
+            'status' => TaskEntity::STATUS_COMPLETED,
+            'deleted' => false
+        ];
+    }
+
+    /**
+     * @param ProjectEntity $project
+     * @return array
+     */
+    public function getConditionOnNotCompletedTasks(ProjectEntity $project)
+    {
+        return [
+            'and',
+            ['project_id' => $project->getId()],
+            ['deleted' => false],
+            ['or', ['status' => [TaskEntity::STATUS_ON_CONSIDERATION, TaskEntity::STATUS_IN_PROGRESS]]]
+        ];
+    }
+
+    /**
+     * @param ProjectEntity $project
+     * @return array
+     */
+    public function getConditionOnMergedTasks(ProjectEntity $project)
+    {
+        return [
+            'project_id' => $project->getId(),
+            'status' => TaskEntity::STATUS_MERGED,
+            'deleted' => false
+        ];
+    }
+
+    /**
+     * @param ProjectEntity $project
+     * @param UserEntity $user
+     * @return array
+     */
+    public function getConditionByAuthorForProject(ProjectEntity $project, UserEntity $user)
+    {
+        return [
+            'project_id' => $project->getId(),
+            'author_id' => $user->getId(),
+            'deleted' => false
+        ];
+    }
+
+    /**
+     * @param array $condition
+     * @return int|string
+     */
+    public function getTotalCountByCondition(array $condition)
+    {
+        return Task::find()->where($condition)->count();
     }
 }

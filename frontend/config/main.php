@@ -40,7 +40,7 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '<action:\w+>' => 'site/<action>',
+                'project/view/<name:\S+>' => 'project/view',
             ],
         ],
     ],

@@ -1,9 +1,12 @@
 <?php
 
 namespace common\models\entities;
+
+
 use common\models\repositories\CompanyRepository;
 use common\models\repositories\ProjectRepository;
 use common\models\repositories\UserRepository;
+use Yii;
 
 
 /**
@@ -20,9 +23,17 @@ use common\models\repositories\UserRepository;
  * @property int $blockedAt
  * @property int $createdAt
  * @property int $updatedAt
+ *
+ * @property array $listRolesAsText
+ * @property \yii\rbac\ManagerInterface $auth
  */
 class ParticipantEntity
 {
+    public const ROLE_USER = 'user';
+    public const ROLE_MANAGER = 'manager';
+    public const ROLE_PROJECT_DIRECTOR = 'projectDirector';
+    public const ROLE_COMPANY_DIRECTOR = 'companyDirector';
+
     protected $id;
     protected $userId;
     protected $companyId;
@@ -34,16 +45,25 @@ class ParticipantEntity
     protected $createdAt;
     protected $updatedAt;
 
+    protected $listRolesAsText = [
+        self::ROLE_USER             => 'Участник',
+        self::ROLE_MANAGER          => 'Менеджер',
+        self::ROLE_PROJECT_DIRECTOR => 'Директор проекта',
+        self::ROLE_COMPANY_DIRECTOR => 'Директор компании',
+    ];
+
+    protected $auth;
+
     /**
      * ParticipantEntity constructor.
      * @param int $userId
-     * @param int|null $id
      * @param int|null $companyId
      * @param int|null $projectId
      * @param bool|null $approved
      * @param int|null $approvedAt
      * @param bool|null $blocked
      * @param int|null $blockedAt
+     * @param int|null $id
      * @param int|null $createdAt
      * @param int|null $updatedAt
      */
@@ -61,6 +81,8 @@ class ParticipantEntity
         $this->blockedAt = $blockedAt;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+
+        $this->auth = Yii::$app->authManager;
     }
 
 
@@ -160,7 +182,19 @@ class ParticipantEntity
 
     // #################### SECTION OF LOGIC ######################
 
+    /**
+     * Переводит название роли на русский язык
+     *
+     * @return mixed|string
+     */
+    public function getRoleName()
+    {
+        $role = $this->auth->getRolesByUser($this->getId());
 
+        $key = key($role);
+
+        return $this->listRolesAsText[$key] ?? 'Роль не определена';
+    }
 }
 
 

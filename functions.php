@@ -1,6 +1,6 @@
 <?php
 
-function debug($data)
+function debug($data = "TEST")
 {
     echo '<pre>';
     print_r($data);
@@ -9,9 +9,13 @@ function debug($data)
     exit();
 }
 
-function dump($data)
+function dump($data = "TEST")
 {
+    echo '<pre>';
+
     var_dump($data);
+
+    echo '</pre>';
 
     exit();
 }

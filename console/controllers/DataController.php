@@ -19,7 +19,7 @@ class DataController extends Controller
 
     public function actionInit()
     {
-        $this->db->createCommand("TRUNCATE company CASCADE")->execute();
+        /*$this->db->createCommand("TRUNCATE company CASCADE")->execute();
         $this->db->createCommand("TRUNCATE project CASCADE")->execute();
         $this->db->createCommand("TRUNCATE users CASCADE")->execute();
         $this->db->createCommand("TRUNCATE participant CASCADE")->execute();
@@ -29,7 +29,7 @@ class DataController extends Controller
         $this->db->createCommand("TRUNCATE task_like CASCADE")->execute();
         $this->db->createCommand("TRUNCATE comment_like CASCADE")->execute();
         $this->db->createCommand("TRUNCATE message CASCADE")->execute();
-        $this->db->createCommand("TRUNCATE notice CASCADE")->execute();
+        $this->db->createCommand("TRUNCATE notice CASCADE")->execute();*/
 
 
         $auth = Yii::$app->authManager;
@@ -88,9 +88,16 @@ class DataController extends Controller
         $auth->assign($director,$participantIds['edirectorVk']);
         $auth->assign($director,$participantIds['edirectorXabr']);
 
-        $tasksIds['firstTask'] = $this->addTask('Первая задача','Текст первой задачи', $userIds['evgeniy'], $projectIds['github']);
-        $tasksIds['secondTask'] = $this->addTask('Вторая задача','Текст второй задачи', $userIds['evgeniy'], $projectIds['vk']);
-        $tasksIds['thirdTask'] = $this->addTask('Третья задача','Текст третьей задачи', $userIds['evgeniy'], $projectIds['xabr']);
+        $tasksIds['firstTask'] = $this->addTask('Первая задача','Текст первой задачи', $userIds['evgeniy'], $projectIds['github'], 0);
+        $tasksIds['secondTask'] = $this->addTask('Вторая задача','Текст второй задачи', $userIds['evgeniy'], $projectIds['vk'], 0);
+        $tasksIds['thirdTask'] = $this->addTask('Третья задача','Текст третьей задачи', $userIds['evgeniy'], $projectIds['xabr'], 0);
+        $tasksIds['fourthTask'] = $this->addTask('Вторая задача','Текст второй задачи', $userIds['evgeniy'], $projectIds['github'], 1);
+        $tasksIds['fifthTask'] = $this->addTask('Третья задача','Текст третьей задачи', $userIds['evgeniy'], $projectIds['github'], 2);
+        $tasksIds['sixthTask'] = $this->addTask('Четвертая задача','Текст четвертой задачи', $userIds['evgeniy'], $projectIds['github'], 0);
+        $tasksIds['seventhTask'] = $this->addTask('Пятая задача','Текст пятой задачи', $userIds['evgeniy'], $projectIds['github'], 3);
+        $tasksIds['eightTask'] = $this->addTask('Шестая задача','Текст шестой задачи', $userIds['evgeniy'], $projectIds['github'], 0);
+        $tasksIds['ninthTask'] = $this->addTask('Седьмая задача','Текст седьмой задачи', $userIds['evgeniy'], $projectIds['github'], 2);
+
 
         $commentsIds['firstComment'] = $this->addComment($tasksIds['firstTask'], $userIds['evgeniy'],'Первый комментарий');
         $commentsIds['secondComment'] = $this->addComment($tasksIds['secondTask'], $userIds['evgeniy'],'Второй комментарий', $commentsIds['firstComment']);
@@ -149,10 +156,12 @@ class DataController extends Controller
         return $this->db->getLastInsertID('users_id_seq');
     }
 
-    private function addTask($title, $content, $authorId, $projectId)
+    private function addTask($title, $content, $authorId, $projectId, $status)
     {
-        $this->db->createCommand("INSERT INTO task (title, content, author_id, project_id, created_at, updated_at) VALUES
-                                      ('{$title}', '{$content}', {$authorId}, {$projectId}, {$this->getTime()}, {$this->getTime()})")
+        $plannedEndAt = $this->getTime() + 200000;
+
+        $this->db->createCommand("INSERT INTO task (title, content, author_id, project_id, status, planned_end_at ,created_at, updated_at) VALUES
+                                      ('{$title}', '{$content}', {$authorId}, {$projectId}, {$status},{$plannedEndAt},{$this->getTime()}, {$this->getTime()})")
                                 ->execute();
 
         return $this->db->getLastInsertID('task_id_seq');

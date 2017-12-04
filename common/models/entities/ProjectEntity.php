@@ -210,6 +210,6 @@ class ProjectEntity
      */
     public function getAmountTasksByAuthor(UserEntity $user)
     {
-        return $this->taskRepository->getAmountTasksByAuthor($this, $user);
+        return $this->taskRepository->getAmountTasksByAuthorForProject($this, $user);
     }
 }
