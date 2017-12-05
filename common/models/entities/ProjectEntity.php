@@ -18,6 +18,9 @@ use common\models\repositories\TaskRepository;
  * @property int $updatedAt
  * @property bool $deleted
  *
+ * @property CompanyEntity $company
+ * @property TaskEntity[]  $tasks
+ *
  * @property TaskRepository $taskRepository
  */
 class ProjectEntity
@@ -30,8 +33,11 @@ class ProjectEntity
     protected $updatedAt;
     protected $deleted;
 
-    protected $taskRepository;
+    //кеш связанных сущностей
+    protected $company;
+    protected $tasks;
 
+    protected $taskRepository;
 
     /**
      * ProjectEntity constructor.
@@ -124,7 +130,12 @@ class ProjectEntity
      */
     public function getCompany()
     {
-        return CompanyRepository::instance()->findOne(['id' => $this->getCompanyId(), 'deleted' => false]);
+        if($this->company === null)
+        {
+            $this->company = CompanyRepository::instance()->findOne(['id' => $this->getCompanyId(), 'deleted' => false]);
+        }
+
+        return $this->company;
     }
 
     /**
@@ -132,7 +143,12 @@ class ProjectEntity
      */
     public function getTasks()
     {
-        return TaskRepository::instance()->findAll(['project_id' => $this->getId(), 'deleted' => false]);
+        if($this->tasks === null)
+        {
+            $this->tasks = TaskRepository::instance()->findAll(['project_id' => $this->getId(), 'deleted' => false]);
+        }
+
+        return $this->tasks;
     }
 
 

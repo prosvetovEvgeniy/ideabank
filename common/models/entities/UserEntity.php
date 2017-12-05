@@ -27,6 +27,14 @@ use common\models\repositories\TaskRepository;
  * @property int $createdAt
  * @property int $updatedAt
  * @property bool $deleted
+ *
+ * @property ParticipantEntity   $participants
+ * @property CommentLikeEntity[] $commentLikes
+ * @property CommentEntity       $comments
+ * @property TaskEntity[]        $tasks
+ * @property TaskLikeEntity[]    $taskLikes
+ * @property NoticeEntity[]      $notices
+ * @property MessageEntity[]     $messages
  */
 class UserEntity
 {
@@ -44,6 +52,15 @@ class UserEntity
     protected $createdAt;
     protected $updatedAt;
     protected $deleted;
+
+    //кеш связанных сущностей
+    protected $participants;
+    protected $commentLikes;
+    protected $comments;
+    protected $tasks;
+    protected $taskLikes;
+    protected $notices;
+    protected $messages;
 
 
     /**
@@ -218,7 +235,11 @@ class UserEntity
      */
     public function getParticipants()
     {
-        return ParticipantRepository::instance()->findAll(['user_id' => $this->getId()]);
+        if($this->participants === null)
+        {
+            $this->participants = ParticipantRepository::instance()->findAll(['user_id' => $this->getId()]);
+        }
+        return $this->participants;
     }
 
     /**
@@ -226,7 +247,12 @@ class UserEntity
      */
     public function getCommentLikes()
     {
-        return CommentLikeRepository::instance()->findAll(['user_id' => $this->getId()]);
+        if($this->commentLikes === null)
+        {
+            $this->commentLikes = CommentLikeRepository::instance()->findAll(['user_id' => $this->getId()]);
+        }
+
+        return $this->commentLikes;
     }
 
     /**
@@ -234,7 +260,12 @@ class UserEntity
      */
     public function getComments()
     {
-        return CommentRepository::instance()->findAll(['sender_id' => $this->getId()]);
+        if($this->comments === null)
+        {
+            $this->comments = CommentRepository::instance()->findAll(['sender_id' => $this->getId()]);
+        }
+
+        return $this->comments;
     }
 
     /**
@@ -242,7 +273,12 @@ class UserEntity
      */
     public function getTasks()
     {
-        return TaskRepository::instance()->findAll(['author_id' => $this->getId()]);
+        if($this->tasks === null)
+        {
+            $this->tasks = TaskRepository::instance()->findAll(['author_id' => $this->getId()]);
+        }
+
+        return $this->tasks;
     }
 
     /**
@@ -250,7 +286,12 @@ class UserEntity
      */
     public function getTaskLikes()
     {
-        return TaskLikeRepository::instance()->findAll(['user_id' => $this->getId()]);
+        if($this->taskLikes === null)
+        {
+            $this->taskLikes = TaskLikeRepository::instance()->findAll(['user_id' => $this->getId()]);
+        }
+
+        return $this->taskLikes;
     }
 
     /**
@@ -258,7 +299,12 @@ class UserEntity
      */
     public function getNotices()
     {
-        return NoticeRepository::instance()->findAll(['recipient_id' => $this->getId()]);
+        if($this->notices === null)
+        {
+            $this->notices = NoticeRepository::instance()->findAll(['recipient_id' => $this->getId()]);
+        }
+
+        return $this->notices;
     }
 
     /**
@@ -266,11 +312,18 @@ class UserEntity
      */
     public function getMessages()
     {
-        return MessageRepository::instance()->findAll(['self_id' => $this->getId()]);
+        if($this->messages === null)
+        {
+            $this->messages = MessageRepository::instance()->findAll(['self_id' => $this->getId()]);
+        }
+
+        return $this->messages;
     }
 
 
     // #################### SECTION OF LOGIC ######################
+
+
 }
 
 

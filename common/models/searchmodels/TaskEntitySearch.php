@@ -130,7 +130,12 @@ class TaskEntitySearch extends Model implements EntitySearchInterface
 
         foreach ($this->attributes as $key => $value)
         {
-            if(!in_array($key, $this->skipOnBuildLike) && $value !== null)
+            if($value === null)
+            {
+                continue;
+            }
+
+            if(!in_array($key, $this->skipOnBuildLike))
             {
                 $condition[] = ['like', $key, $value];
             }
@@ -141,27 +146,22 @@ class TaskEntitySearch extends Model implements EntitySearchInterface
                 if($value === self::STATUS_ALL)
                 {
                     $condition[] = TaskRepository::instance()->getConditionOnAllTasks($project);
-                    continue;
                 }
                 elseif ($value === self::STATUS_COMPLETED)
                 {
                     $condition[] = TaskRepository::instance()->getConditionOnCompletedTasks($project);
-                    continue;
                 }
                 elseif ($value === self::STATUS_NOT_COMPLETED)
                 {
                     $condition[] = TaskRepository::instance()->getConditionOnNotCompletedTasks($project);
-                    continue;
                 }
                 elseif ($value === self::STATUS_MERGED)
                 {
                     $condition[] = TaskRepository::instance()->getConditionOnMergedTasks($project);
-                    continue;
                 }
                 elseif ($value === self::STATUS_OWN)
                 {
                     $condition[] = TaskRepository::instance()->getConditionByAuthorForProject($project, Yii::$app->user->identity->getEntity());
-                    continue;
                 }
             }
         }
@@ -173,7 +173,7 @@ class TaskEntitySearch extends Model implements EntitySearchInterface
      * @return \common\models\entities\ProjectEntity
      * @throws NotFoundHttpException
      */
-    protected function getProject()
+    public function getProject()
     {
         try
         {

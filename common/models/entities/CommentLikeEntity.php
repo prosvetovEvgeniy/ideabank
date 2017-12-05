@@ -1,6 +1,8 @@
 <?php
 
 namespace common\models\entities;
+
+
 use common\models\repositories\CommentRepository;
 use common\models\repositories\UserRepository;
 
@@ -14,6 +16,9 @@ use common\models\repositories\UserRepository;
  * @property bool $liked
  * @property int $createdAt
  * @property int $updatedAt
+
+ * @property UserEntity    $user
+ * @property CommentEntity $comment
  */
 class CommentLikeEntity
 {
@@ -23,6 +28,10 @@ class CommentLikeEntity
     protected $liked;
     protected $createdAt;
     protected $updatedAt;
+
+    //кеш связанных сущностей
+    protected $user;
+    protected $comment;
 
     /**
      * CommentLikeEntity constructor.
@@ -46,6 +55,7 @@ class CommentLikeEntity
 
 
     // #################### SECTION OF GETTERS ######################
+
 
     /**
      * @return int | null
@@ -82,12 +92,19 @@ class CommentLikeEntity
 
 
     // #################### SECTION OF RELATIONS ######################
+
+
     /**
      * @return UserEntity
      */
     public function getUser()
     {
-        return UserRepository::instance()->findOne(['id' => $this->getUserId()]);
+        if ($this->user === null)
+        {
+            $this->user = UserRepository::instance()->findOne(['id' => $this->getUserId()]);
+        }
+
+        return $this->user;
     }
 
     /**
@@ -95,11 +112,17 @@ class CommentLikeEntity
      */
     public function getComment()
     {
-        return CommentRepository::instance()->findOne(['id' => $this->getCommentId()]);
+        if($this->comment === null)
+        {
+            $this->comment = CommentRepository::instance()->findOne(['id' => $this->getCommentId()]);
+        }
+
+        return $this->comment;
     }
 
 
     // #################### SECTION OF LOGIC ######################
+
 
     public function like() { $this->liked = true; }
 

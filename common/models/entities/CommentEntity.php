@@ -19,6 +19,11 @@ use common\models\repositories\UserRepository;
  * @property int $createdAt
  * @property int $updatedAt
  * @property bool $deleted
+
+ * @property CommentEntity       $comment
+ * @property TaskEntity          $task
+ * @property UserEntity          $user
+ * @property CommentLikeEntity[] $commentLikes
  */
 class CommentEntity
 {
@@ -31,6 +36,12 @@ class CommentEntity
     protected $createdAt;
     protected $updatedAt;
     protected $deleted;
+
+    //кеш связанных сущностей
+    protected $comment;
+    protected $task;
+    protected $user;
+    protected $commentLikes;
 
     /**
      * CommentEntity constructor.
@@ -133,7 +144,11 @@ class CommentEntity
      */
     public function getComment()
     {
-        return CommentRepository::instance()->findOne(['id' => $this->getCommentId()]);
+        if($this->comment === null)
+        {
+            $this->comment = CommentRepository::instance()->findOne(['id' => $this->getCommentId()]);
+        }
+        return $this->comment;
     }
 
     /**
@@ -141,7 +156,12 @@ class CommentEntity
      */
     public function getTask()
     {
-        return TaskRepository::instance()->findOne(['id' => $this->getTaskId()]);
+        if($this->task === null)
+        {
+            $this->task = TaskRepository::instance()->findOne(['id' => $this->getTaskId()]);
+        }
+
+        return $this->task;
     }
 
     /**
@@ -149,7 +169,12 @@ class CommentEntity
      */
     public function getUser()
     {
-        return UserRepository::instance()->findOne(['id' => $this->getSenderId()]);
+        if($this->user === null)
+        {
+            $this->user = UserRepository::instance()->findOne(['id' => $this->getSenderId()]);
+        }
+
+        return $this->user;
     }
 
     /**
@@ -157,7 +182,12 @@ class CommentEntity
      */
     public function getCommentLikes()
     {
-        return CommentLikeRepository::instance()->findAll(['comment_id' => $this->getId()]);
+        if($this->commentLikes === null)
+        {
+            $this->commentLikes = CommentLikeRepository::instance()->findAll(['comment_id' => $this->getId()]);
+        }
+
+        return $this->commentLikes;
     }
 
 

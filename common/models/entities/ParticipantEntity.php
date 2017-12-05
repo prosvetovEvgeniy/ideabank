@@ -24,6 +24,10 @@ use Yii;
  * @property int $createdAt
  * @property int $updatedAt
  *
+ * @property CommentEntity $company
+ * @property ProjectEntity $project
+ * @property UserEntity    $user
+ *
  * @property array $listRolesAsText
  * @property \yii\rbac\ManagerInterface $auth
  */
@@ -44,6 +48,11 @@ class ParticipantEntity
     protected $blockedAt;
     protected $createdAt;
     protected $updatedAt;
+
+    //кеш связанных сущностей
+    protected $company;
+    protected $project;
+    protected $user;
 
     protected $listRolesAsText = [
         self::ROLE_USER             => 'Участник',
@@ -87,6 +96,7 @@ class ParticipantEntity
 
 
     // #################### SECTION OF GETTERS ######################
+
 
     /**
      * @return int | null
@@ -141,6 +151,7 @@ class ParticipantEntity
 
     // #################### SECTION OF SETTERS ######################
 
+
     /**
      * @param int $value
      */
@@ -164,23 +175,49 @@ class ParticipantEntity
 
     // #################### SECTION OF RELATIONS ######################
 
+
+    /**
+     * @return CompanyEntity
+     */
     public function getCompany()
     {
-        return CompanyRepository::instance()->findOne(['id' => $this->getCompanyId()]);
+        if($this->company === null)
+        {
+            $this->company = CompanyRepository::instance()->findOne(['id' => $this->getCompanyId()]);
+        }
+
+        return $this->company;
     }
 
+    /**
+     * @return ProjectEntity
+     */
     public function getProject()
     {
-        return ProjectRepository::instance()->findOne(['id' => $this->getProjectId()]);
+        if($this->project === null)
+        {
+            $this->project = ProjectRepository::instance()->findOne(['id' => $this->getProjectId()]);
+        }
+
+        return $this->project;
     }
 
+    /**
+     * @return UserEntity
+     */
     public function getUser()
     {
-        return UserRepository::instance()->findOne(['id' => $this->getUserId()]);
+        if($this->user === null)
+        {
+            $this->user = UserRepository::instance()->findOne(['id' => $this->getUserId()]);
+        }
+
+        return $this->user;
     }
 
 
     // #################### SECTION OF LOGIC ######################
+
 
     /**
      * Переводит название роли на русский язык

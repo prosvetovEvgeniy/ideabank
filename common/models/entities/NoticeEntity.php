@@ -12,6 +12,8 @@ use common\models\repositories\UserRepository;
  * @property string $content
  * @property int $createdAt
  * @property bool $viewed
+ *
+ * @property UserEntity $user
  */
 class NoticeEntity
 {
@@ -20,6 +22,9 @@ class NoticeEntity
     protected $content;
     protected $createdAt;
     protected $viewed;
+
+    //кеш связанных сущностей
+    protected $user;
 
     /**
      * NoticeEntity constructor.
@@ -41,6 +46,7 @@ class NoticeEntity
 
 
     // #################### SECTION OF GETTERS ######################
+
 
     /**
      * @return int | null
@@ -83,16 +89,24 @@ class NoticeEntity
 
     // #################### SECTION OF RELATIONS ######################
 
+
     /**
      * @return UserEntity
      */
     public function getUser()
     {
-        return UserRepository::instance()->findOne(['id' => $this->getRecipientId()]);
+        if($this->user === null)
+        {
+            $this->user = UserRepository::instance()->findOne(['id' => $this->getRecipientId()]);
+        }
+
+        return $this->user;
     }
 
 
     // #################### SECTION OF LOGIC ######################
+
+
 }
 
 

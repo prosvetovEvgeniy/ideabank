@@ -14,6 +14,9 @@ use common\models\repositories\UserRepository;
  * @property bool $liked
  * @property int  $createdAt
  * @property int  $updatedAt
+ *
+ * @property TaskEntity $task
+ * @property UserEntity $user
  */
 class TaskLikeEntity
 {
@@ -24,6 +27,9 @@ class TaskLikeEntity
     protected $createdAt;
     protected $updatedAt;
 
+    //кеш связанных сущностей
+    protected $task;
+    protected $user;
 
     /**
      * TaskLikeEntity constructor.
@@ -89,7 +95,12 @@ class TaskLikeEntity
      */
     public function getTask()
     {
-        return TaskRepository::instance()->findOne(['id' => $this->getTaskId()]);
+        if($this->task === null)
+        {
+            $this->task = TaskRepository::instance()->findOne(['id' => $this->getTaskId()]);
+        }
+
+        return $this->task;
     }
 
     /**
@@ -97,7 +108,12 @@ class TaskLikeEntity
      */
     public function getUser()
     {
-        return UserRepository::instance()->findOne(['id' => $this->getUserId()]);
+        if($this->user === null)
+        {
+            $this->user = UserRepository::instance()->findOne(['id' => $this->getUserId()]);
+        }
+
+        return $this->user;
     }
 
 

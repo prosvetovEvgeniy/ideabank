@@ -202,6 +202,7 @@ class TaskEntityTest extends \Codeception\Test\Unit
     
     // #################### TESTS OF RELATIONS ######################
 
+
     public function testGetProjectCheckOnClassName()
     {
         $task = TaskRepository::instance()->findOne(['id' => 1]);
@@ -209,11 +210,11 @@ class TaskEntityTest extends \Codeception\Test\Unit
         $this->assertEquals(get_class($task->getProject()), ProjectEntity::class);
     }
 
-    public function testGetUserCheckOnClassName()
+    public function testGetAuthorCheckOnClassName()
     {
         $task = TaskRepository::instance()->findOne(['id' => 1]);
 
-        $this->assertEquals(get_class($task->getUser()), UserEntity::class);
+        $this->assertEquals(get_class($task->getAuthor()), UserEntity::class);
     }
 
     public function testGetTaskLikesCheckOnArray()
@@ -244,5 +245,8 @@ class TaskEntityTest extends \Codeception\Test\Unit
         $this->assertEquals(get_class($task->getComments()[0]), CommentEntity::class);
     }
 
+
     // #################### TESTS OF LOGIC ######################
+
+
 }

@@ -19,7 +19,7 @@ class ProjectController extends Controller
 
     public function actionView()
     {
-        $projectName = Yii::$app->request->get('name');
+        $projectName = Yii::$app->request->get('projectName');
 
         try
         {

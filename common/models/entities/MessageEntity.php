@@ -15,6 +15,9 @@ use common\models\repositories\UserRepository;
  * @property bool $isSender
  * @property int $createdAt
  * @property bool $deleted
+
+ * @property UserEntity $self
+ * @property UserEntity $companion
  */
 class MessageEntity
 {
@@ -25,6 +28,10 @@ class MessageEntity
     protected $isSender;
     protected $createdAt;
     protected $deleted;
+
+    //кеш связанных сущностей
+    protected $self;
+    protected $companion;
 
     /**
      * MessageEntity constructor.
@@ -50,6 +57,7 @@ class MessageEntity
 
 
     // #################### SECTION OF GETTERS ######################
+
 
     /**
      * @return int | null
@@ -89,19 +97,27 @@ class MessageEntity
 
     // #################### SECTION OF SETTERS ######################
 
+
     /**
      * @param string $value
      */
     public function setCompanionId(string $value) { $this->companionId = $value; }
 
+
     // #################### SECTION OF RELATIONS ######################
+
 
     /**
      * @return UserEntity
      */
     public function getSelf()
     {
-        return UserRepository::instance()->findOne(['id' => $this->getSelfId()]);
+        if($this->self === null)
+        {
+            $this->self = UserRepository::instance()->findOne(['id' => $this->getSelfId()]);
+        }
+
+        return $this->self;
     }
 
     /**
@@ -109,10 +125,16 @@ class MessageEntity
      */
     public function getCompanion()
     {
-        return UserRepository::instance()->findOne(['id' => $this->getCompanionId()]);
+        if($this->companion === null)
+        {
+            $this->companion = UserRepository::instance()->findOne(['id' => $this->getCompanionId()]);
+        }
+
+        return $this->companion;
     }
 
 
     // #################### SECTION OF LOGIC ######################
+
 
 }

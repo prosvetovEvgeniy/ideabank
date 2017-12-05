@@ -14,6 +14,9 @@ use common\models\repositories\ProjectRepository;
  * @property int $createdAt
  * @property int $updatedAt
  * @property bool $deleted
+
+ * @property ProjectEntity       $projects
+ * @property ParticipantEntity[] $participants
  */
 class CompanyEntity
 {
@@ -23,6 +26,9 @@ class CompanyEntity
     protected $updatedAt;
     protected $deleted;
 
+    //кеш связанных сущностей
+    protected $projects;
+    protected $participants;
 
     /**
      * CompanyEntity constructor.
@@ -85,7 +91,12 @@ class CompanyEntity
      */
     public function getProjects()
     {
-        return ProjectRepository::instance()->findAll(['company_id' => $this->getId()]);
+        if($this->projects === null)
+        {
+            $this->projects = ProjectRepository::instance()->findAll(['company_id' => $this->getId()]);
+        }
+
+        return $this->projects;
     }
 
     /**
@@ -93,7 +104,12 @@ class CompanyEntity
      */
     public function getParticipants()
     {
-        return ParticipantRepository::instance()->findAll(['company_id' => $this->getId()]);
+        if($this->participants === null)
+        {
+            $this->participants = ParticipantRepository::instance()->findAll(['company_id' => $this->getId()]);
+        }
+
+        return $this->participants;
     }
 
     // #################### SECTION OF LOGIC ######################

@@ -8,10 +8,6 @@ use common\models\searchmodels\TaskEntitySearch;
  */
 ?>
 
-<?php
-
-
-?>
 <div class="row">
 
     <?php foreach ($participants as $participant) : ?>
@@ -24,7 +20,7 @@ use common\models\searchmodels\TaskEntitySearch;
             <div class="panel panel-info">
                 <div class="panel-heading">
 
-                    <?= Html::a(HTML::encode($project->getName()), ['project/view', 'name' => $project->getName()], ['target' => '_blank']) ?>
+                    <?= Html::a(HTML::encode($project->getName()), ['project/view', 'projectName' => $project->getName()], ['target' => '_blank']) ?>
 
                     <div><span class="label label-success"><?= $participant->getRoleName() ?></span></div>
                 </div>

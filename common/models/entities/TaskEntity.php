@@ -6,11 +6,14 @@ namespace common\models\entities;
 use common\models\repositories\CommentRepository;
 use common\models\repositories\ProjectRepository;
 use common\models\repositories\TaskLikeRepository;
+use common\models\repositories\TaskRepository;
 use common\models\repositories\UserRepository;
 
 /**
  * Class TaskEntity
  * @package common\models\entities
+ *
+ * @property array $listStatusesAsText
  *
  * @property int $id
  * @property string $title
@@ -26,7 +29,11 @@ use common\models\repositories\UserRepository;
  * @property int $updatedAt
  * @property bool $deleted
  *
- * @property array $listStatusesAsText
+ * @property ProjectEntity    $project
+ * @property UserEntity       $author
+ * @property TaskLikeEntity[] $taskLikes
+ * @property CommentEntity[]  $comments
+ * @propery  TaskEntity       $parent
  */
 class TaskEntity
 {
@@ -41,6 +48,9 @@ class TaskEntity
         self::STATUS_COMPLETED        => 'завершена',
         self::STATUS_MERGED           => 'объединена с другой'
     ];
+
+    protected const DATE_ERROR_MESSAGE = 'дата не определена';
+    protected const STATUS_ERROR_MESSAGE = 'статус не определен';
 
     protected const DATE_FORMAT = 'Y-m-d';
 
@@ -57,6 +67,13 @@ class TaskEntity
     protected $createdAt;
     protected $updatedAt;
     protected $deleted;
+
+    //кеш связанных сущностей
+    protected $project;
+    protected $author;
+    protected $taskLikes;
+    protected $comments;
+    protected $parent;
 
     /**
      * TaskEntity constructor.
@@ -96,6 +113,7 @@ class TaskEntity
 
 
     // #################### SECTION OF GETTERS ######################
+
 
     /**
      * @return int|null
@@ -165,6 +183,7 @@ class TaskEntity
 
     // #################### SECTION OF SETTERS ######################
 
+
     /**
      * @param string $value
      */
@@ -213,20 +232,31 @@ class TaskEntity
 
     // #################### SECTION OF RELATIONS ######################
 
+
     /**
      * @return ProjectEntity
      */
     public function getProject()
     {
-        return ProjectRepository::instance()->findOne(['id' => $this->getProjectId()]);
+        if($this->project === null)
+        {
+            $this->project = ProjectRepository::instance()->findOne(['id' => $this->getProjectId()]);
+        }
+
+        return $this->project;
     }
 
     /**
      * @return UserEntity
      */
-    public function getUser()
+    public function getAuthor()
     {
-        return UserRepository::instance()->findOne(['id' => $this->getAuthorId()]);
+        if($this->author === null)
+        {
+            $this->author = UserRepository::instance()->findOne(['id' => $this->getAuthorId()]);
+        }
+
+        return $this->author;
     }
 
     /**
@@ -234,7 +264,12 @@ class TaskEntity
      */
     public function getTaskLikes()
     {
-        return TaskLikeRepository::instance()->findAll(['task_id' => $this->getId()]);
+        if($this->taskLikes === null)
+        {
+            $this->taskLikes = TaskLikeRepository::instance()->findAll(['task_id' => $this->getId()]);
+        }
+
+        return $this->taskLikes;
     }
 
     /**
@@ -242,18 +277,45 @@ class TaskEntity
      */
     public function getComments()
     {
-        return CommentRepository::instance()->findAll(['task_id' => $this->getId()]);
+        if($this->comments === null)
+        {
+            $this->comments = CommentRepository::instance()->findAll(['task_id' => $this->getId()]);
+        }
+
+        return $this->comments;
+    }
+
+    /**
+     * @return TaskEntity
+     */
+    public function getParent()
+    {
+        if($this->parent === null)
+        {
+            $this->parent = TaskRepository::instance()->findOne(['id' => $this->getParentId()]);
+        }
+
+        return $this->parent;
     }
 
 
     // #################### SECTION OF LOGIC ######################
+
 
     /**
      * @return false|string
      */
     public function getCreatedDate()
     {
-        return date(self::DATE_FORMAT, $this->createdAt);
+        return ($this->createdAt !== null) ? date(self::DATE_FORMAT, $this->createdAt) : self::DATE_ERROR_MESSAGE;
+    }
+
+    /**
+     * @return false|string
+     */
+    public function getUpdatedDate()
+    {
+        return ($this->updatedAt !== null) ? date(self::DATE_FORMAT, $this->updatedAt) : self::DATE_ERROR_MESSAGE;
     }
 
     /**
@@ -261,22 +323,22 @@ class TaskEntity
      */
     public function getPlannedEndDate()
     {
-        return date(self::DATE_FORMAT, $this->plannedEndAt);
+        return ($this->plannedEndAt !== null) ? date(self::DATE_FORMAT, $this->plannedEndAt) : self::DATE_ERROR_MESSAGE;
     }
 
     /**
-     * @return mixed
+     * @return false|string
      */
     public function getEndDate()
     {
-        return date(self::DATE_FORMAT, $this->endAt);
+        return ($this->endAt !== null) ? date(self::DATE_FORMAT, $this->endAt) : self::DATE_ERROR_MESSAGE;
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
     public function getStatusAsText()
     {
-        return self::LIST_STATUSES_AS_TEXT[$this->status] ?? 'статус не определен';
+        return self::LIST_STATUSES_AS_TEXT[$this->status] ?? self::STATUS_ERROR_MESSAGE;
     }
 }

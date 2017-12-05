@@ -5,6 +5,7 @@ namespace console\controllers;
 use yii\console\Controller;
 use Yii;
 use yii\base\Module;
+use yii\db\Exception;
 
 class DataController extends Controller
 {
@@ -54,10 +55,13 @@ class DataController extends Controller
         $projectIds['vk'] = $this->addProject('Вконтакте', $companyIds['eCompanyId']);
         $projectIds['xabr'] = $this->addProject('Хабрахабр', $companyIds['eCompanyId']);
 
-        $userIds['evgeniy'] = $this->addUser('evgeniy','123456','evgeniy@mail.ru');
-        $userIds['admin'] = $this->addDirector('admin','123456','admin@mail.ru',
+        $userIds['evgeniy'] = $this->addUser('evgeniy95','123456','evgeniy@mail.ru',
                                                 '89131841102','Евгений', 'Просветов', 'Игоревич');
-        $userIds['edirector'] = $this->addDirector('edirector','123456','edirector@mail.ru',
+
+        $userIds['admin'] = $this->addUser('admin','123456','admin@mail.ru',
+                                                '89131841102','Евгений', 'Просветов', 'Игоревич');
+
+        $userIds['edirector'] = $this->addUser('edirector','123456','edirector@mail.ru',
             '89131841102','edirector_first_name', 'edirector_second_name', 'edirector_last_name');
 
         $participantIds['evgeniyStub'] = $this->addParticipantStub($userIds['evgeniy']);
@@ -92,9 +96,9 @@ class DataController extends Controller
         $tasksIds['secondTask'] = $this->addTask('Вторая задача','Текст второй задачи', $userIds['evgeniy'], $projectIds['vk'], 0);
         $tasksIds['thirdTask'] = $this->addTask('Третья задача','Текст третьей задачи', $userIds['evgeniy'], $projectIds['xabr'], 0);
         $tasksIds['fourthTask'] = $this->addTask('Вторая задача','Текст второй задачи', $userIds['evgeniy'], $projectIds['github'], 1);
-        $tasksIds['fifthTask'] = $this->addTask('Третья задача','Текст третьей задачи', $userIds['evgeniy'], $projectIds['github'], 2);
+        $tasksIds['fifthTask'] = $this->addTask('Третья задача','Текст третьей задачи', $userIds['evgeniy'], $projectIds['github'], 3, $tasksIds['fourthTask']);
         $tasksIds['sixthTask'] = $this->addTask('Четвертая задача','Текст четвертой задачи', $userIds['evgeniy'], $projectIds['github'], 0);
-        $tasksIds['seventhTask'] = $this->addTask('Пятая задача','Текст пятой задачи', $userIds['evgeniy'], $projectIds['github'], 3);
+        $tasksIds['seventhTask'] = $this->addTask('Пятая задача','Текст пятой задачи', $userIds['evgeniy'], $projectIds['github'], 3, $tasksIds['sixthTask']);
         $tasksIds['eightTask'] = $this->addTask('Шестая задача','Текст шестой задачи', $userIds['evgeniy'], $projectIds['github'], 0);
         $tasksIds['ninthTask'] = $this->addTask('Седьмая задача','Текст седьмой задачи', $userIds['evgeniy'], $projectIds['github'], 2);
 
@@ -136,16 +140,8 @@ class DataController extends Controller
         return $this->db->getLastInsertID('project_id_seq');
     }
 
-    private function addUser($username, $password, $email)
-    {
-        $password = Yii::$app->security->generatePasswordHash($password);
 
-        $this->db->createCommand("INSERT INTO users (username, password, email, created_at, updated_at)
-                                       VALUES ('{$username}', '{$password}', '{$email}', {$this->getTime()}, {$this->getTime()})")->execute();
-        return $this->db->getLastInsertID('users_id_seq');
-    }
-
-    private function addDirector($username, $password, $email, $phone, $firstName, $secondName, $lastName)
+    private function addUser($username, $password, $email, $phone, $firstName, $secondName, $lastName)
     {
         $password = Yii::$app->security->generatePasswordHash($password);
 
@@ -156,12 +152,19 @@ class DataController extends Controller
         return $this->db->getLastInsertID('users_id_seq');
     }
 
-    private function addTask($title, $content, $authorId, $projectId, $status)
+    private function addTask($title, $content, $authorId, $projectId, $status, $parentId = null)
     {
+        if($status === 3 && $parentId === null)
+        {
+            throw new Exception('Не указана родительская категория' . $title);
+        }
+
+        $parentId = $parentId ?? 'NULL';
+
         $plannedEndAt = $this->getTime() + 200000;
 
-        $this->db->createCommand("INSERT INTO task (title, content, author_id, project_id, status, planned_end_at ,created_at, updated_at) VALUES
-                                      ('{$title}', '{$content}', {$authorId}, {$projectId}, {$status},{$plannedEndAt},{$this->getTime()}, {$this->getTime()})")
+        $this->db->createCommand("INSERT INTO task (title, content, author_id, project_id, status, planned_end_at,parent_id, created_at, updated_at) VALUES
+                                      ('{$title}', '{$content}', {$authorId}, {$projectId}, {$status},{$plannedEndAt}, {$parentId},{$this->getTime()}, {$this->getTime()})")
                                 ->execute();
 
         return $this->db->getLastInsertID('task_id_seq');
