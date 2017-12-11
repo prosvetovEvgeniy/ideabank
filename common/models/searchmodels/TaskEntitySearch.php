@@ -101,13 +101,15 @@ class TaskEntitySearch extends Model implements EntitySearchInterface
     {
         $this->load($params);
 
-        if(!$this->validate())
+        $condition = [];
+
+        if($this->validate())
         {
-            throw new NotFoundHttpException;
+            $condition = $this->buildCondition();
         }
 
         $dataProvider = new EntityDataProvider([
-            'condition' => $this->buildCondition(),
+            'condition' => $condition,
             'repositoryInstance' => TaskRepository::instance(),
             'pagination' => [
                 'pageSize' => $pageSize

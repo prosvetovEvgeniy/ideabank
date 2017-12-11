@@ -154,48 +154,6 @@ class ProjectEntity
 
     // #################### SECTION OF LOGIC ######################
 
-
-    /**
-     * @param int|null $limit
-     * @param int|null $offset
-     * @return TaskEntity[]
-     */
-    public function getCompletedTasks(int $limit = null, int $offset = null)
-    {
-        return $this->taskRepository->findCompletedTasks($this, $limit, $offset);
-    }
-
-    /**
-     * @param int|null $limit
-     * @param int|null $offset
-     * @return TaskEntity[]
-     */
-    public function getNotCompletedTasks(int $limit = null, int $offset = null)
-    {
-        return $this->taskRepository->findNotCompletedTasks($this, $limit, $offset);
-    }
-
-    /**
-     * @param int|null $limit
-     * @param int|null $offset
-     * @return TaskEntity[]
-     */
-    public function getMergedTasks(int $limit = null, int $offset = null)
-    {
-        return $this->taskRepository->findMergedTasks($this, $limit, $offset);
-    }
-
-    /**
-     * @param UserEntity $user
-     * @param int|null $limit
-     * @param int|null $offset
-     * @return TaskEntity[]
-     */
-    public function getTasksByAuthor(UserEntity $user, int $limit = null, int $offset = null)
-    {
-        return $this->taskRepository->findTasksByAuthor($this, $user, $limit, $offset);
-    }
-
     /**
      * @return int
      */

@@ -290,7 +290,7 @@ class TaskEntity
      */
     public function getParent()
     {
-        if($this->parent === null)
+        if($this->parent === null && $this->parentId !== null)
         {
             $this->parent = TaskRepository::instance()->findOne(['id' => $this->getParentId()]);
         }

@@ -164,6 +164,8 @@ class UserRepository
     }
 
     /**
+     * Создает экземпляр сущности
+     *
      * @param Users $model
      * @return UserEntity
      */

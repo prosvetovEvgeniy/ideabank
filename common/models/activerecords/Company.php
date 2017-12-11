@@ -76,20 +76,4 @@ class Company extends \yii\db\ActiveRecord
             'deleted' => 'Deleted'
         ];
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getParticipants()
-    {
-        return $this->hasMany(Participant::className(), ['company_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProjects()
-    {
-        return $this->hasMany(Project::className(), ['company_id' => 'id']);
-    }
 }

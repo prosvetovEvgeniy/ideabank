@@ -19,7 +19,9 @@ class EntityDataProvider extends BaseDataProvider
             return [];
         }
 
-        if(($pagination = $this->getPagination()) !== false)
+        $pagination = $this->getPagination();
+
+        if($pagination !== false)
         {
             $pagination->totalCount = $this->getTotalCount();
 

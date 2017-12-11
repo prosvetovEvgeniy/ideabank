@@ -4,13 +4,13 @@ namespace common\models\repositories;
 
 
 use common\models\activerecords\CommentLike;
+use common\models\entities\CommentEntity;
 use common\models\entities\CommentLikeEntity;
 use yii\db\Exception;
 use Yii;
 
 class CommentLikeRepository
 {
-
     // #################### STANDARD METHODS ######################
 
     /**
@@ -182,5 +182,21 @@ class CommentLikeRepository
 
     // #################### UNIQUE METHODS OF CLASS ######################
 
+    /**
+     * @param CommentEntity $comment
+     * @return int
+     */
+    public function getAmountLikes(CommentEntity $comment)
+    {
+        return CommentLike::find()->where(['comment_id' => $comment->getId(), 'liked' => true])->count();
+    }
 
+    /**
+     * @param CommentEntity $comment
+     * @return int
+     */
+    public function getAmountDislikes(CommentEntity $comment)
+    {
+        return CommentLike::find()->where(['comment_id' => $comment->getId(), 'liked' => false])->count();
+    }
 }

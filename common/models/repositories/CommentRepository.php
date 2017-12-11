@@ -5,6 +5,7 @@ namespace common\models\repositories;
 
 use common\models\activerecords\Comment;
 use common\models\entities\CommentEntity;
+use common\models\entities\TaskEntity;
 use yii\db\Exception;
 use Yii;
 
@@ -51,11 +52,11 @@ class CommentRepository
      * Возвращает массив сущностей по условию
      *
      * @param array $condition
-     * @param int|null $offset
      * @param int|null $limit
+     * @param int|null $offset
      * @return CommentEntity[]
      */
-    public function findAll(array $condition, int $offset = null, int $limit = null)
+    public function findAll(array $condition, int $limit = 20, int $offset = null)
     {
         $models = Comment::find()->where($condition)->offset($offset)->limit($limit)->all();
 
@@ -154,7 +155,7 @@ class CommentRepository
         $model->task_id = $comment->getTaskId();
         $model->sender_id = $comment->getSenderId();
         $model->content = $comment->getContent();
-        $model->comment_id = $comment->getCommentId();
+        $model->parent_id = $comment->getParentId();
         $model->private = $comment->getPrivate();
     }
 
@@ -166,7 +167,7 @@ class CommentRepository
      */
     protected function buildEntity(Comment $model)
     {
-        return new CommentEntity($model->task_id, $model->sender_id,$model->content, $model->comment_id,
+        return new CommentEntity($model->task_id, $model->sender_id,$model->content, $model->parent_id,
                                  $model->private, $model->id, $model->created_at, $model->updated_at,
                                  $model->deleted);
     }
@@ -198,4 +199,12 @@ class CommentRepository
     // #################### UNIQUE METHODS OF CLASS ######################
 
 
+    /**
+     * @param string $condition
+     * @return int
+     */
+    public function getTotalCountByCondition(array $condition)
+    {
+        return Comment::find()->where($condition)->count();
+    }
 }

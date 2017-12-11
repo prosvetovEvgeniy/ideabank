@@ -3,6 +3,7 @@
 use common\components\dataproviders\EntityDataProvider;
 use yii\helpers\Html;
 use common\models\searchmodels\TaskEntitySearch;
+use common\models\entities\TaskEntity;
 
 /**
  * @var EntityDataProvider $dataProvider
@@ -52,7 +53,7 @@ use common\models\searchmodels\TaskEntitySearch;
                 [
                     'attribute' => 'title',
                     'header' => 'Заголовок',
-                    'value' => function($task) {
+                    'value' => function(TaskEntity $task) {
                         return Html::a($task->getTitle(), ['task/view', 'taskId' => $task->getId()]);
                     },
                     'format' => 'html'
@@ -60,17 +61,23 @@ use common\models\searchmodels\TaskEntitySearch;
                 [
                     'attribute' => 'status',
                     'header' => 'Статус',
-                    'value' => function($task) { return $task->getStatusAsText(); },
+                    'value' => function(TaskEntity $task) { return $task->getStatusAsText(); },
                 ],
                 [
                     'attribute' => 'creationDate',
                     'header' => 'Дата создания',
-                    'value' => function($task) { return $task->getCreatedDate(); }
+                    'value' => function(TaskEntity $task) {
+                        return Html::tag('code', $task->getCreatedDate());
+                    },
+                    'format' => 'html'
                 ],
                 [
                     'attribute' => 'plannedEndDate',
                     'header' => 'Планируемая дата завершения',
-                    'value' => function($task) { return $task->getPlannedEndDate(); }
+                    'value' => function(TaskEntity $task) {
+                        return Html::tag('code', $task->getPlannedEndDate());
+                    },
+                    'format' => 'html'
                 ],
             ]
         ]);

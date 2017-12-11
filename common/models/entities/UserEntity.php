@@ -239,6 +239,7 @@ class UserEntity
         {
             $this->participants = ParticipantRepository::instance()->findAll(['user_id' => $this->getId()]);
         }
+
         return $this->participants;
     }
 

@@ -10,6 +10,7 @@ use common\models\repositories\UserRepository;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
+use yii\db\Exception;
 use yii\web\IdentityInterface;
 use yii\behaviors\TimestampBehavior;
 
@@ -85,6 +86,7 @@ class Participant extends ActiveRecord implements IdentityInterface
     public static function findByUsername($username)
     {
         $user =  Users::findOne(['username' => $username]);
+
         return static::findOne(['user_id' => $user->id, 'company_id' => null]);
     }
 

@@ -71,20 +71,4 @@ class CommentLike extends \yii\db\ActiveRecord
             'updated_at' => 'Updated At',
         ];
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getComment()
-    {
-        return $this->hasOne(Comment::className(), ['id' => 'comment_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUser()
-    {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
-    }
 }

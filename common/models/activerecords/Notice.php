@@ -74,12 +74,4 @@ class Notice extends \yii\db\ActiveRecord
             'viewed' => 'Viewed',
         ];
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getRecipient()
-    {
-        return $this->hasOne(Users::className(), ['id' => 'recipient_id']);
-    }
 }

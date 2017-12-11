@@ -4,9 +4,3 @@ modules:
     enabled:
         - Yii2:
             part: [orm, fixtures]
-        - Db:
-            dsn: 'pgsql:host=localhost;dbname=idea_bank_test'
-            user: 'evgeniy'
-            password: '12345'
-            populate: false # run populator before all tests
-            cleanup: false # run populator before each test

@@ -7,19 +7,24 @@ use common\models\repositories\CommentRepository;
 
 class CommentRepositoryTest extends BaseRepositoryTest
 {
+    /**
+     * @var \common\tests\UnitTester
+     */
+    protected $tester;
+
     /** @var array */
     protected $data = [
         'taskId'    => 1,
         'senderId'  => 1,
         'content'   => 'Hello World',
-        'commentId' => null,
+        'parentId' => null,
         'private'   => false,
     ];
 
     /** @var array */
     protected $dataForSetters = [
         'content'   => 'new Content',
-        'commentId' => 1,
+        'parentId' => 1,
         'private'   => true,
     ];
     
@@ -47,7 +52,7 @@ class CommentRepositoryTest extends BaseRepositoryTest
                 $this->data['taskId'],
                 $this->data['senderId'],
                 $this->data['content'],
-                $this->data['commentId'],
+                $this->data['parentId'],
                 $this->data['private']
             )
         );
@@ -63,13 +68,13 @@ class CommentRepositoryTest extends BaseRepositoryTest
                 $this->data['taskId'],
                 $this->data['senderId'],
                 $this->data['content'],
-                $this->data['commentId'],
+                $this->data['parentId'],
                 $this->data['private']
             )
         );
 
         $comment->setContent($this->dataForSetters['content']);
-        $comment->setCommentId($this->dataForSetters['commentId']);
+        $comment->setParentId($this->dataForSetters['parentId']);
         $comment->setPrivate($this->dataForSetters['private']);
 
         $this->assertEquals(CommentRepository::instance()->update($comment), $comment);
@@ -83,7 +88,7 @@ class CommentRepositoryTest extends BaseRepositoryTest
                 $this->data['taskId'],
                 $this->data['senderId'],
                 $this->data['content'],
-                $this->data['commentId'],
+                $this->data['parentId'],
                 $this->data['private']
             )
         );

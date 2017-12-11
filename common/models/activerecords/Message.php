@@ -80,20 +80,4 @@ class Message extends \yii\db\ActiveRecord
             'deleted' => 'Deleted',
         ];
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSelf()
-    {
-        return $this->hasOne(Users::className(), ['id' => 'self_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCompanion()
-    {
-        return $this->hasOne(Users::className(), ['id' => 'companion_id']);
-    }
 }

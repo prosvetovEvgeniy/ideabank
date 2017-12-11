@@ -25,6 +25,7 @@ class LoginForm extends Model
         return [
             // username and password are both required
             [['username', 'password'], 'required'],
+            [['username'], 'exist','targetClass' => '\common\models\activerecords\Users', 'message' => 'Введен не существующий логин'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()

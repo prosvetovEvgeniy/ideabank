@@ -82,28 +82,4 @@ class Project extends \yii\db\ActiveRecord
             'deleted' => 'Deleted',
         ];
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getParticipants()
-    {
-        return $this->hasMany(Participant::className(), ['project_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCompany()
-    {
-        return $this->hasOne(Company::className(), ['id' => 'company_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTasks()
-    {
-        return $this->hasMany(Task::className(), ['project_id' => 'id']);
-    }
 }

@@ -17,7 +17,7 @@ class m171114_042214_create_comment_table extends Migration
             'task_id' => $this->integer()->notNull(),
             'sender_id' => $this->integer()->notNull(),
             'content' => $this->string(2000)->notNull(),
-            'comment_id' => $this->integer()->defaultValue(null),
+            'parent_id' => $this->integer()->defaultValue(null),
             'private' => $this->boolean()->defaultValue(false),
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),
@@ -26,7 +26,7 @@ class m171114_042214_create_comment_table extends Migration
 
         $this->addForeignKey('comment_task_id_fk', 'comment', 'task_id','task','id');
         $this->addForeignKey('comment_users_id_fk', 'comment', 'sender_id','users','id');
-        $this->addForeignKey('comment_comment_id_fk', 'comment', 'comment_id','comment','id');
+        $this->addForeignKey('comment_parent_id_fk', 'comment', 'parent_id','comment','id');
 
         $this->createIndex('comment_task_id_index', 'comment', 'task_id');
     }
@@ -40,7 +40,7 @@ class m171114_042214_create_comment_table extends Migration
 
         $this->dropForeignKey('comment_task_id_fk', 'comment');
         $this->dropForeignKey('comment_users_id_fk', 'comment');
-        $this->dropForeignKey('comment_comment_id_fk', 'comment');
+        $this->dropForeignKey('comment_parent_id_fk', 'comment');
 
         $this->dropTable('comment');
     }

@@ -3,6 +3,8 @@
 namespace frontend\controllers;
 
 
+use common\components\dataproviders\EntityDataProvider;
+use common\models\repositories\CommentRepository;
 use common\models\repositories\ParticipantRepository;
 use common\models\repositories\TaskRepository;
 use common\models\searchmodels\TaskEntitySearch;
@@ -35,13 +37,23 @@ class TaskController extends Controller
         {
             $task = TaskRepository::instance()->findOne(['id' => Yii::$app->request->get('taskId')]);
         }
-        catch (Exception $e)
-        {
+        catch (Exception $e) {
             throw new NotFoundHttpException();
         }
 
+        $dataProvider = new EntityDataProvider([
+            'condition' => [
+                'task_id' => $task->getId()
+            ],
+            'repositoryInstance' => CommentRepository::instance(),
+            'pagination' => [
+                'pageSize' => 50
+            ]
+        ]);
+
         return $this->render('view',[
-            'task'   => $task,
+            'task'         => $task,
+            'dataProvider' => $dataProvider
         ]);
     }
 

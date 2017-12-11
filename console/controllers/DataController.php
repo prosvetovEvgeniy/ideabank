@@ -40,6 +40,7 @@ class DataController extends Controller
         $userIds = [];
         $participantIds = [];
         $tasksIds = [];
+
         $commentsIds = [];
         $taskLikesIds = [];
         $commentLikeIds = [];
@@ -47,15 +48,26 @@ class DataController extends Controller
         $noticeIds = [];
 
 
+        //############### FILLING COMPANIES ###############
+
+
         $companyIds['infSysId'] = $this->addCompany('Современные информационные системы');
         $companyIds['eCompanyId'] = $this->addCompany('E-company');
+
+
+        //############### FILLING PROJECTS ###############
+
 
         $projectIds['vulcan'] = $this->addProject('Вулкан-М', $companyIds['infSysId']);
         $projectIds['github'] = $this->addProject('Github', $companyIds['eCompanyId']);
         $projectIds['vk'] = $this->addProject('Вконтакте', $companyIds['eCompanyId']);
         $projectIds['xabr'] = $this->addProject('Хабрахабр', $companyIds['eCompanyId']);
 
-        $userIds['evgeniy'] = $this->addUser('evgeniy95','123456','evgeniy@mail.ru',
+
+        //############### FILLING USERS ###############
+
+
+        $userIds['evgeniy'] = $this->addUser('evgeniy','123456','evgeniy@mail.ru',
                                                 '89131841102','Евгений', 'Просветов', 'Игоревич');
 
         $userIds['admin'] = $this->addUser('admin','123456','admin@mail.ru',
@@ -63,6 +75,10 @@ class DataController extends Controller
 
         $userIds['edirector'] = $this->addUser('edirector','123456','edirector@mail.ru',
             '89131841102','edirector_first_name', 'edirector_second_name', 'edirector_last_name');
+
+
+        //############### FILLING PARTICIPANTS ###############
+
 
         $participantIds['evgeniyStub'] = $this->addParticipantStub($userIds['evgeniy']);
         $participantIds['evgeniyGithub'] = $this->addParticipant($userIds['evgeniy'], $companyIds['eCompanyId'], $projectIds['github']);
@@ -79,6 +95,10 @@ class DataController extends Controller
         $participantIds['edirectorVk'] = $this->addParticipant($userIds['edirector'], $companyIds['eCompanyId'], $projectIds['vk']);
         $participantIds['edirectorXabr'] = $this->addParticipant($userIds['edirector'], $companyIds['eCompanyId'], $projectIds['xabr']);
 
+
+        //############### FILLING AUTH ###############
+
+
         $user = $auth->getRole('user');
         $director = $auth->getRole('projectDirector');
 
@@ -92,6 +112,10 @@ class DataController extends Controller
         $auth->assign($director,$participantIds['edirectorVk']);
         $auth->assign($director,$participantIds['edirectorXabr']);
 
+
+        //############### FILLING TASKS ###############
+
+
         $tasksIds['firstTask'] = $this->addTask('Первая задача','Текст первой задачи', $userIds['evgeniy'], $projectIds['github'], 0);
         $tasksIds['secondTask'] = $this->addTask('Вторая задача','Текст второй задачи', $userIds['evgeniy'], $projectIds['vk'], 0);
         $tasksIds['thirdTask'] = $this->addTask('Третья задача','Текст третьей задачи', $userIds['evgeniy'], $projectIds['xabr'], 0);
@@ -103,28 +127,78 @@ class DataController extends Controller
         $tasksIds['ninthTask'] = $this->addTask('Седьмая задача','Текст седьмой задачи', $userIds['evgeniy'], $projectIds['github'], 2);
 
 
-        $commentsIds['firstComment'] = $this->addComment($tasksIds['firstTask'], $userIds['evgeniy'],'Первый комментарий');
-        $commentsIds['secondComment'] = $this->addComment($tasksIds['secondTask'], $userIds['evgeniy'],'Второй комментарий', $commentsIds['firstComment']);
-        $commentsIds['thirdComment'] = $this->addComment($tasksIds['thirdTask'], $userIds['evgeniy'],'Третьи комментарий');
+        //############### FILLING COMMENTS ###############
+
+        $commentsIds = $this->generateComments($tasksIds['firstTask'], $userIds['evgeniy'], 100);
+
+
+        //############### FILLING TASKLIKES ###############
+
 
         $taskLikesIds['firstLikeToFirstTask'] = $this->addLikeToTask($tasksIds['firstTask'], $userIds['evgeniy'], true);
         $taskLikesIds['firstLikeToSecondTask'] = $this->addLikeToTask($tasksIds['secondTask'], $userIds['evgeniy'], true);
         $taskLikesIds['firstDislikeToThirdTask'] = $this->addLikeToTask($tasksIds['thirdTask'], $userIds['evgeniy'], false);
 
-        $commentLikeIds['firstLikeToFirstComment'] = $this->addLikeToComment($commentsIds['firstComment'], $userIds['evgeniy'], true);
-        $commentLikeIds['firstLikeToSecondComment'] = $this->addLikeToComment($commentsIds['secondComment'], $userIds['evgeniy'], true);
-        $commentLikeIds['firstDislikeToThirdComment'] = $this->addLikeToComment($commentsIds['secondComment'], $userIds['evgeniy'], false);
+
+        //############### FILLING COMMENTLIKES ###############
+
+
+        $commentLikeIds['firstLikeToFirstComment'] = $this->addLikeToComment($commentsIds['1comment'], $userIds['evgeniy'], true);
+        $commentLikeIds['firstLikeToSecondComment'] = $this->addLikeToComment($commentsIds['2comment'], $userIds['evgeniy'], true);
+
+
+        //############### FILLING MESSAGES ###############
+
 
         $messageIds['fromEvgeniyToEdirector'] = $this->addMessage($userIds['evgeniy'], $userIds['edirector'],true,'Привет');
         $messageIds['fromEdirectorToEvgeniy'] = $this->addMessage($userIds['edirector'], $userIds['evgeniy'],false,'Привет');
         $messageIds['fromEdirectorToEvgeniy'] = $this->addMessage($userIds['edirector'], $userIds['evgeniy'],true,'Пока');
         $messageIds['fromEvgeniyToEdirector'] = $this->addMessage($userIds['evgeniy'], $userIds['edirector'],false,'Пока');
 
+
+        //############### FILLING NOTICES ###############
+
+
         $noticeIds['firstNoticeToEvgeniy'] = $this->addNotice($userIds['evgeniy'], 'Первая заметка', false);
         $noticeIds['secondNoticeToEvgeniy'] = $this->addNotice($userIds['evgeniy'], 'Вторая заметка', true);
         $noticeIds['thirdNoticeToEvgeniy'] = $this->addNotice($userIds['evgeniy'], 'Третья заметка', false);
 
         $this->stdout("\nTest data was init\n");
+    }
+
+    private function generateComments($taskId, $senderId, $amount = 500)
+    {
+        $commentsIds = [];
+
+        $lines[] = ['id' => 1, 'content' => '1 comment comment comment comment comment comment', 'parentId' => null];
+
+        for ($i = 2; $i < $amount; $i++)
+        {
+            $probability = rand(0,1000)/1000;
+
+            if($probability < 0.10)
+            {
+                $lines[] = ['id' => $i, 'content' => $i . ' comment comment comment comment comment comment', 'parentId' => null];
+            }
+            else
+            {
+                $key = array_rand($lines, 1);
+
+                $lines[] = ['id' => $i, 'content' => $i . ' comment comment comment comment comment comment', 'parentId' => $lines[$key]['id']];
+            }
+        }
+
+        foreach ($lines as $line)
+        {
+            $parentId = $line['parentId'] ?? 'NULL';
+
+            $this->db->createCommand("INSERT INTO comment (task_id, sender_id, content, parent_id, created_at, updated_at) VALUES 
+                                      ({$taskId}, {$senderId}, '{$line['content']}', {$parentId},{$this->getTime()}, {$this->getTime()})")->execute();
+
+            $commentsIds[$line['id'] . 'comment'] = $this->db->getLastInsertID('comment_id_seq');
+        }
+
+        return $commentsIds;
     }
 
     private function addCompany($name)
@@ -170,11 +244,11 @@ class DataController extends Controller
         return $this->db->getLastInsertID('task_id_seq');
     }
 
-    public function addComment($taskId, $senderId, $content, $commentId = null)
+    public function addComment($taskId, $senderId, $content, $parentId = null)
     {
-        $commentId = $commentId ?? 'NULL';
+        $parentId = $parentId ?? 'NULL';
         $this->db->createCommand("INSERT INTO comment (task_id, sender_id, content, comment_id,created_at, updated_at) VALUES 
-                                      ({$taskId}, {$senderId}, '{$content}', {$commentId},{$this->getTime()}, {$this->getTime()})")->execute();
+                                      ({$taskId}, {$senderId}, '{$content}', {$parentId},{$this->getTime()}, {$this->getTime()})")->execute();
 
         return $this->db->getLastInsertID('comment_id_seq');
     }
@@ -188,11 +262,11 @@ class DataController extends Controller
         return $this->db->getLastInsertID('task_like_id_seq');
     }
 
-    public function addLikeToComment($commentId, $userId, $liked)
+    public function addLikeToComment($parentId, $userId, $liked)
     {
         $liked = $liked ? 'true' : 'false';
         $this->db->createCommand("INSERT INTO comment_like (comment_id, user_id, liked, created_at, updated_at) VALUES 
-                                      ({$commentId}, {$userId}, {$liked}, {$this->getTime()}, {$this->getTime()})")->execute();
+                                      ({$parentId}, {$userId}, {$liked}, {$this->getTime()}, {$this->getTime()})")->execute();
 
         return $this->db->getLastInsertID('comment_like_id_seq');
     }

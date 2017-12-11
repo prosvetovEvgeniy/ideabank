@@ -5,7 +5,6 @@ namespace common\tests\models\entities;
 use common\models\entities\CommentEntity;
 use common\models\entities\CommentLikeEntity;
 use common\models\entities\TaskEntity;
-use common\models\entities\TaskLikeEntity;
 use common\models\entities\UserEntity;
 use common\models\repositories\CommentRepository;
 
@@ -25,7 +24,7 @@ class CommentEntityTest extends \Codeception\Test\Unit
         'taskId'    => 1,
         'senderId'  => 1,
         'content'   => 'Hello World',
-        'commentId' => null,
+        'parentId' => null,
         'private'   => false,
         'createdAt' => 1511431761,
         'updatedAt' => 1511431761,
@@ -35,7 +34,7 @@ class CommentEntityTest extends \Codeception\Test\Unit
     /** @var array */
     protected $dataForSetters = [
         'content'   => 'new Content',
-        'commentId' => 1,
+        'parentId' => 1,
         'private'   => true,
     ];
 
@@ -45,7 +44,7 @@ class CommentEntityTest extends \Codeception\Test\Unit
             $this->data['taskId'],
             $this->data['senderId'],
             $this->data['content'],
-            $this->data['commentId'],
+            $this->data['parentId'],
             $this->data['private'],
             $this->data['id'],
             $this->data['createdAt'],
@@ -81,9 +80,9 @@ class CommentEntityTest extends \Codeception\Test\Unit
         $this->assertEquals($this->comment->getContent(), $this->data['content']);
     }
 
-    public function testGetCommentId()
+    public function testGetParentId()
     {
-        $this->assertEquals($this->comment->getCommentId(), $this->data['commentId']);
+        $this->assertEquals($this->comment->getParentId(), $this->data['parentId']);
     }
 
     public function testGetPrivate()
@@ -116,28 +115,28 @@ class CommentEntityTest extends \Codeception\Test\Unit
         $this->assertEquals($this->comment->getContent(), $this->dataForSetters['content']);
     }
 
-    public function testSetCommentId()
+    public function testSetParentId()
     {
-        $this->comment->setContent($this->dataForSetters['commentId']);
+        $this->comment->setParentId($this->dataForSetters['parentId']);
 
-        $this->assertEquals($this->comment->getContent(), $this->dataForSetters['commentId']);
+        $this->assertEquals($this->comment->getParentId(), $this->dataForSetters['parentId']);
     }
 
     public function testSetPrivate()
     {
-        $this->comment->setContent($this->dataForSetters['private']);
+        $this->comment->setPrivate($this->dataForSetters['private']);
 
-        $this->assertEquals($this->comment->getContent(), $this->dataForSetters['private']);
+        $this->assertEquals($this->comment->getPrivate(), $this->dataForSetters['private']);
     }
 
 
     // #################### TESTS OF RELATIONS ######################
 
-    public function testGetCommentCheckOnClassName()
+    public function testGetParentCheckOnClassName()
     {
         $comment = CommentRepository::instance()->findOne(['id' => 2]);
 
-        $this->assertEquals(get_class($comment->getComment()), CommentEntity::class);
+        $this->assertEquals(get_class($comment->getParent()), CommentEntity::class);
     }
 
     public function testGetTaskCheckOnClassName()

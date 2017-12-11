@@ -57,10 +57,8 @@ class TaskRepository
      * @param int|null $offset
      * @return TaskEntity[]
      */
-    public function findAll(array $condition, int $limit = null, int $offset = null)
+    public function findAll(array $condition, int $limit = 20, int $offset = null)
     {
-        $limit = $limit ?? 20;
-
         $models = Task::find()->where($condition)->offset($offset)->limit($limit)->all();
 
         return $this->buildEntities($models);
@@ -208,67 +206,6 @@ class TaskRepository
 
 
     /**
-     * Возвращает массив сущностей завершенных задач
-     *
-     * @param ProjectEntity $project
-     * @param int|null $limit
-     * @param int|null $offset
-     * @return TaskEntity[]
-     */
-    public function findCompletedTasks(ProjectEntity $project, int $limit = null, int $offset = null)
-    {
-        $condition = $this->getConditionOnCompletedTasks($project);
-
-        return $this->findAll($condition, $offset, $limit);
-    }
-
-    /**
-     * Возвращает массив сущностей не завершенных задач
-     *
-     * @param ProjectEntity $project
-     * @param int|null $limit
-     * @param int|null $offset
-     * @return TaskEntity[]
-     */
-    public function findNotCompletedTasks(ProjectEntity $project, int $limit = null, int $offset = null)
-    {
-        $condition = $this->getConditionOnNotCompletedTasks($project);
-
-        return $this->findAll($condition, $offset, $limit);
-    }
-
-    /**
-     * Возвращает массив сущностей объединенных задач
-     *
-     * @param ProjectEntity $project
-     * @param int|null $limit
-     * @param int|null $offset
-     * @return TaskEntity[]
-     */
-    public function findMergedTasks(ProjectEntity $project, int $limit = null, int $offset = null)
-    {
-        $condition = $this->getConditionOnMergedTasks($project);
-
-        return $this->findAll($condition, $offset, $limit);
-    }
-
-    /**
-     * Возвращает задачи созданные определенным пользователем
-     *
-     * @param ProjectEntity $project
-     * @param UserEntity $user
-     * @param int|null $limit
-     * @param int|null $offset
-     * @return TaskEntity[]
-     */
-    public function findTasksByAuthor(ProjectEntity $project, UserEntity $user, int $limit = null, int $offset = null)
-    {
-        $condition = $this->getConditionByAuthorForProject($project, $user);
-
-        return $this->findAll($condition, $offset, $limit);
-    }
-
-    /**
      * @param ProjectEntity $project
      * @return int
      */
@@ -321,6 +258,15 @@ class TaskRepository
     {
         $condition = $this->getConditionByAuthorForProject($project, $user);
 
+        return Task::find()->where($condition)->count();
+    }
+
+    /**
+     * @param array $condition
+     * @return int|string
+     */
+    public function getTotalCountByCondition(array $condition)
+    {
         return Task::find()->where($condition)->count();
     }
 
@@ -388,14 +334,5 @@ class TaskRepository
             'author_id' => $user->getId(),
             'deleted' => false
         ];
-    }
-
-    /**
-     * @param array $condition
-     * @return int|string
-     */
-    public function getTotalCountByCondition(array $condition)
-    {
-        return Task::find()->where($condition)->count();
     }
 }

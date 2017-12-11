@@ -1,6 +1,8 @@
 <?php
 
 namespace common\models\entities;
+
+
 use common\models\repositories\CommentLikeRepository;
 use common\models\repositories\CommentRepository;
 use common\models\repositories\TaskRepository;
@@ -14,16 +16,17 @@ use common\models\repositories\UserRepository;
  * @property int $taskId
  * @property int $senderId
  * @property string  $content
- * @property int $commentId
+ * @property int $parentId
  * @property bool $private
  * @property int $createdAt
  * @property int $updatedAt
  * @property bool $deleted
 
- * @property CommentEntity       $comment
+ * @property CommentEntity       $parent
  * @property TaskEntity          $task
  * @property UserEntity          $user
  * @property CommentLikeEntity[] $commentLikes
+ *
  */
 class CommentEntity
 {
@@ -31,17 +34,18 @@ class CommentEntity
     protected $taskId;
     protected $senderId;
     protected $content;
-    protected $commentId;
+    protected $parentId;
     protected $private;
     protected $createdAt;
     protected $updatedAt;
     protected $deleted;
 
     //кеш связанных сущностей
-    protected $comment;
+    protected $parent;
     protected $task;
     protected $user;
     protected $commentLikes;
+
 
     /**
      * CommentEntity constructor.
@@ -49,13 +53,13 @@ class CommentEntity
      * @param int $senderId
      * @param string $content
      * @param int|null $id
-     * @param int|null $commentId
+     * @param int|null $parentId
      * @param bool|null $private
      * @param int|null $createdAt
      * @param int|null $updatedAt
      * @param bool|null $deleted
      */
-    public function __construct(int $taskId, int $senderId, string $content,int $commentId = null,
+    public function __construct(int $taskId, int $senderId, string $content,int $parentId = null,
                                 bool $private = null, int $id = null, int $createdAt = null,
                                 int $updatedAt = null, bool $deleted = null)
     {
@@ -63,7 +67,7 @@ class CommentEntity
         $this->taskId = $taskId;
         $this->senderId = $senderId;
         $this->content = $content;
-        $this->commentId = $commentId;
+        $this->parentId = $parentId;
         $this->private = $private;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
@@ -96,7 +100,7 @@ class CommentEntity
     /**
      * @return int | null
      */
-    public function getCommentId() { return $this->commentId; }
+    public function getParentId() { return $this->parentId; }
 
     /**
      * @return bool | null
@@ -129,7 +133,7 @@ class CommentEntity
     /**
      * @param int $value
      */
-    public function setCommentId (int $value) { $this->commentId = $value; }
+    public function setParentId (int $value) { $this->parentId = $value; }
 
     /**
      * @param bool $value
@@ -141,18 +145,21 @@ class CommentEntity
 
     /**
      * @return CommentEntity
+     * @throws \yii\db\Exception
      */
-    public function getComment()
+    public function getParent()
     {
-        if($this->comment === null)
+        if($this->parent === null)
         {
-            $this->comment = CommentRepository::instance()->findOne(['id' => $this->getCommentId()]);
+            $this->parent = CommentRepository::instance()->findOne(['id' => $this->getParentId()]);
         }
-        return $this->comment;
+
+        return $this->parent;
     }
 
     /**
      * @return TaskEntity
+     * @throws \yii\db\Exception
      */
     public function getTask()
     {
@@ -166,6 +173,7 @@ class CommentEntity
 
     /**
      * @return UserEntity
+     * @throws \yii\db\Exception
      */
     public function getUser()
     {
@@ -192,4 +200,35 @@ class CommentEntity
 
 
     // #################### SECTION OF LOGIC ######################
+
+    /**
+     * @return int
+     */
+    public function getAmountLikes()
+    {
+        return CommentLikeRepository::instance()->getAmountLikes($this);
+    }
+
+    /**
+     * @return int
+     */
+    public function getAmountDislikes()
+    {
+        return CommentLikeRepository::instance()->getAmountDislikes($this);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

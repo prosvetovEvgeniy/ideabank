@@ -96,36 +96,4 @@ class Task extends \yii\db\ActiveRecord
             'deleted' => 'Deleted',
         ];
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getComments()
-    {
-        return $this->hasMany(Comment::className(), ['task_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProject()
-    {
-        return $this->hasOne(Project::className(), ['id' => 'project_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getAuthor()
-    {
-        return $this->hasOne(Users::className(), ['id' => 'author_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTaskLikes()
-    {
-        return $this->hasMany(TaskLike::className(), ['task_id' => 'id']);
-    }
 }
