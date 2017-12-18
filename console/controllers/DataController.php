@@ -142,10 +142,7 @@ class DataController extends Controller
 
         //############### FILLING COMMENTLIKES ###############
 
-
-        $commentLikeIds['firstLikeToFirstComment'] = $this->addLikeToComment($commentsIds['1comment'], $userIds['evgeniy'], true);
-        $commentLikeIds['firstLikeToSecondComment'] = $this->addLikeToComment($commentsIds['2comment'], $userIds['evgeniy'], true);
-
+        $commentLikeIds = $this->generateCommentLikes($commentsIds, $userIds['evgeniy']);
 
         //############### FILLING MESSAGES ###############
 
@@ -166,6 +163,37 @@ class DataController extends Controller
         $this->stdout("\nTest data was init\n");
     }
 
+    private function generateCommentLikes(array $commentIds, $userId)
+    {
+        $commentLikeIds = [];
+
+        $i = 0;
+
+        foreach ($commentIds as $key => $commentId)
+        {
+            $likeProbability = rand(0,1000) / 1000;
+
+            if($likeProbability <= 0.3)
+            {
+                $this->db->createCommand("INSERT INTO comment_like (comment_id, user_id, liked, created_at, updated_at) VALUES 
+                                      ({$commentId}, {$userId}, TRUE , {$this->getTime()}, {$this->getTime()})")->execute();
+
+                $commentLikeIds[$i . 'likeTo' . $key] = $this->db->getLastInsertID('comment_like_id_seq');
+            }
+            else
+            {
+                $this->db->createCommand("INSERT INTO comment_like (comment_id, user_id, liked, created_at, updated_at) VALUES 
+                                      ({$commentId}, {$userId}, FALSE , {$this->getTime()}, {$this->getTime()})")->execute();
+
+                $commentLikeIds[$i . 'dislikeTo' . $key] = $this->db->getLastInsertID('comment_like_id_seq');
+            }
+
+            $i++;
+        }
+
+        return $commentLikeIds;
+    }
+
     private function generateComments($taskId, $senderId, $amount = 500)
     {
         $commentsIds = [];
@@ -176,7 +204,7 @@ class DataController extends Controller
         {
             $probability = rand(0,1000)/1000;
 
-            if($probability < 0.10)
+            if($probability <= 0.35)
             {
                 $lines[] = ['id' => $i, 'content' => $i . ' comment comment comment comment comment comment', 'parentId' => null];
             }

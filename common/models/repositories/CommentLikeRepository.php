@@ -91,7 +91,6 @@ class CommentLikeRepository
     {
         $model = CommentLike::findOne(['id' => $commentLike->getId()]);
 
-
         if(!$model)
         {
             throw new Exception('comment_like with id = ' . $commentLike->getId() . ' does not exists');

@@ -4,6 +4,7 @@ namespace common\models\repositories;
 
 
 use common\models\activerecords\Comment;
+use common\models\activerecords\CommentView;
 use common\models\entities\CommentEntity;
 use common\models\entities\TaskEntity;
 use yii\db\Exception;
@@ -46,21 +47,6 @@ class CommentRepository
         }
 
         return $this->buildEntity($model);
-    }
-
-    /**
-     * Возвращает массив сущностей по условию
-     *
-     * @param array $condition
-     * @param int|null $limit
-     * @param int|null $offset
-     * @return CommentEntity[]
-     */
-    public function findAll(array $condition, int $limit = 20, int $offset = null)
-    {
-        $models = Comment::find()->where($condition)->offset($offset)->limit($limit)->all();
-
-        return $this->buildEntities($models);
     }
 
     /**
@@ -165,34 +151,11 @@ class CommentRepository
      * @param Comment $model
      * @return CommentEntity
      */
-    protected function buildEntity(Comment $model)
+    public function buildEntity(Comment $model)
     {
         return new CommentEntity($model->task_id, $model->sender_id,$model->content, $model->parent_id,
                                  $model->private, $model->id, $model->created_at, $model->updated_at,
                                  $model->deleted);
-    }
-
-    /**
-     * Создает экземпляры сущностей
-     *
-     * @param Comment[] $models
-     * @return CommentEntity[]
-     */
-    protected function buildEntities(array $models)
-    {
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
     }
 
 

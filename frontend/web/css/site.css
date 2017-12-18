@@ -125,12 +125,54 @@ a.desc:after {
     margin-top: 10px;
     border-width: 2px;
     border-color: black;
+    background-color: #e9e9ec;
+    border-radius: 10px;
 }
+
+/* ########## TASK RULES ##########*/
+
+.task-content{
+    padding-top: 15px;
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+    min-height: 215px;
+    background-color: rgba(239, 241, 255, 1);
+    border-radius: 10px;
+}
+
+/* ########## COMMENT FORM RULES ##########*/
+
+.comment-form{
+    margin-bottom: 30px;
+}
+
+.comment-form-parent-information{
+    display: none;
+    margin-bottom: 20px;
+}
+
+.comment-form-parent-information > p {
+    display: inline-block;
+    background-color: #D4D9DE;
+    border-radius: 7px;
+    padding: 5px;
+    font-weight: 600;
+}
+
+.comment-form-delete-parent{
+    display: inline-block;
+    font-weight: bold;
+    color: #DA5E4E;
+    cursor: pointer;
+}
+
 
 /* ########## COMMENT RULES ##########*/
 
 .comment-block .media-right
 {
+    width: 100%;
+    overflow:hidden;
     margin-left: 10px;
 }
 
@@ -145,6 +187,7 @@ a.desc:after {
 }
 
 .comment-fio{
+    float: left;
     font-weight: 600;
 }
 
@@ -155,7 +198,7 @@ a.desc:after {
 .comment-date{
     float: left;
     color: #939393;
-    margin-right: 5px;
+    margin-right: 15px;
 }
 
 .vote-down{
@@ -163,20 +206,63 @@ a.desc:after {
     cursor: pointer;
 }
 
+.text-bold{
+    font-weight: bold;
+}
+
 .vote-up{
     display: inline-block;
     cursor: pointer;
     margin-right: 10px;
 }
+
 .footer-comment-left{
     display: inline-block;
     float: left;
+}
+
+.comment-number{
+    margin-left: 70px;
 }
 
 .footer-comment-right{
     display: inline-block;
     float: left;
 }
+
+.comment-content{
+    word-wrap:break-word;
+}
+
+.comment-title{
+    display: inline-block;
+    width: 100%;
+}
+
+.comment-number{
+    float: right;
+    color: #24A10C;
+}
+
+.comment-parent{
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 2px solid #9CB09C;
+}
+
+.comment-parent .comment-parent-username{
+    margin-bottom: 10px;
+}
+
+.comment-parent .comment-parent-content{
+    color: darkgreen;
+}
+
+.comment-content{
+    word-break: break-all;
+}
+
 
 
 @media(max-width:767px) {

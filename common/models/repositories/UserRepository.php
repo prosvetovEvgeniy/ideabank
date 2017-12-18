@@ -169,7 +169,7 @@ class UserRepository
      * @param Users $model
      * @return UserEntity
      */
-    protected function buildEntity(Users $model)
+    public function buildEntity(Users $model)
     {
         return new UserEntity($model->username, $model->password, $model->email,
                               $model->phone, $model->first_name, $model->second_name,

@@ -59,7 +59,7 @@ class TaskRepository
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null)
     {
-        $models = Task::find()->where($condition)->offset($offset)->limit($limit)->all();
+        $models = Task::find()->where($condition)->offset($offset)->limit($limit)->orderBy('id')->all();
 
         return $this->buildEntities($models);
     }

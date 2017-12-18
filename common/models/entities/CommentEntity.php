@@ -27,9 +27,16 @@ use common\models\repositories\UserRepository;
  * @property UserEntity          $user
  * @property CommentLikeEntity[] $commentLikes
  *
+ * @property int $likesAmount
+ * @property int $dislikesAmount
+ * @property bool $currentUserLikedIt
+ * @property bool $currentUserDislikedIt
  */
 class CommentEntity
 {
+    protected const DATE_ERROR_MESSAGE = 'дата не определена';
+    protected const DATE_FORMAT = 'd-m-Y';
+
     protected $id;
     protected $taskId;
     protected $senderId;
@@ -46,22 +53,39 @@ class CommentEntity
     protected $user;
     protected $commentLikes;
 
+    /**
+     * поля вычисленные по
+     * таблице CommentLike
+     */
+    protected $likesAmount;
+    protected $dislikesAmount;
+    protected $currentUserLikedIt;
+    protected $currentUserDislikedIt;
+
 
     /**
      * CommentEntity constructor.
      * @param int $taskId
      * @param int $senderId
      * @param string $content
-     * @param int|null $id
      * @param int|null $parentId
      * @param bool|null $private
+     * @param int|null $id
      * @param int|null $createdAt
      * @param int|null $updatedAt
      * @param bool|null $deleted
+     * @param int $likesAmount
+     * @param int $dislikesAmount
+     * @param UserEntity|null $user
+     * @param CommentEntity|null $parent
+     * @param int|null $currentUserLikedIt
+     * @param int|null $currentUserDislikedIt
      */
     public function __construct(int $taskId, int $senderId, string $content,int $parentId = null,
                                 bool $private = null, int $id = null, int $createdAt = null,
-                                int $updatedAt = null, bool $deleted = null)
+                                int $updatedAt = null, bool $deleted = null, int $likesAmount = 0,
+                                int $dislikesAmount = 0, UserEntity $user = null, CommentEntity $parent = null,
+                                int $currentUserLikedIt = null, int $currentUserDislikedIt = null)
     {
         $this->id = $id;
         $this->taskId = $taskId;
@@ -72,6 +96,15 @@ class CommentEntity
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->deleted = $deleted;
+
+        $this->likesAmount = $likesAmount;
+        $this->dislikesAmount = $dislikesAmount;
+
+        $this->user = $user;
+        $this->parent = $parent;
+
+        $this->currentUserLikedIt = $currentUserLikedIt;
+        $this->currentUserDislikedIt = $currentUserDislikedIt;
     }
 
 
@@ -122,8 +155,29 @@ class CommentEntity
      */
     public function getDeleted() { return $this->deleted; }
 
+    /**
+     * @return int
+     */
+    public function getLikesAmount() { return $this->likesAmount; }
+
+    /**
+     * @return int
+     */
+    public function getDislikesAmount() { return $this->dislikesAmount; }
+
+    /**
+     * @return int | null
+     */
+    public function getCurrentUserLikedIt() { return $this->currentUserLikedIt; }
+
+    /**
+     * @return int | null
+     */
+    public function getCurrentUserDislikedIt() { return $this->currentUserDislikedIt; }
+
 
     // #################### SECTION OF SETTERS ######################
+
 
     /**
      * @param string $value
@@ -142,6 +196,7 @@ class CommentEntity
 
 
     // #################### SECTION OF RELATIONS ######################
+
 
     /**
      * @return CommentEntity
@@ -202,19 +257,11 @@ class CommentEntity
     // #################### SECTION OF LOGIC ######################
 
     /**
-     * @return int
+     * @return false|string
      */
-    public function getAmountLikes()
+    public function getDate()
     {
-        return CommentLikeRepository::instance()->getAmountLikes($this);
-    }
-
-    /**
-     * @return int
-     */
-    public function getAmountDislikes()
-    {
-        return CommentLikeRepository::instance()->getAmountDislikes($this);
+        return date(self::DATE_FORMAT, $this->createdAt);
     }
 }
 

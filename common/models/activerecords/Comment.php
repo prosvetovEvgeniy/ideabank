@@ -21,8 +21,10 @@ use yii\db\ActiveRecord;
  * @property Comment $comment
  * @property Comment[] $comments
  * @property Task $task
- * @property Users $sender
+ * @property Users $user
+ * @property Comment $parent
  * @property CommentLike[] $commentLikes
+ *
  */
 class Comment extends ActiveRecord
 {
@@ -86,5 +88,20 @@ class Comment extends ActiveRecord
             'updated_at' => 'Updated At',
             'deleted' => 'Deleted',
         ];
+    }
+
+    public function getParent()
+    {
+        return $this->hasOne(Comment::className(), ['id' => 'parent_id']);
+    }
+
+    public function getUser()
+    {
+        return $this->hasOne(Users::className(), ['id' => 'sender_id']);
+    }
+
+    public function getCommentLikes()
+    {
+        return $this->hasMany(CommentLike::className(), ['comment_id' => 'id']);
     }
 }

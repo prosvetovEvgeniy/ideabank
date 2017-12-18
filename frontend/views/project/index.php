@@ -26,10 +26,10 @@ use common\models\searchmodels\TaskEntitySearch;
                 </div>
 
                 <div class="panel-body">
-                    <p><?= Html::a('Количество задач : ' . $project->getAmountTasks() , ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_ALL], ['target' => '_blank']) ?></p>
-                    <p><?= Html::a('Завершенные : ' . $project->getAmountCompletedTasks(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_COMPLETED], ['target' => '_blank']) ?></p>
-                    <p><?= Html::a('Не завершенные : ' . $project->getAmountNotCompletedTasks(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_NOT_COMPLETED], ['target' => '_blank']) ?></p>
-                    <p><?= Html::a('Мои задачи : ' . $project->getAmountTasksByAuthor($participant->getUser()), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(),'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_OWN], ['target' => '_blank']) ?></p>
+                    <p><?= Html::a('Количество задач : ' . $project->getAmountTasks() , ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_ALL]) ?></p>
+                    <p><?= Html::a('Завершенные : ' . $project->getAmountCompletedTasks(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_COMPLETED]) ?></p>
+                    <p><?= Html::a('Не завершенные : ' . $project->getAmountNotCompletedTasks(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_NOT_COMPLETED]) ?></p>
+                    <p><?= Html::a('Мои задачи : ' . $project->getAmountTasksByAuthor($participant->getUser()), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(),'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_OWN]) ?></p>
                 </div>
             </div>
         </div>

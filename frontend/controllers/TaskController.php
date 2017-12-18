@@ -5,9 +5,11 @@ namespace frontend\controllers;
 
 use common\components\dataproviders\EntityDataProvider;
 use common\models\repositories\CommentRepository;
+use common\models\repositories\CommentViewRepository;
 use common\models\repositories\ParticipantRepository;
 use common\models\repositories\TaskRepository;
 use common\models\searchmodels\TaskEntitySearch;
+use frontend\models\CommentForm;
 use yii\db\Exception;
 use yii\web\Controller;
 use Yii;
@@ -31,11 +33,11 @@ class TaskController extends Controller
         ]);
     }
 
-    public function actionView()
+    public function actionView($taskId)
     {
         try
         {
-            $task = TaskRepository::instance()->findOne(['id' => Yii::$app->request->get('taskId')]);
+            $task = TaskRepository::instance()->findOne(['id' => $taskId]);
         }
         catch (Exception $e) {
             throw new NotFoundHttpException();
@@ -45,15 +47,27 @@ class TaskController extends Controller
             'condition' => [
                 'task_id' => $task->getId()
             ],
-            'repositoryInstance' => CommentRepository::instance(),
+            'repositoryInstance' => CommentViewRepository::instance(),
             'pagination' => [
-                'pageSize' => 50
+                'pageSize' => 30
             ]
         ]);
 
+        $model = new CommentForm();
+        $model->taskId = $task->getId();
+
+        if($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            if($model->saveComment())
+            {
+                $model = new CommentForm();
+            }
+        }
+
         return $this->render('view',[
             'task'         => $task,
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
+            'model'        => $model
         ]);
     }
 

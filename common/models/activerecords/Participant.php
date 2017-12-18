@@ -30,6 +30,8 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property Company $company
  * @property Users $profile
+ *
+ * @property UserEntity $userEntity
  */
 class Participant extends ActiveRecord implements IdentityInterface
 {
@@ -37,6 +39,8 @@ class Participant extends ActiveRecord implements IdentityInterface
     const MANAGER_ROLE = 'manager';
     const PROJECT_DIRECTOR_ROLE = 'projectDirector';
     const COMPANY_DIRCTOR_ROLE = 'companyDirector';
+
+    private $userEntity;
 
     /**
      * @inheritdoc
@@ -148,6 +152,11 @@ class Participant extends ActiveRecord implements IdentityInterface
      */
     public function getEntity()
     {
-        return UserRepository::instance()->findOne(['id' => $this->user_id]);
+        if($this->userEntity === null)
+        {
+            $this->userEntity = UserRepository::instance()->findOne(['id' => $this->user_id]);
+        }
+
+        return$this->userEntity;
     }
 }

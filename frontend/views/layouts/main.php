@@ -28,9 +28,6 @@ AppAsset::register($this);
 
 <div class="wrap">
     <?php
-
-
-
     NavBar::begin([
         'brandLabel' => 'Idea Bank',
         'brandUrl' => Yii::$app->homeUrl,
