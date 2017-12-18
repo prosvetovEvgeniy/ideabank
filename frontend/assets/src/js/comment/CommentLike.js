@@ -1,26 +1,22 @@
 
 $( document ).ready(function() {
 
-    $('.vote-up i').click(function () {
+    $('.comment-block .footer-comment .vote-up i').click(function () {
 
         var likeSelector = $(this);
         var comment = likeSelector.parents('.comment');
         var dislikeSelector = comment.find('.vote-down i');
-
         var commentId = Number(comment.attr('data-comment-id'));
-
         var amountLikes = likeSelector.text();
-
         var currentUserLikedIt = Number(comment.attr('data-current-user-liked-it'));
         var currentUserDislikedIt = Number(comment.attr('data-current-user-disliked-it'));
 
         if(currentUserLikedIt === 0 && currentUserDislikedIt === 0) {
             $.ajax({
-                url: '/comment/addvote',
+                url: '/comment-like/addvote',
                 type: 'POST',
-                data: {'CommentVoteModel[commentId]': commentId, 'CommentVoteModel[liked]': true},
+                data: {'CommentVoteModel[commentId]': commentId, 'CommentVoteModel[liked]': 1},
                 success: function (response) {
-                    console.log(response);
                     comment.attr('data-current-user-liked-it', 1);
                     amountLikes++;
                     likeSelector.text(amountLikes);
@@ -30,7 +26,7 @@ $( document ).ready(function() {
         else if(currentUserLikedIt === 1 && currentUserDislikedIt === 0)
         {
             $.ajax({
-                url: '/comment/deletevote',
+                url: '/comment-like/deletevote',
                 type: 'POST',
                 data: {commentId: commentId},
                 success: function (response) {
@@ -43,7 +39,7 @@ $( document ).ready(function() {
         else if(currentUserLikedIt === 0 && currentUserDislikedIt === 1)
         {
             $.ajax({
-                url: '/comment/reversevote',
+                url: '/comment-like/reversevote',
                 type: 'POST',
                 data: {commentId: commentId, like: true},
                 success: function (response) {
@@ -63,14 +59,12 @@ $( document ).ready(function() {
         }
     });
 
-    $('.vote-down i').click(function () {
+    $('.comment-block .vote-down i').click(function () {
 
         var dislikeSelector = $(this);
         var comment = dislikeSelector.parents('.comment');
         var likeSelector = comment.find('.vote-up i');
-
         var commentId = Number(comment.attr('data-comment-id'));
-
         var amountDislikes = dislikeSelector.text();
         var currentUserLikedIt = Number(comment.attr('data-current-user-liked-it'));
         var currentUserDislikedIt = Number(comment.attr('data-current-user-disliked-it'));
@@ -78,9 +72,9 @@ $( document ).ready(function() {
         if(currentUserLikedIt === 0 && currentUserDislikedIt === 0)
         {
             $.ajax({
-                url: '/comment/addvote',
+                url: '/comment-like/addvote',
                 type: 'POST',
-                data: {'CommentVoteModel[commentId]': commentId, 'CommentVoteModel[liked]': false},
+                data: {'CommentVoteModel[commentId]': commentId, 'CommentVoteModel[liked]': 0},
                 success: function (response) {
                     comment.attr('data-current-user-disliked-it', 1);
                     amountDislikes++;
@@ -91,7 +85,7 @@ $( document ).ready(function() {
         else if(currentUserLikedIt === 0 && currentUserDislikedIt === 1)
         {
             $.ajax({
-                url: '/comment/deletevote',
+                url: '/comment-like/deletevote',
                 type: 'POST',
                 data: {commentId: commentId},
                 success: function (response) {
@@ -104,7 +98,7 @@ $( document ).ready(function() {
         else if(currentUserLikedIt === 1 && currentUserDislikedIt === 0)
         {
             $.ajax({
-                url: '/comment/reversevote',
+                url: '/commentlike/reversevote',
                 type: 'POST',
                 data: {commentId: commentId},
                 success: function (response) {

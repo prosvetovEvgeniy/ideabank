@@ -119,6 +119,7 @@ class TaskLikeEntity
 
     // #################### SECTION OF LOGIC ######################
 
+
     public function like() { $this->liked = true; }
 
     public function dislike() { $this->liked = false; }

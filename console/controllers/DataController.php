@@ -129,20 +129,21 @@ class DataController extends Controller
 
         //############### FILLING COMMENTS ###############
 
+
         $commentsIds = $this->generateComments($tasksIds['firstTask'], $userIds['evgeniy'], 100);
 
 
         //############### FILLING TASKLIKES ###############
 
 
-        $taskLikesIds['firstLikeToFirstTask'] = $this->addLikeToTask($tasksIds['firstTask'], $userIds['evgeniy'], true);
-        $taskLikesIds['firstLikeToSecondTask'] = $this->addLikeToTask($tasksIds['secondTask'], $userIds['evgeniy'], true);
-        $taskLikesIds['firstDislikeToThirdTask'] = $this->addLikeToTask($tasksIds['thirdTask'], $userIds['evgeniy'], false);
+        $taskLikesIds = $this->generateTaskLikes($tasksIds, $userIds['evgeniy']);
 
 
         //############### FILLING COMMENTLIKES ###############
 
+
         $commentLikeIds = $this->generateCommentLikes($commentsIds, $userIds['evgeniy']);
+
 
         //############### FILLING MESSAGES ###############
 
@@ -163,7 +164,38 @@ class DataController extends Controller
         $this->stdout("\nTest data was init\n");
     }
 
-    private function generateCommentLikes(array $commentIds, $userId)
+    private function generateTaskLikes(array $taskIds, int $userId, float $likeProbability = 0.5)
+    {
+        $taskLikeIds = [];
+
+        $i = 0;
+
+        foreach ($taskIds as $key => $taskId)
+        {
+            $currentProbability = rand(0,1000) / 1000;
+
+            if($currentProbability <= $likeProbability)
+            {
+                $this->db->createCommand("INSERT INTO task_like (task_id, user_id, liked, created_at, updated_at) VALUES 
+                                      ({$taskId}, {$userId}, TRUE , {$this->getTime()}, {$this->getTime()})")->execute();
+
+                $taskLikeIds[$i . 'likeTo' . $key] = $this->db->getLastInsertID('task_like_id_seq');
+            }
+            else
+            {
+                $this->db->createCommand("INSERT INTO task_like (task_id, user_id, liked, created_at, updated_at) VALUES 
+                                      ({$taskId}, {$userId}, FALSE , {$this->getTime()}, {$this->getTime()})")->execute();
+
+                $taskLikeIds[$i . 'dislikeTo' . $key] = $this->db->getLastInsertID('task_like_id_seq');
+            }
+
+            $i++;
+        }
+
+        return $taskLikeIds;
+    }
+
+    private function generateCommentLikes(array $commentIds, int $userId, float $likeProbability = 0.5)
     {
         $commentLikeIds = [];
 
@@ -171,9 +203,9 @@ class DataController extends Controller
 
         foreach ($commentIds as $key => $commentId)
         {
-            $likeProbability = rand(0,1000) / 1000;
+            $currentProbability = rand(0,1000) / 1000;
 
-            if($likeProbability <= 0.3)
+            if($currentProbability <= $likeProbability)
             {
                 $this->db->createCommand("INSERT INTO comment_like (comment_id, user_id, liked, created_at, updated_at) VALUES 
                                       ({$commentId}, {$userId}, TRUE , {$this->getTime()}, {$this->getTime()})")->execute();

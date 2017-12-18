@@ -8,8 +8,10 @@ use yii\widgets\ActiveForm;
 use frontend\models\CommentForm;
 use frontend\assets\CommentLikeAssset;
 use frontend\assets\CommentReplyAsset;
+use frontend\assets\TaskLikeAsset;
 
 CommentLikeAssset::register($this);
+TaskLikeAsset::register($this);
 CommentReplyAsset::register($this);
 
 /**
@@ -25,16 +27,31 @@ $pagination = $dataProvider->getPagination(); //пагинатор
 $increment = $pagination->pageSize * $pagination->page;  //приращение номера комментария
 
 $counter = 1; //счетчик для номера комментария
+
 ?>
 
     <div class="row">
 
-        <div class="col-md-8 task-content">
+        <div class="col-md-8">
 
-            <h2 class="no-margin-top"><?= $task->getTitle() ?></h2>
+            <div class="task"
+                 data-task-id="<?= $task->getId() ?>"
+                 data-current-user-liked-task="<?= $task->getCurrentUserLikedIt() ?>"
+                 data-current-user-disliked-task="<?= $task->getCurrentUserDislikedIt() ?>">
 
-            <p><?= $task->getContent() ?></p>
+                <h2 class="no-margin-top"><?= $task->getTitle() ?></h2>
 
+                <p><?= $task->getContent() ?></p>
+
+                <div class="footer-comment">
+                    <span class="vote-up" title="Нравится">
+                        <i class="glyphicon glyphicon-thumbs-up"><?= $task->getAmountLikes() ?></i>
+                    </span>
+                    <span class="vote-down" title="Не нравится">
+                        <i class="glyphicon glyphicon-thumbs-up"><?= $task->getAmountDislikes() ?></i>
+                    </span>
+                </div>
+            </div>
         </div>
 
         <div class="col-md-4">
@@ -90,6 +107,7 @@ $counter = 1; //счетчик для номера комментария
                     </tr>
 
                 <?php endif; ?>
+
                 </tbody>
             </table>
         </div>
@@ -144,7 +162,6 @@ $counter = 1; //счетчик для номера комментария
                     <div class="comment-block">
 
                         <div class="comment"
-                             data-user-id="<?= $comment->getUser()->getId() ?>"
                              data-comment-id="<?= $comment->getId() ?>"
                              data-current-user-liked-it="<?= $comment->getCurrentUserLikedIt() ?>"
                              data-current-user-disliked-it="<?= $comment->getCurrentUserDislikedIt() ?>">

@@ -4,6 +4,7 @@ namespace common\models\repositories;
 
 
 use common\models\activerecords\TaskLike;
+use common\models\entities\TaskEntity;
 use common\models\entities\TaskLikeEntity;
 use yii\db\Exception;
 use Yii;
@@ -180,5 +181,21 @@ class TaskLikeRepository
 
     // #################### UNIQUE METHODS OF CLASS ######################
 
+    /**
+     * @param TaskEntity $task
+     * @return int
+     */
+    public function getAmountLikes(TaskEntity $task)
+    {
+        return TaskLike::find()->where(['task_id' => $task->getId(), 'liked' => true])->count();
+    }
 
+    /**
+     * @param TaskLike $task
+     * @return int
+     */
+    public function getAmountDislikes(TaskEntity $task)
+    {
+        return TaskLike::find()->where(['task_id' => $task->getId(), 'liked' => false])->count();
+    }
 }

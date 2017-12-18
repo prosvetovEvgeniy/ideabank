@@ -8,6 +8,7 @@ use common\models\repositories\ProjectRepository;
 use common\models\repositories\TaskLikeRepository;
 use common\models\repositories\TaskRepository;
 use common\models\repositories\UserRepository;
+use Yii;
 
 /**
  * Class TaskEntity
@@ -34,6 +35,7 @@ use common\models\repositories\UserRepository;
  * @property TaskLikeEntity[] $taskLikes
  * @property CommentEntity[]  $comments
  * @propery  TaskEntity       $parent
+ *
  */
 class TaskEntity
 {
@@ -74,6 +76,7 @@ class TaskEntity
     protected $taskLikes;
     protected $comments;
     protected $parent;
+
 
     /**
      * TaskEntity constructor.
@@ -341,4 +344,97 @@ class TaskEntity
     {
         return self::LIST_STATUSES_AS_TEXT[$this->status] ?? self::STATUS_ERROR_MESSAGE;
     }
+
+    /**
+     * @return int
+     */
+    public function getAmountLikes()
+    {
+        return TaskLikeRepository::instance()->getAmountLikes($this);
+    }
+
+    /**
+     * @return int
+     */
+    public function getAmountDislikes()
+    {
+        return TaskLikeRepository::instance()->getAmountDislikes($this);
+    }
+
+    /**
+     * @return null | UserEntity
+     */
+    public function getCurrentUser()
+    {
+        if(!Yii::$app->user->identity === null)
+        {
+            return null;
+        }
+
+        return Yii::$app->user->identity->getEntity();
+    }
+
+    /**
+     * @return bool
+     */
+    public function getCurrentUserLikedIt()
+    {
+        $user = $this->getCurrentUser();
+
+        if(!$user)
+        {
+            return false;
+        }
+
+        $taskLike = TaskLikeRepository::instance()->findOne([
+            'task_id' => $this->getId(),
+            'user_id' => $user->getId(),
+            'liked'   => true
+        ]);
+
+        return (!$taskLike) ? false : true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getCurrentUserDislikedIt()
+    {
+        $user = $this->getCurrentUser();
+
+        if(!$user)
+        {
+            return false;
+        }
+
+        $taskLike = TaskLikeRepository::instance()->findOne([
+            'task_id' => $this->getId(),
+            'user_id' => $user->getId(),
+            'liked'   => false
+        ]);
+
+        return (!$taskLike) ? false : true;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

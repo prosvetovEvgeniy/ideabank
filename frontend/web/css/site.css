@@ -119,25 +119,27 @@ a.desc:after {
     margin-bottom: 25px !important;
 }
 
-.comment-block{
-    padding: 10px;
-    margin-bottom: 10px;
-    margin-top: 10px;
-    border-width: 2px;
-    border-color: black;
-    background-color: #e9e9ec;
-    border-radius: 10px;
-}
-
 /* ########## TASK RULES ##########*/
 
-.task-content{
+.task {
     padding-top: 15px;
+    padding-left: 15px;
     padding-bottom: 20px;
     margin-bottom: 40px;
     min-height: 215px;
-    background-color: rgba(239, 241, 255, 1);
+    background: linear-gradient(to bottom, rgba(239, 241, 255, 1), white);
     border-radius: 10px;
+    position: relative;
+}
+
+.task > .footer-comment{
+    position: absolute;
+    bottom: 0px;
+    right: 5%;
+}
+
+.task > .footer-comment .glyphicon{
+    font-weight: bold !important;
 }
 
 /* ########## COMMENT FORM RULES ##########*/
@@ -168,6 +170,16 @@ a.desc:after {
 
 
 /* ########## COMMENT RULES ##########*/
+
+.comment-block{
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border-width: 2px;
+    border-color: black;
+    background-color: #e9e9ec;
+    border-radius: 10px;
+}
 
 .comment-block .media-right
 {
