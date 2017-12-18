@@ -18,8 +18,9 @@ $( document ).ready(function() {
             $.ajax({
                 url: '/comment/addvote',
                 type: 'POST',
-                data: {commentId: commentId, like: true},
+                data: {'CommentVoteModel[commentId]': commentId, 'CommentVoteModel[liked]': true},
                 success: function (response) {
+                    console.log(response);
                     comment.attr('data-current-user-liked-it', 1);
                     amountLikes++;
                     likeSelector.text(amountLikes);
@@ -79,7 +80,7 @@ $( document ).ready(function() {
             $.ajax({
                 url: '/comment/addvote',
                 type: 'POST',
-                data: {commentId: commentId, like: false},
+                data: {'CommentVoteModel[commentId]': commentId, 'CommentVoteModel[liked]': false},
                 success: function (response) {
                     comment.attr('data-current-user-disliked-it', 1);
                     amountDislikes++;

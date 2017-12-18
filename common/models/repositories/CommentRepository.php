@@ -29,21 +29,15 @@ class CommentRepository
      * Возвращает сущность по условию
      *
      * @param array $condition
-     * @return CommentEntity
-     * @throws Exception
+     * @return CommentEntity|null
      */
     public function findOne(array $condition)
     {
         $model = Comment::findOne($condition);
 
-        if(!$model)
+        if(!$model || $model->deleted)
         {
-            throw new Exception('Comment with ' . json_encode($condition) . ' does not exists');
-        }
-
-        if($model->deleted)
-        {
-            throw new Exception('Comment with ' . json_encode($condition) . ' already deleted');
+            return null;
         }
 
         return $this->buildEntity($model);

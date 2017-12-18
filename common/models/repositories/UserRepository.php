@@ -27,21 +27,15 @@ class UserRepository
      * Возвращает сущность по условию
      *
      * @param array $condition
-     * @return UserEntity
-     * @throws Exception
+     * @return UserEntity|null
      */
     public function findOne(array $condition)
     {
         $model = Users::findOne($condition);
 
-        if(!$model)
+        if(!$model || $model->deleted)
         {
-            throw new Exception('User with ' . json_encode($condition) . ' does not exists');
-        }
-
-        if($model->deleted)
-        {
-            throw new Exception('User with ' . json_encode($condition) . ' already deleted');
+            return null;
         }
 
         return $this->buildEntity($model);

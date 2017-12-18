@@ -28,21 +28,15 @@ class ParticipantRepository
      * Возвращает сущность по условию
      *
      * @param array $condition
-     * @return ParticipantEntity
-     * @throws Exception
+     * @return ParticipantEntity|null
      */
     public function findOne(array $condition)
     {
         $model = Participant::findOne($condition);
 
-        if(!$model)
+        if(!$model || $model->blocked)
         {
-            throw new Exception('Participant with ' . json_encode($condition) . ' does not exists');
-        }
-
-        if($model->blocked)
-        {
-            throw new Exception('Participant with ' . json_encode($condition) . ' already blocked');
+            return null;
         }
 
         return $this->buildEntity($model);

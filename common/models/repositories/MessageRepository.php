@@ -28,21 +28,15 @@ class MessageRepository
      * Возвращает сущность по условию
      *
      * @param array $condition
-     * @return MessageEntity
-     * @throws Exception
+     * @return MessageEntity|null
      */
     public function findOne(array $condition)
     {
         $model = Message::findOne($condition);
 
-        if(!$model)
+        if(!$model || $model->deleted)
         {
-            throw new Exception('Message with ' . json_encode($condition) . ' does not exists');
-        }
-
-        if($model->deleted)
-        {
-            throw new Exception('Message with ' . json_encode($condition) . ' already deleted');
+            return null;
         }
 
         return $this->buildEntity($model);

@@ -29,21 +29,15 @@ class TaskRepository
      * Возвращает сущность по условию
      *
      * @param array $condition
-     * @return TaskEntity
-     * @throws Exception
+     * @return TaskEntity|null
      */
     public function findOne(array $condition)
     {
         $model = Task::findOne($condition);
 
-        if(!$model)
+        if(!$model || $model->deleted)
         {
-            throw new Exception('Task with ' . json_encode($condition) . ' does not exists');
-        }
-
-        if($model->deleted)
-        {
-            throw new Exception('Task with ' . json_encode($condition) . ' already deleted');
+            return null;
         }
 
         return $this->buildEntity($model);

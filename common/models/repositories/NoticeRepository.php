@@ -26,21 +26,15 @@ class NoticeRepository
      * Возвращает сущность по условию
      *
      * @param array $condition
-     * @return NoticeEntity
-     * @throws Exception
+     * @return NoticeEntity|null
      */
     public function findOne(array $condition)
     {
         $model = Notice::findOne($condition);
 
-        if(!$model)
+        if(!$model || $model->viewed)
         {
-            throw new Exception('Notice with ' . json_encode($condition) . ' does not exists');
-        }
-
-        if($model->viewed)
-        {
-            throw new Exception('Notice with ' . json_encode($condition) . ' already viewed');
+            return null;
         }
 
         return $this->buildEntity($model);

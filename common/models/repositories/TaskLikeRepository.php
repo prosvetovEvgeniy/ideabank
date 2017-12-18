@@ -27,8 +27,7 @@ class TaskLikeRepository
      * Возвращает сущность по условию
      *
      * @param array $condition
-     * @return TaskLikeEntity
-     * @throws Exception
+     * @return TaskLikeEntity|null
      */
     public function findOne(array $condition)
     {
@@ -36,7 +35,7 @@ class TaskLikeRepository
 
         if(!$model)
         {
-            throw new Exception('task_like with ' . json_encode($condition) . ' does not exists');
+            return null;
         }
 
         return $this->buildEntity($model);

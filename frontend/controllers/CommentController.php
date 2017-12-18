@@ -10,6 +10,7 @@ use yii\web\BadRequestHttpException;
 use common\models\repositories\CommentLikeRepository;
 use common\models\entities\CommentLikeEntity;
 use yii\db\Exception;
+use yii\web\UnauthorizedHttpException;
 
 class CommentController extends Controller
 {
@@ -18,35 +19,22 @@ class CommentController extends Controller
      */
     public function actionAddvote()
     {
-        $commentId = Yii::$app->request->post('commentId');
-
-        $like =  (Yii::$app->request->post('like') === 'true') ? true : false;
-
         if(Yii::$app->user->identity === null)
         {
-            throw new BadRequestHttpException();
+            throw new UnauthorizedHttpException();
         }
 
-        $userId = Yii::$app->user->identity->getEntity()->getId();
-
         $model = new CommentVoteModel();
+        $model->userId = Yii::$app->user->identity->getEntity()->getId();
 
-        $postData = [
-            $model->formName() => [
-                'userId' => $userId,
-                'commentId' => $commentId,
-                'liked' => $like
-            ]
-        ];
-
-        $model->load($postData);
+        $model->load(Yii::$app->request->post());
 
         if(!$model->validate() || $model->recordExist())
         {
             throw new BadRequestHttpException();
         }
 
-        $commentLike = new CommentLikeEntity($commentId, $userId, $like);
+        $commentLike = new CommentLikeEntity($model->commentId, $model->userId, $model->liked);
 
         try
         {
@@ -67,18 +55,23 @@ class CommentController extends Controller
 
         if(Yii::$app->user->identity === null)
         {
-            throw new BadRequestHttpException();
+            throw new UnauthorizedHttpException();
         }
 
         $userId = Yii::$app->user->identity->getEntity()->getId();
 
+        $commentLike = CommentLikeRepository::instance()->findOne([
+            'comment_id' => $commentId,
+            'user_id'    => $userId,
+        ]);
+
+        if(!$commentLike)
+        {
+            throw new BadRequestHttpException();
+        }
+
         try
         {
-            $commentLike = CommentLikeRepository::instance()->findOne([
-                'comment_id' => $commentId,
-                'user_id'    => $userId,
-            ]);
-
             CommentLikeRepository::instance()->delete($commentLike);
         }
         catch (Exception $e)
@@ -96,20 +89,25 @@ class CommentController extends Controller
 
         if(Yii::$app->user->identity === null)
         {
-            throw new BadRequestHttpException();
+            throw new UnauthorizedHttpException();
         }
 
         $userId = Yii::$app->user->identity->getEntity()->getId();
 
+        $commentLike = CommentLikeRepository::instance()->findOne([
+            'comment_id' => $commentId,
+            'user_id'    => $userId,
+        ]);
+
+        if(!$commentLike)
+        {
+            throw new BadRequestHttpException();
+        }
+
+        ($commentLike->getLiked() === true) ? $commentLike->dislike() : $commentLike->like();
+
         try
         {
-            $commentLike = CommentLikeRepository::instance()->findOne([
-                'comment_id' => $commentId,
-                'user_id'    => $userId,
-            ]);
-
-            ($commentLike->getLiked() === true) ? $commentLike->dislike() : $commentLike->like();
-
             CommentLikeRepository::instance()->update($commentLike);
         }
         catch (Exception $e)

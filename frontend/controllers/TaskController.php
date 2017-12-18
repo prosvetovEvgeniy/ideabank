@@ -35,11 +35,10 @@ class TaskController extends Controller
 
     public function actionView($taskId)
     {
-        try
+        $task = TaskRepository::instance()->findOne(['id' => $taskId]);
+
+        if(!$task)
         {
-            $task = TaskRepository::instance()->findOne(['id' => $taskId]);
-        }
-        catch (Exception $e) {
             throw new NotFoundHttpException();
         }
 

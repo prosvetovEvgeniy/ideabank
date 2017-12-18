@@ -23,25 +23,20 @@ class ProjectRepository
         return new self();
     }
 
+
     /**
      * Возвращает сущность по условию
      *
      * @param array $condition
-     * @return ProjectEntity
-     * @throws Exception
+     * @return ProjectEntity|null
      */
     public function findOne(array $condition)
     {
         $model = Project::findOne($condition);
 
-        if(!$model)
+        if(!$model || $model->deleted)
         {
-            throw new Exception('Project with ' . json_encode($condition) . ' does not exists');
-        }
-
-        if($model->deleted)
-        {
-            throw new Exception('Project with ' . json_encode($condition) . ' already deleted');
+            return null;
         }
 
         return $this->buildEntity($model);

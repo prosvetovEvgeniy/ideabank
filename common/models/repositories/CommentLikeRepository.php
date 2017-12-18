@@ -27,8 +27,7 @@ class CommentLikeRepository
      * Возвращает сущность по условию
      *
      * @param array $condition
-     * @return CommentLikeEntity
-     * @throws Exception
+     * @return CommentLikeEntity|null
      */
     public function findOne(array $condition)
     {
@@ -36,7 +35,7 @@ class CommentLikeRepository
 
         if(!$model)
         {
-            throw new Exception('comment_like with ' . json_encode($condition) . ' does not exists');
+            return null;
         }
 
         return $this->buildEntity($model);

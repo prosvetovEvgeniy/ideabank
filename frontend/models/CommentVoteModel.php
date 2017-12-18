@@ -25,7 +25,10 @@ class CommentVoteModel extends Model
         return [
             [['userId', 'commentId', 'liked'], 'required'],
             [['userId', 'commentId'], 'integer'],
-            [['liked'], 'boolean']
+            [['liked'], 'string'],
+            [['liked'], 'filter', 'filter' => function($value){
+                return ($value === 'true') ? true : false;
+            }]
         ];
     }
 
