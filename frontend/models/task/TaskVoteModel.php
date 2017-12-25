@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\models\task;
 
 
 use common\models\activerecords\TaskLike;

@@ -4,6 +4,7 @@ namespace common\models\entities;
 
 use common\models\repositories\ParticipantRepository;
 use common\models\repositories\ProjectRepository;
+use yii\helpers\Html;
 
 /**
  * Class CompanyEntity
@@ -59,7 +60,7 @@ class CompanyEntity
     /**
      * @return string
      */
-    public function getName() { return $this->name; }
+    public function getName() { return Html::encode($this->name); }
 
     /**
      * @return int | null

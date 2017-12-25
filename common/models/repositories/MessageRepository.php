@@ -4,7 +4,6 @@ namespace common\models\repositories;
 
 
 use common\models\activerecords\Message;
-use common\models\entities\CompanyEntity;
 use common\models\entities\MessageEntity;
 use yii\db\Exception;
 use Yii;
@@ -48,11 +47,18 @@ class MessageRepository
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
+     * @param string|null $orderBy
      * @return MessageEntity[]
      */
-    public function findAll(array $condition, int $limit = 20, int $offset = null)
+    public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
-        $models = Message::find()->where($condition)->offset($offset)->limit($limit)->all();
+        $models = Message::find()->where($condition)
+                                 ->with('self')
+                                 ->with('companion')
+                                 ->offset($offset)
+                                 ->limit($limit)
+                                 ->orderBy($orderBy)
+                                 ->all();
 
         return $this->buildEntities($models);
     }
@@ -158,8 +164,11 @@ class MessageRepository
      */
     protected function buildEntity(Message $model)
     {
-        return new MessageEntity($model->self_id, $model->companion_id, $model->is_sender, $model->content,
-                                 $model->id, $model->created_at, $model->deleted);
+        $self = UserRepository::instance()->buildEntity($model->self);
+        $companion = UserRepository::instance()->buildEntity($model->companion);
+
+        return new MessageEntity($model->self_id, $model->companion_id, $model->content, $model->is_sender,
+                                 $model->id, $model->created_at, $model->deleted, $self, $companion);
     }
 
     /**
@@ -185,7 +194,27 @@ class MessageRepository
         return $entities;
     }
 
+
     // #################### UNIQUE METHODS OF CLASS ######################
 
 
+    /**
+     * @param array $condition
+     * @return bool
+     */
+    public function deleteAll(array $condition)
+    {
+        $amountUpdatedRows = Message::updateAll(['deleted' => true], $condition);
+
+        return ($amountUpdatedRows === 0) ? false : true;
+    }
+
+    /**
+     * @param array $condition
+     * @return int|string
+     */
+    public function getTotalCountByCondition(array $condition)
+    {
+        return Message::find()->where($condition)->count();
+    }
 }

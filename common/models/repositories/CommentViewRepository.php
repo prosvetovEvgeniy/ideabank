@@ -37,9 +37,10 @@ class CommentViewRepository
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
+     * @param string $orderBy
      * @return CommentEntity[]
      */
-    public function findAll(array $condition, int $limit = 20, int $offset = null)
+    public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
         $identity = Yii::$app->user->identity;
 
@@ -65,6 +66,7 @@ class CommentViewRepository
             ->orderBy('id ASC')
             ->limit($limit)
             ->offset($offset)
+            ->orderBy($orderBy)
             ->all();
 
         return $this->buildEntities($models);
@@ -114,7 +116,7 @@ class CommentViewRepository
     }
 
     /**
-     * @param string $condition
+     * @param array $condition
      * @return int
      */
     public function getTotalCountByCondition(array $condition)

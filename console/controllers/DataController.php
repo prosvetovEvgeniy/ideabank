@@ -148,10 +148,8 @@ class DataController extends Controller
         //############### FILLING MESSAGES ###############
 
 
-        $messageIds['fromEvgeniyToEdirector'] = $this->addMessage($userIds['evgeniy'], $userIds['edirector'],true,'Привет');
-        $messageIds['fromEdirectorToEvgeniy'] = $this->addMessage($userIds['edirector'], $userIds['evgeniy'],false,'Привет');
-        $messageIds['fromEdirectorToEvgeniy'] = $this->addMessage($userIds['edirector'], $userIds['evgeniy'],true,'Пока');
-        $messageIds['fromEvgeniyToEdirector'] = $this->addMessage($userIds['evgeniy'], $userIds['edirector'],false,'Пока');
+        $this->generateMessages($userIds['evgeniy'], $userIds['edirector'], 20);
+        $this->generateMessages($userIds['evgeniy'], $userIds['admin'], 20);
 
 
         //############### FILLING NOTICES ###############
@@ -162,6 +160,32 @@ class DataController extends Controller
         $noticeIds['thirdNoticeToEvgeniy'] = $this->addNotice($userIds['evgeniy'], 'Третья заметка', false);
 
         $this->stdout("\nTest data was init\n");
+    }
+
+    private function generateMessages(int $firstParticipantId, int $secondParticipantId, int $amount)
+    {
+
+        $time = $this->getTime();
+
+        for($i = 1; $i <= $amount; $i++)
+        {
+            $selfMessage = $i . ' message from id = ' . $firstParticipantId . ' to  id = ' . $secondParticipantId;
+            $companionMessage = $i . ' message from id = ' . $secondParticipantId . ' to  id = ' . $firstParticipantId;
+
+            $this->db->createCommand("INSERT INTO message (self_id, companion_id, content, is_sender, created_at) VALUES
+                                    ({$firstParticipantId}, {$secondParticipantId}, '{$selfMessage}', 'TRUE', {$time})")->execute();
+            $this->db->createCommand("INSERT INTO message (self_id, companion_id, content, is_sender, created_at) VALUES
+                                    ({$secondParticipantId}, {$firstParticipantId}, '{$selfMessage}', 'FALSE', {$time})")->execute();
+
+            $time += 10;
+
+            $this->db->createCommand("INSERT INTO message (self_id, companion_id, content, is_sender, created_at) VALUES
+                                    ({$secondParticipantId}, {$firstParticipantId}, '{$companionMessage}', 'TRUE', {$time})")->execute();
+            $this->db->createCommand("INSERT INTO message (self_id, companion_id, content, is_sender, created_at) VALUES
+                                    ({$firstParticipantId}, {$secondParticipantId}, '{$companionMessage}', 'FALSE', {$time})")->execute();
+
+            $time += 10;
+        }
     }
 
     private function generateTaskLikes(array $taskIds, int $userId, float $likeProbability = 0.5)

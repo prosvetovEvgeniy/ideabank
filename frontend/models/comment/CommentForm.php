@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\models\comment;
 
 
 use common\models\activerecords\Comment;

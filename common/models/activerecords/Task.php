@@ -96,4 +96,9 @@ class Task extends \yii\db\ActiveRecord
             'deleted' => 'Deleted',
         ];
     }
+
+    public function getProject()
+    {
+        return $this->hasOne(Project::className(), ['id' => 'project_id']);
+    }
 }

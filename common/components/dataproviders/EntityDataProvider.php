@@ -12,6 +12,8 @@ class EntityDataProvider extends BaseDataProvider
 
     public $repositoryInstance;
 
+    public $orderBy = 'id ASC';
+
     public function prepareModels()
     {
         if(empty($this->condition))
@@ -30,7 +32,10 @@ class EntityDataProvider extends BaseDataProvider
                 return [];
             }
 
-            return $this->repositoryInstance->findAll($this->condition, $pagination->getLimit(), $pagination->getOffset());
+            return $this->repositoryInstance->findAll($this->condition,
+                                                      $pagination->getLimit(),
+                                                      $pagination->getOffset(),
+                                                      $this->orderBy);
         }
     }
 

@@ -9,6 +9,7 @@ use common\models\repositories\TaskLikeRepository;
 use common\models\repositories\TaskRepository;
 use common\models\repositories\UserRepository;
 use Yii;
+use yii\helpers\Html;
 
 /**
  * Class TaskEntity
@@ -126,12 +127,12 @@ class TaskEntity
     /**
      * @return string
      */
-    public function getTitle() { return $this->title; }
+    public function getTitle() { return Html::encode($this->title); }
 
     /**
      * @return string
      */
-    public function getContent() { return $this->content; }
+    public function getContent() { return Html::encode($this->content); }
 
     /**
      * @return int
@@ -366,7 +367,7 @@ class TaskEntity
      */
     public function getCurrentUser()
     {
-        if(!Yii::$app->user->identity === null)
+        if(Yii::$app->user->isGuest)
         {
             return null;
         }

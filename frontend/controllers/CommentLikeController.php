@@ -3,7 +3,7 @@
 namespace frontend\controllers;
 
 
-use frontend\models\CommentVoteModel;
+use frontend\models\comment\CommentVoteModel;
 use yii\web\Controller;
 use Yii;
 use yii\web\BadRequestHttpException;

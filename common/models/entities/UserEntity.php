@@ -8,6 +8,7 @@ use common\models\repositories\NoticeRepository;
 use common\models\repositories\ParticipantRepository;
 use common\models\repositories\TaskLikeRepository;
 use common\models\repositories\TaskRepository;
+use yii\helpers\Html;
 
 /**
  * Class UserEntity
@@ -112,7 +113,7 @@ class UserEntity
     /**
      * @return string
      */
-    public function getUsername() { return $this->username; }
+    public function getUsername() { return Html::encode($this->username); }
 
     /**
      * @return string
@@ -122,27 +123,27 @@ class UserEntity
     /**
      * @return string
      */
-    public function getEmail() { return $this->email; }
+    public function getEmail() { return Html::encode($this->email); }
 
     /**
      * @return string | null
      */
-    public function getPhone() { return $this->phone; }
+    public function getPhone() { return Html::encode($this->phone); }
 
     /**
      * @return string | null
      */
-    public function getFirstName() { return $this->firstName; }
+    public function getFirstName() { return Html::encode($this->firstName); }
 
     /**
      * @return string | null
      */
-    public function getSecondName() { return $this->secondName; }
+    public function getSecondName() { return Html::encode($this->secondName); }
 
     /**
      * @return string | null
      */
-    public function getLastName() { return $this->lastName; }
+    public function getLastName() { return Html::encode($this->lastName); }
 
     /**
      * @return string | null

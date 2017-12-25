@@ -2,6 +2,7 @@
 
 namespace common\models\entities;
 use common\models\repositories\UserRepository;
+use yii\helpers\Html;
 
 /**
  * Class NoticeEntity
@@ -61,7 +62,7 @@ class NoticeEntity
     /**
      * @return string
      */
-    public function getContent() { return $this->content; }
+    public function getContent() { return Html::encode($this->content); }
 
     /**
      * @return int | null

@@ -9,7 +9,7 @@ use yii\web\BadRequestHttpException;
 use Yii;
 use common\models\repositories\TaskLikeRepository;
 use yii\db\Exception;
-use frontend\models\TaskVoteModel;
+use frontend\models\task\TaskVoteModel;
 
 class TaskLikeController extends Controller
 {

@@ -9,6 +9,7 @@ use frontend\models\CommentForm;
 use frontend\assets\CommentLikeAssset;
 use frontend\assets\CommentReplyAsset;
 use frontend\assets\TaskLikeAsset;
+use yii\widgets\LinkPager;
 
 CommentLikeAssset::register($this);
 TaskLikeAsset::register($this);
@@ -168,7 +169,7 @@ $counter = 1; //счетчик для номера комментария
 
                             <div class="media-left">
                                 <a href="#">
-                                    <img class="comment-avatar" src="/images/pyramid.jpg">
+                                    <img class="avatar" src="/images/pyramid.jpg">
                                 </a>
                             </div>
                             <div class="media-right">
@@ -227,7 +228,7 @@ $counter = 1; //счетчик для номера комментария
 
     <?php
     // display pagination
-    echo \yii\widgets\LinkPager::widget([
+    echo LinkPager::widget([
         'pagination' => $dataProvider->getPagination(),
     ]);
     ?>

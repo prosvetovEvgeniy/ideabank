@@ -47,11 +47,12 @@ class UserRepository
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
+     * @param string|null $orderBy
      * @return UserEntity[]
      */
-    public function findAll(array $condition, int $limit = 20, int $offset = null)
+    public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
-        $models = Users::find()->where($condition)->offset($offset)->limit($limit)->all();
+        $models = Users::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
 
         return $this->buildEntities($models);
     }

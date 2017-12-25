@@ -98,7 +98,7 @@ $( document ).ready(function() {
         else if(currentUserLikedIt === 1 && currentUserDislikedIt === 0)
         {
             $.ajax({
-                url: '/commentlike/reversevote',
+                url: '/comment-like/reversevote',
                 type: 'POST',
                 data: {commentId: commentId},
                 success: function (response) {

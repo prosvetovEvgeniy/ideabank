@@ -3,6 +3,7 @@
 
 namespace common\models\entities;
 use common\models\repositories\UserRepository;
+use yii\helpers\Html;
 
 /**
  * Class MessageEntity
@@ -21,6 +22,8 @@ use common\models\repositories\UserRepository;
  */
 class MessageEntity
 {
+    protected const DATE_FORMAT = 'd M';
+
     protected $id;
     protected $selfId;
     protected $companionId;
@@ -37,14 +40,17 @@ class MessageEntity
      * MessageEntity constructor.
      * @param int $selfId
      * @param int $companionId
-     * @param bool $isSender
      * @param string $content
+     * @param bool $isSender
      * @param int|null $id
      * @param int|null $createdAt
      * @param bool|null $deleted
+     * @param UserEntity|null $self
+     * @param UserEntity|null $companion
      */
-    public function __construct(int $selfId, int $companionId, bool $isSender, string $content,
-                                int $id = null, int $createdAt = null, bool $deleted = null)
+    public function __construct(int $selfId, int $companionId, string $content, bool $isSender,
+                                int $id = null, int $createdAt = null, bool $deleted = null,
+                                UserEntity $self = null, UserEntity $companion = null)
     {
         $this->id = $id;
         $this->selfId = $selfId;
@@ -53,6 +59,9 @@ class MessageEntity
         $this->isSender = $isSender;
         $this->createdAt = $createdAt;
         $this->deleted = $deleted;
+
+        $this->self = $self;
+        $this->companion = $companion;
     }
 
 
@@ -77,7 +86,7 @@ class MessageEntity
     /**
      * @return string
      */
-    public function getContent() { return $this->content; }
+    public function getContent() { return  Html::encode($this->content); }
 
     /**
      * @return bool
@@ -136,5 +145,11 @@ class MessageEntity
 
     // #################### SECTION OF LOGIC ######################
 
-
+    /**
+     * @return false|string
+     */
+    public function getCreationDate()
+    {
+        return date(self::DATE_FORMAT, $this->createdAt);
+    }
 }

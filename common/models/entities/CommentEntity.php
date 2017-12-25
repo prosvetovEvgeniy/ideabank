@@ -7,6 +7,7 @@ use common\models\repositories\CommentLikeRepository;
 use common\models\repositories\CommentRepository;
 use common\models\repositories\TaskRepository;
 use common\models\repositories\UserRepository;
+use yii\helpers\Html;
 
 /**
  * Class CommentEntity
@@ -128,7 +129,7 @@ class CommentEntity
     /**
      * @return string
      */
-    public function getContent() { return $this->content; }
+    public function getContent() { return Html::encode($this->content); }
 
     /**
      * @return int | null

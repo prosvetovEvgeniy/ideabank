@@ -26,6 +26,6 @@ class CommentReplyAsset extends AssetBundle
     {
         parent::init();
 
-        $this->publishOptions = ['forceCopy' => true];
+        //$this->publishOptions = ['forceCopy' => true];
     }
 }

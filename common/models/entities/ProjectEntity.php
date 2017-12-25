@@ -5,6 +5,7 @@ namespace common\models\entities;
 
 use common\models\repositories\CompanyRepository;
 use common\models\repositories\TaskRepository;
+use yii\helpers\Html;
 
 /**
  * Class ProjectEntity
@@ -75,7 +76,7 @@ class ProjectEntity
     /**
      * @return string
      */
-    public function getName() { return $this->name; }
+    public function getName() { return Html::encode($this->name); }
 
     /**
      * @return int

@@ -48,9 +48,9 @@ class NoticeRepository
      * @param int|null $offset
      * @return NoticeEntity[]
      */
-    public function findAll(array $condition, int $limit = 20, int $offset = null)
+    public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
-        $models = Notice::find()->where($condition)->offset($offset)->limit($limit)->all();
+        $models = Notice::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
 
         return $this->buildEntities($models);
     }

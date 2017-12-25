@@ -46,11 +46,12 @@ class CompanyRepository
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
+     * @param string|null $orderBy
      * @return CompanyEntity[]
      */
-    public function findAll(array $condition, int $limit = 20, int $offset = null)
+    public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
-        $models = Company::find()->where($condition)->offset($offset)->limit($limit)->all();
+        $models = Company::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
 
         return $this->buildEntities($models);
     }
