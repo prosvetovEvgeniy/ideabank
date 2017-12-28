@@ -20,14 +20,9 @@ class MessageController extends Controller
 {
     public function actionDialog()
     {
-        /**
-         * @var UserEntity $user
-         */
-        $user = Yii::$app->user->identity->getEntity();
-
         $dataProvider = new EntityDataProvider([
             'condition' => [
-                'self_id' => $user->getId(),
+                'self_id' => Yii::$app->user->identity->getUserId(),
                 'deleted' => false
             ],
             'repositoryInstance' => DialogRepository::instance(),
@@ -41,14 +36,9 @@ class MessageController extends Controller
 
     public function actionInbox()
     {
-        /**
-         * @var UserEntity $user
-         */
-        $user = Yii::$app->user->identity->getEntity();
-
         $dataProvider = new EntityDataProvider([
             'condition' => [
-                'self_id'   => $user->getId(),
+                'self_id'   => Yii::$app->user->identity->getUserId(),
                 'is_sender' => false,
                 'deleted'   => false
             ],
@@ -63,14 +53,9 @@ class MessageController extends Controller
 
     public function actionSent()
     {
-        /**
-         * @var UserEntity $user
-         */
-        $user = Yii::$app->user->identity->getEntity();
-
         $dataProvider = new EntityDataProvider([
             'condition' => [
-                'self_id'   => $user->getId(),
+                'self_id'   => Yii::$app->user->identity->getUserId(),
                 'is_sender' => true,
                 'deleted'   => false
             ],
@@ -86,14 +71,9 @@ class MessageController extends Controller
 
     public function actionCompanions()
     {
-        /**
-         * @var UserEntity $user
-         */
-        $user = Yii::$app->user->identity->getEntity();
-
         $dataProvider = new EntityDataProvider([
             'condition' => [
-                'self_id'   => $user->getId(),
+                'self_id'   => Yii::$app->user->identity->getUserId(),
             ],
             'repositoryInstance' => CompanionRepository::instance(),
             'pagination' => [
@@ -118,7 +98,7 @@ class MessageController extends Controller
 
         $model = new DeleteMessageModel();
         $model->scenario = DeleteMessageModel::SCENARION_DELETE_MESSAGE;
-        $model->selfId = Yii::$app->user->identity->getEntity()->getId();
+        $model->selfId = Yii::$app->user->identity->getUserId();
 
         $model->load(Yii::$app->request->post());
 
@@ -141,7 +121,8 @@ class MessageController extends Controller
 
         $model = new DeleteMessageModel();
         $model->scenario = DeleteMessageModel::SCENARION_DELETE_DIALOG;
-        $model->selfId = Yii::$app->user->identity->getEntity()->getId();
+
+        $model->selfId = Yii::$app->user->identity->getUserId();
 
         $model->load(Yii::$app->request->post());
 
@@ -166,7 +147,7 @@ class MessageController extends Controller
         }
 
         $messages = MessageRepository::instance()->findAll([
-            'self_id'      => Yii::$app->user->identity->getEntity()->getId(),
+            'self_id'      => Yii::$app->user->identity->getUserId(),
             'companion_id' => $companionId,
             'deleted'      => false
         ], -1);
@@ -188,7 +169,7 @@ class MessageController extends Controller
         }
 
         $model = new SendMessageForm();
-        $model->selfId = Yii::$app->user->identity->getEntity()->getId();
+        $model->selfId = Yii::$app->user->identity->getUserId();
 
         $model->load(Yii::$app->request->post());
 

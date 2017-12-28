@@ -4,9 +4,12 @@ namespace common\models\entities;
 
 
 use common\models\repositories\CompanyRepository;
+use common\models\repositories\ParticipantRepository;
 use common\models\repositories\ProjectRepository;
 use common\models\repositories\UserRepository;
 use Yii;
+use yii\base\NotSupportedException;
+use yii\web\IdentityInterface;
 
 
 /**
@@ -31,7 +34,7 @@ use Yii;
  * @property array $listRolesAsText
  * @property \yii\rbac\ManagerInterface $auth
  */
-class ParticipantEntity
+class ParticipantEntity implements IdentityInterface
 {
     public const ROLE_USER = 'user';
     public const ROLE_MANAGER = 'manager';
@@ -103,13 +106,55 @@ class ParticipantEntity
     }
 
 
-    // #################### SECTION OF GETTERS ######################
-
+    // ######## SECTION OF REALIZATION IDENTITY ############
 
     /**
      * @return int | null
      */
-    public function getId() { return $this->id; }
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int|string $id
+     * @return ParticipantEntity|null
+     */
+    public static function findIdentity($id)
+    {
+        return ParticipantRepository::instance()->findOne(['id' => $id]);
+    }
+
+    /**
+     * @param mixed $token
+     * @param null $type
+     * @throws NotSupportedException
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getAuthKey()
+    {
+        return $this->getUser()->getAuthKey();
+    }
+
+    /**
+     * @param string $authKey
+     * @return bool
+     */
+    public function validateAuthKey($authKey)
+    {
+        return $this->getAuthKey() === $authKey;
+    }
+
+
+    // #################### SECTION OF GETTERS ######################
+
 
     /**
      * @return int

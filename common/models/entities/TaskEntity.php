@@ -389,7 +389,7 @@ class TaskEntity
             return null;
         }
 
-        return Yii::$app->user->identity->getEntity();
+        return Yii::$app->user->identity->getUser();
     }
 
     /**

@@ -33,16 +33,6 @@ class SendMessageForm extends Model
         ];
     }
 
-    public function checkOnEntrance($attribute, $params)
-    {
-        $parentComment = Comment::findOne(['id' => $this->$attribute, 'task_id' => $this->taskId]);
-
-        if(!$parentComment)
-        {
-            $this->addError($attribute);
-        }
-    }
-
     public function save()
     {
         $messageToSelf = new MessageEntity(

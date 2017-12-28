@@ -25,7 +25,7 @@ class CommentLikeController extends Controller
         }
 
         $model = new CommentVoteModel();
-        $model->userId = Yii::$app->user->identity->getEntity()->getId();
+        $model->userId = Yii::$app->user->identity->getUserId();
 
         $model->load(Yii::$app->request->post());
 
@@ -58,7 +58,7 @@ class CommentLikeController extends Controller
             throw new UnauthorizedHttpException();
         }
 
-        $userId = Yii::$app->user->identity->getEntity()->getId();
+        $userId = Yii::$app->user->identity->getUserId();
 
         $commentLike = CommentLikeRepository::instance()->findOne([
             'comment_id' => $commentId,
@@ -92,7 +92,7 @@ class CommentLikeController extends Controller
             throw new UnauthorizedHttpException();
         }
 
-        $userId = Yii::$app->user->identity->getEntity()->getId();
+        $userId = Yii::$app->user->identity->getUserId();
 
         $commentLike = CommentLikeRepository::instance()->findOne([
             'comment_id' => $commentId,

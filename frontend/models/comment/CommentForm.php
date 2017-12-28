@@ -57,7 +57,7 @@ class CommentForm extends Model
 
     public function saveComment()
     {
-        $senderId = Yii::$app->user->identity->getEntity()->getId();
+        $senderId = Yii::$app->user->identity->getUserId();
 
         $comment = new CommentEntity($this->taskId, $senderId, $this->content, $this->parentId);
 

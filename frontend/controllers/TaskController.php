@@ -31,7 +31,7 @@ class TaskController extends Controller
 
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, 10);
 
-        $participants = ParticipantRepository::instance()->getParticipantsInProjects(Yii::$app->user->identity->getEntity());
+        $participants = ParticipantRepository::instance()->getParticipantsInProjects(Yii::$app->user->identity->getUser());
 
         return $this->render('index', [
             'dataProvider'   => $dataProvider,
@@ -83,7 +83,7 @@ class TaskController extends Controller
         /**
          * @var UserEntity $user
          */
-        $user = Yii::$app->user->identity->getEntity();
+        $user = Yii::$app->user->identity->getUser();
 
         $projects = ProjectRepository::instance()->getProjectsForUser($user);
 

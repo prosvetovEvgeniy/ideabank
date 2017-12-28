@@ -12,7 +12,7 @@ class ProjectController extends Controller
 {
     public function actionIndex()
     {
-        $participants = ParticipantRepository::instance()->getParticipantsInProjects(Yii::$app->user->identity->getEntity());
+        $participants = ParticipantRepository::instance()->getParticipantsInProjects(Yii::$app->user->identity->getUser());
 
         return $this->render('index', ['participants' => $participants]);
     }

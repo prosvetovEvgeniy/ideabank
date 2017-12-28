@@ -163,7 +163,7 @@ class TaskEntitySearch extends Model implements EntitySearchInterface
                 }
                 elseif ($value === self::STATUS_OWN)
                 {
-                    $condition[] = TaskRepository::instance()->getConditionByAuthorForProject($project, Yii::$app->user->identity->getEntity());
+                    $condition[] = TaskRepository::instance()->getConditionByAuthorForProject($project, Yii::$app->user->identity->getUser());
                 }
             }
         }

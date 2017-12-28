@@ -24,7 +24,7 @@ class TaskLikeController extends Controller
         }
 
         $model = new TaskVoteModel();
-        $model->userId = Yii::$app->user->identity->getEntity()->getId();
+        $model->userId = Yii::$app->user->identity->getUserId();
 
         $model->load(Yii::$app->request->post());
 
@@ -57,11 +57,9 @@ class TaskLikeController extends Controller
             throw new UnauthorizedHttpException();
         }
 
-        $userId = Yii::$app->user->identity->getEntity()->getId();
-
         $taskLike = TaskLikeRepository::instance()->findOne([
             'task_id' => $taskId,
-            'user_id' => $userId,
+            'user_id' => Yii::$app->user->identity->getUserId(),
         ]);
 
         if(!$taskLike)
@@ -91,11 +89,9 @@ class TaskLikeController extends Controller
             throw new UnauthorizedHttpException();
         }
 
-        $userId = Yii::$app->user->identity->getEntity()->getId();
-
         $taskLike = TaskLikeRepository::instance()->findOne([
             'task_id' => $taskId,
-            'user_id' => $userId,
+            'user_id' => Yii::$app->user->identity->getUserId(),
         ]);
 
         if(!$taskLike)

@@ -2,6 +2,8 @@
 
 namespace frontend\models\authentication;
 
+use common\models\entities\ParticipantEntity;
+use common\models\entities\UserEntity;
 use yii\base\Model;
 use Yii;
 use yii\db\Exception;
@@ -18,6 +20,8 @@ use yii\db\Exception;
  * @property string $secondName
  * @property string $lastName
  * @property string $companyName
+ *
+ * @property ParticipantEntity $participant
  */
 class SignupForm extends Model
 {
@@ -32,6 +36,9 @@ class SignupForm extends Model
     public $secondName;
     public $lastName;
     public $companyName;
+
+    //сущность юзера
+    protected $participant;
 
     public function rules()
     {
@@ -86,7 +93,7 @@ class SignupForm extends Model
      * @return null
      * @throws Exception
      */
-    public function signup()
+    public function signUp()
     {
         if (!$this->validate()) {
             return null;
@@ -137,6 +144,11 @@ class SignupForm extends Model
             }
         }
 
-        return null;
+        return false;
     }
+
+    /**
+     * @return ParticipantEntity
+     */
+    public function getParticipant() { return $this->participant; }
 }

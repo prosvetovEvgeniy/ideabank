@@ -168,7 +168,7 @@ class ParticipantRepository
      */
     protected function buildEntity(Participant $model)
     {
-        $project = ProjectRepository::instance()->buildEntity($model->project);
+        $project = ($model->project) ? ProjectRepository::instance()->buildEntity($model->project) : null ;
 
         return new ParticipantEntity($model->user_id, $model->company_id, $model->project_id,
                                      $model->approved, $model->approved_at, $model->blocked, $model->blocked_at,
