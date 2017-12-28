@@ -75,10 +75,14 @@ class ParticipantEntity
      * @param int|null $id
      * @param int|null $createdAt
      * @param int|null $updatedAt
+     * @param ProjectEntity|null $project
+     * @param UserEntity|null $user
+     * @param CompanyEntity|null $company
      */
     public function __construct(int $userId, int $companyId = null, int $projectId = null, bool $approved = null,
                                 int $approvedAt = null, bool $blocked = null, int $blockedAt = null,
-                                int $id = null, int $createdAt = null, int $updatedAt = null)
+                                int $id = null, int $createdAt = null, int $updatedAt = null,
+                                ProjectEntity $project = null, UserEntity $user = null, CompanyEntity $company = null)
     {
         $this->id = $id;
         $this->userId = $userId;
@@ -92,6 +96,10 @@ class ParticipantEntity
         $this->updatedAt = $updatedAt;
 
         $this->auth = Yii::$app->authManager;
+
+        $this->project = $project;
+        $this->user = $user;
+        $this->company = $company;
     }
 
 

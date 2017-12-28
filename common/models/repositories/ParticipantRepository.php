@@ -53,7 +53,12 @@ class ParticipantRepository
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
-        $models = Participant::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
+        $models = Participant::find()->with('project')
+                                     ->where($condition)
+                                     ->offset($offset)
+                                     ->limit($limit)
+                                     ->orderBy($orderBy)
+                                     ->all();
 
         return $this->buildEntities($models);
     }
@@ -163,9 +168,11 @@ class ParticipantRepository
      */
     protected function buildEntity(Participant $model)
     {
+        $project = ProjectRepository::instance()->buildEntity($model->project);
+
         return new ParticipantEntity($model->user_id, $model->company_id, $model->project_id,
                                      $model->approved, $model->approved_at, $model->blocked, $model->blocked_at,
-                                     $model->id, $model->created_at, $model->updated_at);
+                                     $model->id, $model->created_at, $model->updated_at, $project);
     }
 
     /**
@@ -203,9 +210,9 @@ class ParticipantRepository
      */
     public function getParticipantsInProjects(UserEntity $user)
     {
-        return $this::findAll([
+        return self::findAll([
             'and',
-            ['user_id'=>$user->getId()],
+            ['user_id' => $user->getId()],
             ['not', ['company_id'=> null]],
             ['not', ['project_id'=> null]]
         ]);

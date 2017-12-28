@@ -23,10 +23,6 @@ use yii\helpers\Html;
         <p><?= Html::a('Количество задач : ' . $project->getAmountTasks() , ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_ALL], ['target' => '_blank']) ?></p>
     </div>
 
-    <div class="col-md-2">
-        <p><?= Html::a('Создать задачу', ['task/create'], ['target' => '_blank']) ?></p>
-    </div>
-
 </div>
 
 

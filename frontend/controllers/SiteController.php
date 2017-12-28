@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use common\models\activerecords\TaskFile;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -8,9 +9,9 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\forms\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
+use frontend\models\authentication\PasswordResetRequestForm;
+use frontend\models\authentication\ResetPasswordForm;
+use frontend\models\authentication\SignupForm;
 
 /**
  * Site controller

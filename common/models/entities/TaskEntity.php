@@ -5,6 +5,7 @@ namespace common\models\entities;
 
 use common\models\repositories\CommentRepository;
 use common\models\repositories\ProjectRepository;
+use common\models\repositories\TaskFileRepository;
 use common\models\repositories\TaskLikeRepository;
 use common\models\repositories\TaskRepository;
 use common\models\repositories\UserRepository;
@@ -36,6 +37,7 @@ use yii\helpers\Html;
  * @property TaskLikeEntity[] $taskLikes
  * @property CommentEntity[]  $comments
  * @propery  TaskEntity       $parent
+ * @property TaskFileEntity[] $files
  *
  */
 class TaskEntity
@@ -44,6 +46,10 @@ class TaskEntity
     public const STATUS_IN_PROGRESS = 1;
     public const STATUS_COMPLETED = 2;
     public const STATUS_MERGED = 3;
+
+    public const VISIBILITY_AREA_ALL = 0;
+    public const VISIBILITY_AREA_REGISTERED = 1;
+    public const VISIBILITY_AREA_PRIVATE = 2;
 
     public const LIST_STATUSES_AS_TEXT = [
         self::STATUS_ON_CONSIDERATION => 'на рассмотрении',
@@ -77,6 +83,7 @@ class TaskEntity
     protected $taskLikes;
     protected $comments;
     protected $parent;
+    protected $files;
 
 
     /**
@@ -98,7 +105,7 @@ class TaskEntity
     public function __construct(string $title, string $content, int $authorId, int $projectId,
                                 int $status = null, int $visibilityArea = null, int $parentId = null,
                                 int $plannedEndAt = null, int $endAt = null, int $id = null,
-                                 int $createdAt = null, int $updatedAt = null, bool $deleted = null)
+                                int $createdAt = null, int $updatedAt = null, bool $deleted = null)
     {
         $this->id = $id;
         $this->title = $title;
@@ -302,6 +309,16 @@ class TaskEntity
         return $this->parent;
     }
 
+    public function getFiles()
+    {
+        if($this->files === null)
+        {
+            $this->files = TaskFileRepository::instance()->findAll(['task_id' => $this->getId()]);
+        }
+
+        return $this->files;
+    }
+
 
     // #################### SECTION OF LOGIC ######################
 
@@ -415,6 +432,51 @@ class TaskEntity
         ]);
 
         return (!$taskLike) ? false : true;
+    }
+
+    /**
+     * Метод возвращает файлы с mimeType - {image},
+     * то есть картинки прикрепленные к данной
+     * задаче
+     *
+     * @return TaskFileEntity[]
+     */
+    public function getImagesToTask()
+    {
+        $imagesToTask = [];
+
+        foreach ($this->getFiles() as $file)
+        {
+            if($file->isImage())
+            {
+                $imagesToTask[] = $file;
+            }
+        }
+
+        return $imagesToTask;
+    }
+
+    /**
+     * Метод возвращает только файлы с mimeType
+     * отличным от image, то есть не картинки
+     * Не путать с методом getFiles(),
+     * который возвращает файлы всех типов
+     *
+     * @return TaskFileEntity[]
+     */
+    public function getFilesToTask()
+    {
+        $filesToTask = [];
+
+        foreach ($this->getFiles() as $file)
+        {
+            if(!$file->isImage())
+            {
+                $filesToTask[] = $file;
+            }
+        }
+
+        return $filesToTask;
     }
 }
 

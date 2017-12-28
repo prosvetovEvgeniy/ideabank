@@ -3,7 +3,7 @@
 use frontend\assets\MessageMenuAsset;
 use common\components\widgets\MessageMenuWidget;
 use frontend\assets\ChatAsset;
-use frontend\models\SendMessageForm;
+use frontend\models\message\SendMessageForm;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use common\models\entities\MessageEntity;

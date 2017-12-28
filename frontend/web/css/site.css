@@ -144,6 +144,19 @@ a.desc:after {
     font-weight: bold !important;
 }
 
+.task-images-block div{
+    margin-bottom: 25px;
+    display: inline-block;
+}
+
+.task-images-block img{
+    height: 50px;
+    width: 50px;
+}
+
+.task-files-block > div {
+    margin: 5px;
+}
 
 /* ########## COMMENT FORM RULES ##########*/
 

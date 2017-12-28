@@ -1,7 +1,8 @@
 <?php
 
-
 namespace common\models\entities;
+
+
 use common\models\repositories\UserRepository;
 use yii\helpers\Html;
 

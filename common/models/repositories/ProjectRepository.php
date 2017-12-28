@@ -5,6 +5,7 @@ namespace common\models\repositories;
 
 use common\models\activerecords\Project;
 use common\models\entities\ProjectEntity;
+use common\models\entities\UserEntity;
 use yii\db\Exception;
 use Yii;
 
@@ -156,7 +157,7 @@ class ProjectRepository
      * @param Project $model
      * @return ProjectEntity
      */
-    protected function buildEntity(Project $model)
+    public function buildEntity(Project $model)
     {
         return new ProjectEntity($model->name,$model->company_id, $model->default_visibility_area,
                                  $model->id, $model->created_at, $model->updated_at, $model->deleted);
@@ -189,4 +190,26 @@ class ProjectRepository
     // #################### UNIQUE METHODS OF CLASS ######################
 
 
+    /**
+     * @param UserEntity $user
+     * @return array
+     */
+    public function getProjectsForUser(UserEntity $user)
+    {
+        $participants = ParticipantRepository::instance()->getParticipantsInProjects($user);
+
+        if(!$participants)
+        {
+            return [];
+        }
+
+        $projects = [];
+
+        foreach ($participants as $participant)
+        {
+            $projects[] = $participant->getProject();
+        }
+
+        return $projects;
+    }
 }

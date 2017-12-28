@@ -5,7 +5,7 @@ use yii\helpers\Html;
 use common\components\dataproviders\EntityDataProvider;
 use common\models\entities\CommentEntity;
 use yii\widgets\ActiveForm;
-use frontend\models\CommentForm;
+use frontend\models\comment\CommentForm;
 use frontend\assets\CommentLikeAssset;
 use frontend\assets\CommentReplyAsset;
 use frontend\assets\TaskLikeAsset;
@@ -30,7 +30,6 @@ $increment = $pagination->pageSize * $pagination->page;  //приращение 
 $counter = 1; //счетчик для номера комментария
 
 ?>
-
     <div class="row">
 
         <div class="col-md-8">
@@ -51,6 +50,35 @@ $counter = 1; //счетчик для номера комментария
                     <span class="vote-down" title="Не нравится">
                         <i class="glyphicon glyphicon-thumbs-up"><?= $task->getAmountDislikes() ?></i>
                     </span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="task-images-block">
+                        <?php foreach ($task->getImagesToTask() as $image) : ?>
+
+                            <div>
+                                <?php
+                                    $img = Html::img($image->getWebAlias());
+                                    echo Html::a($img, ['task/download', 'id' => $image->getId()], ['target' => '_blank']);
+                                ?>
+                            </div>
+
+                        <?php endforeach; ?>
+                    </div>
+
+                    <div class="task-files-block">
+
+                        <?php foreach ($task->getFilesToTask() as $file) : ?>
+
+                            <div>
+                                <?= Html::a($file->getOriginalName(), ['task/download', 'id' => $file->getId()], ['target' => '_blank']) ?>
+                            </div>
+
+                        <?php endforeach; ?>
+
+                    </div>
                 </div>
             </div>
         </div>

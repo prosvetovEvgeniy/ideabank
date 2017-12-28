@@ -29,7 +29,8 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $updated_at
  *
  * @property Company $company
- * @property Users $profile
+ * @property Users   $profile
+ * @property Project $project
  *
  * @property UserEntity $userEntity
  */

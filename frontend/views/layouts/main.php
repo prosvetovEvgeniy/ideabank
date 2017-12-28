@@ -52,6 +52,7 @@ AppAsset::register($this);
         $menuItems[] = ['label' => 'Аккаунт (' . Yii::$app->user->identity->profile->username . ')', 'items' => [
             ['label' => 'Профиль', 'url' => ['/profile/index']],
             ['label' => 'Сообщения', 'url' => ['/message/dialog']],
+            ['label' => 'Создать задачу', 'url' => ['/task/create']],
             ['label' => 'Настройки', 'url' => ['/settings/index']],
             ['label' => 'Помощь', 'url' => ['/help/index']],
             ['label' => 'Выход', 'url' => ['/site/logout']],
