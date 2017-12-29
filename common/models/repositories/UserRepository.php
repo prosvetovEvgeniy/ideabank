@@ -13,6 +13,7 @@ class UserRepository
 
     // #################### STANDARD METHODS ######################
 
+
     /**
      * Возвращает экземпляр класса
      *
@@ -147,7 +148,7 @@ class UserRepository
     protected function assignProperties(&$model, &$user)
     {
         $model->username = $user->getUsername();
-        $model->password = $user->getPassword();
+        $model->password = $user->getPasswordHash();
         $model->email = $user->getEmail();
         $model->phone = $user->getPhone();
         $model->first_name = $user->getFirstName();

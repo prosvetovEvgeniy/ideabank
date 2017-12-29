@@ -1,6 +1,6 @@
 <?php
 
-use frontend\assets\MessageMenuAsset;
+use frontend\assets\SubMenuAsset;
 use common\components\widgets\MessageMenuWidget;
 use common\models\entities\MessageEntity;
 use common\components\dataproviders\EntityDataProvider;
@@ -8,7 +8,7 @@ use yii\widgets\LinkPager;
 use yii\helpers\Html;
 use frontend\assets\MessageDeleteAsset;
 
-MessageMenuAsset::register($this);
+SubMenuAsset::register($this);
 MessageDeleteAsset::register($this);
 
 /**

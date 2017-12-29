@@ -82,13 +82,15 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+
+        if ($model->load(Yii::$app->request->post()) && $model->login())
+        {
             return $this->goBack();
-        } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
         }
+
+        return $this->render('login', [
+            'model' => $model
+        ]);
     }
 
     /**
@@ -108,22 +110,11 @@ class SiteController extends Controller
         $model = new SignupForm();
         $model->scenario = SignupForm::SCENARIO_USER_SIGNUP;
 
-        /*if($model->load(Yii::$app->request->post())){
-            if($user = $model->signUp()){
-                if (Yii::$app->getUser()->login($user)) {
-                    return $this->goHome();
-                }
-            }
-        }*/
-
-        if($model->load(Yii::$app->request->post()))
+        if($model->load(Yii::$app->request->post()) && $model->signUpUser())
         {
-            if($model->signUp())
+            if(Yii::$app->getUser()->login($model->getParticipant()))
             {
-                if(Yii::$app->getUser()->login($model->getParticipant()))
-                {
-                    return $this->goHome();
-                }
+                return $this->goHome();
             }
         }
 
@@ -135,11 +126,11 @@ class SiteController extends Controller
         $model = new SignupForm();
         $model->scenario = SignupForm::SCENARIO_DIRECTOR_SIGNUP;
 
-        if($model->load(Yii::$app->request->post())){
-            if($user = $model->signUp()){
-                if (Yii::$app->getUser()->login($user)) {
-                    return $this->goHome();
-                }
+        if($model->load(Yii::$app->request->post()) && $model->signUpDirector())
+        {
+            if(Yii::$app->getUser()->login($model->getParticipant()))
+            {
+                return $this->goHome();
             }
         }
 

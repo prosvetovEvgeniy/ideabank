@@ -120,8 +120,7 @@ class Participant extends ActiveRecord implements IdentityInterface
         return $this->profile->auth_key;
     }
 
-    public function validateAuthKey($authKey)
-    {
+    public function validateAuthKey($authKey){
         return $this->getAuthKey() === $authKey;
     }
 

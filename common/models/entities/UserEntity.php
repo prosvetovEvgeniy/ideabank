@@ -1,6 +1,8 @@
 <?php
 
 namespace common\models\entities;
+
+
 use common\models\repositories\CommentLikeRepository;
 use common\models\repositories\CommentRepository;
 use common\models\repositories\MessageRepository;
@@ -9,6 +11,7 @@ use common\models\repositories\ParticipantRepository;
 use common\models\repositories\TaskLikeRepository;
 use common\models\repositories\TaskRepository;
 use yii\helpers\Html;
+use Yii;
 
 /**
  * Class UserEntity
@@ -325,7 +328,13 @@ class UserEntity
 
     // #################### SECTION OF LOGIC ######################
 
-
+    /**
+     * @return string
+     */
+    public function getPasswordHash()
+    {
+        return Yii::$app->security->generatePasswordHash($this->password);
+    }
 }
 
 

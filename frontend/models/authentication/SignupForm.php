@@ -2,8 +2,12 @@
 
 namespace frontend\models\authentication;
 
+use common\models\entities\CompanyEntity;
 use common\models\entities\ParticipantEntity;
 use common\models\entities\UserEntity;
+use common\models\repositories\CompanyRepository;
+use common\models\repositories\ParticipantRepository;
+use common\models\repositories\UserRepository;
 use yii\base\Model;
 use Yii;
 use yii\db\Exception;
@@ -80,9 +84,12 @@ class SignupForm extends Model
         ];
     }
 
-    public function validatePhone()
+    /**
+     * @param $attribute
+     */
+    public function validatePhone($attribute)
     {
-        if((strlen($this->phone)<10))
+        if((strlen($this->$attribute)<10))
         {
             $errorMsg= 'Введите корректный номер телефона';
             $this->addError('phone',$errorMsg);
@@ -90,61 +97,84 @@ class SignupForm extends Model
     }
 
     /**
-     * @return null
-     * @throws Exception
+     * @return bool
      */
-    public function signUp()
+    public function signUpUser()
     {
-        if (!$this->validate()) {
-            return null;
-        }
-
-        if($this->scenario === self::SCENARIO_USER_SIGNUP)
+        if (!$this->validate() || $this->scenario !== self::SCENARIO_USER_SIGNUP)
         {
-            $transaction = Yii::$app->db->beginTransaction();
-
-            try
-            {
-                $user = Yii::createObject(UserManager::class)->createUser($this->username, $this->email, $this->password);
-                $participant = Yii::createObject(ParticipantManager::class)->attachUser($user);
-
-                $transaction->commit();
-
-                return $participant;
-            }
-            catch (Exception $e)
-            {
-                $transaction->rollBack();
-                throw $e;
-            }
-
+            return false;
         }
-        else if($this->scenario === self::SCENARIO_DIRECTOR_SIGNUP)
+
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try
         {
-            $transaction = Yii::$app->db->beginTransaction();
+            $user = UserRepository::instance()->add(
+                new UserEntity($this->username, $this->password, $this->email)
+            );
 
-            try
-            {
-                $user = Yii::createObject(UserManager::class)->createUser(
-                    $this->username, $this->email, $this->password, $this->phone,
-                    $this->firstName, $this->secondName, $this->lastName
-                );
+            $this->participant = ParticipantRepository::instance()->add(
+                new ParticipantEntity($user->getId())
+            );
 
-                $company = Yii::createObject(CompanyManager::class)->createCompany($this->companyName);
-                $participant = Yii::createObject(ParticipantManager::class)->attachDirector($user, $company);
+            $transaction->commit();
 
-                $transaction->commit();
+            return true;
+        }
+        catch (Exception $e)
+        {
+            $transaction->rollBack();
 
-                return $participant;
-            }
-            catch (Exception $e)
-            {
-                $transaction->rollBack();
-                throw $e;
-            }
+            return false;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function signUpDirector()
+    {
+        if (!$this->validate() || $this->scenario !== self::SCENARIO_DIRECTOR_SIGNUP)
+        {
+            return false;
         }
 
-        return false;
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try
+        {
+            $user = UserRepository::instance()->add(
+                new UserEntity(
+                    $this->username, $this->password, $this->email,
+                    $this->phone, $this->firstName, $this->secondName,
+                    $this->lastName
+                )
+            );
+
+            $company = CompanyRepository::instance()->add(
+                new CompanyEntity($this->companyName)
+            );
+
+            $participant = new ParticipantEntity(
+                $user->getId(), $company->getId()
+            );
+
+            $participant->setApproved(true);
+            $participant->setApprovedAt(time());
+
+            $this->participant = ParticipantRepository::instance()->add($participant);
+
+            $transaction->commit();
+
+            return true;
+        }
+        catch (Exception $e)
+        {
+            $transaction->rollBack();
+
+            return false;
+        }
     }
 
     /**

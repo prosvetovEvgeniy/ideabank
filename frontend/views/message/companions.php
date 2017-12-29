@@ -1,12 +1,12 @@
 <?php
 
 use common\components\widgets\MessageMenuWidget;
-use frontend\assets\MessageMenuAsset;
+use frontend\assets\SubMenuAsset;
 use common\components\dataproviders\EntityDataProvider;
 use common\models\entities\UserEntity;
 use yii\widgets\LinkPager;
 
-MessageMenuAsset::register($this);
+SubMenuAsset::register($this);
 
 /**
  * @var EntityDataProvider $dataProvider

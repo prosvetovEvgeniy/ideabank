@@ -1,12 +1,20 @@
 <?php
 namespace common\models\forms;
 
-use common\models\activerecords\Participant;
+use common\models\entities\ParticipantEntity;
+use common\models\repositories\ParticipantRepository;
 use Yii;
 use yii\base\Model;
 
 /**
- * Login form
+ * Class LoginForm
+ * @package common\models\forms
+ *
+ * @property string $username
+ * @property string $password
+ * @property bool   $rememberMe
+ *
+ * @property ParticipantEntity $user
  */
 class LoginForm extends Model
 {
@@ -14,8 +22,7 @@ class LoginForm extends Model
     public $password;
     public $rememberMe = true;
 
-    private $_user;
-
+    private $user;
 
     /**
      * @inheritdoc
@@ -23,13 +30,10 @@ class LoginForm extends Model
     public function rules()
     {
         return [
-            // username and password are both required
             [['username', 'password'], 'required'],
             [['username'], 'exist','targetClass' => '\common\models\activerecords\Users', 'message' => 'Введен не существующий логин'],
-            // rememberMe must be a boolean value
-            ['rememberMe', 'boolean'],
-            // password is validated by validatePassword()
-            ['password', 'validatePassword'],
+            [['rememberMe'], 'boolean'],
+            [['password'], 'validatePassword'],
         ];
     }
 
@@ -43,47 +47,43 @@ class LoginForm extends Model
     }
 
     /**
-     * Validates the password.
-     * This method serves as the inline validation for password.
-     *
-     * @param string $attribute the attribute currently being validated
-     * @param array $params the additional name-value pairs given in the rule
+     * @param $attribute
      */
-    public function validatePassword($attribute, $params)
+    public function validatePassword($attribute)
     {
-        if (!$this->hasErrors()) {
-            $user = $this->getUser();
-            if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
-            }
+        $participantStub = $this->getParticipantStub();
+
+        if (!$participantStub || !$participantStub->validatePassword($this->$attribute))
+        {
+            $this->addError($attribute, 'Incorrect username or password.');
         }
     }
 
     /**
-     * Logs in a user using the provided username and password.
-     *
-     * @return bool whether the user is logged in successfully
+     * @return bool
      */
     public function login()
     {
-        if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+        if (!$this->validate())
+        {
+            return false;
         }
-        
-        return false;
+
+        return Yii::$app->user->login($this->getParticipantStub(), $this->rememberMe ? 3600 * 24 * 30 : 0);
     }
 
     /**
-     * Finds user by [[username]]
+     * Возвращает заглушку из таблицы participant
      *
-     * @return Participant|null
+     * @return ParticipantEntity|null
      */
-    protected function getUser()
+    protected function getParticipantStub()
     {
-        if ($this->_user === null) {
-            $this->_user = Participant::findByUsername($this->username);
+        if ($this->user === null)
+        {
+            $this->user = ParticipantRepository::instance()->findByUserName($this->username);
         }
 
-        return $this->_user;
+        return $this->user;
     }
 }

@@ -117,6 +117,15 @@ class ParticipantEntity implements IdentityInterface
     }
 
     /**
+     * @param string $password
+     * @return bool
+     */
+    public function validatePassword(string $password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->getUser()->getPassword());
+    }
+
+    /**
      * @param int|string $id
      * @return ParticipantEntity|null
      */

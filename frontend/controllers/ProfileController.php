@@ -7,8 +7,13 @@ use yii\web\Controller;
 
 class ProfileController extends Controller
 {
-    public function actionIndex()
+    public function actionSelfData()
     {
-        return $this->render('index');
+        return $this->render('selfdata');
+    }
+
+    public function actionSettings()
+    {
+        return $this->render('settings');
     }
 }

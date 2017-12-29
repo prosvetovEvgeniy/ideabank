@@ -217,4 +217,23 @@ class ParticipantRepository
             ['not', ['project_id'=> null]]
         ]);
     }
+
+    /**
+     * @param string $username
+     * @return ParticipantEntity|null
+     */
+    public function findByUserName(string $username)
+    {
+        $user = UserRepository::instance()->findOne(['username' => $username]);
+
+        if(!$user)
+        {
+            return null;
+        }
+
+        return $this->findOne([
+            'user_id'    => $user->getId(),
+            'company_id' => null
+        ]);
+    }
 }
