@@ -29,7 +29,7 @@ ChatAsset::register($this);
             <div class="chat-header">
                 <div class="companion-block">
                     <a href="#">
-                        <img class="avatar" src="/images/stub-img.png">
+                        <img class="comment-avatar" src="/images/stub-img.png">
                     </a>
                     <a href=""><?= $companion->getUsername() ?></a>
                 </div>
@@ -40,7 +40,7 @@ ChatAsset::register($this);
                 <?php foreach ($messages as $message) : ?>
 
                     <div class="message <?= ($message->getIsSender()) ? null : 'message-from-companion' ?>">
-                        <div class="message-img-block"><img class="avatar" src="/images/stub-img.png"></div>
+                        <div class="message-img-block"><img class="comment-avatar" src="/images/stub-img.png"></div>
                         <div class="chat-message-content">
                             <p><?= $message->getContent() ?></p>
                         </div>

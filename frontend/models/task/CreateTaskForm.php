@@ -100,7 +100,7 @@ class CreateTaskForm extends Model
                     TaskFileRepository::instance()->add($taskFile);
 
                     //если файл не сохранился, откатываем транзакцию
-                    if(!$file->saveAs('uploads/' . $hashName))
+                    if(!$file->saveAs(TaskFileEntity::PATH_TO_FILE . $hashName))
                     {
                         $transaction->rollBack();
 

@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use common\models\searchmodels\TaskEntitySearch;
+use common\components\widgets\RoleViewWidget;
 
 /**
  * @var \common\models\entities\ParticipantEntity[] $participants
@@ -19,10 +20,8 @@ use common\models\searchmodels\TaskEntitySearch;
         <div class="col-lg-3">
             <div class="panel panel-info">
                 <div class="panel-heading">
-
-                    <?= Html::a(HTML::encode($project->getName()), ['project/view', 'projectName' => $project->getName()], ['target' => '_blank']) ?>
-
-                    <div><span class="label label-success"><?= $participant->getRoleName() ?></span></div>
+                    <?= Html::a(HTML::encode($project->getName()), ['project/view', 'id' => $project->getId()], ['target' => '_blank']) ?>
+                    <?= RoleViewWidget::widget(['participant' => $participant]) ?>
                 </div>
 
                 <div class="panel-body">

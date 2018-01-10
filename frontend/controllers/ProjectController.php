@@ -17,13 +17,11 @@ class ProjectController extends Controller
         return $this->render('index', ['participants' => $participants]);
     }
 
-    public function actionView()
+    public function actionView(int $id)
     {
-        $projectName = Yii::$app->request->get('projectName');
-
         try
         {
-            $project = ProjectRepository::instance()->findOne(['name' => $projectName]);
+            $project = ProjectRepository::instance()->findOne(['id' => $id]);
         }
         catch (Exception $e)
         {

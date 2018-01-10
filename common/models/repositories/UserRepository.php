@@ -32,7 +32,10 @@ class UserRepository
      */
     public function findOne(array $condition)
     {
-        $model = Users::findOne($condition);
+        /**
+         * @var Users $model
+         */
+        $model = Users::find()->where($condition)->one();
 
         if(!$model || $model->deleted)
         {

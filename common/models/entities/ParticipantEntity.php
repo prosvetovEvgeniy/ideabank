@@ -3,6 +3,7 @@
 namespace common\models\entities;
 
 
+use common\models\repositories\AuthAssignmentRepository;
 use common\models\repositories\CompanyRepository;
 use common\models\repositories\ParticipantRepository;
 use common\models\repositories\ProjectRepository;
@@ -16,30 +17,45 @@ use yii\web\IdentityInterface;
  * Class ParticipantEntity
  * @package common\models\entities
  *
- * @property int $id
- * @property int $userId
- * @property int $companyId
- * @property int $projectId
+ * @property int  $id
+ * @property int  $userId
+ * @property int  $companyId
+ * @property int  $projectId
  * @property bool $approved
- * @property int $approvedAt
+ * @property int  $approvedAt
  * @property bool $blocked
- * @property int $blockedAt
- * @property int $createdAt
- * @property int $updatedAt
+ * @property int  $blockedAt
+ * @property int  $createdAt
+ * @property int  $updatedAt
+ * @property int  deletedAt
+ * @property bool $deleted
  *
- * @property CommentEntity $company
- * @property ProjectEntity $project
- * @property UserEntity    $user
+ * @property CommentEntity        $company
+ * @property ProjectEntity        $project
+ * @property UserEntity           $user
+ * @property AuthAssignmentEntity $authAssignment
  *
- * @property array $listRolesAsText
+ * @property array $roleList
  * @property \yii\rbac\ManagerInterface $auth
  */
 class ParticipantEntity implements IdentityInterface
 {
+    //названия ролей из RBAC
     public const ROLE_USER = 'user';
     public const ROLE_MANAGER = 'manager';
     public const ROLE_PROJECT_DIRECTOR = 'projectDirector';
     public const ROLE_COMPANY_DIRECTOR = 'companyDirector';
+
+    /**
+     * эти константы используются в видах для
+     * отображения статуса пользователя, если
+     * он не имеет роли, но вступил в проект
+     * или был заблокирован в нем
+     */
+    public const ROLE_BLOCKED = 'blocked';
+    public const ROLE_ON_CONSIDERATION = 'on consideration';
+
+    private const DATE_FORMAT = 'Y-m-d';
 
     protected $id;
     protected $userId;
@@ -51,17 +67,26 @@ class ParticipantEntity implements IdentityInterface
     protected $blockedAt;
     protected $createdAt;
     protected $updatedAt;
+    protected $deletedAt;
+    protected $deleted;
 
     //кеш связанных сущностей
     protected $company;
     protected $project;
     protected $user;
+    protected $authAssignment;
 
-    protected $listRolesAsText = [
-        self::ROLE_USER             => 'Участник',
-        self::ROLE_MANAGER          => 'Менеджер',
-        self::ROLE_PROJECT_DIRECTOR => 'Директор проекта',
-        self::ROLE_COMPANY_DIRECTOR => 'Директор компании',
+    /**
+     * список ролей и состояний на русском языке
+     * @see getRoleNameOnRussian()
+     */
+    protected $roleList = [
+        self::ROLE_USER                    => 'Участник',
+        self::ROLE_MANAGER                 => 'Менеджер',
+        self::ROLE_PROJECT_DIRECTOR        => 'Директор проекта',
+        self::ROLE_COMPANY_DIRECTOR        => 'Директор компании',
+        self::ROLE_BLOCKED                 => 'Заблокирован',
+        self::ROLE_ON_CONSIDERATION        => 'На рассмотрении'
     ];
 
     protected $auth;
@@ -78,6 +103,8 @@ class ParticipantEntity implements IdentityInterface
      * @param int|null $id
      * @param int|null $createdAt
      * @param int|null $updatedAt
+     * @param int|null $deletedAt
+     * @param bool $deleted
      * @param ProjectEntity|null $project
      * @param UserEntity|null $user
      * @param CompanyEntity|null $company
@@ -85,7 +112,8 @@ class ParticipantEntity implements IdentityInterface
     public function __construct(int $userId, int $companyId = null, int $projectId = null, bool $approved = null,
                                 int $approvedAt = null, bool $blocked = null, int $blockedAt = null,
                                 int $id = null, int $createdAt = null, int $updatedAt = null,
-                                ProjectEntity $project = null, UserEntity $user = null, CompanyEntity $company = null)
+                                int $deletedAt = null, bool $deleted, ProjectEntity $project = null,
+                                UserEntity $user = null, CompanyEntity $company = null)
     {
         $this->id = $id;
         $this->userId = $userId;
@@ -97,6 +125,8 @@ class ParticipantEntity implements IdentityInterface
         $this->blockedAt = $blockedAt;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+        $this->deletedAt = $deletedAt;
+        $this->deleted = $deleted;
 
         $this->auth = Yii::$app->authManager;
 
@@ -107,6 +137,7 @@ class ParticipantEntity implements IdentityInterface
 
 
     // ######## SECTION OF REALIZATION IDENTITY ############
+
 
     /**
      * @return int | null
@@ -210,6 +241,16 @@ class ParticipantEntity implements IdentityInterface
      */
     public function getUpdatedAt() { return $this->updatedAt; }
 
+    /**
+     * @return mixed
+     */
+    public function getDeletedAt() { return $this->deletedAt; }
+
+    /**
+     * @return bool
+     */
+    public function getDeleted() { return $this->deleted; }
+
 
     // #################### SECTION OF SETTERS ######################
 
@@ -234,6 +275,15 @@ class ParticipantEntity implements IdentityInterface
      */
     public function setApprovedAt (int $value) { $this->approvedAt = $value; }
 
+    /**
+     * @param int $value
+     */
+    public function setDeletedAt (int $value = null) { $this->deletedAt = $value; }
+
+    /**
+     * @param bool $value
+     */
+    public function setDeleted (bool $value) { $this->deleted = $value; }
 
     // #################### SECTION OF RELATIONS ######################
 
@@ -277,50 +327,67 @@ class ParticipantEntity implements IdentityInterface
         return $this->user;
     }
 
+    /**
+     * @return AuthAssignmentEntity
+     */
+    public function getAuthAssignment()
+    {
+        if($this->authAssignment === null)
+        {
+            $this->authAssignment = AuthAssignmentRepository::instance()->findOne(['user_id' => $this->getId()]);
+        }
+
+        return $this->authAssignment;
+    }
+
 
     // #################### SECTION OF LOGIC ######################
 
 
     /**
-     * Переводит название роли на русский язык
+     * Возвращает значение роли пользователя (из RBAC)
+     * или его статус, если он не имеет роли
      *
-     * @return mixed|string
+     * @return int|null|string
      */
     public function getRoleName()
     {
-        $role = $this->auth->getRolesByUser($this->getId());
+        if($this->blocked)
+        {
+            return self::ROLE_BLOCKED;
+        }
 
-        $key = key($role);
+        if(!$this->approved && !$this->blocked)
+        {
+            return self::ROLE_ON_CONSIDERATION;
+        }
 
-        return $this->listRolesAsText[$key] ?? 'Роль не определена';
+        return $this->getAuthAssignment()->getItemName();
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getRoleNameOnRussian()
+    {
+        $roleName = $this->getRoleName();
+
+        return $this->roleList[$roleName] ?? 'Роль не определена';
+    }
+
+    /**
+     * @return false|string
+     */
+    public function getUpdatedAtDate()
+    {
+        return date(self::DATE_FORMAT, $this->approvedAt);
+    }
+
+    /**
+     * @return false|string
+     */
+    public function getDeletedAtDate()
+    {
+        return date(self::DATE_FORMAT, $this->deletedAt);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

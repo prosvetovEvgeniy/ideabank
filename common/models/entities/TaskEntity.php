@@ -4,6 +4,7 @@ namespace common\models\entities;
 
 
 use common\models\repositories\CommentRepository;
+use common\models\repositories\CommentViewRepository;
 use common\models\repositories\ProjectRepository;
 use common\models\repositories\TaskFileRepository;
 use common\models\repositories\TaskLikeRepository;
@@ -290,7 +291,7 @@ class TaskEntity
     {
         if($this->comments === null)
         {
-            $this->comments = CommentRepository::instance()->findAll(['task_id' => $this->getId()]);
+            $this->comments = CommentViewRepository::instance()->findAll(['task_id' => $this->getId()]);
         }
 
         return $this->comments;

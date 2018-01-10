@@ -2805,3 +2805,63 @@ PHP message: PHP   8. frontend\controllers\TaskContro
 2017/12/28 13:59:34 [error] 16690#16690: *64 access forbidden by rule, client: 127.0.0.1, server: ideabank.local, request: "GET /uploads/P3CBpbei5PZcRfi1.png HTTP/1.1", host: "ideabank.local", referrer: "http://ideabank.local/task/view?taskId=10"
 2017/12/28 13:59:34 [error] 16690#16690: *64 access forbidden by rule, client: 127.0.0.1, server: ideabank.local, request: "GET /uploads/YiFsRT8S2-iLNPbw.jpg HTTP/1.1", host: "ideabank.local", referrer: "http://ideabank.local/task/view?taskId=10"
 2017/12/28 14:00:59 [error] 16943#16943: *1 access forbidden by rule, client: 127.0.0.1, server: ideabank.local, request: "GET /uploads/uya_ngzJZTGk6VKG.php HTTP/1.1", host: "ideabank.local"
+2017/12/29 18:37:49 [error] 2485#2485: *963 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 127.0.0.1, server: ideabank.local, request: "POST /profile/self-data HTTP/1.1", upstream: "fastcgi://unix:/var/run/php/php7.1-fpm.sock", host: "ideabank.local", referrer: "http://ideabank.local/profile/self-data"
+2017/12/29 18:39:58 [error] 2485#2485: *963 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 127.0.0.1, server: ideabank.local, request: "GET /debug/default/toolbar?tag=5a4629428a152 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php/php7.1-fpm.sock", host: "ideabank.local", referrer: "http://ideabank.local/profile/self-data"
+2017/12/29 18:44:02 [error] 2485#2485: *963 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 127.0.0.1, server: ideabank.local, request: "POST /profile/self-data HTTP/1.1", upstream: "fastcgi://unix:/var/run/php/php7.1-fpm.sock", host: "ideabank.local", referrer: "http://ideabank.local/profile/self-data"
+2017/12/29 18:51:09 [error] 2485#2485: *1005 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 127.0.0.1, server: ideabank.local, request: "POST /profile/self-data HTTP/1.1", upstream: "fastcgi://unix:/var/run/php/php7.1-fpm.sock", host: "ideabank.local", referrer: "http://ideabank.local/profile/self-data"
+2018/01/09 11:26:13 [error] 1915#1915: *249 FastCGI sent in stderr: "PHP message: PHP Warning:  The use statement with non-compound name 'Yii' has no effect in /home/evgeniy/ideabank/frontend/views/profile/selfdata.php on line 8
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /home/evgeniy/ideabank/frontend/web/index.php:0
+PHP message: PHP   2. yii\web\Application->run() /home/evgeniy/ideabank/frontend/web/index.php:19
+PHP message: PHP   3. yii\web\Application->handleRequest() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Application.php:386
+PHP message: PHP   4. yii\web\Application->runAction() /home/evgeniy/ideabank/vendor/yiisoft/yii2/web/Application.php:103
+PHP message: PHP   5. frontend\controllers\ProfileController->runAction() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Module.php:528
+PHP message: PHP   6. yii\base\InlineAction->runWithParams() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Controller.php:157
+PHP message: PHP   7. call_user_func_array:{/home/evgeniy/ideabank/vendor/yiisoft/yii2/base/InlineAction.php:57}() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/InlineAction.php:57
+PHP message: PHP   8. frontend\controllers\ProfileController->actionSelfData() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/InlineAction.php:57
+PHP message: PHP   9. frontend\controllers\ProfileController->render() /home/evgeniy/ideabank/frontend/controllers/ProfileController.php:22
+PHP message: PHP  10. yii\web\View->render() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Controller.php:384
+PHP message: PHP  11. yii\web\View->renderFile() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/View.php:152
+PHP message: PHP  12. yii\web\View->renderPhpFile() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/View.php:250" while reading response header from upstream, client: 127.0.0.1, server: ideabank.local, request: "POST /profile/self-data HTTP/1.1", upstream: "fastcgi://unix:/var/run/php/php7.1-fpm.sock:", host: "ideabank.local", referrer: "http://ideabank.local/profile/self-data"
+2018/01/09 12:30:50 [error] 1915#1915: *482 FastCGI sent in stderr: "PHP message: PHP Warning:  The use statement with non-compound name 'Yii' has no effect in /home/evgeniy/ideabank/frontend/views/profile/selfdata.php on line 8
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /home/evgeniy/ideabank/frontend/web/index.php:0
+PHP message: PHP   2. yii\web\Application->run() /home/evgeniy/ideabank/frontend/web/index.php:19
+PHP message: PHP   3. yii\web\Application->handleRequest() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Application.php:386
+PHP message: PHP   4. yii\web\Application->runAction() /home/evgeniy/ideabank/vendor/yiisoft/yii2/web/Application.php:103
+PHP message: PHP   5. frontend\controllers\ProfileController->runAction() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Module.php:528
+PHP message: PHP   6. yii\base\InlineAction->runWithParams() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Controller.php:157
+PHP message: PHP   7. call_user_func_array:{/home/evgeniy/ideabank/vendor/yiisoft/yii2/base/InlineAction.php:57}() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/InlineAction.php:57
+PHP message: PHP   8. frontend\controllers\ProfileController->actionSelfData() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/InlineAction.php:57
+PHP message: PHP   9. frontend\controllers\ProfileController->render() /home/evgeniy/ideabank/frontend/controllers/ProfileController.php:28
+PHP message: PHP  10. yii\web\View->render() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Controller.php:384
+PHP message: PHP  11. yii\web\View->renderFile() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/View.php:152
+PHP message: PHP  12. yii\web\View->renderPhpFile() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/View.php:250" while reading response header from upstream, client: 127.0.0.1, server: ideabank.local, request: "GET /profile/self-data HTTP/1.1", upstream: "fastcgi://unix:/var/run/php/php7.1-fpm.sock:", host: "ideabank.local", referrer: "http://ideabank.local/task/view?taskId=1"
+2018/01/09 13:21:05 [error] 1915#1915: *508 FastCGI sent in stderr: "PHP message: PHP Warning:  The use statement with non-compound name 'Yii' has no effect in /home/evgeniy/ideabank/frontend/views/profile/selfdata.php on line 8
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /home/evgeniy/ideabank/frontend/web/index.php:0
+PHP message: PHP   2. yii\web\Application->run() /home/evgeniy/ideabank/frontend/web/index.php:19
+PHP message: PHP   3. yii\web\Application->handleRequest() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Application.php:386
+PHP message: PHP   4. yii\web\Application->runAction() /home/evgeniy/ideabank/vendor/yiisoft/yii2/web/Application.php:103
+PHP message: PHP   5. frontend\controllers\ProfileController->runAction() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Module.php:528
+PHP message: PHP   6. yii\base\InlineAction->runWithParams() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Controller.php:157
+PHP message: PHP   7. call_user_func_array:{/home/evgeniy/ideabank/vendor/yiisoft/yii2/base/InlineAction.php:57}() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/InlineAction.php:57
+PHP message: PHP   8. frontend\controllers\ProfileController->actionSelfData() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/InlineAction.php:57
+PHP message: PHP   9. frontend\controllers\ProfileController->render() /home/evgeniy/ideabank/frontend/controllers/ProfileController.php:28
+PHP message: PHP  10. yii\web\View->render() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Controller.php:384
+PHP message: PHP  11. yii\web\View->renderFile() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/View.php:152
+PHP message: PHP  12. yii\web\View->renderPhpFile() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/View.php:250" while reading response header from upstream, client: 127.0.0.1, server: ideabank.local, request: "POST /profile/self-data HTTP/1.1", upstream: "fastcgi://unix:/var/run/php/php7.1-fpm.sock:", host: "ideabank.local", referrer: "http://ideabank.local/profile/self-data"
+2018/01/09 13:23:23 [error] 1915#1915: *512 FastCGI sent in stderr: "PHP message: PHP Warning:  The use statement with non-compound name 'Yii' has no effect in /home/evgeniy/ideabank/frontend/views/profile/selfdata.php on line 8
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /home/evgeniy/ideabank/frontend/web/index.php:0
+PHP message: PHP   2. yii\web\Application->run() /home/evgeniy/ideabank/frontend/web/index.php:19
+PHP message: PHP   3. yii\web\Application->handleRequest() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Application.php:386
+PHP message: PHP   4. yii\web\Application->runAction() /home/evgeniy/ideabank/vendor/yiisoft/yii2/web/Application.php:103
+PHP message: PHP   5. frontend\controllers\ProfileController->runAction() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Module.php:528
+PHP message: PHP   6. yii\base\InlineAction->runWithParams() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Controller.php:157
+PHP message: PHP   7. call_user_func_array:{/home/evgeniy/ideabank/vendor/yiisoft/yii2/base/InlineAction.php:57}() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/InlineAction.php:57
+PHP message: PHP   8. frontend\controllers\ProfileController->actionSelfData() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/InlineAction.php:57
+PHP message: PHP   9. frontend\controllers\ProfileController->render() /home/evgeniy/ideabank/frontend/controllers/ProfileController.php:28
+PHP message: PHP  10. yii\web\View->render() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Controller.php:384
+PHP message: PHP  11. yii\web\View->renderFile() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/View.php:152
+PHP message: PHP  12. yii\web\View->renderPhpFile() /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/View.php:250" while reading response header from upstream, client: 127.0.0.1, server: ideabank.local, request: "POST /profile/self-data HTTP/1.1", upstream: "fastcgi://unix:/var/run/php/php7.1-fpm.sock:", host: "ideabank.local", referrer: "http://ideabank.local/profile/self-data"

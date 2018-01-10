@@ -22,6 +22,8 @@ use yii\helpers\FileHelper;
  */
 class TaskFileEntity
 {
+    public const PATH_TO_FILE = 'uploads/tasks/';
+
     protected $id;
     protected $taskId;
     protected $hashName;
@@ -149,7 +151,7 @@ class TaskFileEntity
      */
     public function getWebAlias()
     {
-        return Yii::getAlias('@web/uploads/' . $this->getHashName());
+        return Yii::getAlias('@web/' . self::PATH_TO_FILE . $this->getHashName());
     }
 
     /**
@@ -157,7 +159,7 @@ class TaskFileEntity
      */
     public function getWebRootAlias()
     {
-        return Yii::getAlias('@webroot/uploads/' . $this->getHashName());
+        return Yii::getAlias('@webroot/' . self::PATH_TO_FILE . $this->getHashName());
     }
 
     /**

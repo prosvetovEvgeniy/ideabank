@@ -90,9 +90,7 @@ class TaskController extends Controller
         $model = new CreateTaskForm();
         $model->authorId = $user->getId();
 
-        $model->load(Yii::$app->request->post());
-
-        if($model->validate())
+        if($model->load(Yii::$app->request->post()) && $model->validate())
         {
             $model->files = UploadedFile::getInstances($model, 'files');
 

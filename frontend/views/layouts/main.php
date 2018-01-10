@@ -50,7 +50,7 @@ AppAsset::register($this);
         $menuItems[] = ['label' => 'Проекты', 'url' => '/project/index'];
 
         $menuItems[] = ['label' => 'Аккаунт (' . Yii::$app->user->identity->getUser()->getUserName() . ')', 'items' => [
-            ['label' => 'Личный кабинет', 'url' => ['/profile/self-data']],
+            ['label' => 'Личный кабинет', 'url' => ['/profile/change-own-data']],
             ['label' => 'Сообщения', 'url' => ['/message/dialog']],
             ['label' => 'Создать задачу', 'url' => ['/task/create']],
             ['label' => 'Помощь', 'url' => ['/help/index']],

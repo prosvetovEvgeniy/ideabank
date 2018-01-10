@@ -51,7 +51,7 @@ class DataController extends Controller
         //############### FILLING COMPANIES ###############
 
 
-        $companyIds['infSysId'] = $this->addCompany('Современные информационные системы');
+        $companyIds['infSysId'] = $this->addCompany('Совр. инф. системы');
         $companyIds['eCompanyId'] = $this->addCompany('E-company');
 
 
@@ -84,6 +84,7 @@ class DataController extends Controller
         $participantIds['evgeniyGithub'] = $this->addParticipant($userIds['evgeniy'], $companyIds['eCompanyId'], $projectIds['github']);
         $participantIds['evgeniyVk'] = $this->addParticipant($userIds['evgeniy'], $companyIds['eCompanyId'], $projectIds['vk']);
         $participantIds['evgeniyXabr'] = $this->addParticipant($userIds['evgeniy'], $companyIds['eCompanyId'], $projectIds['xabr']);
+        $participantIds['evgeniyVulcanm'] = $this->addParticipant($userIds['evgeniy'], $companyIds['infSysId'], $projectIds['vulcan']);
 
         $participantIds['adminStub'] = $this->addParticipantStub($userIds['admin']);
         $participantIds['adminDirector'] = $this->addParticipantDirector($userIds['admin'], $companyIds['infSysId']);
@@ -100,11 +101,13 @@ class DataController extends Controller
 
 
         $user = $auth->getRole('user');
+        $manager = $auth->getRole('manager');
         $director = $auth->getRole('projectDirector');
 
         $auth->assign($user,$participantIds['evgeniyGithub']);
         $auth->assign($user,$participantIds['evgeniyVk']);
         $auth->assign($user,$participantIds['evgeniyXabr']);
+        $auth->assign($manager, $participantIds['evgeniyVulcanm']);
 
         $auth->assign($director,$participantIds['adminVulcan']);
 

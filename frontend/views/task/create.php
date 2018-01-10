@@ -33,4 +33,5 @@ use yii\helpers\ArrayHelper;
 
 <?= Html::submitButton('Создать', ['class' => 'btn btn-primary']) ?>
 
+
 <?php ActiveForm::end(); ?>

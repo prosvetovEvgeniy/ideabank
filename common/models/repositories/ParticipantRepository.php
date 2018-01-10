@@ -14,6 +14,7 @@ class ParticipantRepository
 
     // #################### STANDARD METHODS ######################
 
+
     /**
      * Возвращает экземпляр класса
      *
@@ -139,7 +140,63 @@ class ParticipantRepository
         if(!$model->save())
         {
             Yii::error($model->errors);
+            throw new Exception('Cannot block participant with id = ' . $participant->getId());
+        }
+
+        return $this->buildEntity($model);
+    }
+
+    /**
+     * @param ParticipantEntity $participant
+     * @return ParticipantEntity
+     * @throws Exception
+     */
+    public function delete(ParticipantEntity $participant)
+    {
+        $model = Participant::findOne(['id' => $participant->getId()]);
+
+        if(!$model)
+        {
+            throw new Exception('Participant with id = ' . $participant->getId() . ' does not exists');
+        }
+
+        if($model->deleted)
+        {
+            throw new Exception('Participant with id = ' . $participant->getId() . ' already deleted');
+        }
+
+        $model->deleted = true;
+        $model->deleted_at = time();
+
+        if(!$model->save())
+        {
+            Yii::error($model->errors);
             throw new Exception('Cannot delete participant with id = ' . $participant->getId());
+        }
+
+        return $this->buildEntity($model);
+    }
+
+    /**
+     * @param ParticipantEntity $participant
+     * @return ParticipantEntity
+     * @throws Exception
+     */
+    public function deleteFromDb(ParticipantEntity $participant)
+    {
+        $model = Participant::findOne(['id' => $participant->getId()]);
+
+        if(!$model)
+        {
+            throw new Exception('Participant with id = ' . $participant->getId() . ' does not exists');
+        }
+
+        $model->deleted = true;
+
+        if(!$model->delete())
+        {
+            Yii::error($model->errors);
+            throw new Exception('Cannot delete participant from db with id = ' . $participant->getId());
         }
 
         return $this->buildEntity($model);
@@ -160,6 +217,8 @@ class ParticipantRepository
         $model->approved_at = $participant->getApprovedAt();
         $model->blocked = $participant->getBlocked();
         $model->blocked_at = $participant->getBlockedAt();
+        $model->deleted_at = $participant->getDeletedAt();
+        $model->deleted = $participant->getDeleted();
     }
 
     /**
@@ -172,7 +231,8 @@ class ParticipantRepository
 
         return new ParticipantEntity($model->user_id, $model->company_id, $model->project_id,
                                      $model->approved, $model->approved_at, $model->blocked, $model->blocked_at,
-                                     $model->id, $model->created_at, $model->updated_at, $project);
+                                     $model->id, $model->created_at, $model->updated_at, $model->deleted_at,
+                                     $model->deleted, $project);
     }
 
     /**
@@ -208,13 +268,39 @@ class ParticipantRepository
      * @param UserEntity $user
      * @return ParticipantEntity[]
      */
-    public function getParticipantsInProjects(UserEntity $user)
+    public function getParticipantsInProjects(UserEntity $user = null)
     {
-        return self::findAll([
+        if(!$user)
+        {
+            $user = Yii::$app->user->identity->getUser();
+        }
+
+        return $this->findAll([
             'and',
             ['user_id' => $user->getId()],
             ['not', ['company_id'=> null]],
-            ['not', ['project_id'=> null]]
+            ['not', ['project_id'=> null]],
+            ['deleted' => false]
+        ]);
+    }
+
+    /**
+     * @param UserEntity|null $user
+     * @return ParticipantEntity[]
+     */
+    public function getDeletedParticipants(UserEntity $user = null)
+    {
+        if(!$user)
+        {
+            $user = Yii::$app->user->identity->getUser();
+        }
+
+        return $this->findAll([
+            'and',
+            ['user_id' => $user->getId()],
+            ['not', ['company_id'=> null]],
+            ['not', ['project_id'=> null]],
+            ['deleted' => true]
         ]);
     }
 

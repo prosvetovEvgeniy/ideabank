@@ -52,11 +52,11 @@ class SignupForm extends Model
 
             [['username'], 'trim'],
             [['username'], 'unique', 'targetClass' => '\common\models\activerecords\Users', 'message' => 'Такой логин уже занят'],
-            [['username'], 'string', 'min' => 2, 'max' => 255],
+            [['username'], 'string', 'min' => 2, 'max' => 50],
 
             [['email'], 'trim'],
             [['email'], 'email'],
-            [['email'], 'string', 'max' => 255],
+            [['email'], 'string', 'max' => 50],
             [['email'], 'unique', 'targetClass' => '\common\models\activerecords\Users', 'message' => 'Такой email уже занят'],
 
             [['password'], 'string', 'min' => 6],

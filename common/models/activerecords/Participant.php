@@ -27,6 +27,8 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $blocked_at
  * @property integer $created_at
  * @property integer $updated_at
+ * @property integer $deleted_at
+ * @property boolean $deleted
  *
  * @property Company $company
  * @property Users   $profile
@@ -34,13 +36,8 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property UserEntity $userEntity
  */
-class Participant extends ActiveRecord implements IdentityInterface
+class Participant extends ActiveRecord
 {
-    const USER_ROLE = 'user';
-    const MANAGER_ROLE = 'manager';
-    const PROJECT_DIRECTOR_ROLE = 'projectDirector';
-    const COMPANY_DIRCTOR_ROLE = 'companyDirector';
-
     private $userEntity;
 
     /**
@@ -80,48 +77,12 @@ class Participant extends ActiveRecord implements IdentityInterface
         return [
             [['user_id'], 'required'],
             [['user_id', 'company_id', 'project_id'], 'integer'],
-            [['approved', 'blocked'], 'boolean'],
-            [['approved_at', 'blocked_at','created_at', 'updated_at'], 'safe'],
+            [['approved', 'blocked', 'deleted'], 'boolean'],
+            [['approved_at', 'blocked_at','created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Company::className(), 'targetAttribute' => ['company_id' => 'id']],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Project::className(), 'targetAttribute' => ['project_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
-    }
-
-    public static function findByUsername($username)
-    {
-        $user =  Users::findOne(['username' => $username]);
-
-        return static::findOne(['user_id' => $user->id, 'company_id' => null]);
-    }
-
-    public static function findIdentity($id)
-    {
-        return static::findOne(['id' => $id]);
-    }
-
-    public function validatePassword($password)
-    {
-        return Yii::$app->security->validatePassword($password, $this->profile->password);
-    }
-
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getAuthKey()
-    {
-        return $this->profile->auth_key;
-    }
-
-    public function validateAuthKey($authKey){
-        return $this->getAuthKey() === $authKey;
     }
 
     /**
@@ -146,18 +107,5 @@ class Participant extends ActiveRecord implements IdentityInterface
     public function getProfile()
     {
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
-    }
-
-    /**
-     * @return UserEntity
-     */
-    public function getEntity()
-    {
-        if($this->userEntity === null)
-        {
-            $this->userEntity = UserRepository::instance()->findOne(['id' => $this->user_id]);
-        }
-
-        return$this->userEntity;
     }
 }

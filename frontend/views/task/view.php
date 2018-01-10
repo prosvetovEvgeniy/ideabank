@@ -197,7 +197,7 @@ $counter = 1; //счетчик для номера комментария
 
                             <div class="media-left">
                                 <a href="#">
-                                    <img class="avatar" src="/images/pyramid.jpg">
+                                    <?= Html::img($comment->getUser()->getAvatarAlias(), ['class' => 'comment-avatar']) ?>
                                 </a>
                             </div>
                             <div class="media-right">

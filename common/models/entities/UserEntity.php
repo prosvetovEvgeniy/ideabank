@@ -5,6 +5,7 @@ namespace common\models\entities;
 
 use common\models\repositories\CommentLikeRepository;
 use common\models\repositories\CommentRepository;
+use common\models\repositories\CommentViewRepository;
 use common\models\repositories\MessageRepository;
 use common\models\repositories\NoticeRepository;
 use common\models\repositories\ParticipantRepository;
@@ -42,6 +43,9 @@ use Yii;
  */
 class UserEntity
 {
+    public const PATH_TO_AVATAR = 'uploads/avatars/';
+    private const PATH_TO_AVATAR_STUB = 'images/stub-img.png';
+
     protected $id;
     protected $username;
     protected $password;
@@ -151,7 +155,10 @@ class UserEntity
     /**
      * @return string | null
      */
-    public function getAvatar() { return $this->avatar; }
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
 
     /**
      * @return string | null
@@ -234,6 +241,7 @@ class UserEntity
 
     // #################### SECTION OF RELATIONS ######################
 
+
     /**
      * @return ParticipantEntity[]
      */
@@ -267,7 +275,7 @@ class UserEntity
     {
         if($this->comments === null)
         {
-            $this->comments = CommentRepository::instance()->findAll(['sender_id' => $this->getId()]);
+            $this->comments = CommentViewRepository::instance()->findAll(['sender_id' => $this->getId()]);
         }
 
         return $this->comments;
@@ -328,12 +336,30 @@ class UserEntity
 
     // #################### SECTION OF LOGIC ######################
 
+
     /**
      * @return string
      */
     public function getPasswordHash()
     {
         return Yii::$app->security->generatePasswordHash($this->password);
+    }
+
+    /**
+     * Возвращает путь к аватару,
+     * не путать с getAvatar(), который
+     * возвращает только название аватара
+     *
+     * @return bool|string
+     */
+    public function getAvatarAlias()
+    {
+        if(!$this->avatar)
+        {
+            return Yii::getAlias('@web/' . self::PATH_TO_AVATAR_STUB);
+        }
+
+        return Yii::getAlias('@web/' . self::PATH_TO_AVATAR . $this->avatar);
     }
 }
 
