@@ -12,8 +12,9 @@ use yii\db\ActiveRecord;
  * @property integer $id
  * @property integer $self_id
  * @property integer $companion_id
- * @property string $content
+ * @property string  $content
  * @property boolean $is_sender
+ * @property boolean $viewed
  * @property integer $created_at
  * @property boolean $deleted
  *
@@ -33,8 +34,6 @@ class Message extends \yii\db\ActiveRecord
     public function __construct(array $config = [])
     {
         parent::__construct($config);
-
-        //$this->deleted = false;
     }
 
     public function behaviors()
@@ -59,25 +58,9 @@ class Message extends \yii\db\ActiveRecord
             [['self_id', 'companion_id', 'is_sender', 'content'], 'required'],
             [['self_id', 'companion_id', 'created_at'], 'integer'],
             [['content'], 'string'],
-            [['is_sender', 'deleted'], 'boolean'],
+            [['is_sender', 'viewed', 'deleted'], 'boolean'],
             [['self_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['self_id' => 'id']],
             [['companion_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['companion_id' => 'id']],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'self_id' => 'Self ID',
-            'companion_id' => 'Companion ID',
-            'content' => 'Content',
-            'is_sender' => 'Is Sender',
-            'created_at' => 'Created At',
-            'deleted' => 'Deleted',
         ];
     }
 

@@ -139,7 +139,7 @@ class TaskEntitySearch extends Model implements EntitySearchInterface
 
             if(!in_array($key, $this->skipOnBuildLike))
             {
-                $condition[] = ['like', $key, $value];
+                $condition[] = ['like', "lower({$key})", strtolower($value)];
             }
             elseif ($key === 'status')
             {

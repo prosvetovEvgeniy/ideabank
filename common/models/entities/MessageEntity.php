@@ -10,13 +10,14 @@ use yii\helpers\Html;
  * Class MessageEntity
  * @package common\models\entities
  *
- * @property int $id
- * @property int $selfId
- * @property int $companionId
- * @property string  $content
- * @property bool $isSender
- * @property int $createdAt
- * @property bool $deleted
+ * @property int    $id
+ * @property int    $selfId
+ * @property int    $companionId
+ * @property string $content
+ * @property bool   $isSender
+ * @property bool   $viewed
+ * @property int    $createdAt
+ * @property bool   $deleted
 
  * @property UserEntity $self
  * @property UserEntity $companion
@@ -30,6 +31,7 @@ class MessageEntity
     protected $companionId;
     protected $content;
     protected $isSender;
+    protected $viewed;
     protected $createdAt;
     protected $deleted;
 
@@ -44,20 +46,22 @@ class MessageEntity
      * @param string $content
      * @param bool $isSender
      * @param int|null $id
+     * @param bool|null $viewed
      * @param int|null $createdAt
      * @param bool|null $deleted
      * @param UserEntity|null $self
      * @param UserEntity|null $companion
      */
     public function __construct(int $selfId, int $companionId, string $content, bool $isSender,
-                                int $id = null, int $createdAt = null, bool $deleted = null,
-                                UserEntity $self = null, UserEntity $companion = null)
+                                int $id = null, bool $viewed = null, int $createdAt = null,
+                                bool $deleted = null, UserEntity $self = null, UserEntity $companion = null)
     {
         $this->id = $id;
         $this->selfId = $selfId;
         $this->companionId = $companionId;
         $this->content = $content;
         $this->isSender = $isSender;
+        $this->viewed = $viewed;
         $this->createdAt = $createdAt;
         $this->deleted = $deleted;
 
@@ -95,6 +99,11 @@ class MessageEntity
     public function getIsSender() { return $this->isSender; }
 
     /**
+     * @return mixed
+     */
+    public function getViewed() { return $this->viewed; }
+
+    /**
      * @return int | null
      */
     public function getCreatedAt() { return $this->createdAt; }
@@ -113,6 +122,10 @@ class MessageEntity
      */
     public function setCompanionId(string $value) { $this->companionId = $value; }
 
+    /**
+     * @param bool $value
+     */
+    public function setViewed(bool $value) { $this->viewed = $value; }
 
     // #################### SECTION OF RELATIONS ######################
 

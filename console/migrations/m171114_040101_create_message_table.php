@@ -18,6 +18,7 @@ class m171114_040101_create_message_table extends Migration
             'companion_id' => $this->integer()->notNull(),
             'content' => $this->text()->notNull(),
             'is_sender' => $this->boolean()->notNull(),
+            'viewed' => $this->boolean()->defaultValue(false),
             'created_at' => $this->integer(),
             'deleted' => $this->boolean()->defaultValue(false)
         ]);
@@ -27,6 +28,7 @@ class m171114_040101_create_message_table extends Migration
 
         $this->createIndex('message_self_id_index', 'message','self_id');
         $this->createIndex('message_companion_id_index','message', 'companion_id');
+        $this->createIndex('message_created_at_index', 'message', 'created_at');
     }
 
     /**
@@ -36,6 +38,7 @@ class m171114_040101_create_message_table extends Migration
     {
         $this->dropIndex('message_self_id_index','message');
         $this->dropIndex('message_companion_id_index','message');
+        $this->dropIndex('message_created_at_index', 'message');
 
         $this->dropForeignKey('message_users_self_id_fk', 'message');
         $this->dropForeignKey('message_users_companion_id_fk', 'message');

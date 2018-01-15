@@ -60,18 +60,4 @@ class Notice extends \yii\db\ActiveRecord
             [['recipient_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['recipient_id' => 'id']],
         ];
     }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'recipient_id' => 'Recipient ID',
-            'content' => 'Content',
-            'created_at' => 'Created At',
-            'viewed' => 'Viewed',
-        ];
-    }
 }

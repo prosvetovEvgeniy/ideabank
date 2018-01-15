@@ -31,7 +31,7 @@ ChatAsset::register($this);
                     <a href="#">
                         <img class="comment-avatar" src="/images/stub-img.png">
                     </a>
-                    <a href=""><?= $companion->getUsername() ?></a>
+                    <?= Html::a($companion->getUsername(), ['/profile/view', 'id' => $companion->getId()]) ?>
                 </div>
                 <button type="button" class="btn btn-outline-danger">Удалить диалог</button>
             </div>

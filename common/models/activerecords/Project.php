@@ -12,6 +12,7 @@ use yii\db\ActiveRecord;
  * @property integer $id
  * @property string $name
  * @property integer $company_id
+ * @property string  $description
  * @property integer $default_visibility_area
  * @property integer $created_at
  * @property integer $updated_at
@@ -60,26 +61,10 @@ class Project extends \yii\db\ActiveRecord
         return [
             [['name', 'company_id'], 'required'],
             [['company_id', 'default_visibility_area', 'created_at', 'updated_at'], 'integer'],
-            [['name'], 'string', 'max' => 255],
+            [['name', 'description'], 'string', 'max' => 255],
             [['name'], 'unique'],
             [['deleted'], 'boolean'],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Company::className(), 'targetAttribute' => ['company_id' => 'id']],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'company_id' => 'Company ID',
-            'default_visibility_area' => 'Default Visibility Area',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'deleted' => 'Deleted',
         ];
     }
 }

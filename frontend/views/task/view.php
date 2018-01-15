@@ -196,16 +196,13 @@ $counter = 1; //счетчик для номера комментария
                              data-current-user-disliked-it="<?= $comment->getCurrentUserDislikedIt() ?>">
 
                             <div class="media-left">
-                                <a href="#">
-                                    <?= Html::img($comment->getUser()->getAvatarAlias(), ['class' => 'comment-avatar']) ?>
-                                </a>
+                                <?php $img = Html::img($comment->getUser()->getAvatarAlias(), ['class' => 'comment-avatar']) ?>
+                                <?= Html::a($img, ['/profile/view', 'id' => $comment->getUser()->getId()]) ?>
                             </div>
                             <div class="media-right">
                                 <div class="comment-title">
                                     <h5 class="comment-fio no-margin-top">
-                                        <a href="#">
-                                            <?= $comment->getUser()->getUsername() ?>
-                                        </a>
+                                        <?= Html::a($comment->getUser()->getUsername(), ['/profile/view', 'id' => $comment->getUser()->getId()]) ?>
                                     </h5>
                                     <p class="comment-number"><?php echo '#' . ($counter + $increment); $counter++; ?></p>
                                 </div>
@@ -217,9 +214,8 @@ $counter = 1; //счетчик для номера комментария
 
                                         <div class="comment-parent">
                                             <div class="comment-parent-username">
-                                                <a href="#">
-                                                    <?= $parent->getUser()->getUsername() ?>
-                                                </a></div>
+                                                <?= Html::a($parent->getUser()->getUsername(), ['/profile/view', 'id' => $parent->getUser()->getId()]) ?>
+                                            </div>
                                             <div class="comment-parent-content">>> <?= $parent->getContent() ?> </div>
                                         </div>
                                     <?php endif; ?>

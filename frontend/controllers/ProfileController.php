@@ -5,6 +5,7 @@ namespace frontend\controllers;
 
 use common\models\repositories\AuthAssignmentRepository;
 use common\models\repositories\ParticipantRepository;
+use common\models\repositories\UserRepository;
 use frontend\models\profile\ChangeOwnDataForm;
 use frontend\models\profile\ChangePasswordForm;
 use yii\db\Exception;
@@ -65,6 +66,25 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function actionView(int $id)
+    {
+        $user = UserRepository::instance()->findOne(['id' => $id]);
+
+        if(!$user)
+        {
+            throw new BadRequestHttpException();
+        }
+
+        return $this->render('view', [
+            'user' => $user
+        ]);
+    }
+
+
+    //###################### AJAX ACTIONS ######################
+
+
+    //покинуть проект ( deleted = false ) в таблице participants
     public function actionLeaveProject()
     {
         $participantId = Yii::$app->request->post('participantId');
@@ -88,6 +108,7 @@ class ProfileController extends Controller
         }
     }
 
+    //присоединение к проекту
     public function actionJoinToProject()
     {
         $participantId = Yii::$app->request->post('participantId');
@@ -114,6 +135,7 @@ class ProfileController extends Controller
         }
     }
 
+    //удаление записи в таблице participant
     public function actionDeleteParticipant()
     {
         $participantId = Yii::$app->request->post('participantId');

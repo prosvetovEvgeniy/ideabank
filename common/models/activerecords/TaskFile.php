@@ -41,7 +41,6 @@ class TaskFile extends \yii\db\ActiveRecord
         ];
     }
 
-
     /**
      * @inheritdoc
      */
@@ -53,21 +52,6 @@ class TaskFile extends \yii\db\ActiveRecord
             [['deleted'], 'boolean'],
             [['hash_name', 'original_name'], 'string', 'max' => 255],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::className(), 'targetAttribute' => ['task_id' => 'id']],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'task_id' => 'Task ID',
-            'hash_name' => 'Hash Name',
-            'original_name' => 'Original Name',
-            'created_at' => 'Created At',
-            'deleted' => 'Deleted',
         ];
     }
 

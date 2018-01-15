@@ -2,9 +2,13 @@
 
 namespace frontend\controllers;
 
+use common\components\dataproviders\EntityDataProvider;
+use common\models\entities\UserEntity;
 use common\models\repositories\ParticipantRepository;
 use common\models\repositories\ProjectRepository;
+use frontend\models\project\JoinToProjectModel;
 use yii\db\Exception;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use Yii;
 
@@ -25,14 +29,60 @@ class ProjectController extends Controller
         }
         catch (Exception $e)
         {
-            return $this->render('/site/error');
+            throw new BadRequestHttpException();
         }
 
         return $this->render('view', ['project' => $project]);
     }
 
-    public function actionSearch()
+    public function actionSearch(string $projectName)
     {
-        return $this->render('search');
+        /**
+         * @var UserEntity $user
+         */
+        $user = Yii::$app->user->identity->getUser();
+
+        $dataProvider = new EntityDataProvider([
+            'condition' => [
+                'and',
+                ['deleted' => false],
+                ['like', 'lower(name)', strtolower($projectName)]
+            ],
+            'repositoryInstance' => ProjectRepository::instance(),
+            'pagination' => [
+                'pageSize' => 20
+            ]
+        ]);
+
+        return $this->render('search', [
+            'dataProvider' => $dataProvider,
+            'projectName'  => $projectName,
+            'user'         => $user
+        ]);
+    }
+
+
+    //############### AJAX ACTIONS ##################
+
+
+    public function actionJoin(int $projectId, int $userId)
+    {
+        $model = new JoinToProjectModel();
+
+        $model->projectId = $projectId;
+        $model->userId = $userId;
+
+        if(!$model->load(Yii::$app->request->post()) || !$model->save())
+        {
+            throw new BadRequestHttpException();
+        }
     }
 }
+
+
+
+
+
+
+
+

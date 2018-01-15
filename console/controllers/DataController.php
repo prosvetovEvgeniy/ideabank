@@ -32,6 +32,8 @@ class DataController extends Controller
         $this->db->createCommand("TRUNCATE message CASCADE")->execute();
         $this->db->createCommand("TRUNCATE notice CASCADE")->execute();*/
 
+        //$this->db->createCommand("TRUNCATE notice CASCADE")->execute();
+
 
         $auth = Yii::$app->authManager;
 
@@ -58,10 +60,10 @@ class DataController extends Controller
         //############### FILLING PROJECTS ###############
 
 
-        $projectIds['vulcan'] = $this->addProject('Вулкан-М', $companyIds['infSysId']);
-        $projectIds['github'] = $this->addProject('Github', $companyIds['eCompanyId']);
-        $projectIds['vk'] = $this->addProject('Вконтакте', $companyIds['eCompanyId']);
-        $projectIds['xabr'] = $this->addProject('Хабрахабр', $companyIds['eCompanyId']);
+        $projectIds['vulcan'] = $this->addProject('Вулкан-М', $companyIds['infSysId'], 'Это проект Вулкан');
+        $projectIds['github'] = $this->addProject('Github', $companyIds['eCompanyId'], 'Это проект Github');
+        $projectIds['vk'] = $this->addProject('Вконтакте', $companyIds['eCompanyId'], 'Это проект Vk');
+        $projectIds['xabr'] = $this->addProject('Хабрахабр', $companyIds['eCompanyId'], 'Это проект Xabr');
 
 
         //############### FILLING USERS ###############
@@ -69,6 +71,12 @@ class DataController extends Controller
 
         $userIds['evgeniy'] = $this->addUser('evgeniy','123456','evgeniy@mail.ru',
                                                 '89131841102','Евгений', 'Просветов', 'Игоревич');
+
+        $userIds['newUser'] = $this->addUser('newUser','123456','newUser@mail.ru',
+            '89131841102','Евгений', 'Просветов', 'Игоревич');
+
+        $userIds['newLogin'] = $this->addUser('newLogin','123456','newLogin@mail.ru',
+            '89131841102','Евгений', 'Просветов', 'Игоревич');
 
         $userIds['admin'] = $this->addUser('admin','123456','admin@mail.ru',
                                                 '89131841102','Евгений', 'Просветов', 'Игоревич');
@@ -85,6 +93,11 @@ class DataController extends Controller
         $participantIds['evgeniyVk'] = $this->addParticipant($userIds['evgeniy'], $companyIds['eCompanyId'], $projectIds['vk']);
         $participantIds['evgeniyXabr'] = $this->addParticipant($userIds['evgeniy'], $companyIds['eCompanyId'], $projectIds['xabr']);
         $participantIds['evgeniyVulcanm'] = $this->addParticipant($userIds['evgeniy'], $companyIds['infSysId'], $projectIds['vulcan']);
+
+        $participantIds['newLoginStub'] = $this->addParticipantStub($userIds['newLogin']);
+
+        $participantIds['newUserStub'] = $this->addParticipantStub($userIds['newUser']);
+
 
         $participantIds['adminStub'] = $this->addParticipantStub($userIds['admin']);
         $participantIds['adminDirector'] = $this->addParticipantDirector($userIds['admin'], $companyIds['infSysId']);
@@ -133,7 +146,7 @@ class DataController extends Controller
         //############### FILLING COMMENTS ###############
 
 
-        $commentsIds = $this->generateComments($tasksIds['firstTask'], $userIds['evgeniy'], 100);
+        $commentsIds = $this->generateComments($tasksIds['firstTask'], $userIds['newUser'], 100);
 
 
         //############### FILLING TASKLIKES ###############
@@ -151,8 +164,14 @@ class DataController extends Controller
         //############### FILLING MESSAGES ###############
 
 
-        $this->generateMessages($userIds['evgeniy'], $userIds['edirector'], 20);
-        $this->generateMessages($userIds['evgeniy'], $userIds['admin'], 20);
+        $this->generateMessages($userIds['evgeniy'], $userIds['edirector'],  10);
+        $this->generateMessages($userIds['evgeniy'], $userIds['admin'], 10);
+        $this->generateMessages($userIds['evgeniy'], $userIds['newLogin'], 10);
+
+        $this->generateMessages($userIds['newUser'], $userIds['newLogin'], 10);
+
+        $this->generateMessages($userIds['edirector'], $userIds['admin'], 10);
+        $this->generateMessages($userIds['edirector'], $userIds['newLogin'], 10);
 
 
         //############### FILLING NOTICES ###############
@@ -167,28 +186,40 @@ class DataController extends Controller
 
     private function generateMessages(int $firstParticipantId, int $secondParticipantId, int $amount)
     {
-
         $time = $this->getTime();
+
+        $dialog = "";
 
         for($i = 1; $i <= $amount; $i++)
         {
             $selfMessage = $i . ' message from id = ' . $firstParticipantId . ' to  id = ' . $secondParticipantId;
             $companionMessage = $i . ' message from id = ' . $secondParticipantId . ' to  id = ' . $firstParticipantId;
 
-            $this->db->createCommand("INSERT INTO message (self_id, companion_id, content, is_sender, created_at) VALUES
-                                    ({$firstParticipantId}, {$secondParticipantId}, '{$selfMessage}', 'TRUE', {$time})")->execute();
-            $this->db->createCommand("INSERT INTO message (self_id, companion_id, content, is_sender, created_at) VALUES
-                                    ({$secondParticipantId}, {$firstParticipantId}, '{$selfMessage}', 'FALSE', {$time})")->execute();
+            if($i !== $amount)
+            {
+                $dialog .= "({$firstParticipantId}, {$secondParticipantId}, '{$selfMessage}', 'TRUE', 'FALSE', {$time}), ";
+                $dialog .= "({$secondParticipantId}, {$firstParticipantId}, '{$selfMessage}', 'FALSE', 'FALSE', {$time}), ";
 
-            $time += 10;
+                $time += 10;
 
-            $this->db->createCommand("INSERT INTO message (self_id, companion_id, content, is_sender, created_at) VALUES
-                                    ({$secondParticipantId}, {$firstParticipantId}, '{$companionMessage}', 'TRUE', {$time})")->execute();
-            $this->db->createCommand("INSERT INTO message (self_id, companion_id, content, is_sender, created_at) VALUES
-                                    ({$firstParticipantId}, {$secondParticipantId}, '{$companionMessage}', 'FALSE', {$time})")->execute();
+                $dialog .= "({$secondParticipantId}, {$firstParticipantId}, '{$companionMessage}', 'TRUE', 'FALSE', {$time}), ";
+                $dialog .= "({$firstParticipantId}, {$secondParticipantId}, '{$companionMessage}', 'FALSE', 'FALSE', {$time}), ";
 
-            $time += 10;
+                $time += 10;
+            }
+            else
+            {
+                $dialog .= "({$firstParticipantId}, {$secondParticipantId}, '{$selfMessage}', 'TRUE', 'FALSE', {$time}), ";
+                $dialog .= "({$secondParticipantId}, {$firstParticipantId}, '{$selfMessage}', 'FALSE', 'FALSE', {$time}), ";
+
+                $time += 10;
+
+                $dialog .= "({$secondParticipantId}, {$firstParticipantId}, '{$companionMessage}', 'TRUE', 'FALSE', {$time}), ";
+                $dialog .= "({$firstParticipantId}, {$secondParticipantId}, '{$companionMessage}', 'FALSE', 'FALSE', {$time})";
+            }
         }
+
+        $this->db->createCommand("INSERT INTO message (self_id, companion_id, content, is_sender, viewed,created_at) VALUES {$dialog}")->execute();
     }
 
     private function generateTaskLikes(array $taskIds, int $userId, float $likeProbability = 0.5)
@@ -294,10 +325,10 @@ class DataController extends Controller
         return $this->db->getLastInsertID('company_id_seq');
     }
 
-    private function addProject($name, $companyId)
+    private function addProject($name, $companyId, $description)
     {
-        $this->db->createCommand("INSERT INTO project (name, company_id, created_at, updated_at)
-                                      VALUES ('{$name}', {$companyId}, {$this->getTime()}, {$this->getTime()})")->execute();
+        $this->db->createCommand("INSERT INTO project (name, company_id, description, created_at, updated_at)
+                                      VALUES ('{$name}', {$companyId}, '{$description}', {$this->getTime()}, {$this->getTime()})")->execute();
         return $this->db->getLastInsertID('project_id_seq');
     }
 

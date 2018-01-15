@@ -72,24 +72,6 @@ class Comment extends ActiveRecord
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'task_id' => 'Task ID',
-            'sender_id' => 'Sender ID',
-            'content' => 'Content',
-            'parent_id' => 'Parent ID',
-            'private' => 'Private',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'deleted' => 'Deleted',
-        ];
-    }
-
     public function getParent()
     {
         return $this->hasOne(Comment::className(), ['id' => 'parent_id']);

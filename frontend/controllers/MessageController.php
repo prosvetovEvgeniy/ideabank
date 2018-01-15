@@ -28,45 +28,11 @@ class MessageController extends Controller
             'repositoryInstance' => DialogRepository::instance(),
             'pagination' => [
                 'pageSize' => 20
-            ]
-        ]);
-
-        return $this->render('dialog', ['dataProvider' => $dataProvider]);
-    }
-
-    public function actionInbox()
-    {
-        $dataProvider = new EntityDataProvider([
-            'condition' => [
-                'self_id'   => Yii::$app->user->identity->getUserId(),
-                'is_sender' => false,
-                'deleted'   => false
-            ],
-            'repositoryInstance' => MessageRepository::instance(),
-            'pagination' => [
-                'pageSize' => 20
-            ]
-        ]);
-
-        return $this->render('inbox', ['dataProvider' => $dataProvider]);
-    }
-
-    public function actionSent()
-    {
-        $dataProvider = new EntityDataProvider([
-            'condition' => [
-                'self_id'   => Yii::$app->user->identity->getUserId(),
-                'is_sender' => true,
-                'deleted'   => false
-            ],
-            'repositoryInstance' => MessageRepository::instance(),
-            'pagination' => [
-                'pageSize' => 20
             ],
             'orderBy' => 'id DESC'
         ]);
 
-        return $this->render('sent', ['dataProvider' => $dataProvider]);
+        return $this->render('dialog', ['dataProvider' => $dataProvider]);
     }
 
     public function actionCompanions()
@@ -85,59 +51,12 @@ class MessageController extends Controller
         return $this->render('companions', ['dataProvider' => $dataProvider]);
     }
 
-    /**
-     * @throws BadRequestHttpException
-     * @throws UnauthorizedHttpException
-     */
-    public function actionDeleteMessage()
-    {
-        if(Yii::$app->user->isGuest)
-        {
-            throw new UnauthorizedHttpException();
-        }
-
-        $model = new DeleteMessageModel();
-        $model->scenario = DeleteMessageModel::SCENARION_DELETE_MESSAGE;
-        $model->selfId = Yii::$app->user->identity->getUserId();
-
-        $model->load(Yii::$app->request->post());
-
-        if(!$model->validate() || !$model->deleteMessage())
-        {
-            throw new BadRequestHttpException();
-        }
-    }
-
-    /**
-     * @throws BadRequestHttpException
-     * @throws UnauthorizedHttpException
-     */
-    public function actionDeleteDialog()
-    {
-        if(Yii::$app->user->isGuest)
-        {
-            throw new UnauthorizedHttpException();
-        }
-
-        $model = new DeleteMessageModel();
-        $model->scenario = DeleteMessageModel::SCENARION_DELETE_DIALOG;
-
-        $model->selfId = Yii::$app->user->identity->getUserId();
-
-        $model->load(Yii::$app->request->post());
-
-        if(!$model->validate() || !$model->deleteDialog())
-        {
-            throw new BadRequestHttpException();
-        }
-    }
-
     public function actionChat(int $companionId)
     {
-        if(Yii::$app->user->isGuest)
-        {
-            throw new UnauthorizedHttpException();
-        }
+        /**
+         * @var UserEntity $self
+         */
+        $self = Yii::$app->user->identity->getUser();
 
         $companion = UserRepository::instance()->findOne(['id' => $companionId]);
 
@@ -146,8 +65,16 @@ class MessageController extends Controller
             throw new BadRequestHttpException();
         }
 
+        /**
+         * при заходе в чат делаем все сообщения просмотренными
+         */
+        MessageRepository::instance()->viewAll([
+            'self_id'      => $self->getId(),
+            'companion_id' => $companion->getId()
+        ]);
+
         $messages = MessageRepository::instance()->findAll([
-            'self_id'      => Yii::$app->user->identity->getUserId(),
+            'self_id'      => $self->getId(),
             'companion_id' => $companionId,
             'deleted'      => false
         ], -1);
@@ -161,13 +88,41 @@ class MessageController extends Controller
         ]);
     }
 
+
+    //################ AJAX ACTIONS ################
+
+
+    public function actionDeleteMessage()
+    {
+        $model = new DeleteMessageModel();
+        $model->scenario = DeleteMessageModel::SCENARIO_DELETE_MESSAGE;
+        $model->selfId = Yii::$app->user->identity->getUserId();
+
+        $model->load(Yii::$app->request->post());
+
+        if(!$model->validate() || !$model->deleteMessage())
+        {
+            throw new BadRequestHttpException();
+        }
+    }
+
+    public function actionDeleteDialog()
+    {
+        $model = new DeleteMessageModel();
+        $model->scenario = DeleteMessageModel::SCENARIO_DELETE_DIALOG;
+
+        $model->selfId = Yii::$app->user->identity->getUserId();
+
+        $model->load(Yii::$app->request->post());
+
+        if(!$model->validate() || !$model->deleteDialog())
+        {
+            throw new BadRequestHttpException();
+        }
+    }
+
     public function actionSend()
     {
-        if(Yii::$app->user->isGuest)
-        {
-            throw new UnauthorizedHttpException();
-        }
-
         $model = new SendMessageForm();
         $model->selfId = Yii::$app->user->identity->getUserId();
 

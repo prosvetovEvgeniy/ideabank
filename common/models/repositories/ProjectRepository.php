@@ -151,6 +151,7 @@ class ProjectRepository
     {
         $model->name = $project->getName();
         $model->company_id = $project->getCompanyId();
+        $model->description = $project->getDescription();
         $model->default_visibility_area = $project->getDefaultVisibilityArea();
     }
 
@@ -160,8 +161,9 @@ class ProjectRepository
      */
     public function buildEntity(Project $model)
     {
-        return new ProjectEntity($model->name,$model->company_id, $model->default_visibility_area,
-                                 $model->id, $model->created_at, $model->updated_at, $model->deleted);
+        return new ProjectEntity($model->name,$model->company_id, $model->description,
+                                 $model->default_visibility_area, $model->id, $model->created_at,
+                                 $model->updated_at, $model->deleted);
     }
 
     /**
@@ -192,6 +194,15 @@ class ProjectRepository
 
 
     /**
+     * @param array $condition
+     * @return int|string
+     */
+    public function getTotalCountByCondition(array $condition)
+    {
+        return Project::find()->where($condition)->count();
+    }
+
+    /**
      * @param UserEntity $user
      * @return array
      */
@@ -213,4 +224,5 @@ class ProjectRepository
 
         return $projects;
     }
+
 }

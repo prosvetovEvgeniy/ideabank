@@ -4,6 +4,7 @@ use common\components\dataproviders\EntityDataProvider;
 use yii\helpers\Html;
 use common\models\searchmodels\TaskEntitySearch;
 use common\models\entities\TaskEntity;
+use yii\grid\GridView;
 
 /**
  * @var EntityDataProvider $dataProvider
@@ -44,7 +45,7 @@ use common\models\entities\TaskEntity;
         <?= $this->render('_search', ['model' => $searchModel]); ?>
 
         <?=
-        \yii\grid\GridView::widget([
+        GridView::widget([
             'dataProvider' => $dataProvider,
             'layout'=>"{items}\n{pager}",
             'columns' =>[

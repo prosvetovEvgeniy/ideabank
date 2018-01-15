@@ -56,19 +56,4 @@ class TaskLike extends \yii\db\ActiveRecord
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'task_id' => 'Task ID',
-            'user_id' => 'User ID',
-            'liked' => 'Liked',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-        ];
-    }
 }

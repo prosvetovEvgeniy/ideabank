@@ -39,18 +39,6 @@ class AuthAssignment extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'item_name' => 'Item Name',
-            'user_id' => 'User ID',
-            'created_at' => 'Created At',
-        ];
-    }
-
-    /**
      * @return \yii\db\ActiveQuery
      */
     public function getItemName()

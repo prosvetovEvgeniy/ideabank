@@ -112,7 +112,7 @@ class ParticipantEntity implements IdentityInterface
     public function __construct(int $userId, int $companyId = null, int $projectId = null, bool $approved = null,
                                 int $approvedAt = null, bool $blocked = null, int $blockedAt = null,
                                 int $id = null, int $createdAt = null, int $updatedAt = null,
-                                int $deletedAt = null, bool $deleted, ProjectEntity $project = null,
+                                int $deletedAt = null, bool $deleted = null, ProjectEntity $project = null,
                                 UserEntity $user = null, CompanyEntity $company = null)
     {
         $this->id = $id;

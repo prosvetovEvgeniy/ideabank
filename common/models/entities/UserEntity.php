@@ -361,6 +361,14 @@ class UserEntity
 
         return Yii::getAlias('@web/' . self::PATH_TO_AVATAR . $this->avatar);
     }
+
+    /**
+     * @return string
+     */
+    public function getFio()
+    {
+        return $this->getSecondName() . ' ' . $this->getFirstName() . ' ' . $this->getLastName();
+    }
 }
 
 

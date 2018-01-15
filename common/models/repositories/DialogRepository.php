@@ -5,7 +5,9 @@ namespace common\models\repositories;
 
 use common\models\entities\MessageEntity;
 use common\models\activerecords\Message;
+use common\models\entities\UserEntity;
 use yii\helpers\ArrayHelper;
+
 
 class DialogRepository
 {
@@ -38,12 +40,11 @@ class DialogRepository
                                     ->offset($offset)
                                     ->limit($limit)
                                     ->groupBy('companion_id')
-                                    ->orderBy($orderBy)
-                                    ->asArray()
                                     ->all();
 
         $models = Message::find()->with('companion')
                                  ->where(['in', 'id', $dialogIds])
+                                 ->orderBy($orderBy)
                                  ->all();
 
         return $this->buildEntities($models);
@@ -61,6 +62,7 @@ class DialogRepository
         $model->companion_id = $message->getCompanionId();
         $model->is_sender = $message->getIsSender();
         $model->content = $message->getContent();
+        $model->viewed = $message->getViewed();
     }
 
     /**
@@ -73,7 +75,8 @@ class DialogRepository
         $companion = UserRepository::instance()->buildEntity($model->companion);
 
         return new MessageEntity($model->self_id, $model->companion_id, $model->content, $model->is_sender,
-                                 $model->id, $model->created_at, $model->deleted, $self, $companion);
+                                 $model->id, $model->viewed, $model->created_at, $model->deleted, $self,
+                                 $companion);
     }
 
     /**
@@ -99,6 +102,10 @@ class DialogRepository
         return $entities;
     }
 
+    /**
+     * @param array $condition
+     * @return int|string
+     */
     public function getTotalCountByCondition(array $condition)
     {
         return Message::find()->select('MAX(id) as id')

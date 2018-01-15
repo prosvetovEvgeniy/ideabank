@@ -16,6 +16,7 @@ class m171110_114017_create_project_table extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull()->unique(),
             'company_id' => $this->integer()->notNull(),
+            'description' => $this->string()->defaultValue(null),
             'default_visibility_area' => $this->integer()->defaultValue(0),
             'created_at' => $this->integer()->defaultValue(null),
             'updated_at' => $this->integer()->defaultValue(null),

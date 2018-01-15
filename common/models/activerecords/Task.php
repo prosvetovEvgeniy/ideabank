@@ -75,28 +75,6 @@ class Task extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'title' => 'Title',
-            'content' => 'Content',
-            'author_id' => 'Author ID',
-            'project_id' => 'Project ID',
-            'status' => 'Status',
-            'visibility_area' => 'Visibility Area',
-            'parent_id' => 'Parent ID',
-            'planned_end_at' => 'Planned End At',
-            'end_at' => 'End At',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'deleted' => 'Deleted',
-        ];
-    }
-
     public function getProject()
     {
         return $this->hasOne(Project::className(), ['id' => 'project_id']);

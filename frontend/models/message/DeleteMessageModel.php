@@ -18,8 +18,8 @@ use common\models\entities\MessageEntity;
  */
 class DeleteMessageModel extends Model
 {
-    const SCENARION_DELETE_MESSAGE = 'deleteMessage';
-    const SCENARION_DELETE_DIALOG = 'deleteDialog';
+    const SCENARIO_DELETE_MESSAGE = 'DELETE_MESSAGE';
+    const SCENARIO_DELETE_DIALOG = 'DELETE_DIALOG';
 
     public $selfId;
     public $messageId;
@@ -28,8 +28,8 @@ class DeleteMessageModel extends Model
     public function rules()
     {
         return [
-            [['selfId', 'messageId'], 'required', 'on' => self::SCENARION_DELETE_MESSAGE],
-            [['selfId', 'companionId'], 'required', 'on' => self::SCENARION_DELETE_DIALOG],
+            [['selfId', 'messageId'], 'required', 'on' => self::SCENARIO_DELETE_MESSAGE],
+            [['selfId', 'companionId'], 'required', 'on' => self::SCENARIO_DELETE_DIALOG],
             [['selfId', 'messageId', 'companionId'], 'integer'],
         ];
     }

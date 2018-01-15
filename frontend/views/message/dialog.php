@@ -7,6 +7,7 @@ use common\components\dataproviders\EntityDataProvider;
 use yii\widgets\LinkPager;
 use yii\helpers\Html;
 use frontend\assets\MessageDeleteAsset;
+use common\models\repositories\MessageRepository;
 
 SubMenuAsset::register($this);
 MessageDeleteAsset::register($this);
@@ -31,9 +32,20 @@ MessageDeleteAsset::register($this);
                         <tr class="dialog-row" data-companion-id="<?= $dialog->getCompanionId() ?>"
                                                data-companion-username="<?= $dialog->getCompanion()->getUsername() ?>">
                             <td><i class="glyphicon glyphicon-envelope"></i></td>
-                            <td class="message-content" onclick="window.location.href='/message/chat?companionId=<?= $dialog->getCompanionId() ?>'; return false"><p><?= $dialog->getContent() ?></p></td>
+                            <td class="message-content" onclick="window.location.href='/message/chat?companionId=<?= $dialog->getCompanionId() ?>'; return false">
+                                <p><?= $dialog->getContent() ?></p>
+                            </td>
+                            <td>
+                                <?php $unviewedMsgCount = MessageRepository::instance()->getUnviewedMsgCount($dialog->getSelf(), $dialog->getCompanion()); ?>
+
+                                <?php if($unviewedMsgCount !== 0): ?>
+                                    <div class="unviewed-messages">
+                                        + <?= $unviewedMsgCount ?>
+                                    </div>
+                                <?php endif; ?>
+                            </td>
                             <td><?= $dialog->getCreationDate() ?></td>
-                            <td><?= Html::a( $dialog->getCompanion()->getUsername(), '#') ?></td>
+                            <td><?= Html::a( $dialog->getCompanion()->getUsername(),  ['/profile/view', 'id' => $dialog->getCompanion()->getId()]) ?></td>
                             <td><i class="glyphicon glyphicon-trash delete-button delete-dialog"></i></td>
                         </tr>
                     <?php endforeach; ?>
@@ -42,9 +54,9 @@ MessageDeleteAsset::register($this);
             </table>
 
             <?=
-            LinkPager::widget([
-                'pagination' => $dataProvider->getPagination()
-            ])
+                LinkPager::widget([
+                    'pagination' => $dataProvider->getPagination()
+                ])
             ?>
         </div>
     </div>

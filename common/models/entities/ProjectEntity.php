@@ -4,6 +4,7 @@ namespace common\models\entities;
 
 
 use common\models\repositories\CompanyRepository;
+use common\models\repositories\ParticipantRepository;
 use common\models\repositories\TaskRepository;
 use yii\helpers\Html;
 
@@ -14,21 +15,26 @@ use yii\helpers\Html;
  * @property int $id
  * @property string $name
  * @property int $companyId
+ * @property string $description
  * @property int $defaultVisibilityArea
  * @property int $createdAt
  * @property int $updatedAt
  * @property bool $deleted
  *
- * @property CompanyEntity $company
- * @property TaskEntity[]  $tasks
+ * @property CompanyEntity       $company
+ * @property TaskEntity[]        $tasks
+ * @property ParticipantEntity[] $participants
  *
  * @property TaskRepository $taskRepository
  */
 class ProjectEntity
 {
+    private const DATE_FORMAT = 'Y-m-d';
+
     protected $id;
     protected $name;
     protected $companyId;
+    protected $description;
     protected $defaultVisibilityArea;
     protected $createdAt;
     protected $updatedAt;
@@ -37,6 +43,7 @@ class ProjectEntity
     //кеш связанных сущностей
     protected $company;
     protected $tasks;
+    protected $participants;
 
     protected $taskRepository;
 
@@ -44,18 +51,21 @@ class ProjectEntity
      * ProjectEntity constructor.
      * @param string $name
      * @param int $companyId
-     * @param int|null $id
+     * @param string $description
      * @param int|null $defaultVisibilityArea
+     * @param int|null $id
      * @param int|null $createdAt
      * @param int|null $updatedAt
      * @param bool|null $deleted
      */
-    public function __construct(string $name, int $companyId, int $defaultVisibilityArea = null, int $id = null,
+    public function __construct(string $name, int $companyId, string $description = null,
+                                int $defaultVisibilityArea = null, int $id = null,
                                 int $createdAt = null, int $updatedAt = null, bool $deleted = null)
     {
         $this->id = $id;
         $this->name = $name;
         $this->companyId = $companyId;
+        $this->description = $description;
         $this->defaultVisibilityArea = $defaultVisibilityArea;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
@@ -82,6 +92,11 @@ class ProjectEntity
      * @return int
      */
     public function getCompanyId() { return $this->companyId; }
+
+    /**
+     * @return string
+     */
+    public function getDescription() { return $this->description; }
 
     /**
      * @return int | null
@@ -118,6 +133,11 @@ class ProjectEntity
     public function setCompanyId (int $value) { $this->companyId = $value; }
 
     /**
+     * @param string $value
+     */
+    public function setDescription(string $value) { $this->description = $value; }
+
+    /**
      * @param integer $value
      */
     public function setDefaultVisibilityArea (int $value) { $this->defaultVisibilityArea = $value; }
@@ -150,6 +170,22 @@ class ProjectEntity
         }
 
         return $this->tasks;
+    }
+
+    /**
+     * @return ParticipantEntity[]
+     */
+    public function getParticipants()
+    {
+        if($this->participants === null)
+        {
+            $this->participants = ParticipantRepository::instance()->findAll([
+                'project_id' => $this->getId(),
+                'deleted'    => false
+            ]);
+        }
+
+        return $this->participants;
     }
 
 
@@ -186,5 +222,13 @@ class ProjectEntity
     public function getAmountTasksByAuthor(UserEntity $user)
     {
         return $this->taskRepository->getAmountTasksByAuthorForProject($this, $user);
+    }
+
+    /**
+     * @return false|string
+     */
+    public function getCreatedAtDate()
+    {
+        return date(self::DATE_FORMAT, $this->getCreatedAt());
     }
 }

@@ -1,4 +1,118 @@
 <?php
+use common\components\dataproviders\EntityDataProvider;
+use yii\grid\GridView;
+use common\components\widgets\ProjectSearchWidget;
+use common\models\entities\ProjectEntity;
+use yii\helpers\Html;
+use common\models\entities\ParticipantEntity;
+use common\models\entities\UserEntity;
+use common\models\searchmodels\TaskEntitySearch;
+
+/**
+ * @var EntityDataProvider $dataProvider
+ * @var string $projectName
+ * @var UserEntity $user
+ */
 ?>
 
-<h2>This is search page</h2>
+
+<div class="row">
+
+    <?= ProjectSearchWidget::widget(['searchValue' => $projectName]) ?>
+
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="center-block projects-search-grid">
+            <?=
+            GridView::widget([
+                'dataProvider' => $dataProvider,
+                'layout'=>"{items}\n{pager}",
+                'columns' =>[
+                    ['class' => 'yii\grid\SerialColumn'],
+
+                    [
+                        'attribute' => 'name',
+                        'header' => 'Название',
+                        'value' => function(ProjectEntity $project) {
+                            /**
+                             * @var ProjectEntity $project
+                             */
+                            return Html::a($project->getName(), ['/project/view/', 'id' => $project->getId()]);
+                        },
+                        'format' => 'html'
+                    ],
+                    [
+                        'attribute' => 'companyName',
+                        'header' => 'Название компании',
+                        'value' => function(ProjectEntity $project) {
+                            /**
+                             * @var ProjectEntity $project
+                             */
+                            return $project->getCompany()->getName();
+                        },
+                    ],
+                    [
+                        'attribute' => 'description',
+                        'header' => 'Опиание',
+                        'value' => function(ProjectEntity $project) {
+                            /**
+                             * @var ProjectEntity $project
+                             */
+                            return $project->getDescription();
+                        },
+                        'format' => 'html'
+                    ],
+                    [
+                        'attribute' => 'created_at',
+                        'header' => 'Дата регистрации',
+                        'value' => function(ProjectEntity $project) {
+                            /**
+                             * @var ProjectEntity $project
+                             */
+                            $date = '<code>' . $project->getCreatedAtDate() . '</code>';
+                            return $date;
+                        },
+                        'format' => 'html'
+                    ],
+                    [
+                        'attribute' => '',
+                        'header' => '',
+                        'value' => function(ProjectEntity $project) {
+                            /**
+                             * @var ParticipantEntity $participants
+                             * @var UserEntity        $user
+                             */
+                            $participants = $project->getParticipants();
+                            $user = Yii::$app->user->identity->getUser();
+
+                            /**
+                             * @var ParticipantEntity $participant
+                             */
+                            foreach ($participants as $participant)
+                            {
+                                if($participant->getUserId() === $user->getId())
+                                {
+                                    if($participant->getApproved() && !$participant->getBlocked())
+                                    {
+                                        return Html::a('Перейти', ['/task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_ALL]);
+                                    }
+                                    else if(!$participant->getApproved())
+                                    {
+                                        return '<code>На рассмотрении </code>';
+                                    }
+                                    else if($participant->getBlocked())
+                                    {
+                                        return '<code>Забанен</code>';
+                                    }
+                                }
+                            }
+
+                            return Html::a('Вступить <data-user-id="1">', '');
+                        },
+                        'format' => 'html'
+                    ]
+                ]
+            ]);
+            ?>
+        </div>
+    </div>
+</div>

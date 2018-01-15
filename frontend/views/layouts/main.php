@@ -9,6 +9,7 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
 use common\widgets\Alert;
+use common\models\repositories\MessageRepository;
 
 AppAsset::register($this);
 ?>
@@ -49,9 +50,20 @@ AppAsset::register($this);
 
         $menuItems[] = ['label' => 'Проекты', 'url' => '/project/index'];
 
+        $unViewedMessagesCount = MessageRepository::instance()->getAllUnviewedMsgCount();
+
+        if($unViewedMessagesCount !== 0)
+        {
+            $unViewedMessagesCount = ' <code>+(' . $unViewedMessagesCount . ') </code>' ;
+        }
+        else
+        {
+            $unViewedMessagesCount = null;
+        }
+
         $menuItems[] = ['label' => 'Аккаунт (' . Yii::$app->user->identity->getUser()->getUserName() . ')', 'items' => [
             ['label' => 'Личный кабинет', 'url' => ['/profile/change-own-data']],
-            ['label' => 'Сообщения', 'url' => ['/message/dialog']],
+            ['label' => 'Сообщения' . $unViewedMessagesCount, 'url' => ['/message/dialog']],
             ['label' => 'Создать задачу', 'url' => ['/task/create']],
             ['label' => 'Помощь', 'url' => ['/help/index']],
             ['label' => 'Выход', 'url' => ['/site/logout']],
@@ -60,6 +72,7 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => $menuItems,
+        'encodeLabels' => false
     ]);
     NavBar::end();
     ?>

@@ -37,17 +37,6 @@ class AuthItemChild extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'parent' => 'Parent',
-            'child' => 'Child',
-        ];
-    }
-
-    /**
      * @return \yii\db\ActiveQuery
      */
     public function getParent0()

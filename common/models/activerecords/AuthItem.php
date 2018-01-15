@@ -48,22 +48,6 @@ class AuthItem extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'name' => 'Name',
-            'type' => 'Type',
-            'description' => 'Description',
-            'rule_name' => 'Rule Name',
-            'data' => 'Data',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-        ];
-    }
-
-    /**
      * @return \yii\db\ActiveQuery
      */
     public function getAuthAssignments()

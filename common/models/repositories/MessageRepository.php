@@ -5,6 +5,7 @@ namespace common\models\repositories;
 
 use common\models\activerecords\Message;
 use common\models\entities\MessageEntity;
+use common\models\entities\UserEntity;
 use yii\db\Exception;
 use Yii;
 
@@ -155,6 +156,7 @@ class MessageRepository
         $model->self_id = $message->getSelfId();
         $model->companion_id = $message->getCompanionId();
         $model->is_sender = $message->getIsSender();
+        //$model->viewed = $message->getViewed();
         $model->content = $message->getContent();
     }
 
@@ -168,7 +170,8 @@ class MessageRepository
         $companion = UserRepository::instance()->buildEntity($model->companion);
 
         return new MessageEntity($model->self_id, $model->companion_id, $model->content, $model->is_sender,
-                                 $model->id, $model->created_at, $model->deleted, $self, $companion);
+                                 $model->id, $model->viewed, $model->created_at, $model->deleted, $self,
+                                 $companion);
     }
 
     /**
@@ -197,6 +200,17 @@ class MessageRepository
 
     // #################### UNIQUE METHODS OF CLASS ######################
 
+    /**
+     * @param array $conditionForSet
+     * @param array $conditionForSearch
+     * @return bool
+     */
+    public function updateAll(array $conditionForSet, array $conditionForSearch)
+    {
+        $amountUpdatedRows = Message::updateAll($conditionForSet, $conditionForSearch);
+
+        return ($amountUpdatedRows === 0) ? false : true;
+    }
 
     /**
      * @param array $condition
@@ -204,9 +218,16 @@ class MessageRepository
      */
     public function deleteAll(array $condition)
     {
-        $amountUpdatedRows = Message::updateAll(['deleted' => true], $condition);
+        return $this->updateAll(['deleted' => true], $condition);
+    }
 
-        return ($amountUpdatedRows === 0) ? false : true;
+    /**
+     * @param array $condition
+     * @return bool
+     */
+    public function viewAll(array $condition)
+    {
+        return $this->updateAll(['viewed' => true], $condition);
     }
 
     /**
@@ -216,5 +237,35 @@ class MessageRepository
     public function getTotalCountByCondition(array $condition)
     {
         return Message::find()->where($condition)->count();
+    }
+
+    /**
+     * @param UserEntity|null $user
+     * @return int|string
+     */
+    public function getAllUnviewedMsgCount(UserEntity $user = null)
+    {
+        /**
+         * @var UserEntity $user
+         */
+        $user = $user ?? Yii::$app->user->identity->getUser();
+
+        return $this->getTotalCountByCondition([
+            'is_sender' => false,
+            'viewed'    => false,
+            'deleted'   => false,
+            'self_id'   => $user->getId()
+        ]);
+    }
+
+    public function getUnviewedMsgCount(UserEntity $self, UserEntity $companion)
+    {
+        return $this->getTotalCountByCondition([
+            'is_sender'    => false,
+            'viewed'       => false,
+            'deleted'      => false,
+            'self_id'      => $self->getId(),
+            'companion_id' => $companion->getId()
+        ]);
     }
 }
