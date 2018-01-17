@@ -1,6 +1,6 @@
 <?php
 
-function debug($data = "TEST", $timeStart = null, $timeEnd = null)
+function dump($data = "TEST", $timeStart = null, $timeEnd = null)
 {
     echo '<pre>';
     print_r($data);
@@ -20,7 +20,7 @@ function debug($data = "TEST", $timeStart = null, $timeEnd = null)
     exit();
 }
 
-function dump($data = "TEST", $timeStart = null, $timeEnd = null)
+function debug($data = "TEST", $timeStart = null, $timeEnd = null)
 {
     echo '<pre>';
     var_dump($data);

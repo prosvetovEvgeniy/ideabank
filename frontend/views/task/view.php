@@ -5,7 +5,7 @@ use yii\helpers\Html;
 use common\components\dataproviders\EntityDataProvider;
 use common\models\entities\CommentEntity;
 use yii\widgets\ActiveForm;
-use frontend\models\comment\CommentForm;
+use frontend\models\comment\CommentModel;
 use frontend\assets\CommentLikeAssset;
 use frontend\assets\CommentReplyAsset;
 use frontend\assets\TaskLikeAsset;
@@ -18,7 +18,7 @@ CommentReplyAsset::register($this);
 /**
  * @var TaskEntity $task
  * @var EntityDataProvider $dataProvider
- * @var CommentForm $model
+ * @var CommentModel $model
  */
 
 $comments = $dataProvider->getModels();
@@ -150,28 +150,23 @@ $counter = 1; //счетчик для номера комментария
 
             <br>
 
-            <?php
-                $form = ActiveForm::begin([
-                    'id' => 'comment-form',
-                    'options' => [
-                        'class' => 'comment-form'
-                    ]
-                ]);
-            ?>
+            <form action="" method="POST" id="comment-form">
+                <div class="form-group">
+                    <label>Текст</label>
 
-            <?= $form->field($model, 'content')->textarea() ?>
+                    <textarea class="form-control" rows="2" id="comment-form-text"></textarea>
 
-            <?= $form->field($model, 'parentId')->hiddenInput()->label(false) ?>
+                    <input hidden id="comment-form-parent-id">
 
-            <div class="comment-form-parent-information"><p>Ответ на: <span class="comment-parent-number"></span></p>
-                <i class="glyphicon glyphicon-remove comment-form-delete-parent"></i>
-            </div>
+                    <div class="comment-form-parent-information"><p>Ответ на: <span class="comment-parent-number"></span></p>
+                        <i class="glyphicon glyphicon-remove comment-form-delete-parent"></i>
+                    </div>
 
-            <?= Html::submitButton('Ответить',['class' => 'btn btn-primary']); ?>
+                    <br>
 
-            <?php ActiveForm::end(); ?>
-
-
+                    <button class="btn btn-primary" id="send-comment" data-task-id="<?= $task->getId() ?>">Ответить</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -202,7 +197,7 @@ $counter = 1; //счетчик для номера комментария
                             <div class="media-right">
                                 <div class="comment-title">
                                     <h5 class="comment-fio no-margin-top">
-                                        <?= Html::a($comment->getUser()->getUsername(), ['/profile/view', 'id' => $comment->getUser()->getId()]) ?>
+                                        <?= Html::a($comment->getUser()->getUsername(), ['/profile/view', 'id' => $comment->getUser()->getId()], ['name' => $comment->getId()]) ?>
                                     </h5>
                                     <p class="comment-number"><?php echo '#' . ($counter + $increment); $counter++; ?></p>
                                 </div>

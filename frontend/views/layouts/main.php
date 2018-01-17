@@ -65,7 +65,7 @@ AppAsset::register($this);
             ['label' => 'Личный кабинет', 'url' => ['/profile/change-own-data']],
             ['label' => 'Сообщения' . $unViewedMessagesCount, 'url' => ['/message/dialog']],
             ['label' => 'Создать задачу', 'url' => ['/task/create']],
-            ['label' => 'Помощь', 'url' => ['/help/index']],
+            //['label' => 'Помощь', 'url' => ['/help/index']],
             ['label' => 'Выход', 'url' => ['/site/logout']],
         ]];
     }

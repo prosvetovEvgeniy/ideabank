@@ -174,30 +174,6 @@ class ParticipantRepository
             throw new Exception('Cannot delete participant with id = ' . $participant->getId());
         }
 
-        return $this->buildEntity($model);
-    }
-
-    /**
-     * @param ParticipantEntity $participant
-     * @return ParticipantEntity
-     * @throws Exception
-     */
-    public function deleteFromDb(ParticipantEntity $participant)
-    {
-        $model = Participant::findOne(['id' => $participant->getId()]);
-
-        if(!$model)
-        {
-            throw new Exception('Participant with id = ' . $participant->getId() . ' does not exists');
-        }
-
-        $model->deleted = true;
-
-        if(!$model->delete())
-        {
-            Yii::error($model->errors);
-            throw new Exception('Cannot delete participant from db with id = ' . $participant->getId());
-        }
 
         return $this->buildEntity($model);
     }
@@ -261,6 +237,14 @@ class ParticipantRepository
 
     // #################### UNIQUE METHODS OF CLASS ######################
 
+    /**
+     * @param $condition
+     * @return int|string
+     */
+    public function getTotalCountByCondition($condition)
+    {
+        return Participant::find()->where($condition)->count();
+    }
 
     /**
      * Возвращает проекты, в которым присоединен пользователь
@@ -270,18 +254,29 @@ class ParticipantRepository
      */
     public function getParticipantsInProjects(UserEntity $user = null)
     {
+        $condition = $this->getConditionOnParticipantsInProjects($user);
+
+        return $this->findAll($condition);
+    }
+
+    /**
+     * @param UserEntity|null $user
+     * @return array
+     */
+    public function getConditionOnParticipantsInProjects(UserEntity $user = null)
+    {
         if(!$user)
         {
             $user = Yii::$app->user->identity->getUser();
         }
 
-        return $this->findAll([
+        return [
             'and',
             ['user_id' => $user->getId()],
-            ['not', ['company_id'=> null]],
-            ['not', ['project_id'=> null]],
+            ['not', ['company_id' => null]],
+            ['not', ['project_id' => null]],
             ['deleted' => false]
-        ]);
+        ];
     }
 
     /**

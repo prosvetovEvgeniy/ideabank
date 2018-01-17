@@ -7,6 +7,9 @@ use yii\helpers\Html;
 use common\models\entities\ParticipantEntity;
 use common\models\entities\UserEntity;
 use common\models\searchmodels\TaskEntitySearch;
+use frontend\assets\ProjectJoinAsset;
+
+ProjectJoinAsset::register($this);
 
 /**
  * @var EntityDataProvider $dataProvider
@@ -106,9 +109,9 @@ use common\models\searchmodels\TaskEntitySearch;
                                 }
                             }
 
-                            return Html::a('Вступить <data-user-id="1">', '');
+                            return Html::a('Вступить', '/project/join', ['class' => 'project-join','data' => ['user-id' => $user->getId(), 'project-id' => $project->getId()]]);
                         },
-                        'format' => 'html'
+                        'format' => 'raw'
                     ]
                 ]
             ]);

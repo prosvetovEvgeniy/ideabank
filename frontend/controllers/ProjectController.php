@@ -65,12 +65,9 @@ class ProjectController extends Controller
     //############### AJAX ACTIONS ##################
 
 
-    public function actionJoin(int $projectId, int $userId)
+    public function actionJoin()
     {
         $model = new JoinToProjectModel();
-
-        $model->projectId = $projectId;
-        $model->userId = $userId;
 
         if(!$model->load(Yii::$app->request->post()) || !$model->save())
         {

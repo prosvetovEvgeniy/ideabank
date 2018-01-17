@@ -18,6 +18,7 @@ use common\models\activerecords\Comment;
  */
 class CommentViewRepository
 {
+    public const COMMENTS_PER_PAGE = 30;
 
     // #################### STANDARD METHODS ######################
 
@@ -52,22 +53,21 @@ class CommentViewRepository
          */
         $userId = ($identity !== null) ? $identity->getId() : 'NULL';
 
-        $models = CommentView::find()
-            ->where($condition)
-            ->with('user')
-            ->with('parent')
-            ->joinWith('commentLikes')
-            ->addSelect('comment.*')
-            ->addSelect('SUM(CASE WHEN comment_like.liked = TRUE THEN 1 ELSE 0 END) AS likes_amount')
-            ->addSelect('SUM(CASE WHEN comment_like.liked = FALSE THEN 1 ELSE 0 END) AS dislikes_amount')
-            ->addSelect('(CASE WHEN comment_like.user_id = ' . $userId . ' AND comment_like.liked = TRUE THEN TRUE ELSE FALSE END) as current_user_liked_it')
-            ->addSelect('(CASE WHEN comment_like.user_id = ' . $userId . ' AND comment_like.liked = FALSE THEN TRUE ELSE FALSE END) as current_user_disliked_it')
-            ->groupBy('comment.id, comment_like.user_id, comment_like.liked')
-            ->orderBy('id ASC')
-            ->limit($limit)
-            ->offset($offset)
-            ->orderBy($orderBy)
-            ->all();
+        $models = CommentView::find()->where($condition)
+                                     ->with('user')
+                                     ->with('parent')
+                                     ->joinWith('commentLikes')
+                                     ->addSelect('comment.*')
+                                     ->addSelect('SUM(CASE WHEN comment_like.liked = TRUE THEN 1 ELSE 0 END) AS likes_amount')
+                                     ->addSelect('SUM(CASE WHEN comment_like.liked = FALSE THEN 1 ELSE 0 END) AS dislikes_amount')
+                                     ->addSelect('(CASE WHEN comment_like.user_id = ' . $userId . ' AND comment_like.liked = TRUE THEN TRUE ELSE FALSE END) as current_user_liked_it')
+                                     ->addSelect('(CASE WHEN comment_like.user_id = ' . $userId . ' AND comment_like.liked = FALSE THEN TRUE ELSE FALSE END) as current_user_disliked_it')
+                                     ->groupBy('comment.id, comment_like.user_id, comment_like.liked')
+                                     ->orderBy('id ASC')
+                                     ->limit($limit)
+                                     ->offset($offset)
+                                     ->orderBy($orderBy)
+                                     ->all();
 
         return $this->buildEntities($models);
     }

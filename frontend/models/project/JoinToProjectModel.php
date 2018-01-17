@@ -8,6 +8,7 @@ use yii\base\Model;
 use Yii;
 use common\models\repositories\ProjectRepository;
 use common\models\repositories\ParticipantRepository;
+use yii\db\Exception;
 
 /**
  * Class JoinToProjectModel
@@ -37,12 +38,12 @@ class JoinToProjectModel extends Model
         }
 
         /**
-         * @var UserEntity $user
+         * @var  UserEntity $user
          */
         $user = Yii::$app->user->identity->getUser();
         $project = ProjectRepository::instance()->findOne(['id' => $this->projectId]);
 
-        if($this->userId !== $user->getId() || !$project)
+        if((int) $this->userId !== $user->getId() || !$project)
         {
             return false;
         }
@@ -52,18 +53,48 @@ class JoinToProjectModel extends Model
             'project_id' => $project->getId(),
         ]);
 
+        //если пользователь уже был присоединен к проекту, но покинул его
         if($participantExist)
         {
+            if($participantExist->getDeleted())
+            {
+                $participantExist->setApproved(false);
+                $participantExist->setApprovedAt();
+                $participantExist->setDeleted(false);
+                $participantExist->setDeletedAt();
+
+                try
+                {
+                    ParticipantRepository::instance()->update($participantExist);
+                    return true;
+                }
+                catch (Exception $e)
+                {
+                    return false;
+                }
+            }
+
             return false;
         }
 
+        //если пользователь присоединяется к проекту впервые
         $participant = new ParticipantEntity($this->userId, $project->getCompanyId(), $project->getId());
 
-        if(!ParticipantRepository::instance()->add($participant))
+        try
+        {
+            ParticipantRepository::instance()->add($participant);
+            return true;
+        }
+        catch (Exception $e)
         {
             return false;
         }
-
-        return true;
     }
 }
+
+
+
+
+
+
+

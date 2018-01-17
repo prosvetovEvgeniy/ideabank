@@ -2,16 +2,8 @@
 
 namespace common\models\activerecords;
 
-use common\models\activerecords\Company;
-use common\models\activerecords\Project;
-use common\models\activerecords\Users;
 use common\models\entities\UserEntity;
-use common\models\repositories\UserRepository;
-use Yii;
-use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
-use yii\db\Exception;
-use yii\web\IdentityInterface;
 use yii\behaviors\TimestampBehavior;
 
 /**
@@ -38,8 +30,6 @@ use yii\behaviors\TimestampBehavior;
  */
 class Participant extends ActiveRecord
 {
-    private $userEntity;
-
     /**
      * @inheritdoc
      */
@@ -51,8 +41,6 @@ class Participant extends ActiveRecord
     public function __construct(array $config = [])
     {
         parent::__construct($config);
-
-        $this->blocked = false;
     }
 
     public function behaviors()

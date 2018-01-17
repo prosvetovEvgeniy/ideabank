@@ -7,6 +7,7 @@ use common\models\entities\ParticipantEntity;
 ?>
 
 <div>
+
     <?php if ($participant->getRoleName() === ParticipantEntity::ROLE_USER): ?>
 
         <span class="label label-success"><?= $participant->getRoleNameOnRussian() ?></span>
@@ -28,6 +29,10 @@ use common\models\entities\ParticipantEntity;
         <span class="label label-default"><?= $participant->getRoleNameOnRussian() ?></span>
 
     <?php elseif ($participant->getRoleName() === ParticipantEntity::ROLE_BLOCKED): ?>
+
+        <span class="label label-danger"><?= $participant->getRoleNameOnRussian() ?></span>
+
+    <?php elseif ($participant->getRoleName() === ParticipantEntity::ROLE_UNDEFINED): ?>
 
         <span class="label label-danger"><?= $participant->getRoleNameOnRussian() ?></span>
 

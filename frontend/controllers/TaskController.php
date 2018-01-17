@@ -4,8 +4,6 @@ namespace frontend\controllers;
 
 
 use common\components\dataproviders\EntityDataProvider;
-use common\models\activerecords\TaskFile;
-use common\models\entities\TaskFileEntity;
 use common\models\entities\UserEntity;
 use common\models\repositories\CommentViewRepository;
 use common\models\repositories\ParticipantRepository;
@@ -13,13 +11,10 @@ use common\models\repositories\ProjectRepository;
 use common\models\repositories\TaskFileRepository;
 use common\models\repositories\TaskRepository;
 use common\models\searchmodels\TaskEntitySearch;
-use frontend\models\comment\CommentForm;
+use frontend\models\comment\CommentModel;
 use frontend\models\task\CreateTaskForm;
-use yii\helpers\FileHelper;
-use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use Yii;
-use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 
@@ -56,19 +51,16 @@ class TaskController extends Controller
             ],
             'repositoryInstance' => CommentViewRepository::instance(),
             'pagination' => [
-                'pageSize' => 30
+                'pageSize' => CommentViewRepository::COMMENTS_PER_PAGE
             ]
         ]);
 
-        $model = new CommentForm();
+        $model = new CommentModel();
         $model->taskId = $task->getId();
 
-        if($model->load(Yii::$app->request->post()) && $model->validate())
+        if($model->load(Yii::$app->request->post()) && $model->save())
         {
-            if($model->saveComment())
-            {
-                $model = new CommentForm();
-            }
+            $model = new CommentModel();
         }
 
         return $this->render('view',[
@@ -129,5 +121,22 @@ class TaskController extends Controller
         }
 
         return Yii::$app->response->sendFile($file->getWebRootAlias(), $file->getOriginalName());
+    }
+
+
+    //############### AJAX ACTIONS ###############
+
+
+    //оставление комментария к задаче
+    public function actionComment()
+    {
+        $model = new CommentModel();
+
+        $model->url = explode('?',$_SERVER['HTTP_REFERER'])[0];
+
+        if($model->load(Yii::$app->request->post()) && $model->save())
+        {
+            return $model->getUrl();
+        }
     }
 }

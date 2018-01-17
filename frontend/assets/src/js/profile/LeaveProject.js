@@ -8,41 +8,15 @@ $(document).ready(function () {
         if(confirm(question))
         {
             $.ajax({
-                url: '/profile/leave-project',
+                url: '/profile/delete-participant',
                 type: 'POST',
-                data: {'participantId': participantId},
+                data: {'DeleteParticipantModel[participantId]': participantId},
                 success: function (response) {
                     location.reload();
                 }
             });
         }
-    });
 
-    $('.join-to-project').click(function () {
-
-        var participantId = $(this).data('participant-id');
-
-        $.ajax({
-            url: '/profile/join-to-project',
-            type: 'POST',
-            data: {'participantId': participantId},
-            success: function (response) {
-                location.reload();
-            }
-        });
-    });
-
-    $('.delete-participant').click(function () {
-
-        var participantId = $(this).data('participant-id');
-
-        $.ajax({
-            url: '/profile/delete-participant',
-            type: 'POST',
-            data: {'participantId': participantId},
-            success: function (response) {
-                location.reload();
-            }
-        });
+        return false;
     });
 });

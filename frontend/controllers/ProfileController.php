@@ -3,11 +3,13 @@
 namespace frontend\controllers;
 
 
+use common\components\dataproviders\EntityDataProvider;
 use common\models\repositories\AuthAssignmentRepository;
 use common\models\repositories\ParticipantRepository;
 use common\models\repositories\UserRepository;
 use frontend\models\profile\ChangeOwnDataForm;
 use frontend\models\profile\ChangePasswordForm;
+use frontend\models\profile\DeleteParticipantModel;
 use yii\db\Exception;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -56,13 +58,16 @@ class ProfileController extends Controller
 
     public function actionMyProjects()
     {
-        $participants = ParticipantRepository::instance()->getParticipantsInProjects();
-
-        $deletedParticipants = ParticipantRepository::instance()->getDeletedParticipants();
+        $dataProvider = new EntityDataProvider([
+            'condition' => ParticipantRepository::instance()->getConditionOnParticipantsInProjects(),
+            'repositoryInstance' => ParticipantRepository::instance(),
+            'pagination' => [
+                'pageSize' => 25
+            ],
+        ]);
 
         return $this->render('my-projects',[
-            'participants'        => $participants,
-            'deletedParticipants' => $deletedParticipants
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -84,85 +89,13 @@ class ProfileController extends Controller
     //###################### AJAX ACTIONS ######################
 
 
-    //покинуть проект ( deleted = false ) в таблице participants
-    public function actionLeaveProject()
-    {
-        $participantId = Yii::$app->request->post('participantId');
-        $participant = ParticipantRepository::instance()->findOne(['id' => $participantId]);
-        $userId = Yii::$app->user->identity->getUser()->getId();
-
-        if(!$participant || $participant->getDeleted() ||
-            ($participant->getUserId() !== $userId) ||
-            ($participant->getProjectId() === null && $participant->getCompanyId() === null))
-        {
-            throw new BadRequestHttpException();
-        }
-
-        try
-        {
-            ParticipantRepository::instance()->delete($participant);
-        }
-        catch (Exception $e)
-        {
-            throw new BadRequestHttpException();
-        }
-    }
-
-    //присоединение к проекту
-    public function actionJoinToProject()
-    {
-        $participantId = Yii::$app->request->post('participantId');
-        $participant = ParticipantRepository::instance()->findOne(['id' => $participantId]);
-        $userId = Yii::$app->user->identity->getUser()->getId();
-
-        if(!$participant || !$participant->getDeleted() ||
-            ($participant->getUserId() !== $userId) ||
-            ($participant->getProjectId() === null && $participant->getCompanyId() === null))
-        {
-            throw new BadRequestHttpException();
-        }
-
-        try
-        {
-            $participant->setDeleted(false);
-            $participant->setDeletedAt();
-
-            ParticipantRepository::instance()->update($participant);
-        }
-        catch (Exception $e)
-        {
-            throw new BadRequestHttpException();
-        }
-    }
-
     //удаление записи в таблице participant
     public function actionDeleteParticipant()
     {
-        $participantId = Yii::$app->request->post('participantId');
-        $participant = ParticipantRepository::instance()->findOne(['id' => $participantId]);
-        $authAssignment = AuthAssignmentRepository::instance()->findOne(['user_id' => $participant->getId()]);
-        $userId = Yii::$app->user->identity->getUser()->getId();
+        $model = new DeleteParticipantModel();
 
-        if(!$participant || !$authAssignment || !$participant->getDeleted() ||
-            ($participant->getUserId() !== $userId) ||
-            ($participant->getProjectId() === null && $participant->getCompanyId() === null))
+        if(!$model->load(Yii::$app->request->post()) || !$model->delete())
         {
-            throw new BadRequestHttpException();
-        }
-
-        $transaction = Yii::$app->db->beginTransaction();
-
-        try
-        {
-            AuthAssignmentRepository::instance()->delete($authAssignment);
-            ParticipantRepository::instance()->deleteFromDb($participant);
-
-            $transaction->commit();
-        }
-        catch (Exception $e)
-        {
-            $transaction->rollBack();
-
             throw new BadRequestHttpException();
         }
     }

@@ -48,6 +48,8 @@ use yii\grid\GridView;
         GridView::widget([
             'dataProvider' => $dataProvider,
             'layout'=>"{items}\n{pager}",
+            'options' => ['class' => 'text-center'],
+            'headerRowOptions' => ['class' => 'center-header-text'],
             'columns' =>[
                 ['class' => 'yii\grid\SerialColumn'],
 

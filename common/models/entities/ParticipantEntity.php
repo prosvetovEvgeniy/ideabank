@@ -54,6 +54,9 @@ class ParticipantEntity implements IdentityInterface
      */
     public const ROLE_BLOCKED = 'blocked';
     public const ROLE_ON_CONSIDERATION = 'on consideration';
+    public const ROLE_UNDEFINED = 'role undefined';
+
+    protected const DATE_ERROR_MESSAGE = '-';
 
     private const DATE_FORMAT = 'Y-m-d';
 
@@ -81,12 +84,13 @@ class ParticipantEntity implements IdentityInterface
      * @see getRoleNameOnRussian()
      */
     protected $roleList = [
-        self::ROLE_USER                    => 'Участник',
-        self::ROLE_MANAGER                 => 'Менеджер',
-        self::ROLE_PROJECT_DIRECTOR        => 'Директор проекта',
-        self::ROLE_COMPANY_DIRECTOR        => 'Директор компании',
-        self::ROLE_BLOCKED                 => 'Заблокирован',
-        self::ROLE_ON_CONSIDERATION        => 'На рассмотрении'
+        self::ROLE_USER             => 'Участник',
+        self::ROLE_MANAGER          => 'Менеджер',
+        self::ROLE_PROJECT_DIRECTOR => 'Директор проекта',
+        self::ROLE_COMPANY_DIRECTOR => 'Директор компании',
+        self::ROLE_BLOCKED          => 'Заблокирован',
+        self::ROLE_ON_CONSIDERATION => 'На рассмотрении',
+        self::ROLE_UNDEFINED        => 'Роль не определена'
     ];
 
     protected $auth;
@@ -109,10 +113,10 @@ class ParticipantEntity implements IdentityInterface
      * @param UserEntity|null $user
      * @param CompanyEntity|null $company
      */
-    public function __construct(int $userId, int $companyId = null, int $projectId = null, bool $approved = null,
-                                int $approvedAt = null, bool $blocked = null, int $blockedAt = null,
+    public function __construct(int $userId, int $companyId = null, int $projectId = null, bool $approved = false,
+                                int $approvedAt = null, bool $blocked = false, int $blockedAt = null,
                                 int $id = null, int $createdAt = null, int $updatedAt = null,
-                                int $deletedAt = null, bool $deleted = null, ProjectEntity $project = null,
+                                int $deletedAt = null, bool $deleted = false, ProjectEntity $project = null,
                                 UserEntity $user = null, CompanyEntity $company = null)
     {
         $this->id = $id;
@@ -273,7 +277,7 @@ class ParticipantEntity implements IdentityInterface
     /**
      * @param int $value
      */
-    public function setApprovedAt (int $value) { $this->approvedAt = $value; }
+    public function setApprovedAt (int $value = null) { $this->approvedAt = $value; }
 
     /**
      * @param int $value
@@ -284,6 +288,7 @@ class ParticipantEntity implements IdentityInterface
      * @param bool $value
      */
     public function setDeleted (bool $value) { $this->deleted = $value; }
+
 
     // #################### SECTION OF RELATIONS ######################
 
@@ -346,7 +351,8 @@ class ParticipantEntity implements IdentityInterface
 
     /**
      * Возвращает значение роли пользователя (из RBAC)
-     * или его статус, если он не имеет роли
+     * или его статус (заблокирован, на рассмотрении),
+     * если он не имеет роли
      *
      * @return int|null|string
      */
@@ -356,38 +362,35 @@ class ParticipantEntity implements IdentityInterface
         {
             return self::ROLE_BLOCKED;
         }
-
-        if(!$this->approved && !$this->blocked)
+        else if(!$this->approved && !$this->blocked)
         {
             return self::ROLE_ON_CONSIDERATION;
         }
-
-        return $this->getAuthAssignment()->getItemName();
+        else if($this->getAuthAssignment() !== null)
+        {
+            return $this->getAuthAssignment()->getItemName();
+        }
+        else
+        {
+            return self::ROLE_UNDEFINED;
+        }
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
     public function getRoleNameOnRussian()
     {
         $roleName = $this->getRoleName();
 
-        return $this->roleList[$roleName] ?? 'Роль не определена';
+        return $this->roleList[$roleName];
     }
 
     /**
      * @return false|string
      */
-    public function getUpdatedAtDate()
+    public function getApprovedAtDate()
     {
-        return date(self::DATE_FORMAT, $this->approvedAt);
-    }
-
-    /**
-     * @return false|string
-     */
-    public function getDeletedAtDate()
-    {
-        return date(self::DATE_FORMAT, $this->deletedAt);
+        return ($this->approvedAt) ? date(self::DATE_FORMAT, $this->approvedAt) : self::DATE_ERROR_MESSAGE;
     }
 }

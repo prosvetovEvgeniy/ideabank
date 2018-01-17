@@ -4,9 +4,7 @@ namespace common\models\repositories;
 
 
 use common\models\activerecords\Comment;
-use common\models\activerecords\CommentView;
 use common\models\entities\CommentEntity;
-use common\models\entities\TaskEntity;
 use yii\db\Exception;
 use Yii;
 
@@ -157,11 +155,26 @@ class CommentRepository
 
 
     /**
-     * @param string $condition
-     * @return int
+     * @param array $condition
+     * @return int|string
      */
     public function getTotalCountByCondition(array $condition)
     {
         return Comment::find()->where($condition)->count();
+    }
+
+    /**
+     * Рассчитывает количество комментриев до текущего
+     *
+     * @param CommentEntity $comment
+     * @return int|string
+     */
+    public function getCountRecordsBeforeComment(CommentEntity $comment)
+    {
+        return $this->getTotalCountByCondition([
+            'and',
+            ['<', 'id', $comment->getId()],
+            ['<', 'created_at', $comment->getCreatedAt()]
+        ]);
     }
 }

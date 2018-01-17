@@ -167,7 +167,7 @@ a.desc:after {
 
 .comment-form-parent-information{
     display: none;
-    margin-bottom: 20px;
+    margin-top: 10px;
 }
 
 .comment-form-parent-information > p {
@@ -439,7 +439,6 @@ a.desc:after {
 
 /* PROFILE */
 
-
 .inf-block{
     display: block;
     border-radius: 10px;
@@ -450,13 +449,22 @@ a.desc:after {
     margin-bottom: 20px;
 }
 
+
 /* OTHERS */
+
+.text-center{
+    text-align: center; !important;
+}
 
 .center-block
 {
     width:75%;
     margin:0 auto;
     border-radius: 10px;
+}
+
+.center-header-text > th{
+    text-align: center; !important;
 }
 
 .avatar{
@@ -469,10 +477,11 @@ a.desc:after {
 
 .header{
     text-align: center;
-    display: block;
     margin-bottom: 20px;
+    font-size: 20px;
     color: #808080;
 }
+
 
 .header-deleted{
     text-align: center;
@@ -494,11 +503,17 @@ a.desc:after {
     text-align: center;
 }
 
+
 /* ########## PROJECT RULES ######## */
 
 .projects-search-grid{
-    margin-top: 30px;
+    margin-top: 30px; !important;
 }
+
+.search-project-form > input{
+    text-align: center;
+}
+
 
 /* ########## MEDIA RULES ##########*/
 

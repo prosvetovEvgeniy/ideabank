@@ -6,13 +6,14 @@ use common\models\entities\ParticipantEntity;
 use common\components\widgets\RoleViewWidget;
 use yii\helpers\Html;
 use frontend\assets\ProfileProjectsAsset;
+use yii\grid\GridView;
+use common\components\dataproviders\EntityDataProvider;
 
 SubMenuAsset::register($this);
 ProfileProjectsAsset::register($this);
 
 /**
- * @var ParticipantEntity[] $participants
- * @var ParticipantEntity[] $deletedParticipants
+ * @var EntityDataProvider $dataProvider;
  */
 ?>
 
@@ -22,69 +23,63 @@ ProfileProjectsAsset::register($this);
     </div>
     <div class="col-lg-8 col-md-8 col-sm-9">
         <div class="dialogs-block">
+            <?=
+            GridView::widget([
+                'dataProvider' => $dataProvider,
+                'layout'=>"{items}\n{pager}",
+                'caption' => 'Текущие',
+                'captionOptions' => ['class' => 'header'],
+                'options' => ['class' => 'text-center'],
+                'headerRowOptions' => ['class' => 'center-header-text'],
+                'columns' =>[
+                    ['class' => 'yii\grid\SerialColumn'],
 
-            <h3 class="header">Текущие</h3>
+                    [
+                        'attribute' => 'company',
+                        'header' => 'Компания',
+                        'value' => function(ParticipantEntity $participant) {
+                            return $participant->getCompany()->getName();
+                        },
+                        'format' => 'html'
+                    ],
+                    [
+                        'attribute' => 'project',
+                        'header' => 'Проект',
+                        'value' => function(ParticipantEntity $participant) {
+                            return $participant->getProject()->getName();
+                        },
+                        'format' => 'html'
+                    ],
+                    [
+                        'attribute' => 'status',
+                        'header' => 'Статус',
+                        'value' => function(ParticipantEntity $participant) {
+                            return RoleViewWidget::widget(['participant' => $participant]);
+                        },
+                        'format' => 'html',
+                    ],
+                    [
+                        'attribute' => 'created_at_date',
+                        'header' => 'Дата вступления',
+                        'value' => function(ParticipantEntity $participant) {
+                            return Html::tag('code', $participant->getApprovedAtDate());
+                        },
+                        'format' => 'html',
+                    ],
+                    [
+                        'header' => Html::tag('i', '', ['class' => 'glyphicon glyphicon-remove']),
+                        'value' => function(ParticipantEntity $participant){
+                            return Html::a('Покинуть', '/profile/delete-participant', [
+                                    'class' => 'leave-project',
+                                    'data'  => ['participant-id' => $participant->getId()]
+                            ]);
+                        },
+                        'format' => 'raw',
+                    ],
+                ]
+            ]);
+            ?>
 
-            <table class="table dialogs">
-                <thead>
-                    <tr>
-                        <th scope="col">Компания</th>
-                        <th scope="col">Проект</th>
-                        <th scope="col">Статус</th>
-                        <th scope="col">Дата вступления</th>
-                    </tr>
-                </thead>
-
-                <?php foreach ($participants as $participant): ?>
-
-                    <tbody>
-                        <tr>
-                            <td><?= $participant->getCompany()->getName() ?></td>
-                            <td><?= Html::a($participant->getProject()->getName(), ['project/view', 'id' => $participant->getProjectId()]) ?></td>
-                            <td><?= RoleViewWidget::widget(['participant' => $participant]) ?></td>
-                            <td><code><?= $participant->getUpdatedAtDate() ?></code></td>
-                            <td><a class="leave-project" data-participant-id="<?= $participant->getId() ?>" href="">Покинуть</a></td>
-                        </tr>
-                    </tbody>
-
-                <?php endforeach; ?>
-            </table>
         </div>
-
-        <?php if (!empty($deletedParticipants)): ?>
-
-            <div class="dialogs-block">
-
-                <h3 class="header-deleted">Удаленные</h3>
-
-                <table class="table dialogs">
-                    <thead>
-                    <tr>
-                        <th scope="col">Компания</th>
-                        <th scope="col">Проект</th>
-                        <th scope="col">Дата выхода</th>
-                    </tr>
-                    </thead>
-
-                    <?php foreach ($deletedParticipants as $participant): ?>
-
-                        <tbody>
-                        <tr>
-                            <td><?= $participant->getCompany()->getName() ?></td>
-                            <td><?= Html::a($participant->getProject()->getName(), ['project/view', 'id' => $participant->getProjectId()]) ?></td>
-                            <td><code><?= $participant->getDeletedAtDate() ?></code></td>
-                            <td>
-                                <a class="join-to-project" data-participant-id="<?= $participant->getId() ?>" href="">Присоединиться</a> /
-                                <a class="delete-participant" data-participant-id="<?= $participant->getId() ?>" href="">Очистить</a>
-                            </td>
-                        </tr>
-                        </tbody>
-
-                    <?php endforeach; ?>
-                </table>
-            </div>
-
-        <?php endif; ?>
-
     </div>
 </div>
