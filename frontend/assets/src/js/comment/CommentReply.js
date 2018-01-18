@@ -1,27 +1,5 @@
 
 $( document ).ready(function() {
-
-    $('#send-comment').click(function () {
-
-        var content = $(this).parent('.form-group').children('#comment-form-text').val();
-        var parentId = $(this).parent('.form-group').children('#comment-form-parent-id').val();
-        var taskId = $(this).data('task-id');
-
-        $.ajax({
-            url: '/task/comment',
-            type: 'POST',
-            data: {'CommentModel[content]': content,
-                   'CommentModel[parentId]': parentId,
-                   'CommentModel[taskId]': taskId},
-            success: function (response) {
-                location.reload(true);
-                location.href = response;
-            }
-        });
-
-        return false;
-    });
-
     $('.comment-reply').click(function () {
 
         var commentId = $(this).parents('.comment').data('comment-id');
@@ -42,7 +20,7 @@ $( document ).ready(function() {
         var parentInformation = $('.comment-form-parent-information');
 
         //скрываем div с номером родительского комметария
-        $('#commentform-parentid').attr('value', '');
+        $('#comment-form-parent-id').attr('value', '');
         parentInformation.css({'display': 'none'});
     })
 });

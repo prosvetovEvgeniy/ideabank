@@ -8,6 +8,7 @@ use common\models\repositories\CommentRepository;
 use common\models\repositories\TaskRepository;
 use common\models\repositories\UserRepository;
 use yii\helpers\Html;
+use Yii;
 
 /**
  * Class CommentEntity
@@ -190,8 +191,7 @@ class CommentEntity
 
 
     /**
-     * @return CommentEntity
-     * @throws \yii\db\Exception
+     * @return CommentEntity|null
      */
     public function getParent()
     {
@@ -204,8 +204,7 @@ class CommentEntity
     }
 
     /**
-     * @return TaskEntity
-     * @throws \yii\db\Exception
+     * @return TaskEntity|null
      */
     public function getTask()
     {
@@ -218,8 +217,7 @@ class CommentEntity
     }
 
     /**
-     * @return UserEntity
-     * @throws \yii\db\Exception
+     * @return UserEntity|null
      */
     public function getUser()
     {
@@ -264,6 +262,19 @@ class CommentEntity
      * @return bool | null
      */
     public function getCurrentUserDislikedIt() { return $this->currentUserDislikedIt; }
+
+    /**
+     * @return bool
+     */
+    public function isOwn()
+    {
+        /**
+         * @var UserEntity $user
+         */
+        $user = Yii::$app->user->identity->getUser();
+
+        return ($this->getSenderId() === $user->getId()) ? true : false;
+    }
 }
 
 

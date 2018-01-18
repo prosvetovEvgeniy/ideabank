@@ -193,10 +193,12 @@ a.desc:after {
     padding: 10px;
     margin-bottom: 10px;
     margin-top: 10px;
-    border-width: 2px;
-    border-color: black;
     background-color: #e9e9ec;
     border-radius: 10px;
+}
+
+.own-comment{
+    border: 1px solid red;
 }
 
 .comment-block .media-right
@@ -207,6 +209,7 @@ a.desc:after {
 }
 
 .comment-amount{
+    margin-top: 50px;
     margin-bottom: 30px;
 }
 

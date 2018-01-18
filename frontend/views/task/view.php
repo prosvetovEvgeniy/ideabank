@@ -48,7 +48,7 @@ $counter = 1; //счетчик для номера комментария
                         <i class="glyphicon glyphicon-thumbs-up"><?= $task->getAmountLikes() ?></i>
                     </span>
                     <span class="vote-down" title="Не нравится">
-                        <i class="glyphicon glyphicon-thumbs-up"><?= $task->getAmountDislikes() ?></i>
+                        <i class="glyphicon glyphicon-thumbs-down"><?= $task->getAmountDislikes() ?></i>
                     </span>
                 </div>
             </div>
@@ -150,23 +150,24 @@ $counter = 1; //счетчик для номера комментария
 
             <br>
 
-            <form action="" method="POST" id="comment-form">
-                <div class="form-group">
-                    <label>Текст</label>
+            <?php
+            $form = ActiveForm::begin([
+                    'id' => 'comment-form'
+            ]);
+            ?>
 
-                    <textarea class="form-control" rows="2" id="comment-form-text"></textarea>
+                <?= $form->field($model, 'content')->textarea(['rows' => 2]) ?>
 
-                    <input hidden id="comment-form-parent-id">
+                <?= $form->field($model, 'parentId')->hiddenInput(['id' => 'comment-form-parent-id'])->label(false) ?>
 
-                    <div class="comment-form-parent-information"><p>Ответ на: <span class="comment-parent-number"></span></p>
-                        <i class="glyphicon glyphicon-remove comment-form-delete-parent"></i>
-                    </div>
-
-                    <br>
-
-                    <button class="btn btn-primary" id="send-comment" data-task-id="<?= $task->getId() ?>">Ответить</button>
+                <div class="comment-form-parent-information"><p>Ответ на: <span class="comment-parent-number"></span></p>
+                    <i class="glyphicon glyphicon-remove comment-form-delete-parent"></i>
                 </div>
-            </form>
+
+                <?= Html::submitButton('Отправить', ['class' => 'btn btn-primary']) ?>
+
+            <?php ActiveForm::end() ?>
+
         </div>
     </div>
 
@@ -181,9 +182,9 @@ $counter = 1; //счетчик для номера комментария
                  * @var CommentEntity $comment
                  */
                 foreach ($comments as $comment):
-                    ?>
+                ?>
 
-                    <div class="comment-block">
+                    <div class="comment-block <?php if($comment->isOwn()) { echo 'own-comment'; } ?>">
 
                         <div class="comment"
                              data-comment-id="<?= $comment->getId() ?>"

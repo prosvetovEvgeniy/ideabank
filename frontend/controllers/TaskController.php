@@ -58,9 +58,12 @@ class TaskController extends Controller
         $model = new CommentModel();
         $model->taskId = $task->getId();
 
+        //получаем url без GET-параметров
+        $model->url = explode('?', Yii::$app->request->absoluteUrl)[0];
+
         if($model->load(Yii::$app->request->post()) && $model->save())
         {
-            $model = new CommentModel();
+            $this->redirect($model->getUrl(), 200);
         }
 
         return $this->render('view',[
@@ -121,22 +124,5 @@ class TaskController extends Controller
         }
 
         return Yii::$app->response->sendFile($file->getWebRootAlias(), $file->getOriginalName());
-    }
-
-
-    //############### AJAX ACTIONS ###############
-
-
-    //оставление комментария к задаче
-    public function actionComment()
-    {
-        $model = new CommentModel();
-
-        $model->url = explode('?',$_SERVER['HTTP_REFERER'])[0];
-
-        if($model->load(Yii::$app->request->post()) && $model->save())
-        {
-            return $model->getUrl();
-        }
     }
 }

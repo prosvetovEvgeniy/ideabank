@@ -5,6 +5,7 @@ namespace common\models\repositories;
 
 use common\models\activerecords\Comment;
 use common\models\entities\CommentEntity;
+use common\models\entities\TaskEntity;
 use yii\db\Exception;
 use Yii;
 
@@ -173,6 +174,7 @@ class CommentRepository
     {
         return $this->getTotalCountByCondition([
             'and',
+            ['task_id' => $comment->getTaskId()],
             ['<', 'id', $comment->getId()],
             ['<', 'created_at', $comment->getCreatedAt()]
         ]);

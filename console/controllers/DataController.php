@@ -146,7 +146,7 @@ class DataController extends Controller
         //############### FILLING COMMENTS ###############
 
 
-        $commentsIds = $this->generateComments($tasksIds['firstTask'], $userIds['newUser'], 100);
+        $commentsIds = $this->generateComments($tasksIds['firstTask'], $userIds['newUser'], 121);
 
 
         //############### FILLING TASKLIKES ###############

@@ -8,6 +8,7 @@ use common\models\entities\CommentEntity;
 use common\models\repositories\CommentRepository;
 use common\models\repositories\CommentViewRepository;
 use yii\base\Model;
+use common\models\activerecords\Task;
 use Yii;
 use yii\db\Exception;
 
@@ -32,6 +33,7 @@ class CommentModel extends Model
     //сущность сохраненного комментария
     protected $comment;
 
+
     public function rules()
     {
         return [
@@ -39,6 +41,7 @@ class CommentModel extends Model
             [['content'], 'string', 'length' => [1, 2000]],
             [['content'], 'trim'],
             [['url'], 'string'],
+            [['taskId'], 'exist', 'targetClass' => Task::className(), 'targetAttribute' => ['taskId' => 'id']],
             [['parentId', 'taskId'], 'integer'],
             [['parentId'], 'checkOnEntrance'],
             [['parentId'], 'filter', 'filter' => function($value) {
@@ -106,7 +109,7 @@ class CommentModel extends Model
 
     /**
      * Возращает url по которому будет находится новый созданный комментарий.
-     * Формат: 'http://ideabank.local/task/view?taskId=1&page=2&per-page=30#44'
+     * Пример: 'http://ideabank.local/task/view?taskId=1&page=2&per-page=30#44'
      *
      * @return string
      */
@@ -128,6 +131,6 @@ class CommentModel extends Model
         $count = CommentRepository::instance()->getCountRecordsBeforeComment($this->comment);
         $perPage = CommentViewRepository::COMMENTS_PER_PAGE;
 
-        return ceil($count/$perPage);
+        return floor($count/$perPage) + 1;
     }
 }
