@@ -47,7 +47,6 @@ class DataController extends Controller
         $taskLikesIds = [];
         $commentLikeIds = [];
         $messageIds = [];
-        $noticeIds = [];
 
 
         //############### FILLING COMPANIES ###############
@@ -146,7 +145,7 @@ class DataController extends Controller
         //############### FILLING COMMENTS ###############
 
 
-        $commentsIds = $this->generateComments($tasksIds['firstTask'], $userIds['newUser'], 121);
+        $commentsIds = $this->generateComments($tasksIds['firstTask'], $userIds['newUser'], 110);
 
 
         //############### FILLING TASKLIKES ###############
@@ -173,13 +172,6 @@ class DataController extends Controller
         $this->generateMessages($userIds['edirector'], $userIds['admin'], 10);
         $this->generateMessages($userIds['edirector'], $userIds['newLogin'], 10);
 
-
-        //############### FILLING NOTICES ###############
-
-
-        $noticeIds['firstNoticeToEvgeniy'] = $this->addNotice($userIds['evgeniy'], 'Первая заметка', false);
-        $noticeIds['secondNoticeToEvgeniy'] = $this->addNotice($userIds['evgeniy'], 'Вторая заметка', true);
-        $noticeIds['thirdNoticeToEvgeniy'] = $this->addNotice($userIds['evgeniy'], 'Третья заметка', false);
 
         $this->stdout("\nTest data was init\n");
     }
@@ -397,15 +389,6 @@ class DataController extends Controller
                                 ->execute();
 
         return $this->db->getLastInsertID('message_id_seq');
-    }
-
-    public function addNotice($recipientId, $content, $viewed)
-    {
-        $viewed = $viewed ? 'true' : 'false';
-        $this->db->createCommand("INSERT INTO notice (recipient_id, content, viewed,created_at) VALUES 
-                                      ({$recipientId}, '{$content}', {$viewed} ,{$this->getTime()})")->execute();
-
-        return $this->db->getLastInsertID('notice_id_seq');
     }
 
     public function addParticipantStub($userId)

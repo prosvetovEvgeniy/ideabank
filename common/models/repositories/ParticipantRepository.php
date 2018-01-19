@@ -234,9 +234,6 @@ class ParticipantRepository
         return $entities;
     }
 
-
-    // #################### UNIQUE METHODS OF CLASS ######################
-
     /**
      * @param $condition
      * @return int|string
@@ -245,6 +242,10 @@ class ParticipantRepository
     {
         return Participant::find()->where($condition)->count();
     }
+
+
+    // #################### UNIQUE METHODS OF CLASS ######################
+
 
     /**
      * Возвращает проекты, в которым присоединен пользователь

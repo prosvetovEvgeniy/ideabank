@@ -46,6 +46,7 @@ class NoticeRepository
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
+     * @param string|null $orderBy
      * @return NoticeEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
@@ -71,7 +72,7 @@ class NoticeRepository
         if(!$model->save())
         {
             Yii::error($model->errors);
-            throw new Exception('Cannot save notice with content = ' . $notice->getContent());
+            throw new Exception('Cannot save notice with link = ' . $notice->getLink());
         }
 
         return $this->buildEntity($model);
@@ -145,7 +146,9 @@ class NoticeRepository
     protected function assignProperties(&$model, &$notice)
     {
         $model->recipient_id = $notice->getRecipientId();
+        $model->sender_id = $notice->getSenderId();
         $model->content = $notice->getContent();
+        $model->link = $notice->getLink();
     }
 
     /**
@@ -154,8 +157,8 @@ class NoticeRepository
      */
     protected function buildEntity(Notice $model)
     {
-        return new NoticeEntity($model->recipient_id, $model->content, $model->id, $model->created_at,
-                                $model->viewed);
+        return new NoticeEntity($model->recipient_id,$model->content ,$model->link, $model->sender_id,
+                                $model->id, $model->created_at, $model->viewed);
     }
 
     /**
@@ -179,6 +182,15 @@ class NoticeRepository
         }
 
         return $entities;
+    }
+
+    /**
+     * @param array $condition
+     * @return int|string
+     */
+    public function getTotalCountByCondition(array $condition)
+    {
+        return Notice::find()->where($condition)->count();
     }
 
 

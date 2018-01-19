@@ -67,6 +67,7 @@ class UserRepository
      * @param UserEntity $user
      * @return UserEntity
      * @throws Exception
+     * @throws \yii\base\Exception
      */
     public function add(UserEntity $user)
     {
@@ -89,6 +90,7 @@ class UserRepository
      * @param UserEntity $user
      * @return UserEntity
      * @throws Exception
+     * @throws \yii\base\Exception
      */
     public function update(UserEntity $user)
     {
@@ -147,8 +149,9 @@ class UserRepository
      *
      * @param Users $model
      * @param UserEntity $user
+     * @throws \yii\base\Exception
      */
-    protected function assignProperties(&$model, &$user)
+    protected function assignProperties(Users &$model, UserEntity &$user)
     {
         $model->username = $user->getUsername();
         $model->password = $user->getPasswordHash();

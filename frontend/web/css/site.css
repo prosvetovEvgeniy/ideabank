@@ -188,6 +188,9 @@ a.desc:after {
 
 /* ########## COMMENT RULES ##########*/
 
+.comments{
+    margin-bottom: 150px;
+}
 
 .comment-block{
     padding: 10px;

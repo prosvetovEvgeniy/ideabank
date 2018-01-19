@@ -52,19 +52,19 @@ class SignupForm extends Model
 
             [['username'], 'trim'],
             [['username'], 'unique', 'targetClass' => '\common\models\activerecords\Users', 'message' => 'Такой логин уже занят'],
-            [['username'], 'string', 'min' => 2, 'max' => 50],
+            [['username'], 'string', 'length' => [2, UserEntity::USERNAME_MAX_LENGTH]],
 
             [['email'], 'trim'],
             [['email'], 'email'],
-            [['email'], 'string', 'max' => 50],
+            [['email'], 'string', 'max' => UserEntity::EMAIL_MAX_LENGTH],
             [['email'], 'unique', 'targetClass' => '\common\models\activerecords\Users', 'message' => 'Такой email уже занят'],
 
-            [['password'], 'string', 'min' => 6],
+            [['password'], 'string', 'min' => UserEntity::PASSWORD_MIN_LENGTH],
 
             [['phone'], 'string'],
             [['phone'], 'validatePhone', 'skipOnEmpty'=> true],
 
-            [['firstName', 'secondName', 'lastName'], 'string', 'length' => [2,30]],
+            [['firstName', 'secondName', 'lastName'], 'string', 'length' => [2, UserEntity::NAME_MAX_LENGTH]],
 
             [['companyName'], 'unique', 'targetClass' => '\common\models\activerecords\Company', 'targetAttribute' => ['companyName' => 'name'] , 'message' => 'Такая компания уже зарегистрирована']
         ];
@@ -98,6 +98,7 @@ class SignupForm extends Model
 
     /**
      * @return bool
+     * @throws Exception
      */
     public function signUpUser()
     {
@@ -132,6 +133,7 @@ class SignupForm extends Model
 
     /**
      * @return bool
+     * @throws Exception
      */
     public function signUpDirector()
     {

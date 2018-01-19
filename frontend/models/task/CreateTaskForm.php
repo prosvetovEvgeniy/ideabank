@@ -3,10 +3,13 @@
 namespace frontend\models\task;
 
 
+use common\components\helpers\NoticeHelper;
 use common\models\activerecords\Project;
 use common\models\activerecords\Users;
+use common\models\entities\NoticeEntity;
 use common\models\entities\TaskEntity;
 use common\models\entities\TaskFileEntity;
+use common\models\repositories\NoticeRepository;
 use common\models\repositories\ProjectRepository;
 use common\models\repositories\TaskFileRepository;
 use common\models\repositories\TaskRepository;
@@ -19,15 +22,15 @@ use yii\web\UploadedFile;
  * Class CreateTaskForm
  * @package frontend\models\task
  *
- * @property string $title
- * @property string $content
- * @property int    $authorId
- * @property int    $projectId
- * @property int    $status
- * @property int    $visibilityArea
+ * @property string         $title
+ * @property string         $content
+ * @property int            $authorId
+ * @property int            $projectId
+ * @property int            $status
+ * @property int            $visibilityArea
  * @property UploadedFile[] $files
  *
- * @property int $taskId
+ * @property TaskEntity $task
  */
 class CreateTaskForm extends Model
 {
@@ -39,7 +42,8 @@ class CreateTaskForm extends Model
     public $visibilityArea;
     public $files;
 
-    protected $taskId;
+    //сущность сохраненной задачи
+    private $task;
 
     public function rules()
     {
@@ -75,46 +79,83 @@ class CreateTaskForm extends Model
         ];
     }
 
+    /**
+     * @return bool
+     * @throws Exception
+     * @throws \yii\base\Exception
+     */
     public function save()
     {
+        if(!$this->validate())
+        {
+            return false;
+        }
+
+        $project = ProjectRepository::instance()->findOne(['id' => $this->projectId]);
+
+        $task = new TaskEntity(
+            $this->title,
+            $this->content,
+            $this->authorId,
+            $this->projectId,
+            TaskEntity::STATUS_ON_CONSIDERATION,
+            $project->getDefaultVisibilityArea()
+        );
+
+        $noticedUsers = NoticeHelper::getNoticedUsers($this->content);
+
+        //если есть файлы или заметки открываем транзакцию
+        if($this->files || $noticedUsers) { Yii::$app->db->beginTransaction(); }
+
         try
         {
-            $project = ProjectRepository::instance()->findOne(['id' => $this->projectId]);
-
-            $task = new TaskEntity($this->title, $this->content, $this->authorId, $this->projectId,
-                             TaskEntity::STATUS_ON_CONSIDERATION, $project->getDefaultVisibilityArea());
-
-            $transaction = Yii::$app->db->beginTransaction();
-
             //сохраняем задачу
-            $this->taskId = (TaskRepository::instance()->add($task))->getId();
+            $this->task = TaskRepository::instance()->add($task);
 
-            if($this->files) //если есть файлы сохраняем их тоже
+            //если есть файлы, то сохраняем их тоже
+            if($this->files)
             {
                 foreach ($this->files as $file)
                 {
                     $hashName = $this->generateFileHashName($file->extension);
-
-                    $taskFile = new TaskFileEntity($this->taskId, $hashName, $file->name);
+                    $taskFile = new TaskFileEntity($this->task->getId(), $hashName, $file->name);
 
                     TaskFileRepository::instance()->add($taskFile);
 
                     //если файл не сохранился, откатываем транзакцию
                     if(!$file->saveAs(TaskFileEntity::PATH_TO_FILE . $hashName))
                     {
-                        $transaction->rollBack();
+                        Yii::$app->db->transaction->rollBack();
 
                         return false;
                     }
                 }
             }
 
-            $transaction->commit(); //если все успешно сохраняем данные
+            //если есть упоминания, то сохраняем их тоже
+            if($noticedUsers)
+            {
+                foreach ($noticedUsers as $noticedUser)
+                {
+                    NoticeRepository::instance()->add(
+                        new NoticeEntity(
+                            $noticedUser->getId(),
+                            $this->content,
+                            $this->getLink(),
+                            $this->authorId
+                        )
+                    );
+                }
+            }
+
+            if($this->files || $noticedUsers) { Yii::$app->db->transaction->commit(); }
 
             return true;
         }
         catch (Exception $e)
         {
+            if($this->files || $noticedUsers) { Yii::$app->db->transaction->rollBack(); }
+
             return false;
         }
     }
@@ -126,6 +167,7 @@ class CreateTaskForm extends Model
      * @param string $fileExtension
      * @param int $nameLength
      * @return mixed|string
+     * @throws \yii\base\Exception
      */
     public function generateFileHashName(string $fileExtension, int $nameLength = 16)
     {
@@ -137,9 +179,15 @@ class CreateTaskForm extends Model
     }
 
     /**
-     * Используется для редиректа в контроллере на созданную задачу
+     * Возращает ссылку по которой будет находится созданная задача.
      *
-     * @return int
+     * @return string
      */
-    public function getTaskId() { return $this->taskId; }
+    public function getLink()
+    {
+        return Yii::$app->urlManager->createAbsoluteUrl([
+            '/task/view',
+            'taskId' => $this->task->getId()
+        ]);
+    }
 }

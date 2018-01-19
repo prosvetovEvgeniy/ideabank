@@ -11,7 +11,9 @@ use yii\db\ActiveRecord;
  *
  * @property integer $id
  * @property integer $recipient_id
- * @property string $content
+ * @property integer $sender_id
+ * @property string  $content
+ * @property string  $link
  * @property integer $created_at
  * @property boolean $viewed
  *
@@ -30,8 +32,6 @@ class Notice extends \yii\db\ActiveRecord
     public function __construct(array $config = [])
     {
         parent::__construct($config);
-
-        $this->viewed = false;
     }
 
     public function behaviors()
@@ -53,10 +53,12 @@ class Notice extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['recipient_id', 'content'], 'required'],
-            [['recipient_id', 'created_at'], 'integer'],
-            [['content'], 'string'],
+            [['recipient_id', 'content','link'], 'required'],
+            [['recipient_id','created_at'], 'integer'],
+            [['content','link'], 'string'],
             [['viewed'], 'boolean'],
+            [['sender_id'], 'integer', 'skipOnEmpty' => true],
+            [['sender_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['recipient_id' => 'id']],
             [['recipient_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['recipient_id' => 'id']],
         ];
     }

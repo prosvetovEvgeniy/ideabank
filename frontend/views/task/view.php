@@ -89,7 +89,7 @@ $counter = 1; //счетчик для номера комментария
                 <tr>
                     <td>Проект</td>
 
-                    <td> <?= Html::a($task->getProject()->getName(), ['project/view', 'projectName' => $task->getProject()->getName()]) ?> </td>
+                    <td> <?= Html::a($task->getProject()->getName(), ['project/view', 'id' => $task->getProject()->getId()]) ?> </td>
                 </tr>
                 <tr>
                     <td>Создал</td>
@@ -241,15 +241,15 @@ $counter = 1; //счетчик для номера комментария
                     <?php
                     endforeach;
                     ?>
-
+                <?php
+                // display pagination
+                echo LinkPager::widget([
+                    'pagination' => $dataProvider->getPagination(),
+                ]);
+                ?>
             </div>
         </div>
     </div>
 
-    <?php
-    // display pagination
-    echo LinkPager::widget([
-        'pagination' => $dataProvider->getPagination(),
-    ]);
-    ?>
+
 

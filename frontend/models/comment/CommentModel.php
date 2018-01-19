@@ -3,13 +3,17 @@
 namespace frontend\models\comment;
 
 
+use common\components\helpers\NoticeHelper;
 use common\models\activerecords\Comment;
 use common\models\entities\CommentEntity;
+use common\models\entities\NoticeEntity;
 use common\models\repositories\CommentRepository;
 use common\models\repositories\CommentViewRepository;
+use common\models\repositories\NoticeRepository;
 use yii\base\Model;
 use common\models\activerecords\Task;
 use Yii;
+use yii\data\Pagination;
 use yii\db\Exception;
 
 /**
@@ -19,7 +23,8 @@ use yii\db\Exception;
  * @property int $parentId
  * @property int $taskId
  * @property string $content
- * @property string $url
+ *
+ * @property string $link
  *
  * @property CommentEntity $comment
  */
@@ -28,19 +33,20 @@ class CommentModel extends Model
     public $parentId;
     public $taskId;
     public $content;
-    public $url; //url по которому нужно формировать ссылку
 
     //сущность сохраненного комментария
-    protected $comment;
+    private $comment;
+
+    //ссылка для перехода по новому комментарию (кешируется)
+    private $link;
 
 
     public function rules()
     {
         return [
-            [['content', 'taskId', 'url'], 'required'],
+            [['content', 'taskId'], 'required'],
             [['content'], 'string', 'length' => [1, 2000]],
             [['content'], 'trim'],
-            [['url'], 'string'],
             [['taskId'], 'exist', 'targetClass' => Task::className(), 'targetAttribute' => ['taskId' => 'id']],
             [['parentId', 'taskId'], 'integer'],
             [['parentId'], 'checkOnEntrance'],
@@ -85,44 +91,72 @@ class CommentModel extends Model
         }
 
         $senderId = Yii::$app->user->identity->getUserId();
-
         $comment = new CommentEntity($this->taskId, $senderId, $this->content, $this->parentId);
 
-        /*//если есть упоминания о других пользователях
-        preg_match_all("/@\w+/",$this->content, $matches);
+        $noticedUsers = NoticeHelper::getNoticedUsers($this->content);
 
-        if(!empty($matches))
-        {
-
-        }*/
+        //если есть упоминания открываем транзакцию
+        if($noticedUsers) { Yii::$app->db->beginTransaction(); }
 
         try
         {
             $this->comment = CommentRepository::instance()->add($comment);
+
+            //записываем упоминания в бд если они есть
+            if(!empty($noticedUsers))
+            {
+                foreach ($noticedUsers as $noticedUser)
+                {
+                    NoticeRepository::instance()->add(
+                        new NoticeEntity(
+                            $noticedUser->getId(),
+                            $this->comment->getContent(),
+                            $this->getLink(),
+                            $this->comment->getSenderId()
+                        )
+                    );
+                }
+
+                Yii::$app->db->transaction->commit();
+            }
+
             return true;
         }
         catch (Exception $e)
         {
+            if($noticedUsers) { Yii::$app->db->transaction->rollBack(); }
+
             return false;
         }
     }
 
     /**
-     * Возращает url по которому будет находится новый созданный комментарий.
+     * Возращает ссылку по которой будет находится новый созданный комментарий.
      * Пример: 'http://ideabank.local/task/view?taskId=1&page=2&per-page=30#44'
      *
      * @return string
      */
-    public function getUrl()
+    public function getLink()
     {
-        return $this->url . '?taskId=' . $this->taskId .
-               '&page=' . $this->calculatePageNumber() .
-               '&per_page=' . CommentViewRepository::COMMENTS_PER_PAGE .
-               '#' . $this->comment->getId();
+        if($this->link === null)
+        {
+            //из класс yii\data\Pagination получаем названия GET-параметров (page, per-page)
+            $pagination = new Pagination();
+
+            $this->link = Yii::$app->urlManager->createAbsoluteUrl([
+                Yii::$app->request->pathInfo,
+                'taskId' => $this->taskId,
+                $pagination->pageParam => $this->calculatePageNumber(),
+                $pagination->pageSizeParam => CommentViewRepository::COMMENTS_PER_PAGE,
+                '#' => $this->comment->getId()
+            ]);
+        }
+
+        return $this->link;
     }
 
     /**
-     * Расчитывает номер страницы на которой будет отображен созднный комментарий
+     * Расчитывает номер страницы на которой будет отображен созданный комментарий
      *
      * @return float
      */

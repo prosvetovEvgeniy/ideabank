@@ -197,6 +197,15 @@ class MessageRepository
         return $entities;
     }
 
+    /**
+     * @param array $condition
+     * @return int|string
+     */
+    public function getTotalCountByCondition(array $condition)
+    {
+        return Message::find()->where($condition)->count();
+    }
+
 
     // #################### UNIQUE METHODS OF CLASS ######################
 
@@ -228,15 +237,6 @@ class MessageRepository
     public function viewAll(array $condition)
     {
         return $this->updateAll(['viewed' => true], $condition);
-    }
-
-    /**
-     * @param array $condition
-     * @return int|string
-     */
-    public function getTotalCountByCondition(array $condition)
-    {
-        return Message::find()->where($condition)->count();
     }
 
     /**

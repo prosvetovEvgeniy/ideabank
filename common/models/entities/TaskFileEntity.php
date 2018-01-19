@@ -164,6 +164,7 @@ class TaskFileEntity
 
     /**
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getMimeType()
     {
@@ -172,6 +173,7 @@ class TaskFileEntity
 
     /**
      * @return bool
+     * @throws \yii\base\InvalidConfigException
      */
     public function isImage()
     {

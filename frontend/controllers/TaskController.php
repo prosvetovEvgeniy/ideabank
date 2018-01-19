@@ -26,7 +26,12 @@ class TaskController extends Controller
 
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, 10);
 
-        $participants = ParticipantRepository::instance()->getParticipantsInProjects(Yii::$app->user->identity->getUser());
+        /**
+         * @var UserEntity $user
+         */
+        $user = Yii::$app->user->identity->getUser();
+
+        $participants = ParticipantRepository::instance()->getParticipantsInProjects($user);
 
         return $this->render('index', [
             'dataProvider'   => $dataProvider,
@@ -58,12 +63,9 @@ class TaskController extends Controller
         $model = new CommentModel();
         $model->taskId = $task->getId();
 
-        //получаем url без GET-параметров
-        $model->url = explode('?', Yii::$app->request->absoluteUrl)[0];
-
         if($model->load(Yii::$app->request->post()) && $model->save())
         {
-            $this->redirect($model->getUrl(), 200);
+            $this->redirect($model->getLink());
         }
 
         return $this->render('view',[
@@ -85,13 +87,13 @@ class TaskController extends Controller
         $model = new CreateTaskForm();
         $model->authorId = $user->getId();
 
-        if($model->load(Yii::$app->request->post()) && $model->validate())
+        if($model->load(Yii::$app->request->post()))
         {
             $model->files = UploadedFile::getInstances($model, 'files');
 
             if($model->save())
             {
-                return $this->redirect('/task/view?taskId=' . $model->getTaskId());
+                return $this->redirect($model->getLink());
             }
         }
 

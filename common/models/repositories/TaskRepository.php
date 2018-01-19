@@ -196,6 +196,15 @@ class TaskRepository
         return $entities;
     }
 
+    /**
+     * @param array $condition
+     * @return int|string
+     */
+    public function getTotalCountByCondition(array $condition)
+    {
+        return Task::find()->where($condition)->count();
+    }
+
 
     // #################### UNIQUE METHODS OF CLASS ######################
 
@@ -208,7 +217,7 @@ class TaskRepository
     {
         $condition = $this->getConditionOnAllTasks($project);
 
-        return Task::find()->where($condition)->count();
+        return $this->getTotalCountByCondition($condition);
     }
 
     /**
@@ -219,7 +228,7 @@ class TaskRepository
     {
         $condition = $this->getConditionOnCompletedTasks($project);
 
-        return Task::find()->where($condition)->count();
+        return $this->getTotalCountByCondition($condition);
     }
 
     /**
@@ -230,7 +239,7 @@ class TaskRepository
     {
         $condition = $this->getConditionOnNotCompletedTasks($project);
 
-        return Task::find()->where($condition)->count();
+        return $this->getTotalCountByCondition($condition);
     }
 
     /**
@@ -241,7 +250,7 @@ class TaskRepository
     {
         $condition = $this->getConditionOnMergedTasks($project);
 
-        return Task::find()->where($condition)->count();
+        return $this->getTotalCountByCondition($condition);
     }
 
     /**
@@ -253,16 +262,7 @@ class TaskRepository
     {
         $condition = $this->getConditionByAuthorForProject($project, $user);
 
-        return Task::find()->where($condition)->count();
-    }
-
-    /**
-     * @param array $condition
-     * @return int|string
-     */
-    public function getTotalCountByCondition(array $condition)
-    {
-        return Task::find()->where($condition)->count();
+        return $this->getTotalCountByCondition($condition);
     }
 
     /**

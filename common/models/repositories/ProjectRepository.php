@@ -189,10 +189,6 @@ class ProjectRepository
         return $entities;
     }
 
-
-    // #################### UNIQUE METHODS OF CLASS ######################
-
-
     /**
      * @param array $condition
      * @return int|string
@@ -201,6 +197,9 @@ class ProjectRepository
     {
         return Project::find()->where($condition)->count();
     }
+
+    // #################### UNIQUE METHODS OF CLASS ######################
+
 
     /**
      * @param UserEntity $user

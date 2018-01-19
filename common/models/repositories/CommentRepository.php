@@ -151,10 +151,6 @@ class CommentRepository
                                  $model->deleted);
     }
 
-
-    // #################### UNIQUE METHODS OF CLASS ######################
-
-
     /**
      * @param array $condition
      * @return int|string
@@ -163,6 +159,10 @@ class CommentRepository
     {
         return Comment::find()->where($condition)->count();
     }
+
+
+    // #################### UNIQUE METHODS OF CLASS ######################
+
 
     /**
      * Рассчитывает количество комментриев до текущего

@@ -112,6 +112,9 @@ class TaskLikeRepository
      * @param TaskLikeEntity $taskLike
      * @return TaskLikeEntity
      * @throws Exception
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function delete(TaskLikeEntity $taskLike)
     {
@@ -192,8 +195,8 @@ class TaskLikeRepository
     }
 
     /**
-     * @param TaskLike $task
-     * @return int
+     * @param TaskEntity $task
+     * @return int|string
      */
     public function getAmountDislikes(TaskEntity $task)
     {

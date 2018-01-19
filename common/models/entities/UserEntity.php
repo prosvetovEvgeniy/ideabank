@@ -43,6 +43,11 @@ use Yii;
  */
 class UserEntity
 {
+    public const USERNAME_MAX_LENGTH = 50;
+    public const EMAIL_MAX_LENGTH = 50;
+    public const NAME_MAX_LENGTH = 50;
+    public const PASSWORD_MIN_LENGTH = 6;
+
     public const PATH_TO_AVATAR = 'uploads/avatars/';
     private const PATH_TO_AVATAR_STUB = 'images/stub-img.png';
 
@@ -339,6 +344,7 @@ class UserEntity
 
     /**
      * @return string
+     * @throws \yii\base\Exception
      */
     public function getPasswordHash()
     {
@@ -370,35 +376,3 @@ class UserEntity
         return $this->getSecondName() . ' ' . $this->getFirstName() . ' ' . $this->getLastName();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
