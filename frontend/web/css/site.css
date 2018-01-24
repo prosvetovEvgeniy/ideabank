@@ -451,12 +451,22 @@ a.desc:after {
     background-color: rgba(51, 122, 183, 0.1);
     padding: 10px;
 }
+
 .inf-block:last-child{
     margin-bottom: 20px;
 }
 
 
 /* OTHERS */
+
+.text-hidden {
+    display: block;
+    max-width: 500px;
+    min-width: 500px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 
 .text-center{
     text-align: center; !important;
@@ -509,6 +519,9 @@ a.desc:after {
     text-align: center;
 }
 
+.text-lext{
+    text-align: left;
+}
 
 /* ########## PROJECT RULES ######## */
 

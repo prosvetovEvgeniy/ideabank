@@ -7,110 +7,39 @@ use frontend\models\comment\CommentVoteModel;
 use yii\web\Controller;
 use Yii;
 use yii\web\BadRequestHttpException;
-use common\models\repositories\CommentLikeRepository;
-use common\models\entities\CommentLikeEntity;
-use yii\db\Exception;
-use yii\web\UnauthorizedHttpException;
+
 
 class CommentLikeController extends Controller
 {
-    /**
-     * @throws BadRequestHttpException
-     */
-    public function actionAddvote()
+    public function actionAddVote()
     {
-        if(Yii::$app->user->identity === null)
-        {
-            throw new UnauthorizedHttpException();
-        }
-
         $model = new CommentVoteModel();
         $model->userId = Yii::$app->user->identity->getUserId();
 
-        $model->load(Yii::$app->request->post());
-
-        if(!$model->validate() || $model->recordExist())
-        {
-            throw new BadRequestHttpException();
-        }
-
-        $commentLike = new CommentLikeEntity($model->commentId, $model->userId, $model->liked);
-
-        try
-        {
-            CommentLikeRepository::instance()->add($commentLike);
-        }
-        catch (Exception $e)
+        if(!$model->load(Yii::$app->request->post()) || !$model->add())
         {
             throw new BadRequestHttpException();
         }
     }
 
-    /**
-     * @throws BadRequestHttpException
-     */
-    public function actionDeletevote()
+    public function actionDeleteVote()
     {
-        $commentId = Yii::$app->request->post('commentId');
+        $model = new CommentVoteModel();
+        $model->scenario = CommentVoteModel::SCENARIO_DELETE;
+        $model->userId = Yii::$app->user->identity->getUserId();
 
-        if(Yii::$app->user->identity === null)
-        {
-            throw new UnauthorizedHttpException();
-        }
-
-        $userId = Yii::$app->user->identity->getUserId();
-
-        $commentLike = CommentLikeRepository::instance()->findOne([
-            'comment_id' => $commentId,
-            'user_id'    => $userId,
-        ]);
-
-        if(!$commentLike)
-        {
-            throw new BadRequestHttpException();
-        }
-
-        try
-        {
-            CommentLikeRepository::instance()->delete($commentLike);
-        }
-        catch (Exception $e)
+        if(!$model->load(Yii::$app->request->post()) || !$model->delete())
         {
             throw new BadRequestHttpException();
         }
     }
 
-    /**
-     * @throws BadRequestHttpException
-     */
-    public function actionReversevote()
+    public function actionReverseVote()
     {
-        $commentId = Yii::$app->request->post('commentId');
+        $model = new CommentVoteModel();
+        $model->userId = Yii::$app->user->identity->getUserId();
 
-        if(Yii::$app->user->identity === null)
-        {
-            throw new UnauthorizedHttpException();
-        }
-
-        $userId = Yii::$app->user->identity->getUserId();
-
-        $commentLike = CommentLikeRepository::instance()->findOne([
-            'comment_id' => $commentId,
-            'user_id'    => $userId,
-        ]);
-
-        if(!$commentLike)
-        {
-            throw new BadRequestHttpException();
-        }
-
-        ($commentLike->getLiked() === true) ? $commentLike->dislike() : $commentLike->like();
-
-        try
-        {
-            CommentLikeRepository::instance()->update($commentLike);
-        }
-        catch (Exception $e)
+        if(!$model->load(Yii::$app->request->post()) || !$model->reverse())
         {
             throw new BadRequestHttpException();
         }

@@ -30,7 +30,7 @@ use yii\db\Exception;
 class SignupForm extends Model
 {
     const SCENARIO_USER_SIGNUP = 'user signup';
-    const SCENARIO_DIRECTOR_SIGNUP = 'director signup';
+    const SCENARIO_DIRECTOR_SIGNUP = 'director sign up';
 
     public $username;
     public $email;
@@ -99,6 +99,7 @@ class SignupForm extends Model
     /**
      * @return bool
      * @throws Exception
+     * @throws \yii\base\Exception
      */
     public function signUpUser()
     {
@@ -134,6 +135,7 @@ class SignupForm extends Model
     /**
      * @return bool
      * @throws Exception
+     * @throws \yii\base\Exception
      */
     public function signUpDirector()
     {

@@ -3,6 +3,7 @@
 namespace frontend\models\task;
 
 
+use common\components\helpers\FileHelper;
 use common\components\helpers\NoticeHelper;
 use common\models\activerecords\Project;
 use common\models\activerecords\Users;
@@ -31,6 +32,7 @@ use yii\web\UploadedFile;
  * @property UploadedFile[] $files
  *
  * @property TaskEntity $task
+ * @property NoticeHelper $noticeHelper;
  */
 class CreateTaskForm extends Model
 {
@@ -44,6 +46,8 @@ class CreateTaskForm extends Model
 
     //сущность сохраненной задачи
     private $task;
+
+    private $noticeHelper;
 
     public function rules()
     {
@@ -81,7 +85,6 @@ class CreateTaskForm extends Model
 
     /**
      * @return bool
-     * @throws Exception
      * @throws \yii\base\Exception
      */
     public function save()
@@ -102,40 +105,79 @@ class CreateTaskForm extends Model
             $project->getDefaultVisibilityArea()
         );
 
-        $noticedUsers = NoticeHelper::getNoticedUsers($this->content);
+        $this->noticeHelper = new NoticeHelper($this->content);
 
-        //если есть файлы или заметки открываем транзакцию
-        if($this->files || $noticedUsers) { Yii::$app->db->beginTransaction(); }
+        $this->beginTransaction();
 
         try
         {
-            //сохраняем задачу
             $this->task = TaskRepository::instance()->add($task);
 
-            //если есть файлы, то сохраняем их тоже
+            if(!$this->saveFiles() || !$this->saveNotices())
+            {
+                $this->rollBack();
+
+                return false;
+            }
+
+            $this->commit();
+
+            return true;
+        }
+        catch (Exception $e)
+        {
+            $this->rollBack();
+
+            return false;
+        }
+    }
+
+    /**
+     * @return bool
+     * @throws \yii\base\Exception
+     */
+    private function saveFiles()
+    {
+        try
+        {
             if($this->files)
             {
                 foreach ($this->files as $file)
                 {
-                    $hashName = $this->generateFileHashName($file->extension);
-                    $taskFile = new TaskFileEntity($this->task->getId(), $hashName, $file->name);
+                    $fileHelper = new FileHelper($file->extension, TaskFileRepository::instance());
 
+                    $hashName = $fileHelper->getHash('hash_name');
+
+                    $taskFile = new TaskFileEntity($this->task->getId(), $hashName, $file->name);
                     TaskFileRepository::instance()->add($taskFile);
 
                     //если файл не сохранился, откатываем транзакцию
                     if(!$file->saveAs(TaskFileEntity::PATH_TO_FILE . $hashName))
                     {
-                        Yii::$app->db->transaction->rollBack();
-
                         return false;
                     }
                 }
             }
 
+            return true;
+        }
+        catch (Exception $e)
+        {
+            return false;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    private function saveNotices()
+    {
+        try
+        {
             //если есть упоминания, то сохраняем их тоже
-            if($noticedUsers)
+            if($this->noticeHelper->hasNotice())
             {
-                foreach ($noticedUsers as $noticedUser)
+                foreach ($this->noticeHelper->getNoticedUsers() as $noticedUser)
                 {
                     NoticeRepository::instance()->add(
                         new NoticeEntity(
@@ -148,34 +190,27 @@ class CreateTaskForm extends Model
                 }
             }
 
-            if($this->files || $noticedUsers) { Yii::$app->db->transaction->commit(); }
-
             return true;
         }
         catch (Exception $e)
         {
-            if($this->files || $noticedUsers) { Yii::$app->db->transaction->rollBack(); }
-
             return false;
         }
     }
 
-    /**
-     * Возвращает уникальное имя для сохраняемого файла,
-     * если такое имя уже есть, то происходит рекурсивный вызов
-     *
-     * @param string $fileExtension
-     * @param int $nameLength
-     * @return mixed|string
-     * @throws \yii\base\Exception
-     */
-    public function generateFileHashName(string $fileExtension, int $nameLength = 16)
+    private function beginTransaction()
     {
-        $hashName = Yii::$app->security->generateRandomString($nameLength) . '.' . $fileExtension;
+        if($this->files || $this->noticeHelper->hasNotice()) { Yii::$app->db->beginTransaction(); }
+    }
 
-        $file = TaskFileRepository::instance()->findOne(['hash_name' => $hashName]);
+    private function commit()
+    {
+        if($this->files || $this->noticeHelper->hasNotice()) { Yii::$app->db->transaction->commit(); }
+    }
 
-        return (!$file) ? $hashName : $this->generateFileHashName($fileExtension) ;
+    private function rollBack()
+    {
+        if($this->files || $this->noticeHelper->hasNotice()) { Yii::$app->db->transaction->rollBack(); }
     }
 
     /**

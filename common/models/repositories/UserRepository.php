@@ -5,10 +5,11 @@ namespace common\models\repositories;
 
 use common\models\activerecords\Users;
 use common\models\entities\UserEntity;
+use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
-class UserRepository
+class UserRepository implements IRepository
 {
 
     // #################### STANDARD METHODS ######################
@@ -19,7 +20,7 @@ class UserRepository
      *
      * @return UserRepository
      */
-    public static function instance()
+    public static function instance(): IRepository
     {
         return new self();
     }
@@ -203,6 +204,14 @@ class UserRepository
         return $entities;
     }
 
+    /**
+     * @param array $condition
+     * @return int|string
+     */
+    public function getTotalCountByCondition(array $condition)
+    {
+        return Users::find()->where($condition)->count();
+    }
 
     // #################### UNIQUE METHODS OF CLASS ######################
 

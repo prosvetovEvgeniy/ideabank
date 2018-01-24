@@ -1,4 +1,5 @@
 <?php
+
 use common\components\dataproviders\EntityDataProvider;
 use yii\grid\GridView;
 use common\components\widgets\ProjectSearchWidget;

@@ -5,10 +5,11 @@ namespace common\models\repositories;
 
 use common\models\activerecords\AuthAssignment;
 use common\models\entities\AuthAssignmentEntity;
+use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
-class AuthAssignmentRepository
+class AuthAssignmentRepository implements IRepository
 {
     // #################### STANDARD METHODS ######################
 
@@ -17,7 +18,7 @@ class AuthAssignmentRepository
      *
      * @return AuthAssignmentRepository
      */
-    public static function instance()
+    public static function instance(): IRepository
     {
         return new self();
     }
@@ -109,6 +110,9 @@ class AuthAssignmentRepository
      * @param AuthAssignmentEntity $authAssignment
      * @return AuthAssignmentEntity
      * @throws Exception
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function delete(AuthAssignmentEntity $authAssignment)
     {
@@ -174,6 +178,14 @@ class AuthAssignmentRepository
         return $entities;
     }
 
+    /**
+     * @param array $condition
+     * @return int|string
+     */
+    public function getTotalCountByCondition(array $condition)
+    {
+        return AuthAssignment::find()->where($condition)->count();
+    }
 
     // #################### UNIQUE METHODS OF CLASS ######################
 }

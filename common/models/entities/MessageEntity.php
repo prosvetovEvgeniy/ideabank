@@ -3,6 +3,7 @@
 namespace common\models\entities;
 
 
+use common\models\interfaces\IEntity;
 use common\models\repositories\UserRepository;
 use yii\helpers\Html;
 
@@ -22,7 +23,7 @@ use yii\helpers\Html;
  * @property UserEntity $self
  * @property UserEntity $companion
  */
-class MessageEntity
+class MessageEntity implements IEntity
 {
     protected const DATE_FORMAT = 'd M';
 

@@ -4,10 +4,11 @@ namespace common\models\repositories;
 
 use common\models\activerecords\Company;
 use common\models\entities\CompanyEntity;
+use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
-class CompanyRepository
+class CompanyRepository implements IRepository
 {
 
     // #################### STANDARD METHODS ######################
@@ -17,7 +18,7 @@ class CompanyRepository
      *
      * @return CompanyRepository
      */
-    public static function instance()
+    public static function instance(): IRepository
     {
         return new self();
     }
@@ -182,6 +183,14 @@ class CompanyRepository
         return $entities;
     }
 
+    /**
+     * @param array $condition
+     * @return int|string
+     */
+    public function getTotalCountByCondition(array $condition)
+    {
+        return Company::find()->where($condition)->count();
+    }
 
     // #################### UNIQUE METHODS OF CLASS ######################
 

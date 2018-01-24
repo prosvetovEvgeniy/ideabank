@@ -9,27 +9,41 @@ use common\models\repositories\UserRepository;
 /**
  * Class NoticeHelper
  * @package common\components\helpers
+ *
+ * @property array $matches
  */
 class NoticeHelper
 {
     private const PATTERN = '/#\w{2,' . UserEntity::USERNAME_MAX_LENGTH . '}/';
 
-    /**
-     * @param string $text
-     * @return UserEntity[]
-     */
-    public static function getNoticedUsers(string $text)
+    private $matches;
+
+    public function __construct(string $text)
     {
         preg_match_all(self::PATTERN, $text, $matches);
 
         /**
          * получаем массив полных уникальных вхождений шаблона
          */
-        $uniqueMatches = array_values(array_unique($matches[0]));
+        $this->matches = array_values(array_unique($matches[0]));
+    }
 
+    /**
+     * @return bool
+     */
+    public function hasNotice()
+    {
+        return (empty($this->matches)) ? false : true ;
+    }
+
+    /**
+     * @return UserEntity[]
+     */
+    public function getNoticedUsers()
+    {
         $userNames = [];
 
-        foreach ($uniqueMatches as $match)
+        foreach ($this->matches as $match)
         {
             $userNames[] = explode('#', $match)[1];
         }

@@ -2,6 +2,7 @@
 
 namespace common\models\entities;
 
+use common\models\interfaces\IEntity;
 use common\models\repositories\TaskRepository;
 use Yii;
 use yii\helpers\FileHelper;
@@ -20,7 +21,7 @@ use yii\helpers\FileHelper;
  *
  * @property TaskEntity $task
  */
-class TaskFileEntity
+class TaskFileEntity implements IEntity
 {
     public const PATH_TO_FILE = 'uploads/tasks/';
 

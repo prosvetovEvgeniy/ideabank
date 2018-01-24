@@ -14,7 +14,7 @@ class TaskLikeAsset extends AssetBundle
     ];
 
     public $js = [
-        'js/comment/TaskLike.js'
+        'js/task/TaskLike.js'
     ];
 
     public $depends = [

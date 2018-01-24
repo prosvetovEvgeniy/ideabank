@@ -6,10 +6,11 @@ namespace common\models\repositories;
 use common\models\activerecords\TaskLike;
 use common\models\entities\TaskEntity;
 use common\models\entities\TaskLikeEntity;
+use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
-class TaskLikeRepository
+class TaskLikeRepository implements IRepository
 {
 
     // #################### STANDARD METHODS ######################
@@ -19,7 +20,7 @@ class TaskLikeRepository
      *
      * @return TaskLikeRepository
      */
-    public static function instance()
+    public static function instance(): IRepository
     {
         return new self();
     }
@@ -182,6 +183,14 @@ class TaskLikeRepository
         return $entities;
     }
 
+    /**
+     * @param array $condition
+     * @return int|string
+     */
+    public function getTotalCountByCondition(array $condition)
+    {
+        return TaskLike::find()->where($condition)->count();
+    }
 
     // #################### UNIQUE METHODS OF CLASS ######################
 

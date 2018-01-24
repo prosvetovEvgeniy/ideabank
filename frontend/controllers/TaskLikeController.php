@@ -2,110 +2,43 @@
 
 namespace frontend\controllers;
 
-use common\models\entities\TaskLikeEntity;
 use yii\web\Controller;
-use yii\web\UnauthorizedHttpException;
 use yii\web\BadRequestHttpException;
 use Yii;
-use common\models\repositories\TaskLikeRepository;
-use yii\db\Exception;
 use frontend\models\task\TaskVoteModel;
 
 class TaskLikeController extends Controller
 {
-    /**
-     * @throws BadRequestHttpException
-     */
-    public function actionAddvote()
+    public function actionAddVote()
     {
-        if(Yii::$app->user->identity === null)
-        {
-            throw new UnauthorizedHttpException();
-        }
-
         $model = new TaskVoteModel();
         $model->userId = Yii::$app->user->identity->getUserId();
 
-        $model->load(Yii::$app->request->post());
-
-        if(!$model->validate() || $model->recordExist())
-        {
-            throw new BadRequestHttpException();
-        }
-
-        $taskLike = new TaskLikeEntity($model->taskId, $model->userId, $model->liked);
-
-        try
-        {
-            TaskLikeRepository::instance()->add($taskLike);
-        }
-        catch (Exception $e)
+        if(!$model->load(Yii::$app->request->post()) || !$model->add())
         {
             throw new BadRequestHttpException();
         }
     }
 
-    /**
-     * @throws BadRequestHttpException
-     */
-    public function actionDeletevote()
+    public function actionDeleteVote()
     {
-        $taskId = Yii::$app->request->post('taskId');
+        $model = new TaskVoteModel();
+        $model->scenario = TaskVoteModel::SCENARIO_DELETE;
 
-        if(Yii::$app->user->identity === null)
-        {
-            throw new UnauthorizedHttpException();
-        }
+        $model->userId = Yii::$app->user->identity->getUserId();
 
-        $taskLike = TaskLikeRepository::instance()->findOne([
-            'task_id' => $taskId,
-            'user_id' => Yii::$app->user->identity->getUserId(),
-        ]);
-
-        if(!$taskLike)
-        {
-            throw new BadRequestHttpException();
-        }
-
-        try
-        {
-            TaskLikeRepository::instance()->delete($taskLike);
-        }
-        catch (Exception $e)
+        if(!$model->load(Yii::$app->request->post()) || !$model->delete())
         {
             throw new BadRequestHttpException();
         }
     }
 
-    /**
-     * @throws BadRequestHttpException
-     */
-    public function actionReversevote()
+    public function actionReverseVote()
     {
-        $taskId = Yii::$app->request->post('taskId');
+        $model = new TaskVoteModel();
+        $model->userId = Yii::$app->user->identity->getUserId();
 
-        if(Yii::$app->user->identity === null)
-        {
-            throw new UnauthorizedHttpException();
-        }
-
-        $taskLike = TaskLikeRepository::instance()->findOne([
-            'task_id' => $taskId,
-            'user_id' => Yii::$app->user->identity->getUserId(),
-        ]);
-
-        if(!$taskLike)
-        {
-            throw new BadRequestHttpException();
-        }
-
-        ($taskLike->getLiked() === true) ? $taskLike->dislike() : $taskLike->like();
-
-        try
-        {
-            TaskLikeRepository::instance()->update($taskLike);
-        }
-        catch (Exception $e)
+        if(!$model->load(Yii::$app->request->post()) || !$model->reverse())
         {
             throw new BadRequestHttpException();
         }

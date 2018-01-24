@@ -2,6 +2,7 @@
 
 namespace common\models\entities;
 
+use common\models\interfaces\IEntity;
 use common\models\repositories\ParticipantRepository;
 use common\models\repositories\ProjectRepository;
 use yii\helpers\Html;
@@ -19,7 +20,7 @@ use yii\helpers\Html;
  * @property ProjectEntity       $projects
  * @property ParticipantEntity[] $participants
  */
-class CompanyEntity
+class CompanyEntity implements IEntity
 {
     protected $id;
     protected $name;

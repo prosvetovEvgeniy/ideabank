@@ -6,10 +6,11 @@ namespace common\models\repositories;
 use common\models\activerecords\Message;
 use common\models\entities\MessageEntity;
 use common\models\entities\UserEntity;
+use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
-class MessageRepository
+class MessageRepository implements IRepository
 {
 
     // #################### STANDARD METHODS ######################
@@ -19,7 +20,7 @@ class MessageRepository
      *
      * @return MessageRepository
      */
-    public static function instance()
+    public static function instance(): IRepository
     {
         return new self();
     }

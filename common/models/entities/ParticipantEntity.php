@@ -3,6 +3,7 @@
 namespace common\models\entities;
 
 
+use common\models\interfaces\IEntity;
 use common\models\repositories\AuthAssignmentRepository;
 use common\models\repositories\CompanyRepository;
 use common\models\repositories\ParticipantRepository;
@@ -38,7 +39,7 @@ use yii\web\IdentityInterface;
  * @property array $roleList
  * @property \yii\rbac\ManagerInterface $auth
  */
-class ParticipantEntity implements IdentityInterface
+class ParticipantEntity implements IEntity, IdentityInterface
 {
     //названия ролей из RBAC
     public const ROLE_USER = 'user';

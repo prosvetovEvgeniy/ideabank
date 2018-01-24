@@ -1,9 +1,9 @@
 <?php
 namespace frontend\controllers;
 
+use common\models\repositories\CompanyRepository;
 use Yii;
 use yii\base\InvalidParamException;
-use yii\data\Pagination;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;

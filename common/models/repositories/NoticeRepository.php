@@ -4,10 +4,11 @@ namespace common\models\repositories;
 
 use common\models\activerecords\Notice;
 use common\models\entities\NoticeEntity;
+use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
-class NoticeRepository
+class NoticeRepository implements IRepository
 {
 
     // #################### STANDARD METHODS ######################
@@ -17,7 +18,7 @@ class NoticeRepository
      *
      * @return NoticeRepository
      */
-    public static function instance()
+    public static function instance(): IRepository
     {
         return new self();
     }

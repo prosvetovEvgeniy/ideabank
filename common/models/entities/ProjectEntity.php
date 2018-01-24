@@ -3,6 +3,7 @@
 namespace common\models\entities;
 
 
+use common\models\interfaces\IEntity;
 use common\models\repositories\CompanyRepository;
 use common\models\repositories\ParticipantRepository;
 use common\models\repositories\TaskRepository;
@@ -27,7 +28,7 @@ use yii\helpers\Html;
  *
  * @property TaskRepository $taskRepository
  */
-class ProjectEntity
+class ProjectEntity implements IEntity
 {
     private const DATE_FORMAT = 'Y-m-d';
 

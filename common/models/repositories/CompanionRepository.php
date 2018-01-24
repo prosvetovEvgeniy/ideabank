@@ -6,9 +6,11 @@ namespace common\models\repositories;
 use common\models\activerecords\Message;
 use common\models\activerecords\Users;
 use common\models\entities\UserEntity;
+use common\models\interfaces\IRepository;
+use yii\base\NotSupportedException;
 use yii\helpers\ArrayHelper;
 
-class CompanionRepository
+class CompanionRepository implements IRepository
 {
     // #################### STANDARD METHODS ######################
 
@@ -17,9 +19,14 @@ class CompanionRepository
      *
      * @return CompanionRepository
      */
-    public static function instance()
+    public static function instance(): IRepository
     {
         return new self();
+    }
+
+    public function findOne(array $condition)
+    {
+        throw new NotSupportedException();
     }
 
     /**

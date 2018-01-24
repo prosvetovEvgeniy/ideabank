@@ -3,6 +3,7 @@
 namespace common\models\entities;
 
 
+use common\models\interfaces\IEntity;
 use common\models\repositories\UserRepository;
 
 /**
@@ -17,10 +18,13 @@ use common\models\repositories\UserRepository;
  * @property int $createdAt
  * @property bool $viewed
  *
- * @property UserEntity $user
+ * @property UserEntity $sender;
+ * @property UserEntity $recipient
  */
-class NoticeEntity
+class NoticeEntity implements IEntity
 {
+    private const DATE_FORMAT = 'Y-m-d';
+
     protected $id;
     protected $recipientId;
     protected $senderId;
@@ -30,7 +34,8 @@ class NoticeEntity
     protected $viewed;
 
     //кеш связанных сущностей
-    protected $user;
+    protected $sender;
+    protected $recipient;
 
 
     public function __construct(int $recipientId, string $content,string $link, int $senderId = null,
@@ -110,24 +115,40 @@ class NoticeEntity
 
     // #################### SECTION OF RELATIONS ######################
 
-
     /**
-     * @return UserEntity
+     * @return UserEntity|null
      */
-    public function getUser()
+    public function getSender()
     {
-        if($this->user === null)
+        if($this->sender === null)
         {
-            $this->user = UserRepository::instance()->findOne(['id' => $this->getRecipientId()]);
+            $this->sender = UserRepository::instance()->findOne(['id' => $this->getSenderId()]);
         }
 
-        return $this->user;
+        return $this->sender;
+    }
+
+    /**
+     * @return UserEntity|null
+     */
+    public function getRecipient()
+    {
+        if($this->recipient === null)
+        {
+            $this->recipient = UserRepository::instance()->findOne(['id' => $this->getRecipientId()]);
+        }
+
+        return $this->recipient;
     }
 
 
     // #################### SECTION OF LOGIC ######################
 
 
+    public function getCreatedAtDate()
+    {
+        return date(self::DATE_FORMAT, $this->getCreatedAt());
+    }
 }
 
 

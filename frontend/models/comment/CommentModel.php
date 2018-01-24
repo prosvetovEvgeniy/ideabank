@@ -25,8 +25,8 @@ use yii\db\Exception;
  * @property string $content
  *
  * @property string $link
- *
  * @property CommentEntity $comment
+ * @property NoticeHelper $noticeHelper
  */
 class CommentModel extends Model
 {
@@ -40,6 +40,7 @@ class CommentModel extends Model
     //ссылка для перехода по новому комментарию (кешируется)
     private $link;
 
+    private $noticeHelper;
 
     public function rules()
     {
@@ -90,44 +91,83 @@ class CommentModel extends Model
             return false;
         }
 
-        $senderId = Yii::$app->user->identity->getUserId();
-        $comment = new CommentEntity($this->taskId, $senderId, $this->content, $this->parentId);
+        $comment = new CommentEntity(
+            $this->taskId,
+            Yii::$app->user->identity->getUserId(),
+            $this->content,
+            $this->parentId
+        );
 
-        $noticedUsers = NoticeHelper::getNoticedUsers($this->content);
+        $this->noticeHelper = new NoticeHelper($this->content);
 
-        //если есть упоминания открываем транзакцию
-        if($noticedUsers) { Yii::$app->db->beginTransaction(); }
+        $this->beginTransaction();
 
         try
         {
             $this->comment = CommentRepository::instance()->add($comment);
 
-            //записываем упоминания в бд если они есть
-            if(!empty($noticedUsers))
+            if(!$this->saveNotices())
             {
-                foreach ($noticedUsers as $noticedUser)
+                $this->rollBack();
+
+                return false;
+            }
+
+            $this->commit();
+
+            return true;
+        }
+        catch (Exception $e)
+        {
+            $this->rollBack();
+
+            return false;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    private function saveNotices()
+    {
+        try
+        {
+            if($this->noticeHelper->hasNotice())
+            {
+                foreach ($this->noticeHelper->getNoticedUsers() as $noticedUser)
                 {
                     NoticeRepository::instance()->add(
                         new NoticeEntity(
                             $noticedUser->getId(),
-                            $this->comment->getContent(),
+                            $this->content,
                             $this->getLink(),
-                            $this->comment->getSenderId()
+                            Yii::$app->user->identity->getUserId()
                         )
                     );
                 }
-
-                Yii::$app->db->transaction->commit();
             }
 
             return true;
         }
         catch (Exception $e)
         {
-            if($noticedUsers) { Yii::$app->db->transaction->rollBack(); }
-
             return false;
         }
+    }
+
+    private function beginTransaction()
+    {
+        if($this->noticeHelper->hasNotice()) { Yii::$app->db->beginTransaction(); }
+    }
+
+    private function commit()
+    {
+        if($this->noticeHelper->hasNotice()) { Yii::$app->db->transaction->commit(); }
+    }
+
+    private function rollBack()
+    {
+        if($this->noticeHelper->hasNotice()) { Yii::$app->db->transaction->rollBack(); }
     }
 
     /**

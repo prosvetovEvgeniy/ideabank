@@ -13,7 +13,7 @@ $( document ).ready(function() {
 
         if(currentUserLikedIt === 0 && currentUserDislikedIt === 0) {
             $.ajax({
-                url: '/comment-like/addvote',
+                url: '/comment-like/add-vote',
                 type: 'POST',
                 data: {'CommentVoteModel[commentId]': commentId, 'CommentVoteModel[liked]': 1},
                 success: function (response) {
@@ -26,9 +26,9 @@ $( document ).ready(function() {
         else if(currentUserLikedIt === 1 && currentUserDislikedIt === 0)
         {
             $.ajax({
-                url: '/comment-like/deletevote',
+                url: '/comment-like/delete-vote',
                 type: 'POST',
-                data: {commentId: commentId},
+                data: {'CommentVoteModel[commentId]': commentId},
                 success: function (response) {
                     comment.attr('data-current-user-liked-it', 0);
                     amountLikes--;
@@ -39,9 +39,9 @@ $( document ).ready(function() {
         else if(currentUserLikedIt === 0 && currentUserDislikedIt === 1)
         {
             $.ajax({
-                url: '/comment-like/reversevote',
+                url: '/comment-like/reverse-vote',
                 type: 'POST',
-                data: {commentId: commentId, like: true},
+                data: {'CommentVoteModel[commentId]': commentId, 'CommentVoteModel[liked]': 1},
                 success: function (response) {
 
                     comment.attr('data-current-user-liked-it', 1);
@@ -72,7 +72,7 @@ $( document ).ready(function() {
         if(currentUserLikedIt === 0 && currentUserDislikedIt === 0)
         {
             $.ajax({
-                url: '/comment-like/addvote',
+                url: '/comment-like/add-vote',
                 type: 'POST',
                 data: {'CommentVoteModel[commentId]': commentId, 'CommentVoteModel[liked]': 0},
                 success: function (response) {
@@ -85,9 +85,9 @@ $( document ).ready(function() {
         else if(currentUserLikedIt === 0 && currentUserDislikedIt === 1)
         {
             $.ajax({
-                url: '/comment-like/deletevote',
+                url: '/comment-like/delete-vote',
                 type: 'POST',
-                data: {commentId: commentId},
+                data: {'CommentVoteModel[commentId]': commentId},
                 success: function (response) {
                     comment.attr('data-current-user-disliked-it', 0);
                     amountDislikes--;
@@ -98,9 +98,9 @@ $( document ).ready(function() {
         else if(currentUserLikedIt === 1 && currentUserDislikedIt === 0)
         {
             $.ajax({
-                url: '/comment-like/reversevote',
+                url: '/comment-like/reverse-vote',
                 type: 'POST',
-                data: {commentId: commentId},
+                data: {'CommentVoteModel[commentId]': commentId, 'CommentVoteModel[liked]': 0},
                 success: function (response) {
                     comment.attr('data-current-user-liked-it', 0);
                     comment.attr('data-current-user-disliked-it', 1);

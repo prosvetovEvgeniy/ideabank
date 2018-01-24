@@ -3,6 +3,7 @@
 namespace common\models\entities;
 
 
+use common\models\interfaces\IEntity;
 use common\models\repositories\CommentRepository;
 use common\models\repositories\UserRepository;
 
@@ -20,7 +21,7 @@ use common\models\repositories\UserRepository;
  * @property UserEntity    $user
  * @property CommentEntity $comment
  */
-class CommentLikeEntity
+class CommentLikeEntity implements IEntity
 {
     protected $id;
     protected $commentId;

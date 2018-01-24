@@ -1,6 +1,7 @@
 <?php
 
 namespace common\models\entities;
+use common\models\interfaces\IEntity;
 use common\models\repositories\TaskRepository;
 use common\models\repositories\UserRepository;
 
@@ -18,7 +19,7 @@ use common\models\repositories\UserRepository;
  * @property TaskEntity $task
  * @property UserEntity $user
  */
-class TaskLikeEntity
+class TaskLikeEntity implements IEntity
 {
     protected $id;
     protected $taskId;

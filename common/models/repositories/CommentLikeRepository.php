@@ -6,10 +6,11 @@ namespace common\models\repositories;
 use common\models\activerecords\CommentLike;
 use common\models\entities\CommentEntity;
 use common\models\entities\CommentLikeEntity;
+use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
-class CommentLikeRepository
+class CommentLikeRepository implements IRepository
 {
     // #################### STANDARD METHODS ######################
 
@@ -18,7 +19,7 @@ class CommentLikeRepository
      *
      * @return CommentLikeRepository
      */
-    public static function instance()
+    public static function instance(): IRepository
     {
         return new self();
     }
@@ -111,6 +112,9 @@ class CommentLikeRepository
      * @param CommentLikeEntity $commentLike
      * @return CommentLikeEntity
      * @throws Exception
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function delete(CommentLikeEntity $commentLike)
     {
@@ -178,6 +182,14 @@ class CommentLikeRepository
         return $entities;
     }
 
+    /**
+     * @param array $condition
+     * @return int|string
+     */
+    public function getTotalCountByCondition(array $condition)
+    {
+        return CommentLike::find()->where($condition)->count();
+    }
 
     // #################### UNIQUE METHODS OF CLASS ######################
 

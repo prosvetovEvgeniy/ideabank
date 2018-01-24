@@ -3,6 +3,7 @@
 namespace common\models\entities;
 
 
+use common\models\interfaces\IEntity;
 use common\models\repositories\CommentRepository;
 use common\models\repositories\CommentViewRepository;
 use common\models\repositories\ProjectRepository;
@@ -41,7 +42,7 @@ use yii\helpers\Html;
  * @property TaskFileEntity[] $files
  *
  */
-class TaskEntity
+class TaskEntity implements IEntity
 {
     public const STATUS_ON_CONSIDERATION = 0;
     public const STATUS_IN_PROGRESS = 1;

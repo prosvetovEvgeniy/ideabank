@@ -6,10 +6,11 @@ namespace common\models\repositories;
 use common\models\activerecords\Project;
 use common\models\entities\ProjectEntity;
 use common\models\entities\UserEntity;
+use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
-class ProjectRepository
+class ProjectRepository implements IRepository
 {
 
     // #################### STANDARD METHODS ######################
@@ -20,7 +21,7 @@ class ProjectRepository
      *
      * @return ProjectRepository
      */
-    public static function instance()
+    public static function instance(): IRepository
     {
         return new self();
     }

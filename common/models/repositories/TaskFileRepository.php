@@ -5,11 +5,12 @@ namespace common\models\repositories;
 
 use common\models\activerecords\TaskFile;
 use common\models\entities\TaskFileEntity;
+use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
 
-class TaskFileRepository
+class TaskFileRepository implements IRepository
 {
 
     // #################### STANDARD METHODS ######################
@@ -19,7 +20,7 @@ class TaskFileRepository
      *
      * @return TaskFileRepository
      */
-    public static function instance()
+    public static function instance(): IRepository
     {
         return new self();
     }
@@ -183,5 +184,14 @@ class TaskFileRepository
         }
 
         return $entities;
+    }
+
+    /**
+     * @param array $condition
+     * @return int|string
+     */
+    public function getTotalCountByCondition(array $condition)
+    {
+        return TaskFile::find()->where($condition)->count();
     }
 }

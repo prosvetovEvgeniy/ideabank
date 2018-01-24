@@ -3,8 +3,8 @@
 namespace common\models\entities;
 
 
+use common\models\interfaces\IEntity;
 use common\models\repositories\CommentLikeRepository;
-use common\models\repositories\CommentRepository;
 use common\models\repositories\CommentViewRepository;
 use common\models\repositories\MessageRepository;
 use common\models\repositories\NoticeRepository;
@@ -41,7 +41,7 @@ use Yii;
  * @property NoticeEntity[]      $notices
  * @property MessageEntity[]     $messages
  */
-class UserEntity
+class UserEntity implements IEntity
 {
     public const USERNAME_MAX_LENGTH = 50;
     public const EMAIL_MAX_LENGTH = 50;

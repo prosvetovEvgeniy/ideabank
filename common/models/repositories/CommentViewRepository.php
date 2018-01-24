@@ -3,10 +3,12 @@
 namespace common\models\repositories;
 
 
+use common\models\interfaces\IRepository;
 use Yii;
 use common\models\activerecords\CommentView;
 use common\models\entities\CommentEntity;
 use common\models\activerecords\Comment;
+use yii\base\NotSupportedException;
 
 /**
  * Этот репозиторий используется
@@ -16,20 +18,27 @@ use common\models\activerecords\Comment;
  * Class CommentViewRepository
  * @package common\models\repositories
  */
-class CommentViewRepository
+class CommentViewRepository implements IRepository
 {
     public const COMMENTS_PER_PAGE = 30;
 
+
     // #################### STANDARD METHODS ######################
+
 
     /**
      * Возвращает экземпляр класса
      *
      * @return CommentViewRepository
      */
-    public static function instance()
+    public static function instance(): IRepository
     {
         return new self();
+    }
+
+    public function findOne(array $condition)
+    {
+        throw new NotSupportedException();
     }
 
     /**
@@ -82,13 +91,14 @@ class CommentViewRepository
     {
         $userEntity = UserRepository::instance()->buildEntity($model->user);
 
+        //если у комеентария нет родителя
         $parentCommentEntity = ($model->parent) ? CommentRepository::instance()->buildEntity($model->parent) : null;
 
         return new CommentEntity($model->task_id, $model->sender_id,$model->content, $model->parent_id,
-            $model->private, $model->id, $model->created_at, $model->updated_at,
-            $model->deleted, $model->likes_amount, $model->dislikes_amount,
-            $userEntity, $parentCommentEntity, $model->current_user_liked_it,
-            $model->current_user_disliked_it);
+                                 $model->private, $model->id, $model->created_at, $model->updated_at,
+                                 $model->deleted, $model->likes_amount, $model->dislikes_amount,
+                                 $userEntity, $parentCommentEntity, $model->current_user_liked_it,
+                                 $model->current_user_disliked_it);
     }
 
 
@@ -122,5 +132,25 @@ class CommentViewRepository
     public function getTotalCountByCondition(array $condition)
     {
         return Comment::find()->where($condition)->count();
+    }
+
+
+    // #################### UNIQUE METHODS OF CLASS ######################
+
+
+    /**
+     * Рассчитывает количество комментриев до текущего
+     *
+     * @param CommentEntity $comment
+     * @return int|string
+     */
+    public function getCountRecordsBeforeComment(CommentEntity $comment)
+    {
+        return $this->getTotalCountByCondition([
+            'and',
+            ['task_id' => $comment->getTaskId()],
+            ['<', 'id', $comment->getId()],
+            ['<', 'created_at', $comment->getCreatedAt()]
+        ]);
     }
 }

@@ -3,6 +3,7 @@
 namespace common\models\entities;
 
 
+use common\models\interfaces\IEntity;
 use common\models\repositories\CommentLikeRepository;
 use common\models\repositories\CommentRepository;
 use common\models\repositories\TaskRepository;
@@ -34,7 +35,7 @@ use Yii;
  * @property bool $currentUserLikedIt
  * @property bool $currentUserDislikedIt
  */
-class CommentEntity
+class CommentEntity implements IEntity
 {
     protected const DATE_ERROR_MESSAGE = 'дата не определена';
     protected const DATE_FORMAT = 'd-m-Y';

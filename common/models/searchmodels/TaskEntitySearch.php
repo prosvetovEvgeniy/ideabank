@@ -4,7 +4,7 @@ namespace common\models\searchmodels;
 
 
 use common\components\dataproviders\EntityDataProvider;
-use common\models\interfaces\EntitySearchInterface;
+use common\models\interfaces\ISearchEntityModel;
 use common\models\repositories\ProjectRepository;
 use common\models\repositories\TaskRepository;
 use yii\base\Model;
@@ -23,7 +23,7 @@ use Yii;
  *
  * @property array  $skipOnBuildLike
  */
-class TaskEntitySearch extends Model implements EntitySearchInterface
+class TaskEntitySearch extends Model implements ISearchEntityModel
 {
     /**
      * Список статусов для поиска.
@@ -92,21 +92,13 @@ class TaskEntitySearch extends Model implements EntitySearchInterface
     }
 
     /**
-     * @param array $params
      * @param int $pageSize
      * @return EntityDataProvider
      * @throws NotFoundHttpException
      */
-    public function search(array $params, int $pageSize = 20)
+    public function search(int $pageSize = 20): EntityDataProvider
     {
-        $this->load($params);
-
-        $condition = [];
-
-        if($this->validate())
-        {
-            $condition = $this->buildCondition();
-        }
+        $condition = $this->buildCondition();
 
         $dataProvider = new EntityDataProvider([
             'condition' => $condition,

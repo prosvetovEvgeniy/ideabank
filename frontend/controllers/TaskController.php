@@ -24,7 +24,12 @@ class TaskController extends Controller
     {
         $searchModel = new TaskEntitySearch();
 
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, 10);
+        if(!$searchModel->load(Yii::$app->request->queryParams) || !$searchModel->validate())
+        {
+            throw new NotFoundHttpException();
+        }
+
+        $dataProvider = $searchModel->search();
 
         /**
          * @var UserEntity $user

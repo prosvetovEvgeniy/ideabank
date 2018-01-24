@@ -6,10 +6,11 @@ namespace common\models\repositories;
 use common\models\activerecords\Participant;
 use common\models\entities\ParticipantEntity;
 use common\models\entities\UserEntity;
+use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
-class ParticipantRepository
+class ParticipantRepository implements IRepository
 {
 
     // #################### STANDARD METHODS ######################
@@ -20,7 +21,7 @@ class ParticipantRepository
      *
      * @return ParticipantRepository
      */
-    public static function instance()
+    public static function instance(): IRepository
     {
         return new self();
     }
@@ -238,7 +239,7 @@ class ParticipantRepository
      * @param $condition
      * @return int|string
      */
-    public function getTotalCountByCondition($condition)
+    public function getTotalCountByCondition(array $condition)
     {
         return Participant::find()->where($condition)->count();
     }

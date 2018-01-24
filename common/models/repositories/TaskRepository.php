@@ -7,10 +7,11 @@ use common\models\activerecords\Task;
 use common\models\entities\ProjectEntity;
 use common\models\entities\TaskEntity;
 use common\models\entities\UserEntity;
+use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
-class TaskRepository
+class TaskRepository implements IRepository
 {
 
     // #################### STANDARD METHODS ######################
@@ -20,7 +21,7 @@ class TaskRepository
      *
      * @return TaskRepository
      */
-    public static function instance()
+    public static function instance(): IRepository
     {
         return new self();
     }
@@ -146,7 +147,7 @@ class TaskRepository
      * @param Task $model
      * @param TaskEntity $task
      */
-    protected function assignProperties(&$model, &$task)
+    protected function assignProperties(Task &$model, TaskEntity &$task)
     {
         $model->title = $task->getTitle();
         $model->content = $task->getContent();

@@ -18,6 +18,7 @@ use yii\db\ActiveRecord;
  * @property boolean $viewed
  *
  * @property Users $recipient
+ * @property Users $sender
  */
 class Notice extends \yii\db\ActiveRecord
 {
@@ -61,5 +62,21 @@ class Notice extends \yii\db\ActiveRecord
             [['sender_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['recipient_id' => 'id']],
             [['recipient_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['recipient_id' => 'id']],
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSender()
+    {
+        return $this->hasOne(Users::className(), ['id' => 'sender_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRecipient()
+    {
+        return $this->hasOne(Users::className(), ['id' => 'recipient_id']);
     }
 }

@@ -3,6 +3,7 @@
 namespace frontend\models\profile;
 
 
+use common\components\helpers\FileHelper;
 use common\models\entities\UserEntity;
 use common\models\repositories\UserRepository;
 use yii\base\Model;
@@ -150,7 +151,9 @@ class ChangeOwnDataForm extends Model
 
             if($this->avatar)
             {
-                $hashName = $this->generateFileHashName($this->avatar->extension);
+                $fileHelper = new FileHelper($this->avatar->extension, UserRepository::instance());
+
+                $hashName = $fileHelper->getHash('avatar');
 
                 $user->setAvatar($hashName);
 
@@ -172,6 +175,7 @@ class ChangeOwnDataForm extends Model
 
     /**
      * Заполняет поля формы данными
+     * (в виде поля будут сразу заполнены)
      */
     public function fillFields()
     {
@@ -189,23 +193,6 @@ class ChangeOwnDataForm extends Model
             $this->lastName = $user->getLastName();
             $this->phone = $user->getPhone();
         }
-    }
-
-    /**
-     * Возвращает уникальное имя для сохраняемого файла,
-     * если такое имя уже есть, то происходит рекурсивный вызов
-     *
-     * @param string $fileExtension
-     * @param int $nameLength
-     * @return mixed|string
-     */
-    public function generateFileHashName(string $fileExtension, int $nameLength = 16)
-    {
-        $hashName = Yii::$app->security->generateRandomString($nameLength) . '.' . $fileExtension;
-
-        $file = UserRepository::instance()->findOne(['avatar' => $hashName]);
-
-        return (!$file) ? $hashName : $this->generateFileHashName($fileExtension) ;
     }
 
     /**

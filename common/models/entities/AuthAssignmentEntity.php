@@ -1,6 +1,7 @@
 <?php
 
 namespace common\models\entities;
+use common\models\interfaces\IEntity;
 use common\models\repositories\UserRepository;
 
 /**
@@ -13,7 +14,7 @@ use common\models\repositories\UserRepository;
  *
  * @property UserEntity $user
  */
-class AuthAssignmentEntity
+class AuthAssignmentEntity implements IEntity
 {
     protected $itemName;
     protected $userId;

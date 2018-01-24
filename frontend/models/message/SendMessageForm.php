@@ -15,6 +15,7 @@ use Yii;
  * @property int $selfId
  * @property string $content
  * @property int $companionId
+ * 
  * @property MessageEntity $messageToSelf
  */
 class SendMessageForm extends Model
@@ -22,6 +23,7 @@ class SendMessageForm extends Model
     public $selfId;
     public $content;
     public $companionId;
+    
     protected $messageToSelf;
 
     public function rules()
@@ -73,5 +75,4 @@ class SendMessageForm extends Model
      * @return MessageEntity
      */
     public function getSelfMessage() { return $this->messageToSelf; }
-
 }

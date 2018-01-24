@@ -5,11 +5,11 @@ namespace common\models\repositories;
 
 use common\models\activerecords\Comment;
 use common\models\entities\CommentEntity;
-use common\models\entities\TaskEntity;
+use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
-class CommentRepository
+class CommentRepository implements IRepository
 {
 
     // #################### STANDARD METHODS ######################
@@ -19,7 +19,7 @@ class CommentRepository
      *
      * @return CommentRepository
      */
-    public static function instance()
+    public static function instance(): IRepository
     {
         return new self();
     }
@@ -40,6 +40,20 @@ class CommentRepository
         }
 
         return $this->buildEntity($model);
+    }
+
+    /**
+     * @param array $condition
+     * @param int $limit
+     * @param int|null $offset
+     * @param string|null $orderBy
+     * @return CommentEntity[]|\common\models\interfaces\IEntity[]
+     */
+    public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
+    {
+        $models = Comment::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
+
+        return $this->buildEntities($models);
     }
 
     /**
@@ -149,6 +163,29 @@ class CommentRepository
         return new CommentEntity($model->task_id, $model->sender_id,$model->content, $model->parent_id,
                                  $model->private, $model->id, $model->created_at, $model->updated_at,
                                  $model->deleted);
+    }
+
+    /**
+     * Создает экземпляры сущностей
+     *
+     * @param Comment[] $models
+     * @return CommentEntity[]
+     */
+    protected function buildEntities(array $models)
+    {
+        if(!$models)
+        {
+            return [];
+        }
+
+        $entities = [];
+
+        foreach ($models as $model)
+        {
+            $entities[] = $this->buildEntity($model);
+        }
+
+        return $entities;
     }
 
     /**
