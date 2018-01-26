@@ -118,11 +118,11 @@ class DialogRepository implements IRepository
      * @param array $condition
      * @return int|string
      */
-    public function getTotalCountByCondition(array $condition)
+    public function getTotalCountByCondition(array $condition): int
     {
-        return Message::find()->select('MAX(id) as id')
-                              ->where($condition )
-                              ->groupBy('companion_id')
-                              ->count();
+        return (int) Message::find()->select('MAX(id) as id')
+                                    ->where($condition )
+                                    ->groupBy('companion_id')
+                                    ->count();
     }
 }

@@ -6,6 +6,7 @@ namespace frontend\controllers;
 use common\components\dataproviders\EntityDataProvider;
 use common\models\repositories\AuthAssignmentRepository;
 use common\models\repositories\ParticipantRepository;
+use common\models\repositories\TaskRepository;
 use common\models\repositories\UserRepository;
 use frontend\models\profile\ChangeOwnDataForm;
 use frontend\models\profile\ChangePasswordForm;
@@ -85,6 +86,23 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function actionMyTasks()
+    {
+        $dataProvider = new EntityDataProvider([
+            'condition' => [
+                'author_id' => Yii::$app->user->identity->getUser()->getId()
+            ],
+            'repositoryInstance' => TaskRepository::instance(),
+            'pagination' => [
+                'pageSize' => 20
+            ],
+            'orderBy' => 'created_at DESC'
+        ]);
+
+        return $this->render('my-tasks',[
+            'dataProvider' => $dataProvider
+        ]);
+    }
 
     //###################### AJAX ACTIONS ######################
 

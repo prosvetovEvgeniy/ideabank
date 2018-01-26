@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 
 use common\components\dataproviders\EntityDataProvider;
+use common\models\activerecords\Company;
 use common\models\entities\UserEntity;
 use common\models\repositories\CommentViewRepository;
 use common\models\repositories\ParticipantRepository;
@@ -13,6 +14,7 @@ use common\models\repositories\TaskRepository;
 use common\models\searchmodels\TaskEntitySearch;
 use frontend\models\comment\CommentModel;
 use frontend\models\task\CreateTaskForm;
+use frontend\models\task\EditTaskForm;
 use yii\web\Controller;
 use Yii;
 use yii\web\NotFoundHttpException;
@@ -46,9 +48,9 @@ class TaskController extends Controller
         ]);
     }
 
-    public function actionView($taskId)
+    public function actionView(int $id)
     {
-        $task = TaskRepository::instance()->findOne(['id' => $taskId]);
+        $task = TaskRepository::instance()->findOne(['id' => $id]);
 
         if(!$task)
         {
@@ -105,6 +107,15 @@ class TaskController extends Controller
         return $this->render('create', [
             'model'    => $model,
             'projects' => $projects
+        ]);
+    }
+
+    public function actionEdit(int $id)
+    {
+        $model = new EditTaskForm();
+
+        return $this->render('edit', [
+            'model' => $model
         ]);
     }
 

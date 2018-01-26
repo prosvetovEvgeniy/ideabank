@@ -10,4 +10,5 @@ use yii\helpers\Html;
     <li><?= Html::a('Личные данные ', '/profile/change-own-data') ?></li>
     <li><?= Html::a('Изменить пароль', '/profile/change-password') ?></li>
     <li><?= Html::a('Мои проекты', '/profile/my-projects') ?></li>
+    <li><?= Html::a('Мои задачи', '/profile/my-tasks') ?></li>
 </ul>

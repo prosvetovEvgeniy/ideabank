@@ -1,6 +1,8 @@
 <?php
 namespace frontend\controllers;
 
+use common\components\dataproviders\EntityDataProvider;
+use common\models\repositories\ActualTasksRepository;
 use common\models\repositories\CompanyRepository;
 use Yii;
 use yii\base\InvalidParamException;
@@ -72,6 +74,8 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        $actualTasks = ActualTasksRepository::instance()->findAll([]);
+
         return $this->render('index');
     }
 

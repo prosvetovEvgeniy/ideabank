@@ -7,5 +7,10 @@ use common\components\widgets\ProjectSearchWidget;
 $this->title = 'My Yii Application';
 ?>
 <div class="row">
-   <?= ProjectSearchWidget::widget([]) ?>
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="center-block">
+            <?= ProjectSearchWidget::widget([]) ?>
+
+        </div>
+    </div>
 </div>

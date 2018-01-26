@@ -199,11 +199,11 @@ class TaskRepository implements IRepository
 
     /**
      * @param array $condition
-     * @return int|string
+     * @return int
      */
-    public function getTotalCountByCondition(array $condition)
+    public function getTotalCountByCondition(array $condition): int
     {
-        return Task::find()->where($condition)->count();
+        return (int) Task::find()->where($condition)->count();
     }
 
 

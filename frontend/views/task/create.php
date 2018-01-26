@@ -17,17 +17,16 @@ use yii\helpers\ArrayHelper;
         'id' => 'create-task-form'
     ]);
 
-    $items = ArrayHelper::map($projects,
-                              function($project){ return $project->getId(); },
-                              function($project) { return $project->getName();}
-                              );
+    $projectItems = ArrayHelper::map($projects,
+                                     function($project){ return $project->getId(); },
+                                     function($project) { return $project->getName();});
 ?>
 
 <?= $form->field($model, 'title')->textInput() ?>
 
 <?= $form->field($model, 'content')->textarea(['rows' => 10]) ?>
 
-<?= $form->field($model, 'projectId')->dropDownList($items) ?>
+<?= $form->field($model, 'projectId')->dropDownList($projectItems) ?>
 
 <?= $form->field($model, 'files[]')->fileInput(['multiple' => true, 'accept' => '*']) ?>
 

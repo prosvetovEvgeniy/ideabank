@@ -2878,3 +2878,14 @@ PHP message: PHP  12. yii\web\View->renderPhpFile() /home/evgeniy/ideabank/vendo
 2018/01/17 14:43:35 [error] 15493#15493: *455 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 127.0.0.1, server: ideabank.local, request: "POST /task/comment HTTP/1.1", upstream: "fastcgi://unix:/var/run/php/php7.1-fpm.sock", host: "ideabank.local", referrer: "http://ideabank.local/task/view?taskId=1&page=2&per-page=30"
 2018/01/17 14:57:57 [error] 15493#15493: *500 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 127.0.0.1, server: ideabank.local, request: "GET /task/view?taskId=1&page=4&per-page=30 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php/php7.1-fpm.sock", host: "ideabank.local"
 2018/01/18 15:19:24 [error] 1317#1317: *1357 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 127.0.0.1, server: ideabank.local, request: "POST /task/view?taskId=1&page=5&per_page=30 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php/php7.1-fpm.sock", host: "ideabank.local", referrer: "http://ideabank.local/task/view?taskId=1&page=5&per_page=30"
+2018/01/24 14:58:31 [error] 1251#1251: *924 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Cannot redeclare frontend\controllers\ProfileController::actionMyProjects() in /home/evgeniy/ideabank/frontend/controllers/ProfileController.php on line 88
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /home/evgeniy/ideabank/frontend/web/index.php:0
+PHP message: PHP   2. yii\web\Application->run() /home/evgeniy/ideabank/frontend/web/index.php:19
+PHP message: PHP   3. yii\web\Application->handleRequest($request = *uninitialized*) /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Application.php:386
+PHP message: PHP   4. yii\web\Application->runAction($route = *uninitialized*, $params = *uninitialized*) /home/evgeniy/ideabank/vendor/yiisoft/yii2/web/Application.php:103
+PHP message: PHP   5. yii\web\Application->createController($route = *uninitialized*) /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Module.php:522
+PHP message: PHP   6. yii\web\Application->createControllerByID($id = *uninitialized*) /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Module.php:596
+PHP message: PHP   7. class_exists(*uninitialized*) /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Module.php:638
+PHP message: PHP   8. spl_autoload_call(*uninitialized*) /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Module.php:638
+PHP message: PHP   9. yii\BaseYii::autoload($className = *uninitialized*) /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Module.php:638" while reading response header from upstream, client: 127.0.0.1, server: ideabank.local, request: "GET /profile/change-own-data HTTP/1.1", upstream: "fastcgi://unix:/var/run/php/php7.1-fpm.sock:", host: "ideabank.local", referrer: "http://ideabank.local/profile/my-tasks"

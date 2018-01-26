@@ -11,6 +11,12 @@ use common\components\widgets\RoleViewWidget;
 
 <div class="row">
 
+    <?php if(!$participants): ?>
+
+        <h3>Вы не учавствуете ни в одном проекте</h3>
+
+    <?php endif; ?>
+
     <?php foreach ($participants as $participant) : ?>
 
         <?php

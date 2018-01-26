@@ -58,17 +58,6 @@ class CreateTaskForm extends Model
             [['projectId'], 'exist', 'targetClass' => Project::className(), 'targetAttribute' => ['projectId' => 'id']],
             [['title'], 'string', 'length' => [4, 100]],
             [['content'], 'string', 'length' => [4, 13000]],
-            [['status'], 'in', 'range' => [
-                TaskEntity::STATUS_ON_CONSIDERATION,
-                TaskEntity::STATUS_IN_PROGRESS,
-                TaskEntity::STATUS_COMPLETED,
-                TaskEntity::STATUS_MERGED
-            ]],
-            [['visibilityArea'], 'in', 'range' => [
-                TaskEntity::VISIBILITY_AREA_ALL,
-                TaskEntity::VISIBILITY_AREA_REGISTERED,
-                TaskEntity::VISIBILITY_AREA_PRIVATE
-            ]],
             [['files'], 'file', 'skipOnEmpty' => true, 'maxFiles' => 10, 'maxSize' => 100 * (1000000)] //maxSize = 100MB
         ];
     }
@@ -89,8 +78,7 @@ class CreateTaskForm extends Model
      */
     public function save()
     {
-        if(!$this->validate())
-        {
+        if (!$this->validate()) {
             return false;
         }
 
@@ -109,15 +97,35 @@ class CreateTaskForm extends Model
 
         $this->beginTransaction();
 
-        try
-        {
+        try {
+            //сохраняем задачу
             $this->task = TaskRepository::instance()->add($task);
 
-            if(!$this->saveFiles() || !$this->saveNotices())
+            //если есть файлы сохраняем их тоже
+            foreach ($this->files as $file)
             {
-                $this->rollBack();
+                $fileHelper = new FileHelper($file->extension, TaskFileRepository::instance());
+                $hashName = $fileHelper->getHash('hash_name');
 
-                return false;
+                $taskFile = new TaskFileEntity($this->task->getId(), $hashName, $file->name);
+
+                TaskFileRepository::instance()->add($taskFile);
+
+                //если файл не сохранился, откатываем транзакцию
+                if (!$file->saveAs(TaskFileEntity::PATH_TO_FILE . $hashName))
+                {
+                    $this->rollBack();
+
+                    return false;
+                }
+            }
+
+            //если есть упоминания, то сохраняем их тоже
+            foreach ($this->noticeHelper->getNoticedUsers() as $noticedUser)
+            {
+                $notice = new NoticeEntity($noticedUser->getId(), $this->content, $this->getLink(), $this->authorId);
+
+                NoticeRepository::instance()->add($notice);
             }
 
             $this->commit();
@@ -132,85 +140,27 @@ class CreateTaskForm extends Model
         }
     }
 
-    /**
-     * @return bool
-     * @throws \yii\base\Exception
-     */
-    private function saveFiles()
-    {
-        try
-        {
-            if($this->files)
-            {
-                foreach ($this->files as $file)
-                {
-                    $fileHelper = new FileHelper($file->extension, TaskFileRepository::instance());
-
-                    $hashName = $fileHelper->getHash('hash_name');
-
-                    $taskFile = new TaskFileEntity($this->task->getId(), $hashName, $file->name);
-                    TaskFileRepository::instance()->add($taskFile);
-
-                    //если файл не сохранился, откатываем транзакцию
-                    if(!$file->saveAs(TaskFileEntity::PATH_TO_FILE . $hashName))
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
-        catch (Exception $e)
-        {
-            return false;
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    private function saveNotices()
-    {
-        try
-        {
-            //если есть упоминания, то сохраняем их тоже
-            if($this->noticeHelper->hasNotice())
-            {
-                foreach ($this->noticeHelper->getNoticedUsers() as $noticedUser)
-                {
-                    NoticeRepository::instance()->add(
-                        new NoticeEntity(
-                            $noticedUser->getId(),
-                            $this->content,
-                            $this->getLink(),
-                            $this->authorId
-                        )
-                    );
-                }
-            }
-
-            return true;
-        }
-        catch (Exception $e)
-        {
-            return false;
-        }
-    }
-
     private function beginTransaction()
     {
-        if($this->files || $this->noticeHelper->hasNotice()) { Yii::$app->db->beginTransaction(); }
+        if($this->hasFilesOrNotices()) { Yii::$app->db->beginTransaction(); }
     }
 
     private function commit()
     {
-        if($this->files || $this->noticeHelper->hasNotice()) { Yii::$app->db->transaction->commit(); }
+        if($this->hasFilesOrNotices()) { Yii::$app->db->transaction->commit(); }
     }
 
     private function rollBack()
     {
-        if($this->files || $this->noticeHelper->hasNotice()) { Yii::$app->db->transaction->rollBack(); }
+        if($this->hasFilesOrNotices()) { Yii::$app->db->transaction->rollBack(); }
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasFilesOrNotices()
+    {
+        return (!empty($this->files) || $this->noticeHelper->hasNotice()) ? true : false ;
     }
 
     /**
@@ -222,7 +172,7 @@ class CreateTaskForm extends Model
     {
         return Yii::$app->urlManager->createAbsoluteUrl([
             '/task/view',
-            'taskId' => $this->task->getId()
+            'id' => $this->task->getId()
         ]);
     }
 }

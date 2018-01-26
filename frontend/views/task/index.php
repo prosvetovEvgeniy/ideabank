@@ -17,25 +17,15 @@ use yii\grid\GridView;
 <div class="row">
 
     <div class="col-md-2 col-sm-12">
+        <div class="btn-group-vertical" role="group">
+            <?php foreach ($participants as $participant): ?>
 
-        <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                Проект
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <?php $project = $participant->getProject(); ?>
 
-                <?php foreach ($participants as $participant): ?>
+                <?= Html::a($project->getName(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_ALL], ['class' => 'btn btn-default']) ?>
 
-                    <?php $project = $participant->getProject(); ?>
-
-                    <li><?= Html::a($project->getName(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_ALL]) ?></a></li>
-
-                <?php endforeach; ?>
-
-            </ul>
+            <?php endforeach; ?>
         </div>
-
     </div>
 
     <div class="col-md-10 col-sm-12">
@@ -57,7 +47,7 @@ use yii\grid\GridView;
                     'attribute' => 'title',
                     'header' => 'Заголовок',
                     'value' => function(TaskEntity $task) {
-                        return Html::a($task->getTitle(), ['task/view', 'taskId' => $task->getId()]);
+                        return Html::a($task->getTitle(), ['task/view', 'id' => $task->getId()]);
                     },
                     'format' => 'html'
                 ],

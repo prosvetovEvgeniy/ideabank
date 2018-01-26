@@ -11,7 +11,7 @@ use yii\db\ActiveRecord;
  * @property integer $id
  * @property integer $task_id
  * @property integer $sender_id
- * @property string $content
+ * @property string  $content
  * @property integer $parent_id
  * @property boolean $private
  * @property integer $created_at
@@ -34,13 +34,6 @@ class Comment extends ActiveRecord
     public static function tableName()
     {
         return 'comment';
-    }
-
-    public function __construct(array $config = [])
-    {
-        parent::__construct($config);
-
-        $this->deleted = false;
     }
 
     public function behaviors()

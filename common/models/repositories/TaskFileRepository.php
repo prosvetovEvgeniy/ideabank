@@ -188,10 +188,10 @@ class TaskFileRepository implements IRepository
 
     /**
      * @param array $condition
-     * @return int|string
+     * @return int
      */
-    public function getTotalCountByCondition(array $condition)
+    public function getTotalCountByCondition(array $condition): int
     {
-        return TaskFile::find()->where($condition)->count();
+        return (int) TaskFile::find()->where($condition)->count();
     }
 }

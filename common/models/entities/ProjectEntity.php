@@ -97,7 +97,7 @@ class ProjectEntity implements IEntity
     /**
      * @return string
      */
-    public function getDescription() { return $this->description; }
+    public function getDescription() { return Html::encode($this->description); }
 
     /**
      * @return int | null
@@ -192,6 +192,7 @@ class ProjectEntity implements IEntity
 
     // #################### SECTION OF LOGIC ######################
 
+    
     /**
      * @return int
      */

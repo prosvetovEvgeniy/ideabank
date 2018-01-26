@@ -24,8 +24,12 @@ use yii\helpers\Html;
                     ['class' => 'yii\grid\SerialColumn'],
                     [
                         'attribute' => 'sender',
-                        'header' => 'Отправитель',
-                        'value' => function(NoticeEntity $notice) {
+                        'header' => 'Упомянул',
+                        'value' => function (NoticeEntity $notice) {
+                            if(Yii::$app->user->identity->getUser()->getid() === $notice->getSenderId())
+                            {
+                                return Html::a($notice->getSender()->getUsername(), ['/profile/my-tasks']);
+                            }
                             return Html::a($notice->getSender()->getUsername(), ['/profile/view', 'id' => $notice->getSenderId()]);
                         },
                         'format' => 'html'

@@ -27,7 +27,7 @@ interface IRepository
 
     /**
      * @param array $condition
-     * @return int|string
+     * @return int
      */
-    public function getTotalCountByCondition(array $condition);
+    public function getTotalCountByCondition(array $condition): int;
 }

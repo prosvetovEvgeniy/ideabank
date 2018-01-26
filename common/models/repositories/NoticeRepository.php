@@ -52,7 +52,12 @@ class NoticeRepository implements IRepository
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
-        $models = Notice::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
+        $models = Notice::find()->where($condition)
+                                ->with('sender')
+                                ->offset($offset)
+                                ->limit($limit)
+                                ->orderBy($orderBy)
+                                ->all();
 
         return $this->buildEntities($models);
     }
@@ -158,8 +163,10 @@ class NoticeRepository implements IRepository
      */
     protected function buildEntity(Notice $model)
     {
+        $sender = UserRepository::instance()->buildEntity($model->sender);
+
         return new NoticeEntity($model->recipient_id,$model->content ,$model->link, $model->sender_id,
-                                $model->id, $model->created_at, $model->viewed);
+                                $model->id, $model->created_at, $model->viewed, $sender);
     }
 
     /**
@@ -187,11 +194,11 @@ class NoticeRepository implements IRepository
 
     /**
      * @param array $condition
-     * @return int|string
+     * @return int
      */
-    public function getTotalCountByCondition(array $condition)
+    public function getTotalCountByCondition(array $condition): int
     {
-        return Notice::find()->where($condition)->count();
+        return (int) Notice::find()->where($condition)->count();
     }
 
 

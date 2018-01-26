@@ -1,21 +1,26 @@
 <?php
 
 namespace common\components\helpers;
+use common\models\entities\TaskEntity;
 use common\models\interfaces\IRepository;
 use Yii;
+use yii\web\UploadedFile;
 
 
 /**
  * Class FileHelper
  * @package common\components\helpers
  *
- * @property string $fileExtension
- * @property IRepository $repository
+ * @property TaskEntity     $task
+ * @property UploadedFile[] $files
+ * @property IRepository    $repository
+ * @pr
  */
 class FileHelper
 {
-    private $fileExtension;
     private $repository;
+    private $fileExtension;
+
 
     /**
      * FileHelper constructor.

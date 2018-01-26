@@ -31,7 +31,7 @@ ProfileProjectsAsset::register($this);
                 'captionOptions' => ['class' => 'header'],
                 'options' => ['class' => 'text-center'],
                 'headerRowOptions' => ['class' => 'center-header-text'],
-                'columns' =>[
+                'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
 
                     [
@@ -67,7 +67,7 @@ ProfileProjectsAsset::register($this);
                         'format' => 'html',
                     ],
                     [
-                        'header' => Html::tag('i', '', ['class' => 'glyphicon glyphicon-remove']),
+                        'header' => '',
                         'value' => function(ParticipantEntity $participant){
                             return Html::a('Покинуть', '/profile/delete-participant', [
                                     'class' => 'leave-project',

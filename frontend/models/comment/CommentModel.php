@@ -106,11 +106,16 @@ class CommentModel extends Model
         {
             $this->comment = CommentRepository::instance()->add($comment);
 
-            if(!$this->saveNotices())
+            foreach ($this->noticeHelper->getNoticedUsers() as $noticedUser)
             {
-                $this->rollBack();
-
-                return false;
+                NoticeRepository::instance()->add(
+                    new NoticeEntity(
+                        $noticedUser->getId(),
+                        $this->content,
+                        $this->getLink(),
+                        Yii::$app->user->identity->getUserId()
+                    )
+                );
             }
 
             $this->commit();
@@ -121,36 +126,6 @@ class CommentModel extends Model
         {
             $this->rollBack();
 
-            return false;
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    private function saveNotices()
-    {
-        try
-        {
-            if($this->noticeHelper->hasNotice())
-            {
-                foreach ($this->noticeHelper->getNoticedUsers() as $noticedUser)
-                {
-                    NoticeRepository::instance()->add(
-                        new NoticeEntity(
-                            $noticedUser->getId(),
-                            $this->content,
-                            $this->getLink(),
-                            Yii::$app->user->identity->getUserId()
-                        )
-                    );
-                }
-            }
-
-            return true;
-        }
-        catch (Exception $e)
-        {
             return false;
         }
     }
@@ -185,7 +160,7 @@ class CommentModel extends Model
 
             $this->link = Yii::$app->urlManager->createAbsoluteUrl([
                 Yii::$app->request->pathInfo,
-                'taskId' => $this->taskId,
+                'id' => $this->taskId,
                 $pagination->pageParam => $this->calculatePageNumber(),
                 $pagination->pageSizeParam => CommentViewRepository::COMMENTS_PER_PAGE,
                 '#' => $this->comment->getId()

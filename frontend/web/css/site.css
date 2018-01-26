@@ -442,27 +442,29 @@ a.desc:after {
     display: none;
 }
 
-
 /* PROFILE */
 
 .inf-block{
-    display: block;
     border-radius: 10px;
     background-color: rgba(51, 122, 183, 0.1);
     padding: 10px;
+    max-width: 400px;
 }
 
-.inf-block:last-child{
-    margin-bottom: 20px;
+.profile {
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }
-
 
 /* OTHERS */
 
 .text-hidden {
     display: block;
-    max-width: 500px;
-    min-width: 500px;
+    max-width: 800px;
+    min-width: 400px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -470,13 +472,6 @@ a.desc:after {
 
 .text-center{
     text-align: center; !important;
-}
-
-.center-block
-{
-    width:75%;
-    margin:0 auto;
-    border-radius: 10px;
 }
 
 .center-header-text > th{
@@ -508,19 +503,10 @@ a.desc:after {
 }
 
 .center-block {
-    width: 100%;
-    height: 100%;
     display: flex;
-    align-items: center;
-    align-content: center;
-    justify-content: center;
-    padding-left: 150px;
-    padding-right: 150px;
+    flex-direction: column;
     text-align: center;
-}
-
-.text-lext{
-    text-align: left;
+    margin: 0 50px;
 }
 
 /* ########## PROJECT RULES ######## */
@@ -536,25 +522,25 @@ a.desc:after {
 
 /* ########## MEDIA RULES ##########*/
 
-@media(max-width: 400px) {
+@media(max-width: 400px){
     .message-content p {
         width: 450px;
     }
 }
 
-@media(max-width: 996px) {
+@media(max-width: 996px){
     .message-content p {
         width: 100px;
     }
 }
 
-@media(max-width: 1204px) {
+@media(max-width: 1204px){
     .message-content p {
         width: 350px;
     }
 }
 
-@media(max-width:767px) {
+@media(max-width:767px){
     .nav li > form > button.logout {
         display:block;
         text-align: left;
@@ -563,7 +549,7 @@ a.desc:after {
     }
 }
 
-@media(max-width:386px) {
+@media(max-width:386px){
     .footer-comment-right{
         display: inline-block;
         float: left;

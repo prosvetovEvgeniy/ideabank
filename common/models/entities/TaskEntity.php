@@ -4,7 +4,6 @@ namespace common\models\entities;
 
 
 use common\models\interfaces\IEntity;
-use common\models\repositories\CommentRepository;
 use common\models\repositories\CommentViewRepository;
 use common\models\repositories\ProjectRepository;
 use common\models\repositories\TaskFileRepository;
@@ -44,6 +43,9 @@ use yii\helpers\Html;
  */
 class TaskEntity implements IEntity
 {
+    public const TITLE_MAX_LENGTH = 40;
+    public const CONTENT_MAX_LENGTH = 10000;
+
     public const STATUS_ON_CONSIDERATION = 0;
     public const STATUS_IN_PROGRESS = 1;
     public const STATUS_COMPLETED = 2;
@@ -395,6 +397,8 @@ class TaskEntity implements IEntity
     }
 
     /**
+     * Проверяет лайкал ли задачу текущий пользователь
+     *
      * @return bool
      */
     public function getCurrentUserLikedIt()
@@ -441,7 +445,8 @@ class TaskEntity implements IEntity
      * то есть картинки прикрепленные к данной
      * задаче
      *
-     * @return TaskFileEntity[]
+     * @return array
+     * @throws \yii\base\InvalidConfigException
      */
     public function getImagesToTask()
     {
@@ -464,7 +469,8 @@ class TaskEntity implements IEntity
      * Не путать с методом getFiles(),
      * который возвращает файлы всех типов
      *
-     * @return TaskFileEntity[]
+     * @return array
+     * @throws \yii\base\InvalidConfigException
      */
     public function getFilesToTask()
     {
@@ -479,6 +485,15 @@ class TaskEntity implements IEntity
         }
 
         return $filesToTask;
+    }
+
+    /**
+     * @param int $status
+     * @return bool
+     */
+    public function checkStatus(int $status)
+    {
+        return ($this->getStatus() === $status) ? true : false ;
     }
 }
 

@@ -115,11 +115,11 @@ class CompanionRepository implements IRepository
      * @param array $condition
      * @return int|string
      */
-    public function getTotalCountByCondition(array $condition)
+    public function getTotalCountByCondition(array $condition): int
     {
-        return Message::find()->select('companion_id')
-                              ->where($condition )
-                              ->distinct('companion_id')
-                              ->count();
+        return (int) Message::find()->select('companion_id')
+                                    ->where($condition )
+                                    ->distinct('companion_id')
+                                    ->count();
     }
 }

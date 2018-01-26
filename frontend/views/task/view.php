@@ -93,7 +93,23 @@ $counter = 1; //счетчик для номера комментария
                 </tr>
                 <tr>
                     <td>Создал</td>
-                    <td> <?= $task->getAuthor()->getUsername() ?> </td>
+                    <td>
+                        <?php
+                        if(Yii::$app->user->isGuest)
+                        {
+                            echo Html::a($task->getAuthor()->getUsername());
+                        }
+
+                        if(Yii::$app->user->identity->getUser()->getId() === $task->getAuthorId())
+                        {
+                            echo Html::a($task->getAuthor()->getUsername(), '/profile/my-tasks');
+                        }
+                        else
+                        {
+                            echo Html::a($task->getAuthor()->getUsername(), ['/profile/view', 'id' => $task->getAuthorId()]);
+                        }
+                        ?>
+                    </td>
                 </tr>
                 <tr>
                     <td>Дата создания</td>
@@ -198,7 +214,11 @@ $counter = 1; //счетчик для номера комментария
                             <div class="media-right">
                                 <div class="comment-title">
                                     <h5 class="comment-fio no-margin-top">
-                                        <?= Html::a($comment->getUser()->getUsername(), ['/profile/view', 'id' => $comment->getUser()->getId()], ['name' => $comment->getId()]) ?>
+                                        <?php if($comment->getSenderId() === Yii::$app->user->identity->getUser()->getId()): ?>
+                                            <?= Html::a($comment->getUser()->getUsername(), ['/profile/my-projects'], ['name' => $comment->getId()]) ?>
+                                        <?php else: ?>
+                                            <?= Html::a($comment->getUser()->getUsername(), ['/profile/view', 'id' => $comment->getUser()->getId()], ['name' => $comment->getId()]) ?>
+                                        <?php endif; ?>
                                     </h5>
                                     <p class="comment-number"><?php echo '#' . ($counter + $increment); $counter++; ?></p>
                                 </div>

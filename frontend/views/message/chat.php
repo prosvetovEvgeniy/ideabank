@@ -15,7 +15,7 @@ ChatAsset::register($this);
 /**
  * @var MessageEntity[] $messages
  * @var SendMessageForm $model
- * @var UserEntity $companion
+ * @var UserEntity      $companion
  */
 ?>
 
@@ -27,12 +27,8 @@ ChatAsset::register($this);
     <div class="col-lg-10 col-md-10 col-sm-9 somesome">
         <div class="chat-block">
             <div class="chat-header">
-                <div class="companion-block">
-                    <a href="#">
-                        <img class="comment-avatar" src="/images/stub-img.png">
-                    </a>
-                    <?= Html::a($companion->getUsername(), ['/profile/view', 'id' => $companion->getId()]) ?>
-                </div>
+                <?= Html::img($companion->getAvatarAlias(), ['class' => 'comment-avatar']) ?>
+                <?= Html::a($companion->getUsername(), ['/profile/view', 'id' => $companion->getId()], ['class' => 'companion-link']) ?>
                 <button type="button" class="btn btn-outline-danger">Удалить диалог</button>
             </div>
             <div class="chat">
@@ -40,7 +36,17 @@ ChatAsset::register($this);
                 <?php foreach ($messages as $message) : ?>
 
                     <div class="message <?= ($message->getIsSender()) ? null : 'message-from-companion' ?>">
-                        <div class="message-img-block"><img class="comment-avatar" src="/images/stub-img.png"></div>
+                        <?php
+                            if($message->getIsSender())
+                            {
+                                echo Html::img($message->getSelf()->getAvatarAlias(), ['class' => 'comment-avatar']);
+                            }
+                            else
+                            {
+                                echo Html::img($message->getCompanion()->getAvatarAlias(), ['class' => 'comment-avatar']);
+
+                            }
+                        ?>
                         <div class="chat-message-content">
                             <p><?= $message->getContent() ?></p>
                         </div>
@@ -50,6 +56,7 @@ ChatAsset::register($this);
                     </div>
 
                 <?php endforeach; ?>
+
             </div>
             <div class="message-send-form">
                 <?php

@@ -3,7 +3,6 @@
 namespace frontend\controllers;
 
 use common\components\dataproviders\EntityDataProvider;
-use common\models\entities\UserEntity;
 use common\models\repositories\ParticipantRepository;
 use common\models\repositories\ProjectRepository;
 use frontend\models\project\JoinToProjectModel;
@@ -37,11 +36,6 @@ class ProjectController extends Controller
 
     public function actionSearch(string $projectName)
     {
-        /**
-         * @var UserEntity $user
-         */
-        $user = Yii::$app->user->identity->getUser();
-
         $dataProvider = new EntityDataProvider([
             'condition' => [
                 'and',
@@ -56,8 +50,7 @@ class ProjectController extends Controller
 
         return $this->render('search', [
             'dataProvider' => $dataProvider,
-            'projectName'  => $projectName,
-            'user'         => $user
+            'projectName'  => $projectName
         ]);
     }
 

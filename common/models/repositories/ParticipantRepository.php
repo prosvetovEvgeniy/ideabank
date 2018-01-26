@@ -237,11 +237,11 @@ class ParticipantRepository implements IRepository
 
     /**
      * @param $condition
-     * @return int|string
+     * @return int
      */
-    public function getTotalCountByCondition(array $condition)
+    public function getTotalCountByCondition(array $condition): int
     {
-        return Participant::find()->where($condition)->count();
+        return (int) Participant::find()->where($condition)->count();
     }
 
 
