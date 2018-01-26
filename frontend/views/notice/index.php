@@ -8,6 +8,8 @@ use yii\helpers\Html;
 /**
  * @var EntityDataProvider $dataProvider
  */
+
+$this->title = 'Упоминания';
 ?>
 
 

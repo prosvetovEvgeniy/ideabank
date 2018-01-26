@@ -10,6 +10,8 @@ use yii\helpers\ArrayHelper;
  * @var CreateTaskForm  $model
  * @var ProjectEntity[] $projects;
  */
+
+$this->title = 'Создать задачу'
 ?>
 
 <?php

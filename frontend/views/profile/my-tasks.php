@@ -12,6 +12,8 @@ SubMenuAsset::register($this);
 /**
  * @var EntityDataProvider $dataProvider
  */
+
+$this->title = 'Мои задачи';
 ?>
 
 <div class="row">

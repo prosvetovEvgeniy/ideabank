@@ -125,7 +125,7 @@ class UserEntity implements IEntity
     /**
      * @return string
      */
-    public function getUsername() { return Html::encode($this->username); }
+    public function getUsername() { return $this->username; }
 
     /**
      * @return string
@@ -135,27 +135,27 @@ class UserEntity implements IEntity
     /**
      * @return string
      */
-    public function getEmail() { return Html::encode($this->email); }
+    public function getEmail() { return $this->email; }
 
     /**
      * @return string | null
      */
-    public function getPhone() { return Html::encode($this->phone); }
+    public function getPhone() { return $this->phone; }
 
     /**
      * @return string | null
      */
-    public function getFirstName() { return Html::encode($this->firstName); }
+    public function getFirstName() { return $this->firstName; }
 
     /**
      * @return string | null
      */
-    public function getSecondName() { return Html::encode($this->secondName); }
+    public function getSecondName() { return $this->secondName; }
 
     /**
      * @return string | null
      */
-    public function getLastName() { return Html::encode($this->lastName); }
+    public function getLastName() { return $this->lastName; }
 
     /**
      * @return string | null

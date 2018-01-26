@@ -269,6 +269,11 @@ class CommentEntity implements IEntity
      */
     public function isOwn()
     {
+        if(Yii::$app->user->isGuest)
+        {
+            return false;
+        }
+
         /**
          * @var UserEntity $user
          */

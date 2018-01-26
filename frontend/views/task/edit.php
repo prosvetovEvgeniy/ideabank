@@ -7,6 +7,8 @@ use yii\helpers\Html;
 /**
  * @var EditTaskForm $model
  */
+
+$this->title = 'Редактировать задачу';
 ?>
 
 <?php

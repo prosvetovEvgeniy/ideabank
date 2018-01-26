@@ -4,14 +4,27 @@ namespace common\models\repositories;
 
 
 use common\models\activerecords\Message;
+use common\models\builders\MessageEntityBuilder;
 use common\models\entities\MessageEntity;
 use common\models\entities\UserEntity;
 use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
+/**
+ * Class MessageRepository
+ * @package common\models\repositories
+ *
+ * @property MessageEntityBuilder $builderBehavior
+ */
 class MessageRepository implements IRepository
 {
+    public $builderBehavior;
+
+    public function __construct()
+    {
+        $this->builderBehavior = new MessageEntityBuilder();
+    }
 
     // #################### STANDARD METHODS ######################
 
@@ -40,7 +53,7 @@ class MessageRepository implements IRepository
             return null;
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -62,7 +75,7 @@ class MessageRepository implements IRepository
                                  ->orderBy($orderBy)
                                  ->all();
 
-        return $this->buildEntities($models);
+        return $this->builderBehavior->buildEntities($models);
     }
 
     /**
@@ -76,7 +89,7 @@ class MessageRepository implements IRepository
     {
         $model = new Message();
 
-        $this->assignProperties($model, $message);
+        $this->builderBehavior->assignProperties($model, $message);
 
         if(!$model->save())
         {
@@ -84,7 +97,7 @@ class MessageRepository implements IRepository
             throw new Exception('Cannot save message with content = ' . $message->getContent());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -103,7 +116,7 @@ class MessageRepository implements IRepository
             throw new Exception('Message with id = ' . $message->getId() . ' does not exists');
         }
 
-        $this->assignProperties($model, $message);
+        $this->builderBehavior->assignProperties($model, $message);
 
         if(!$model->save())
         {
@@ -111,7 +124,7 @@ class MessageRepository implements IRepository
             throw new Exception('Cannot update message with id = ' . $message->getId());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -143,59 +156,7 @@ class MessageRepository implements IRepository
             throw new Exception('Cannot delete message with id = ' . $message->getId());
         }
 
-        return $this->buildEntity($model);
-    }
-
-    /**
-     * Присваивает свойства сущности к модели
-     *
-     * @param Message $model
-     * @param MessageEntity $message
-     */
-    protected function assignProperties(&$model, &$message)
-    {
-        $model->self_id = $message->getSelfId();
-        $model->companion_id = $message->getCompanionId();
-        $model->is_sender = $message->getIsSender();
-        //$model->viewed = $message->getViewed();
-        $model->content = $message->getContent();
-    }
-
-    /**
-     * @param Message $model
-     * @return MessageEntity
-     */
-    protected function buildEntity(Message $model)
-    {
-        $self = UserRepository::instance()->buildEntity($model->self);
-        $companion = UserRepository::instance()->buildEntity($model->companion);
-
-        return new MessageEntity($model->self_id, $model->companion_id, $model->content, $model->is_sender,
-                                 $model->id, $model->viewed, $model->created_at, $model->deleted, $self,
-                                 $companion);
-    }
-
-    /**
-     * Создает экземпляры сущностей
-     *
-     * @param Message[] $models
-     * @return MessageEntity[]
-     */
-    protected function buildEntities(array $models)
-    {
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -209,6 +170,7 @@ class MessageRepository implements IRepository
 
 
     // #################### UNIQUE METHODS OF CLASS ######################
+
 
     /**
      * @param array $conditionForSet

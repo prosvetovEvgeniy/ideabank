@@ -7,13 +7,15 @@ use common\components\widgets\RoleViewWidget;
 /**
  * @var \common\models\entities\ParticipantEntity[] $participants
  */
+
+$this->title = 'Проекты';
 ?>
 
 <div class="row">
 
     <?php if(!$participants): ?>
 
-        <h3>Вы не учавствуете ни в одном проекте</h3>
+        <h3>Вы не учавствуете ни в одном проекте <?=Html::a('найти?', ['/project/search', 'projectName' => '']) ?></h3>
 
     <?php endif; ?>
 

@@ -43,6 +43,8 @@ use yii\helpers\Html;
  */
 class TaskEntity implements IEntity
 {
+    public const ACTUAL_TASKS_COUNT = 5;
+
     public const TITLE_MAX_LENGTH = 40;
     public const CONTENT_MAX_LENGTH = 10000;
 
@@ -138,12 +140,12 @@ class TaskEntity implements IEntity
     /**
      * @return string
      */
-    public function getTitle() { return Html::encode($this->title); }
+    public function getTitle() { return $this->title; }
 
     /**
      * @return string
      */
-    public function getContent() { return Html::encode($this->content); }
+    public function getContent() { return $this->content; }
 
     /**
      * @return int

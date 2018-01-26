@@ -4,13 +4,26 @@ namespace common\models\repositories;
 
 
 use common\models\activerecords\AuthAssignment;
+use common\models\builders\AuthAssignmentEntityBuilder;
 use common\models\entities\AuthAssignmentEntity;
 use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
+/**
+ * Class AuthAssignmentRepository
+ * @package common\models\repositories
+ *
+ * @property AuthAssignmentEntityBuilder $builderBehavior
+ */
 class AuthAssignmentRepository implements IRepository
 {
+    private $builderBehavior;
+
+    public function __construct()
+    {
+        $this->builderBehavior = new AuthAssignmentEntityBuilder();
+    }
     // #################### STANDARD METHODS ######################
 
     /**
@@ -38,7 +51,7 @@ class AuthAssignmentRepository implements IRepository
             return null;
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -54,7 +67,7 @@ class AuthAssignmentRepository implements IRepository
     {
         $models = AuthAssignment::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
 
-        return $this->buildEntities($models);
+        return $this->builderBehavior->buildEntities($models);
     }
 
     /**
@@ -68,7 +81,7 @@ class AuthAssignmentRepository implements IRepository
     {
         $model = new AuthAssignment();
 
-        $this->assignProperties($model, $authAssignment);
+        $this->builderBehavior->assignProperties($model, $authAssignment);
 
         if(!$model->save())
         {
@@ -76,7 +89,7 @@ class AuthAssignmentRepository implements IRepository
             throw new Exception('Cannot save auth_assignment with user_id = ' . $authAssignment->getUserId());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -95,7 +108,7 @@ class AuthAssignmentRepository implements IRepository
             throw new Exception('auth_assignment with user_id = ' . $authAssignment->getUserId() . ' does not exists');
         }
 
-        $this->assignProperties($model, $commentLike);
+        $this->builderBehavior->assignProperties($model, $commentLike);
 
         if(!$model->save())
         {
@@ -103,7 +116,7 @@ class AuthAssignmentRepository implements IRepository
             throw new Exception('Cannot update auth_assignment with user_id = ' . $authAssignment->getUserId());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -129,53 +142,7 @@ class AuthAssignmentRepository implements IRepository
             throw new Exception('Cannot delete auth_assignment with user_id = ' . $authAssignment->getUserId());
         }
 
-        return $this->buildEntity($model);
-    }
-
-    /**
-     * Присваивает свойства сущности к модели
-     *
-     * @param AuthAssignment $model
-     * @param AuthAssignmentEntity $authAssignment
-     */
-    protected function assignProperties(&$model, &$authAssignment)
-    {
-        $model->itemName = $authAssignment->getItemName();
-        $model->user_id = $authAssignment->getUserId();
-    }
-
-    /**
-     * Создает экземпляр сущности
-     *
-     * @param AuthAssignment $model
-     * @return AuthAssignmentEntity
-     */
-    protected function buildEntity(AuthAssignment $model)
-    {
-        return new AuthAssignmentEntity($model->item_name, $model->user_id, $model->created_at);
-    }
-
-    /**
-     * Создает экземпляры сущностей
-     *
-     * @param AuthAssignment[] $models
-     * @return AuthAssignmentEntity[]
-     */
-    protected function buildEntities(array $models)
-    {
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**

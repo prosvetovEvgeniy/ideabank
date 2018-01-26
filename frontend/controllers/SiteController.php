@@ -2,8 +2,10 @@
 namespace frontend\controllers;
 
 use common\components\dataproviders\EntityDataProvider;
+use common\models\entities\TaskEntity;
 use common\models\repositories\ActualTasksRepository;
 use common\models\repositories\CompanyRepository;
+use common\models\repositories\TaskRepository;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -74,9 +76,29 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $actualTasks = ActualTasksRepository::instance()->findAll([]);
+        $actualTasksDataProvider = new EntityDataProvider([
+            'condition' => [],
+            'repositoryInstance' => ActualTasksRepository::instance(),
+            'pagination' => [
+                'pageSizeLimit' => [TaskEntity::ACTUAL_TASKS_COUNT, TaskEntity::ACTUAL_TASKS_COUNT]
+            ]
+        ]);
 
-        return $this->render('index');
+        $lastTasksDataProvider = new EntityDataProvider([
+            'condition' => [
+                'visibility_area' => TaskEntity::VISIBILITY_AREA_ALL
+            ],
+            'repositoryInstance' => TaskRepository::instance(),
+            'pagination' => [
+                'pageSizeLimit' => [TaskEntity::ACTUAL_TASKS_COUNT, TaskEntity::ACTUAL_TASKS_COUNT]
+            ],
+            'orderBy' => 'created_at DESC'
+        ]);
+
+        return $this->render('index', [
+            'actualTasksDataProvider' => $actualTasksDataProvider,
+            'lastTasksDataProvider' => $lastTasksDataProvider
+        ]);
     }
 
     public function actionLogin()

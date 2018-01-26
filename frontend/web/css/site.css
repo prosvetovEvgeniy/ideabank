@@ -461,6 +461,10 @@ a.desc:after {
 
 /* OTHERS */
 
+.space-bottom-2x{
+    margin-bottom: 80px;
+}
+
 .text-hidden {
     display: block;
     max-width: 800px;

@@ -6,6 +6,8 @@ use yii\helpers\Html;
 /**
  * @var \common\models\entities\ProjectEntity $project
  */
+
+$this->title = $project->getName();
 ?>
 
 <div class="row">

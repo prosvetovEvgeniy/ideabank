@@ -18,6 +18,8 @@ ProjectJoinAsset::register($this);
  * @var string $projectName
  * @var UserEntity $user
  */
+
+$this->title = 'Поиск';
 ?>
 
 

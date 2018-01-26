@@ -87,7 +87,7 @@ class ProjectEntity implements IEntity
     /**
      * @return string
      */
-    public function getName() { return Html::encode($this->name); }
+    public function getName() { return $this->name; }
 
     /**
      * @return int
@@ -97,7 +97,7 @@ class ProjectEntity implements IEntity
     /**
      * @return string
      */
-    public function getDescription() { return Html::encode($this->description); }
+    public function getDescription() { return $this->description; }
 
     /**
      * @return int | null

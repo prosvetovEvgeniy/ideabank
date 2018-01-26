@@ -92,7 +92,7 @@ class MessageEntity implements IEntity
     /**
      * @return string
      */
-    public function getContent() { return  Html::encode($this->content); }
+    public function getContent() { return  $this->content; }
 
     /**
      * @return bool

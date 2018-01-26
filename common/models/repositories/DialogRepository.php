@@ -3,16 +3,27 @@
 namespace common\models\repositories;
 
 
+use common\models\builders\MessageEntityBuilder;
 use common\models\entities\MessageEntity;
 use common\models\activerecords\Message;
-use common\models\entities\UserEntity;
 use common\models\interfaces\IRepository;
 use yii\base\NotSupportedException;
-use yii\helpers\ArrayHelper;
 
 
+/**
+ * Class DialogRepository
+ * @package common\models\repositories
+ *
+ * @property MessageEntityBuilder $builderBehavior
+ */
 class DialogRepository implements IRepository
 {
+    private $builderBehavior;
+
+    public function __construct()
+    {
+        $this->builderBehavior = new MessageEntityBuilder();
+    }
 
     // #################### STANDARD METHODS ######################
 
@@ -59,59 +70,7 @@ class DialogRepository implements IRepository
                                  ->orderBy($orderBy)
                                  ->all();
 
-        return $this->buildEntities($models);
-    }
-
-    /**
-     * Присваивает свойства сущности к модели
-     *
-     * @param Message $model
-     * @param MessageEntity $message
-     */
-    protected function assignProperties(&$model, &$message)
-    {
-        $model->self_id = $message->getSelfId();
-        $model->companion_id = $message->getCompanionId();
-        $model->is_sender = $message->getIsSender();
-        $model->content = $message->getContent();
-        $model->viewed = $message->getViewed();
-    }
-
-    /**
-     * @param Message $model
-     * @return MessageEntity
-     */
-    protected function buildEntity(Message $model)
-    {
-        $self = UserRepository::instance()->buildEntity($model->self);
-        $companion = UserRepository::instance()->buildEntity($model->companion);
-
-        return new MessageEntity($model->self_id, $model->companion_id, $model->content, $model->is_sender,
-                                 $model->id, $model->viewed, $model->created_at, $model->deleted, $self,
-                                 $companion);
-    }
-
-    /**
-     * Создает экземпляры сущностей
-     *
-     * @param Message[] $models
-     * @return MessageEntity[]
-     */
-    protected function buildEntities(array $models)
-    {
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->builderBehavior->buildEntities($models);
     }
 
     /**

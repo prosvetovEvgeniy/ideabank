@@ -3,13 +3,27 @@
 namespace common\models\repositories;
 
 use common\models\activerecords\Notice;
+use common\models\builders\NoticeEntityBuilder;
 use common\models\entities\NoticeEntity;
 use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
+/**
+ * Class NoticeRepository
+ * @package common\models\repositories
+ *
+ * @property NoticeEntityBuilder $builderBehavior
+ */
 class NoticeRepository implements IRepository
 {
+    private $builderBehavior;
+
+    public function __construct()
+    {
+        $this->builderBehavior = new NoticeEntityBuilder();
+    }
+
 
     // #################### STANDARD METHODS ######################
 
@@ -38,7 +52,7 @@ class NoticeRepository implements IRepository
             return null;
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -59,7 +73,7 @@ class NoticeRepository implements IRepository
                                 ->orderBy($orderBy)
                                 ->all();
 
-        return $this->buildEntities($models);
+        return $this->builderBehavior->buildEntities($models);
     }
 
     /**
@@ -73,7 +87,7 @@ class NoticeRepository implements IRepository
     {
         $model = new Notice();
 
-        $this->assignProperties($model, $notice);
+        $this->builderBehavior->assignProperties($model, $notice);
 
         if(!$model->save())
         {
@@ -81,7 +95,7 @@ class NoticeRepository implements IRepository
             throw new Exception('Cannot save notice with link = ' . $notice->getLink());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -100,7 +114,7 @@ class NoticeRepository implements IRepository
             throw new Exception('Notice with id = ' . $notice->getId() . ' does not exists');
         }
 
-        $this->assignProperties($model, $notice);
+        $this->builderBehavior->assignProperties($model, $notice);
 
         if(!$model->save())
         {
@@ -108,7 +122,7 @@ class NoticeRepository implements IRepository
             throw new Exception('Cannot update notice with id = ' . $notice->getId());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -140,56 +154,7 @@ class NoticeRepository implements IRepository
             throw new Exception('Cannot delete notice with id = ' . $notice->getId());
         }
 
-        return $this->buildEntity($model);
-    }
-
-    /**
-     * Присваивает свойства сущности к модели
-     *
-     * @param Notice $model
-     * @param NoticeEntity $notice
-     */
-    protected function assignProperties(&$model, &$notice)
-    {
-        $model->recipient_id = $notice->getRecipientId();
-        $model->sender_id = $notice->getSenderId();
-        $model->content = $notice->getContent();
-        $model->link = $notice->getLink();
-    }
-
-    /**
-     * @param Notice $model
-     * @return NoticeEntity
-     */
-    protected function buildEntity(Notice $model)
-    {
-        $sender = UserRepository::instance()->buildEntity($model->sender);
-
-        return new NoticeEntity($model->recipient_id,$model->content ,$model->link, $model->sender_id,
-                                $model->id, $model->created_at, $model->viewed, $sender);
-    }
-
-    /**
-     * Создает экземпляры сущностей
-     *
-     * @param Notice[] $models
-     * @return NoticeEntity[]
-     */
-    protected function buildEntities(array $models)
-    {
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**

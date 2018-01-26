@@ -4,14 +4,28 @@ namespace common\models\repositories;
 
 
 use common\models\activerecords\CommentLike;
+use common\models\builders\CommentLikeEntityBuilder;
 use common\models\entities\CommentEntity;
 use common\models\entities\CommentLikeEntity;
 use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
+/**
+ * Class CommentLikeRepository
+ * @package common\models\repositories
+ *
+ * @property CommentLikeEntityBuilder $builderBehavior
+ */
 class CommentLikeRepository implements IRepository
 {
+    private $builderBehavior;
+
+    public function __construct()
+    {
+        $this->builderBehavior = new CommentLikeEntityBuilder();
+    }
+
     // #################### STANDARD METHODS ######################
 
     /**
@@ -39,7 +53,7 @@ class CommentLikeRepository implements IRepository
             return null;
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -55,7 +69,7 @@ class CommentLikeRepository implements IRepository
     {
         $models = CommentLike::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
 
-        return $this->buildEntities($models);
+        return $this->builderBehavior->buildEntities($models);
     }
 
     /**
@@ -69,7 +83,7 @@ class CommentLikeRepository implements IRepository
     {
         $model = new CommentLike();
 
-        $this->assignProperties($model, $commentLike);
+        $this->builderBehavior->assignProperties($model, $commentLike);
 
         if(!$model->save())
         {
@@ -78,7 +92,7 @@ class CommentLikeRepository implements IRepository
                 ' and user_id = ' . $commentLike->getUserId());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -97,7 +111,7 @@ class CommentLikeRepository implements IRepository
             throw new Exception('comment_like with id = ' . $commentLike->getId() . ' does not exists');
         }
 
-        $this->assignProperties($model, $commentLike);
+        $this->builderBehavior->assignProperties($model, $commentLike);
 
         if(!$model->save())
         {
@@ -105,7 +119,7 @@ class CommentLikeRepository implements IRepository
             throw new Exception('Cannot update comment_like with id = ' . $commentLike->getId());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -131,55 +145,7 @@ class CommentLikeRepository implements IRepository
             throw new Exception('Cannot delete comment_like with id = ' . $commentLike->getId());
         }
 
-        return $this->buildEntity($model);
-    }
-
-    /**
-     * Присваивает свойства сущности к модели
-     *
-     * @param CommentLike $model
-     * @param CommentLikeEntity $commentLike
-     */
-    protected function assignProperties(&$model, &$commentLike)
-    {
-        $model->comment_id = $commentLike->getCommentId();
-        $model->user_id = $commentLike->getUserId();
-        $model->liked = $commentLike->getLiked();
-    }
-
-    /**
-     * Создает экземпляр сущности
-     *
-     * @param CommentLike $model
-     * @return CommentLikeEntity
-     */
-    protected function buildEntity(CommentLike $model)
-    {
-        return new CommentLikeEntity($model->comment_id, $model->user_id, $model->liked,$model->id,
-            $model->created_at, $model->updated_at);
-    }
-
-    /**
-     * Создает экземпляры сущностей
-     *
-     * @param CommentLike[] $models
-     * @return CommentLikeEntity[]
-     */
-    protected function buildEntities(array $models)
-    {
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**

@@ -4,14 +4,27 @@ namespace common\models\repositories;
 
 
 use common\models\activerecords\TaskFile;
+use common\models\builders\TaskFileEntityBuilder;
 use common\models\entities\TaskFileEntity;
 use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
-
+/**
+ * Class TaskFileRepository
+ * @package common\models\repositories
+ *
+ * @property TaskFileEntityBuilder $builderBehavior
+ */
 class TaskFileRepository implements IRepository
 {
+    private $builderBehavior;
+
+    public function __construct()
+    {
+        $this->builderBehavior = new TaskFileEntityBuilder();
+    }
+
 
     // #################### STANDARD METHODS ######################
 
@@ -40,7 +53,7 @@ class TaskFileRepository implements IRepository
             return null;
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -56,7 +69,7 @@ class TaskFileRepository implements IRepository
     {
         $models = TaskFile::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
 
-        return $this->buildEntities($models);
+        return $this->builderBehavior->buildEntities($models);
     }
 
     /**
@@ -70,7 +83,7 @@ class TaskFileRepository implements IRepository
     {
         $model = new TaskFile();
 
-        $this->assignProperties($model, $taskFile);
+        $this->builderBehavior->assignProperties($model, $taskFile);
 
         if(!$model->save())
         {
@@ -78,7 +91,7 @@ class TaskFileRepository implements IRepository
             throw new Exception('Cannot save task_file with hash_name = ' . $taskFile->getHashName());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -97,7 +110,7 @@ class TaskFileRepository implements IRepository
             throw new Exception('Task_file with id = ' . $taskFile->getId() . ' does not exists');
         }
 
-        $this->assignProperties($model, $taskFile);
+        $this->builderBehavior->assignProperties($model, $taskFile);
 
         if(!$model->save())
         {
@@ -105,7 +118,7 @@ class TaskFileRepository implements IRepository
             throw new Exception('Cannot update task_file with id = ' . $taskFile->getId());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -137,53 +150,7 @@ class TaskFileRepository implements IRepository
             throw new Exception('Cannot delete task_file with id = ' . $taskFile->getId());
         }
 
-        return $this->buildEntity($model);
-    }
-
-    /**
-     * Присваивает свойства сущности к модели
-     *
-     * @param TaskFile $model
-     * @param TaskFileEntity $taskFile
-     */
-    protected function assignProperties(&$model, &$taskFile)
-    {
-        $model->task_id = $taskFile->getTaskId();
-        $model->hash_name = $taskFile->getHashName();
-        $model->original_name = $taskFile->getOriginalName();
-    }
-
-    /**
-     * @param TaskFile $model
-     * @return TaskFileEntity
-     */
-    public function buildEntity(TaskFile $model)
-    {
-        return new TaskFileEntity($model->task_id, $model->hash_name, $model->original_name, $model->id,
-                                  $model->created_at, $model->deleted);
-    }
-
-    /**
-     * Создает экземпляры сущностей
-     *
-     * @param TaskFile[] $models
-     * @return TaskFileEntity[]
-     */
-    protected function buildEntities(array $models)
-    {
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**

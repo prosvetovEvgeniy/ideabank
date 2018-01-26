@@ -88,8 +88,18 @@ $counter = 1; //счетчик для номера комментария
                 <tbody>
                 <tr>
                     <td>Проект</td>
-
-                    <td> <?= Html::a($task->getProject()->getName(), ['project/view', 'id' => $task->getProject()->getId()]) ?> </td>
+                    <td>
+                        <?php
+                        if(Yii::$app->user->isGuest)
+                        {
+                            echo Html::a($task->getProject()->getName(), ['site/login']);
+                        }
+                        else
+                        {
+                            echo Html::a($task->getProject()->getName(), ['project/view', 'id' => $task->getProject()->getId()]);
+                        }
+                        ?>
+                    </td>
                 </tr>
                 <tr>
                     <td>Создал</td>
@@ -97,16 +107,18 @@ $counter = 1; //счетчик для номера комментария
                         <?php
                         if(Yii::$app->user->isGuest)
                         {
-                            echo Html::a($task->getAuthor()->getUsername());
-                        }
-
-                        if(Yii::$app->user->identity->getUser()->getId() === $task->getAuthorId())
-                        {
-                            echo Html::a($task->getAuthor()->getUsername(), '/profile/my-tasks');
+                            echo Html::a($task->getAuthor()->getUsername(), ['/site/login']);
                         }
                         else
                         {
-                            echo Html::a($task->getAuthor()->getUsername(), ['/profile/view', 'id' => $task->getAuthorId()]);
+                            if(Yii::$app->user->identity->getUser()->getId() === $task->getAuthorId())
+                            {
+                                echo Html::a($task->getAuthor()->getUsername(), '/profile/my-tasks');
+                            }
+                            else
+                            {
+                                echo Html::a($task->getAuthor()->getUsername(), ['/profile/view', 'id' => $task->getAuthorId()]);
+                            }
                         }
                         ?>
                     </td>
@@ -158,6 +170,8 @@ $counter = 1; //счетчик для номера комментария
         </div>
     </div>
 
+    <?php if(!Yii::$app->user->isGuest): ?>
+
     <div class="row">
 
         <div class="col-md-8 ">
@@ -187,6 +201,8 @@ $counter = 1; //счетчик для номера комментария
         </div>
     </div>
 
+    <?php endif; ?>
+
     <div class="row">
         <div class="col-md-8">
             <div class="comments">
@@ -208,16 +224,19 @@ $counter = 1; //счетчик для номера комментария
                              data-current-user-disliked-it="<?= $comment->getCurrentUserDislikedIt() ?>">
 
                             <div class="media-left">
-                                <?php $img = Html::img($comment->getUser()->getAvatarAlias(), ['class' => 'comment-avatar']) ?>
-                                <?= Html::a($img, ['/profile/view', 'id' => $comment->getUser()->getId()]) ?>
+                                <?= Html::img($comment->getUser()->getAvatarAlias(), ['class' => 'comment-avatar']) ?>
                             </div>
                             <div class="media-right">
                                 <div class="comment-title">
                                     <h5 class="comment-fio no-margin-top">
-                                        <?php if($comment->getSenderId() === Yii::$app->user->identity->getUser()->getId()): ?>
-                                            <?= Html::a($comment->getUser()->getUsername(), ['/profile/my-projects'], ['name' => $comment->getId()]) ?>
+                                        <?php if(Yii::$app->user->isGuest): ?>
+                                            <?= Html::a($comment->getUser()->getUsername(), ['/site/login'], ['name' => $comment->getId()]) ?>
                                         <?php else: ?>
-                                            <?= Html::a($comment->getUser()->getUsername(), ['/profile/view', 'id' => $comment->getUser()->getId()], ['name' => $comment->getId()]) ?>
+                                            <?php if($comment->getSenderId() === Yii::$app->user->identity->getUser()->getId()): ?>
+                                                <?= Html::a($comment->getUser()->getUsername(), ['/profile/my-projects'], ['name' => $comment->getId()]) ?>
+                                            <?php else: ?>
+                                                <?= Html::a($comment->getUser()->getUsername(), ['/profile/view', 'id' => $comment->getUser()->getId()], ['name' => $comment->getId()]) ?>
+                                            <?php endif; ?>
                                         <?php endif; ?>
                                     </h5>
                                     <p class="comment-number"><?php echo '#' . ($counter + $increment); $counter++; ?></p>

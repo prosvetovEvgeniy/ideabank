@@ -4,13 +4,27 @@ namespace common\models\repositories;
 
 
 use common\models\activerecords\Users;
+use common\models\builders\UserEntityBuilder;
 use common\models\entities\UserEntity;
 use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
+/**
+ * Class UserRepository
+ * @package common\models\repositories
+ *
+ * @property UserEntityBuilder $builderBehavior
+ */
 class UserRepository implements IRepository
 {
+    public $builderBehavior;
+
+    public function __construct()
+    {
+        $this->builderBehavior = new UserEntityBuilder();
+    }
+
 
     // #################### STANDARD METHODS ######################
 
@@ -43,7 +57,7 @@ class UserRepository implements IRepository
             return null;
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -59,7 +73,7 @@ class UserRepository implements IRepository
     {
         $models = Users::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
 
-        return $this->buildEntities($models);
+        return $this->builderBehavior->buildEntities($models);
     }
 
     /**
@@ -74,7 +88,7 @@ class UserRepository implements IRepository
     {
         $model = new Users();
 
-        $this->assignProperties($model, $user);
+        $this->builderBehavior->assignProperties($model, $user);
 
         if(!$model->save())
         {
@@ -82,7 +96,7 @@ class UserRepository implements IRepository
             throw new Exception('Cannot save user with username = ' . $user->getUsername());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -102,7 +116,7 @@ class UserRepository implements IRepository
             throw new Exception('User with id = ' . $user->getId() . ' does not exists');
         }
 
-        $this->assignProperties($model, $user);
+        $this->builderBehavior->assignProperties($model, $user);
 
         if(!$model->save())
         {
@@ -110,7 +124,7 @@ class UserRepository implements IRepository
             throw new Exception('Cannot update user with id = ' . $user->getId());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -142,66 +156,7 @@ class UserRepository implements IRepository
             throw new Exception('Cannot delete user with id = ' . $user->getId());
         }
 
-        return $this->buildEntity($model);
-    }
-
-    /**
-     * Присваивает свойства сущности к модели
-     *
-     * @param Users $model
-     * @param UserEntity $user
-     * @throws \yii\base\Exception
-     */
-    protected function assignProperties(Users &$model, UserEntity &$user)
-    {
-        $model->username = $user->getUsername();
-        $model->password = $user->getPasswordHash();
-        $model->email = $user->getEmail();
-        $model->phone = $user->getPhone();
-        $model->first_name = $user->getFirstName();
-        $model->second_name = $user->getSecondName();
-        $model->last_name = $user->getLastName();
-        $model->avatar = $user->getAvatar();
-        $model->auth_key = $user->getAuthKey();
-        $model->password_reset_token = $user->getPasswordResetToken();
-    }
-
-    /**
-     * Создает экземпляр сущности
-     *
-     * @param Users $model
-     * @return UserEntity
-     */
-    public function buildEntity(Users $model)
-    {
-        return new UserEntity($model->username, $model->password, $model->email,
-                              $model->phone, $model->first_name, $model->second_name,
-                              $model->last_name, $model->avatar, $model->auth_key,
-                              $model->password_reset_token, $model->id, $model->created_at,
-                              $model->updated_at, $model->deleted);
-    }
-
-    /**
-     * Создает экземпляры сущностей
-     *
-     * @param Users[] $models
-     * @return UserEntity[]
-     */
-    protected function buildEntities(array $models)
-    {
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**

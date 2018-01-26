@@ -4,13 +4,27 @@ namespace common\models\repositories;
 
 
 use common\models\activerecords\Comment;
+use common\models\builders\CommentEntityBuilder;
 use common\models\entities\CommentEntity;
 use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
+/**
+ * Class CommentRepository
+ * @package common\models\repositories
+ *
+ * @property CommentEntityBuilder $builderBehavior
+ */
 class CommentRepository implements IRepository
 {
+    private $builderBehavior;
+
+    public function __construct()
+    {
+        $this->builderBehavior = new CommentEntityBuilder();
+    }
+
 
     // #################### STANDARD METHODS ######################
 
@@ -39,7 +53,7 @@ class CommentRepository implements IRepository
             return null;
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -47,13 +61,13 @@ class CommentRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
-     * @return CommentEntity[]|\common\models\interfaces\IEntity[]
+     * @return CommentEntity|\common\models\interfaces\IEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
         $models = Comment::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
 
-        return $this->buildEntities($models);
+        return $this->builderBehavior->buildEntities($models);
     }
 
     /**
@@ -67,7 +81,7 @@ class CommentRepository implements IRepository
     {
         $model = new Comment();
 
-        $this->assignProperties($model, $comment);
+        $this->builderBehavior->assignProperties($model, $comment);
 
         if(!$model->save())
         {
@@ -75,7 +89,7 @@ class CommentRepository implements IRepository
             throw new Exception('Cannot save comment with content = ' . $comment->getContent());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -94,7 +108,7 @@ class CommentRepository implements IRepository
             throw new Exception('Comment with id = ' . $comment->getId() . ' does not exists');
         }
 
-        $this->assignProperties($model, $comment);
+        $this->builderBehavior->assignProperties($model, $comment);
 
         if(!$model->save())
         {
@@ -102,7 +116,7 @@ class CommentRepository implements IRepository
             throw new Exception('Cannot update comment with id = ' . $comment->getId());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -134,58 +148,7 @@ class CommentRepository implements IRepository
             throw new Exception('Cannot delete comment with id = ' . $comment->getId());
         }
 
-        return $this->buildEntity($model);
-    }
-
-    /**
-     * Присваивает свойства сущности к модели
-     *
-     * @param Comment $model
-     * @param CommentEntity $comment
-     */
-    protected function assignProperties(&$model, &$comment)
-    {
-        $model->task_id = $comment->getTaskId();
-        $model->sender_id = $comment->getSenderId();
-        $model->content = $comment->getContent();
-        $model->parent_id = $comment->getParentId();
-        $model->private = $comment->getPrivate();
-    }
-
-    /**
-     * Создает экземпляр сущности
-     *
-     * @param Comment $model
-     * @return CommentEntity
-     */
-    public function buildEntity(Comment $model)
-    {
-        return new CommentEntity($model->task_id, $model->sender_id,$model->content, $model->parent_id,
-                                 $model->private, $model->id, $model->created_at, $model->updated_at,
-                                 $model->deleted);
-    }
-
-    /**
-     * Создает экземпляры сущностей
-     *
-     * @param Comment[] $models
-     * @return CommentEntity[]
-     */
-    protected function buildEntities(array $models)
-    {
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**

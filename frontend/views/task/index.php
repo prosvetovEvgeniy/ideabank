@@ -12,6 +12,8 @@ use yii\grid\GridView;
  * @var \common\models\entities\ProjectEntity $currentProject
  * @var \common\models\entities\ParticipantEntity[] $participants
  */
+
+$this->title = 'Предложения';
 ?>
 
 <div class="row">

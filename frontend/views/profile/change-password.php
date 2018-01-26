@@ -11,6 +11,8 @@ SubMenuAsset::register($this);
 /**
  * @var ChangePasswordForm $model
  */
+
+$this->title = 'Изменить пароль';
 ?>
 
 <div class="row">

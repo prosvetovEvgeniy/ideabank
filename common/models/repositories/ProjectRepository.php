@@ -4,14 +4,28 @@ namespace common\models\repositories;
 
 
 use common\models\activerecords\Project;
+use common\models\builders\ProjectEntityBuilder;
 use common\models\entities\ProjectEntity;
 use common\models\entities\UserEntity;
 use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
+/**
+ * Class ProjectRepository
+ * @package common\models\repositories
+ *
+ * @property ProjectEntityBuilder $builderBehavior
+ */
 class ProjectRepository implements IRepository
 {
+    private $builderBehavior;
+
+    public function __construct()
+    {
+        $this->builderBehavior = new ProjectEntityBuilder();
+    }
+
 
     // #################### STANDARD METHODS ######################
 
@@ -42,7 +56,7 @@ class ProjectRepository implements IRepository
             return null;
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -58,7 +72,7 @@ class ProjectRepository implements IRepository
     {
         $models = Project::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
 
-        return $this->buildEntities($models);
+        return $this->builderBehavior->buildEntities($models);
     }
 
     /**
@@ -72,7 +86,7 @@ class ProjectRepository implements IRepository
     {
         $model = new Project();
 
-        $this->assignProperties($model, $project);
+        $this->builderBehavior->assignProperties($model, $project);
 
         if(!$model->save())
         {
@@ -80,7 +94,7 @@ class ProjectRepository implements IRepository
             throw new Exception('Cannot save project with name = ' . $project->getName());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -99,7 +113,7 @@ class ProjectRepository implements IRepository
             throw new Exception('Project with id = ' . $project->getId() . ' does not exists');
         }
 
-        $this->assignProperties($model, $project);
+        $this->builderBehavior->assignProperties($model, $project);
 
         if(!$model->save())
         {
@@ -107,7 +121,7 @@ class ProjectRepository implements IRepository
             throw new Exception('Cannot update project with id = ' . $project->getId());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -139,55 +153,7 @@ class ProjectRepository implements IRepository
             throw new Exception('Cannot delete project with id = ' . $project->getId());
         }
 
-        return $this->buildEntity($model);
-    }
-
-    /**
-     * Присваивает свойства сущности к модели
-     *
-     * @param Project $model
-     * @param ProjectEntity $project
-     */
-    protected function assignProperties(&$model, &$project)
-    {
-        $model->name = $project->getName();
-        $model->company_id = $project->getCompanyId();
-        $model->description = $project->getDescription();
-        $model->default_visibility_area = $project->getDefaultVisibilityArea();
-    }
-
-    /**
-     * @param Project $model
-     * @return ProjectEntity
-     */
-    public function buildEntity(Project $model)
-    {
-        return new ProjectEntity($model->name,$model->company_id, $model->description,
-                                 $model->default_visibility_area, $model->id, $model->created_at,
-                                 $model->updated_at, $model->deleted);
-    }
-
-    /**
-     * Создает экземпляры сущностей
-     *
-     * @param Project[] $models
-     * @return ProjectEntity[]
-     */
-    protected function buildEntities(array $models)
-    {
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -198,6 +164,7 @@ class ProjectRepository implements IRepository
     {
         return (int) Project::find()->where($condition)->count();
     }
+
 
     // #################### UNIQUE METHODS OF CLASS ######################
 
@@ -224,5 +191,4 @@ class ProjectRepository implements IRepository
 
         return $projects;
     }
-
 }

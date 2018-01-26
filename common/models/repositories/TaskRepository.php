@@ -4,6 +4,7 @@ namespace common\models\repositories;
 
 
 use common\models\activerecords\Task;
+use common\models\builders\TaskEntityBuilder;
 use common\models\entities\ProjectEntity;
 use common\models\entities\TaskEntity;
 use common\models\entities\UserEntity;
@@ -11,10 +12,24 @@ use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
+/**
+ * Class TaskRepository
+ * @package common\models\repositories
+ *
+ * @property TaskEntityBuilder $builderBehavior
+ */
 class TaskRepository implements IRepository
 {
+    private $builderBehavior;
+
+    public function __construct()
+    {
+        $this->builderBehavior = new TaskEntityBuilder();
+    }
+
 
     // #################### STANDARD METHODS ######################
+
 
     /**
      * Возвращает экземпляр класса
@@ -41,7 +56,7 @@ class TaskRepository implements IRepository
             return null;
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -57,7 +72,7 @@ class TaskRepository implements IRepository
     {
         $models = Task::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
 
-        return $this->buildEntities($models);
+        return $this->builderBehavior->buildEntities($models);
     }
 
     /**
@@ -71,7 +86,7 @@ class TaskRepository implements IRepository
     {
         $model = new Task();
 
-        $this->assignProperties($model, $task);
+        $this->builderBehavior->assignProperties($model, $task);
 
         if(!$model->save())
         {
@@ -79,7 +94,7 @@ class TaskRepository implements IRepository
             throw new Exception('Cannot save task with title = ' . $task->getTitle());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -98,7 +113,7 @@ class TaskRepository implements IRepository
             throw new Exception('Task with id = ' . $task->getId() . ' does not exists');
         }
 
-        $this->assignProperties($model, $task);
+        $this->builderBehavior->assignProperties($model, $task);
 
         if(!$model->save())
         {
@@ -106,7 +121,7 @@ class TaskRepository implements IRepository
             throw new Exception('Cannot update task with id = ' . $task->getId());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -138,63 +153,7 @@ class TaskRepository implements IRepository
             throw new Exception('Cannot delete task with id = ' . $task->getId());
         }
 
-        return $this->buildEntity($model);
-    }
-
-    /**
-     * Присваивает свойства сущности к модели
-     *
-     * @param Task $model
-     * @param TaskEntity $task
-     */
-    protected function assignProperties(Task &$model, TaskEntity &$task)
-    {
-        $model->title = $task->getTitle();
-        $model->content = $task->getContent();
-        $model->author_id = $task->getAuthorId();
-        $model->project_id = $task->getProjectId();
-        $model->status = $task->getStatus();
-        $model->visibility_area = $task->getVisibilityArea();
-        $model->parent_id = $task->getParentId();
-        $model->planned_end_at = $task->getPlannedEndAt();
-        $model->end_at = $task->getEndAt();
-    }
-
-    /**
-     * Создает экземпляр сущности
-     *
-     * @param Task $model
-     * @return TaskEntity
-     */
-    protected function buildEntity(Task $model)
-    {
-        return new TaskEntity($model->title, $model->content, $model->author_id, $model->project_id,
-                              $model->status, $model->visibility_area, $model->parent_id,
-                              $model->planned_end_at, $model->end_at, $model->id, $model->created_at,
-                              $model->updated_at, $model->deleted);
-    }
-
-    /**
-     * Создает экземпляры сущностей
-     *
-     * @param Task[] $models
-     * @return TaskEntity[]
-     */
-    protected function buildEntities(array $models)
-    {
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**

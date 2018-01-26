@@ -5,13 +5,27 @@ namespace common\models\repositories;
 
 use common\models\activerecords\Message;
 use common\models\activerecords\Users;
+use common\models\builders\UserEntityBuilder;
 use common\models\entities\UserEntity;
 use common\models\interfaces\IRepository;
 use yii\base\NotSupportedException;
 use yii\helpers\ArrayHelper;
 
+/**
+ * Class CompanionRepository
+ * @package common\models\repositories
+ *
+ * @property UserEntityBuilder $builderBehavior
+ */
 class CompanionRepository implements IRepository
 {
+    public $builderBehavior;
+
+    public function __construct()
+    {
+        $this->builderBehavior = new UserEntityBuilder();
+    }
+
     // #################### STANDARD METHODS ######################
 
     /**
@@ -50,65 +64,7 @@ class CompanionRepository implements IRepository
 
         $models = Users::find()->where(['in', 'id', ArrayHelper::getColumn($companionIds,'companion_id')])->all();
 
-        return $this->buildEntities($models);
-    }
-
-    /**
-     * Присваивает свойства сущности к модели
-     *
-     * @param Users $model
-     * @param UserEntity $user
-     */
-    protected function assignProperties(&$model, &$user)
-    {
-        $model->username = $user->getUsername();
-        $model->password = $user->getPassword();
-        $model->email = $user->getEmail();
-        $model->phone = $user->getPhone();
-        $model->first_name = $user->getFirstName();
-        $model->second_name = $user->getSecondName();
-        $model->last_name = $user->getLastName();
-        $model->avatar = $user->getAvatar();
-        $model->auth_key = $user->getAuthKey();
-        $model->password_reset_token = $user->getPasswordResetToken();
-    }
-
-    /**
-     * Создает экземпляры сущностей
-     *
-     * @param Users[] $models
-     * @return UserEntity[]
-     */
-    protected function buildEntities(array $models)
-    {
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
-    }
-
-    /**
-     * Создает экземпляр сущности
-     *
-     * @param Users $model
-     * @return UserEntity
-     */
-    public function buildEntity(Users $model)
-    {
-        return new UserEntity($model->username, $model->password, $model->email,
-                              $model->phone, $model->first_name, $model->second_name,
-                              $model->last_name, $model->avatar, $model->auth_key,
-                              $model->password_reset_token, $model->id, $model->created_at,
-                              $model->updated_at, $model->deleted);
+        return $this->builderBehavior->buildEntities($models);
     }
 
     /**

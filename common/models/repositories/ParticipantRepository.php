@@ -4,14 +4,28 @@ namespace common\models\repositories;
 
 
 use common\models\activerecords\Participant;
+use common\models\builders\ParticipantEntityBuilder;
 use common\models\entities\ParticipantEntity;
 use common\models\entities\UserEntity;
 use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
+/**
+ * Class ParticipantRepository
+ * @package common\models\repositories
+ *
+ * @property ParticipantEntityBuilder $builderBehavior
+ */
 class ParticipantRepository implements IRepository
 {
+    private $builderBehavior;
+
+    public function __construct()
+    {
+        $this->builderBehavior = new ParticipantEntityBuilder();
+    }
+
 
     // #################### STANDARD METHODS ######################
 
@@ -41,7 +55,7 @@ class ParticipantRepository implements IRepository
             return null;
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -62,7 +76,7 @@ class ParticipantRepository implements IRepository
                                      ->orderBy($orderBy)
                                      ->all();
 
-        return $this->buildEntities($models);
+        return $this->builderBehavior->buildEntities($models);
     }
 
     /**
@@ -76,7 +90,7 @@ class ParticipantRepository implements IRepository
     {
         $model = new Participant();
 
-        $this->assignProperties($model, $participant);
+        $this->builderBehavior->assignProperties($model, $participant);
 
         if(!$model->save())
         {
@@ -84,7 +98,7 @@ class ParticipantRepository implements IRepository
             throw new Exception('Cannot save participant with user_id = ' . $participant->getUserId());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -103,7 +117,7 @@ class ParticipantRepository implements IRepository
             throw new Exception('Participant with id = ' . $participant->getId() . ' does not exists');
         }
 
-        $this->assignProperties($model, $participant);
+        $this->builderBehavior->assignProperties($model, $participant);
 
         if(!$model->save())
         {
@@ -111,7 +125,7 @@ class ParticipantRepository implements IRepository
             throw new Exception('Cannot update participant with id = ' . $participant->getId());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -144,7 +158,7 @@ class ParticipantRepository implements IRepository
             throw new Exception('Cannot block participant with id = ' . $participant->getId());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -176,63 +190,7 @@ class ParticipantRepository implements IRepository
         }
 
 
-        return $this->buildEntity($model);
-    }
-
-    /**
-     * Присваивает свойства сущности к модели
-     *
-     * @param Participant $model
-     * @param ParticipantEntity $participant
-     */
-    protected function assignProperties(&$model, &$participant)
-    {
-        $model->user_id = $participant->getUserId();
-        $model->company_id = $participant->getCompanyId();
-        $model->project_id = $participant->getProjectId();
-        $model->approved = $participant->getApproved();
-        $model->approved_at = $participant->getApprovedAt();
-        $model->blocked = $participant->getBlocked();
-        $model->blocked_at = $participant->getBlockedAt();
-        $model->deleted_at = $participant->getDeletedAt();
-        $model->deleted = $participant->getDeleted();
-    }
-
-    /**
-     * @param Participant $model
-     * @return ParticipantEntity
-     */
-    protected function buildEntity(Participant $model)
-    {
-        $project = ($model->project) ? ProjectRepository::instance()->buildEntity($model->project) : null ;
-
-        return new ParticipantEntity($model->user_id, $model->company_id, $model->project_id,
-                                     $model->approved, $model->approved_at, $model->blocked, $model->blocked_at,
-                                     $model->id, $model->created_at, $model->updated_at, $model->deleted_at,
-                                     $model->deleted, $project);
-    }
-
-    /**
-     * Создает экземпляры сущностей
-     *
-     * @param Participant[] $models
-     * @return ParticipantEntity[]
-     */
-    protected function buildEntities(array $models)
-    {
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**

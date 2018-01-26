@@ -6,6 +6,8 @@ use yii\helpers\Html;
 /**
  * @var UserEntity $user
  */
+
+$this->title = 'Страница: ' . $user->getUsername();
 ?>
 
 <div class="row">

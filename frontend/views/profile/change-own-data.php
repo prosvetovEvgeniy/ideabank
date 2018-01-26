@@ -12,6 +12,8 @@ SubMenuAsset::register($this);
  * @var ChangeOwnDataForm $model
  * @var string $avatar
  */
+
+$this->title = 'Изменить данные';
 ?>
 
 <div class="row">

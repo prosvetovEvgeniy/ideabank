@@ -15,6 +15,8 @@ ProfileProjectsAsset::register($this);
 /**
  * @var EntityDataProvider $dataProvider;
  */
+
+$this->title = 'Мои проекты';
 ?>
 
 <div class="row">

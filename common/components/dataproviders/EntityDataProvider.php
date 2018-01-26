@@ -4,7 +4,6 @@ namespace common\components\dataproviders;
 
 
 use common\models\interfaces\IRepository;
-use yii\base\NotSupportedException;
 use yii\data\BaseDataProvider;
 
 /**
@@ -28,11 +27,6 @@ class EntityDataProvider extends BaseDataProvider
      */
     public function prepareModels()
     {
-        if(empty($this->condition))
-        {
-            return [];
-        }
-
         $pagination = $this->getPagination();
 
         if($pagination !== false)

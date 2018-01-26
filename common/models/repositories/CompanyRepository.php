@@ -3,13 +3,27 @@
 namespace common\models\repositories;
 
 use common\models\activerecords\Company;
+use common\models\builders\CompanyEntityBuilder;
 use common\models\entities\CompanyEntity;
 use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
+/**
+ * Class CompanyRepository
+ * @package common\models\repositories
+ *
+ * @property CompanyEntityBuilder $builderBehavior
+ */
 class CompanyRepository implements IRepository
 {
+    private $builderBehavior;
+
+    public function __construct()
+    {
+        $this->builderBehavior = new CompanyEntityBuilder();
+    }
+
 
     // #################### STANDARD METHODS ######################
 
@@ -38,23 +52,21 @@ class CompanyRepository implements IRepository
             return null;
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
-     * Возвращает массив сущностей по условию
-     *
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
-     * @return CompanyEntity[]
+     * @return CompanyEntity|\common\models\interfaces\IEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
         $models = Company::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
 
-        return $this->buildEntities($models);
+        return $this->builderBehavior->buildEntities($models);
     }
 
     /**
@@ -68,7 +80,7 @@ class CompanyRepository implements IRepository
     {
         $model = new Company();
 
-        $this->assignProperties($model, $company);
+        $this->builderBehavior->assignProperties($model, $company);
 
         if(!$model->save())
         {
@@ -76,7 +88,7 @@ class CompanyRepository implements IRepository
             throw new Exception("Cannot save company with name = " . $company->getName());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -95,7 +107,7 @@ class CompanyRepository implements IRepository
             throw new Exception('Company with id = ' . $company->getId() . ' does not exists');
         }
 
-        $this->assignProperties($model, $company);
+        $this->builderBehavior->assignProperties($model, $company);
 
         if(!$model->save())
         {
@@ -103,7 +115,7 @@ class CompanyRepository implements IRepository
             throw new Exception('Cannot update company with id = ' . $company->getId());
         }
 
-        return $this->buildEntity($model);
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
@@ -135,52 +147,7 @@ class CompanyRepository implements IRepository
             throw new Exception('Cannot delete company with id = ' . $company->getId());
         }
 
-        return $this->buildEntity($model);
-    }
-
-    /**
-     * Присваивает свойства сущности к модели
-     *
-     * @param Company $model
-     * @param CompanyEntity $company
-     */
-    protected function assignProperties(&$model, &$company)
-    {
-        $model->name = $company->getName();
-    }
-
-    /**
-     * Создает экземпляр сущности
-     *
-     * @param Company $model
-     * @return CompanyEntity
-     */
-    protected function buildEntity(Company $model)
-    {
-        return new CompanyEntity($model->name, $model->id, $model->created_at, $model->updated_at, $model->deleted);
-    }
-
-    /**
-     * Создает экземпляры сущностей
-     *
-     * @param Company[] $models
-     * @return CompanyEntity[]
-     */
-    protected function buildEntities(array $models)
-    {
-        if(!$models)
-        {
-            return [];
-        }
-
-        $entities = [];
-
-        foreach ($models as $model)
-        {
-            $entities[] = $this->buildEntity($model);
-        }
-
-        return $entities;
+        return $this->builderBehavior->buildEntity($model);
     }
 
     /**
