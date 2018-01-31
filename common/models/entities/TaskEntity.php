@@ -43,10 +43,16 @@ use yii\helpers\Html;
  */
 class TaskEntity implements IEntity
 {
+    /*
+     * количество актуальных задач,
+     * которые оторбражаются на странице
+     */
     public const ACTUAL_TASKS_COUNT = 5;
 
-    public const TITLE_MAX_LENGTH = 40;
+    public const TITLE_MAX_LENGTH = 100;
     public const CONTENT_MAX_LENGTH = 10000;
+    public const TITLE_MIN_LENGTH = 4;
+    public const CONTENT_MIN_LENGTH = 10;
 
     public const STATUS_ON_CONSIDERATION = 0;
     public const STATUS_IN_PROGRESS = 1;
@@ -67,7 +73,7 @@ class TaskEntity implements IEntity
     protected const DATE_ERROR_MESSAGE = 'дата не определена';
     protected const STATUS_ERROR_MESSAGE = 'статус не определен';
 
-    protected const DATE_FORMAT = 'Y-m-d';
+    protected const DATE_FORMAT = 'd-m-Y';
 
     protected $id;
     protected $title;
@@ -319,7 +325,7 @@ class TaskEntity implements IEntity
     {
         if($this->files === null)
         {
-            $this->files = TaskFileRepository::instance()->findAll(['task_id' => $this->getId()]);
+            $this->files = TaskFileRepository::instance()->findAll(['task_id' => $this->getId(), 'deleted' => false]);
         }
 
         return $this->files;
@@ -328,37 +334,40 @@ class TaskEntity implements IEntity
 
     // #################### SECTION OF LOGIC ######################
 
-
     /**
-     * @return false|string
+     * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getCreatedDate()
     {
-        return ($this->createdAt !== null) ? date(self::DATE_FORMAT, $this->createdAt) : self::DATE_ERROR_MESSAGE;
+        return ($this->createdAt !== null) ?  Yii::$app->formatter->asDate($this->getCreatedAt(), 'short') : self::DATE_ERROR_MESSAGE;
     }
 
     /**
-     * @return false|string
+     * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getUpdatedDate()
     {
-        return ($this->updatedAt !== null) ? date(self::DATE_FORMAT, $this->updatedAt) : self::DATE_ERROR_MESSAGE;
+        return ($this->updatedAt !== null) ?  Yii::$app->formatter->asDate($this->getUpdatedAt(), 'short') : self::DATE_ERROR_MESSAGE;
     }
 
     /**
-     * @return false|string
+     * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getPlannedEndDate()
     {
-        return ($this->plannedEndAt !== null) ? date(self::DATE_FORMAT, $this->plannedEndAt) : self::DATE_ERROR_MESSAGE;
+        return ($this->plannedEndAt !== null) ?  Yii::$app->formatter->asDate($this->getPlannedEndAt(), 'short') : self::DATE_ERROR_MESSAGE;
     }
 
     /**
-     * @return false|string
+     * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getEndDate()
     {
-        return ($this->endAt !== null) ? date(self::DATE_FORMAT, $this->endAt) : self::DATE_ERROR_MESSAGE;
+        return ($this->endAt !== null) ?  Yii::$app->formatter->asDate($this->getEndAt(), 'short') : self::DATE_ERROR_MESSAGE;
     }
 
     /**
@@ -447,7 +456,7 @@ class TaskEntity implements IEntity
      * то есть картинки прикрепленные к данной
      * задаче
      *
-     * @return array
+     * @return TaskFileEntity[]
      * @throws \yii\base\InvalidConfigException
      */
     public function getImagesToTask()

@@ -1,10 +1,10 @@
 <?php
 
 use yii\widgets\ActiveForm;
-use common\models\searchmodels\TaskEntitySearch;
+use common\models\searchmodels\task\TaskEntitySearch;
 
 /* @var $this yii\web\View */
-/* @var $model \common\models\searchmodels\TaskEntitySearch */
+/* @var $model \common\models\searchmodels\task\TaskEntitySearch */
 /* @var $form yii\widgets\ActiveForm */
 
 ?>

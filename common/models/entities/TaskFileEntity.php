@@ -23,7 +23,10 @@ use yii\helpers\FileHelper;
  */
 class TaskFileEntity implements IEntity
 {
+    public const MAX_FILES_TO_TASK = 10;
+    public const MAX_SIZE_FILES = 100 * (1000000); //max size 100MB
     public const PATH_TO_FILE = 'uploads/tasks/';
+    public const PATH_TO_FILE_STUB = 'images/file-stub-img.png';
 
     protected $id;
     protected $taskId;
@@ -161,6 +164,16 @@ class TaskFileEntity implements IEntity
     public function getWebRootAlias()
     {
         return Yii::getAlias('@webroot/' . self::PATH_TO_FILE . $this->getHashName());
+    }
+
+    /**
+     * Картинка для файла
+     *
+     * @return bool|string
+     */
+    public function getFileStub()
+    {
+        return Yii::getAlias('@web/' . self::PATH_TO_FILE_STUB);
     }
 
     /**

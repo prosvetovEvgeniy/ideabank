@@ -62,7 +62,6 @@ class SignupForm extends Model
             [['password'], 'string', 'min' => UserEntity::PASSWORD_MIN_LENGTH],
 
             [['phone'], 'string'],
-            [['phone'], 'validatePhone', 'skipOnEmpty'=> true],
 
             [['firstName', 'secondName', 'lastName'], 'string', 'length' => [2, UserEntity::NAME_MAX_LENGTH]],
 
@@ -82,18 +81,6 @@ class SignupForm extends Model
             'lastName' => 'Отчество',
             'companyName' => 'Название компании'
         ];
-    }
-
-    /**
-     * @param $attribute
-     */
-    public function validatePhone($attribute)
-    {
-        if((strlen($this->$attribute)<10))
-        {
-            $errorMsg= 'Введите корректный номер телефона';
-            $this->addError('phone',$errorMsg);
-        }
     }
 
     /**
@@ -168,6 +155,10 @@ class SignupForm extends Model
             $participant->setApprovedAt(time());
 
             $this->participant = ParticipantRepository::instance()->add($participant);
+
+            ParticipantRepository::instance()->add(
+                new ParticipantEntity($user->getId())
+            );
 
             $transaction->commit();
 

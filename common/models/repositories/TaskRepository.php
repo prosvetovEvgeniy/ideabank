@@ -11,6 +11,7 @@ use common\models\entities\UserEntity;
 use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class TaskRepository
@@ -288,6 +289,25 @@ class TaskRepository implements IRepository
             'project_id' => $project->getId(),
             'author_id' => $user->getId(),
             'deleted' => false
+        ];
+    }
+
+    public function getConditionOnOwnTasks()
+    {
+        $participants = ParticipantRepository::instance()->getParticipantsInProjects();
+
+        $projectIds = [];
+
+        foreach ($participants as $participant)
+        {
+            $projectIds[] = $participant->getProjectId();
+        }
+
+        return [
+            'and',
+            ['author_id' => Yii::$app->user->identity->getUserId()],
+            ['in', 'project_id', $projectIds],
+            ['deleted' => false]
         ];
     }
 }

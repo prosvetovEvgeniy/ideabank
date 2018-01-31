@@ -11,7 +11,6 @@ use common\models\repositories\NoticeRepository;
 use common\models\repositories\ParticipantRepository;
 use common\models\repositories\TaskLikeRepository;
 use common\models\repositories\TaskRepository;
-use yii\helpers\Html;
 use Yii;
 
 /**

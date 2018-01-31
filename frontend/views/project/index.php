@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use common\models\searchmodels\TaskEntitySearch;
+use common\models\searchmodels\task\TaskEntitySearch;
 use common\components\widgets\RoleViewWidget;
 
 /**

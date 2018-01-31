@@ -3,10 +3,13 @@
 namespace common\models\repositories;
 
 
+use common\components\helpers\FileHelper;
 use common\models\activerecords\TaskFile;
 use common\models\builders\TaskFileEntityBuilder;
+use common\models\entities\TaskEntity;
 use common\models\entities\TaskFileEntity;
 use common\models\interfaces\IRepository;
+use GuzzleHttp\Psr7\UploadedFile;
 use yii\db\Exception;
 use Yii;
 
@@ -160,5 +163,34 @@ class TaskFileRepository implements IRepository
     public function getTotalCountByCondition(array $condition): int
     {
         return (int) TaskFile::find()->where($condition)->count();
+    }
+
+
+    // #################### UNIQUE METHODS OF CLASS ######################
+
+
+    /**
+     * @param UploadedFile[] $files
+     * @param TaskEntity     $task
+     * @throws Exception
+     * @throws \yii\base\Exception
+     */
+    public function saveFiles(array $files, TaskEntity $task)
+    {
+        foreach ($files as $file)
+        {
+            $fileHelper = new FileHelper($file->extension, self::instance());
+            $hashName = $fileHelper->getHash('hash_name');
+
+            $taskFile = new TaskFileEntity($task->getId(), $hashName, $file->name);
+
+            $this->add($taskFile);
+
+            //если файл не сохранился на диск, то вырбасываем исключение
+            if (!$file->saveAs(TaskFileEntity::PATH_TO_FILE . $hashName))
+            {
+                throw new \yii\base\Exception();
+            }
+        }
     }
 }

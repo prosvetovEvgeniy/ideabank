@@ -49,7 +49,7 @@ class ChangePasswordForm extends Model
     {
         $user = $this->getUser();
 
-        if(!Yii::$app->security->validatePassword($this->$attribute, $user->getPassword()))
+        if(!Yii::$app->security->validatePassword($this->oldPassword, $user->getPassword()))
         {
             $this->addError('oldPassword', 'Старый пароль введен не правильно');
         }

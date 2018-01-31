@@ -41,7 +41,7 @@ $this->title = 'Упоминания';
                         'contentOptions' => ['class' => 'text-left'],
                         'header' => 'Содержание',
                         'value' => function(NoticeEntity $notice) {
-                            return Html::a($notice->getContent(), $notice->getLink(), ['class' => 'text-hidden', 'target' => '_blank']);
+                            return Html::a($notice->getContent(), $notice->getLink(), ['class' => 'text-hidden']);
                         },
                         'format' => 'raw'
                     ],

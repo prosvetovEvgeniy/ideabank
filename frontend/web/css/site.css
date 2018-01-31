@@ -144,18 +144,43 @@ a.desc:after {
     font-weight: bold !important;
 }
 
-.task-images-block div{
+.task-files-block{
+    margin: 50px 0;
+}
+
+.task-files-block div{
     margin-bottom: 25px;
+    margin-right: 15px;
     display: inline-block;
 }
 
-.task-images-block img{
-    height: 50px;
-    width: 50px;
+.task-files-block img{
+    height: 75px;
+    width: 75px;
+    border-radius: 10px;
 }
 
-.task-files-block > div {
-    margin: 5px;
+.file{
+    position: relative;
+}
+
+.delete-file-btn {
+    transition: 0.3s all;
+    position: absolute;
+    color: red;
+    right: 0px;
+    top: 0px;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.delete-file-btn:hover {
+    transform: scale(1.4);
+}
+
+.file-view{
+    width: 100px;
+    height: 100px;
 }
 
 /* ########## COMMENT FORM RULES ##########*/
@@ -436,10 +461,6 @@ a.desc:after {
 .send-message-form
 {
     margin-top: 20px;
-}
-
-.help-block{
-    display: none;
 }
 
 /* PROFILE */

@@ -170,17 +170,11 @@ class ProjectRepository implements IRepository
 
 
     /**
-     * @param UserEntity $user
      * @return array
      */
-    public function getProjectsForUser(UserEntity $user)
+    public function getProjectsForUser()
     {
-        $participants = ParticipantRepository::instance()->getParticipantsInProjects($user);
-
-        if(!$participants)
-        {
-            return [];
-        }
+        $participants = ParticipantRepository::instance()->getParticipantsInProjects();
 
         $projects = [];
 

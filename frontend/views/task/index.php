@@ -2,13 +2,13 @@
 
 use common\components\dataproviders\EntityDataProvider;
 use yii\helpers\Html;
-use common\models\searchmodels\TaskEntitySearch;
+use common\models\searchmodels\task\TaskEntitySearch;
 use common\models\entities\TaskEntity;
 use yii\grid\GridView;
 
 /**
  * @var EntityDataProvider $dataProvider
- * @var \common\models\searchmodels\TaskEntitySearch $searchModel
+ * @var \common\models\searchmodels\task\TaskEntitySearch $searchModel
  * @var \common\models\entities\ProjectEntity $currentProject
  * @var \common\models\entities\ParticipantEntity[] $participants
  */

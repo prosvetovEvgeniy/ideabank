@@ -6,6 +6,7 @@ namespace common\models\entities;
 use common\models\interfaces\IEntity;
 use common\models\repositories\UserRepository;
 use yii\helpers\Html;
+use Yii;
 
 /**
  * Class MessageEntity
@@ -161,10 +162,11 @@ class MessageEntity implements IEntity
     // #################### SECTION OF LOGIC ######################
 
     /**
-     * @return false|string
+     * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getCreationDate()
     {
-        return date(self::DATE_FORMAT, $this->createdAt);
+        return Yii::$app->formatter->asDate($this->getCreatedAt(), 'short');
     }
 }

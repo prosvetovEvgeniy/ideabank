@@ -14,25 +14,33 @@ use yii\helpers\ArrayHelper;
 $this->title = 'Создать задачу'
 ?>
 
-<?php
+<?php if(empty($projects)): ?>
+
+    <h2>Вы не участвуете ни в одном проекте</h2>
+
+<?php else: ?>
+
+    <?php
     $form = ActiveForm::begin([
         'id' => 'create-task-form'
     ]);
 
     $projectItems = ArrayHelper::map($projects,
-                                     function($project){ return $project->getId(); },
-                                     function($project) { return $project->getName();});
-?>
+        function($project){ return $project->getId(); },
+        function($project) { return $project->getName();});
+    ?>
 
-<?= $form->field($model, 'title')->textInput() ?>
+    <?= $form->field($model, 'title')->textInput() ?>
 
-<?= $form->field($model, 'content')->textarea(['rows' => 10]) ?>
+    <?= $form->field($model, 'content')->textarea(['rows' => 10]) ?>
 
-<?= $form->field($model, 'projectId')->dropDownList($projectItems) ?>
+    <?= $form->field($model, 'projectId')->dropDownList($projectItems) ?>
 
-<?= $form->field($model, 'files[]')->fileInput(['multiple' => true, 'accept' => '*']) ?>
+    <?= $form->field($model, 'files[]')->fileInput(['multiple' => true, 'accept' => '*']) ?>
 
-<?= Html::submitButton('Создать', ['class' => 'btn btn-primary']) ?>
+    <?= Html::submitButton('Создать', ['class' => 'btn btn-primary']) ?>
 
 
-<?php ActiveForm::end(); ?>
+    <?php ActiveForm::end(); ?>
+
+<?php endif; ?>

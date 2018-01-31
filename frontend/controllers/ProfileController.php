@@ -60,7 +60,7 @@ class ProfileController extends Controller
     public function actionMyProjects()
     {
         $dataProvider = new EntityDataProvider([
-            'condition' => ParticipantRepository::instance()->getConditionOnParticipantsInProjects(),
+            'condition' => ParticipantRepository::instance()->getConditionOnRelationToProject(),
             'repositoryInstance' => ParticipantRepository::instance(),
             'pagination' => [
                 'pageSize' => 25
@@ -89,9 +89,7 @@ class ProfileController extends Controller
     public function actionMyTasks()
     {
         $dataProvider = new EntityDataProvider([
-            'condition' => [
-                'author_id' => Yii::$app->user->identity->getUser()->getId()
-            ],
+            'condition' => TaskRepository::instance()->getConditionOnOwnTasks(),
             'repositoryInstance' => TaskRepository::instance(),
             'pagination' => [
                 'pageSize' => 20

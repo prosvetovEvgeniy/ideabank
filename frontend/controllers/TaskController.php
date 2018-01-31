@@ -4,17 +4,17 @@ namespace frontend\controllers;
 
 
 use common\components\dataproviders\EntityDataProvider;
-use common\models\activerecords\Company;
-use common\models\entities\UserEntity;
 use common\models\repositories\CommentViewRepository;
 use common\models\repositories\ParticipantRepository;
 use common\models\repositories\ProjectRepository;
-use common\models\repositories\TaskFileRepository;
 use common\models\repositories\TaskRepository;
-use common\models\searchmodels\TaskEntitySearch;
+use common\models\searchmodels\task\searchstrategy\ManagerTaskSearchStrategy;
+use common\models\searchmodels\task\searchstrategy\UserTaskSearchStrategy;
+use common\models\searchmodels\task\TaskEntitySearch;
 use frontend\models\comment\CommentModel;
 use frontend\models\task\CreateTaskForm;
 use frontend\models\task\EditTaskForm;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use Yii;
 use yii\web\NotFoundHttpException;
@@ -24,7 +24,7 @@ class TaskController extends Controller
 {
     public function actionIndex()
     {
-        $searchModel = new TaskEntitySearch();
+        $searchModel = new TaskEntitySearch(new UserTaskSearchStrategy());
 
         if(!$searchModel->load(Yii::$app->request->queryParams) || !$searchModel->validate())
         {
@@ -33,12 +33,7 @@ class TaskController extends Controller
 
         $dataProvider = $searchModel->search();
 
-        /**
-         * @var UserEntity $user
-         */
-        $user = Yii::$app->user->identity->getUser();
-
-        $participants = ParticipantRepository::instance()->getParticipantsInProjects($user);
+        $participants = ParticipantRepository::instance()->getParticipantsInProjects();
 
         return $this->render('index', [
             'dataProvider'   => $dataProvider,
@@ -84,15 +79,10 @@ class TaskController extends Controller
 
     public function actionCreate()
     {
-        /**
-         * @var UserEntity $user
-         */
-        $user = Yii::$app->user->identity->getUser();
-
-        $projects = ProjectRepository::instance()->getProjectsForUser($user);
+        $projects = ProjectRepository::instance()->getProjectsForUser();
 
         $model = new CreateTaskForm();
-        $model->authorId = $user->getId();
+        $model->authorId = Yii::$app->user->identity->getUser()->getId();
 
         if($model->load(Yii::$app->request->post()))
         {
@@ -112,35 +102,28 @@ class TaskController extends Controller
 
     public function actionEdit(int $id)
     {
-        $model = new EditTaskForm();
+        $task = TaskRepository::instance()->findOne(['id' => $id]);
+
+        if(!$task)
+        {
+            throw new BadRequestHttpException();
+        }
+
+        $model = new EditTaskForm($task);
+
+        if($model->load(Yii::$app->request->post()))
+        {
+            $model->files = UploadedFile::getInstances($model, 'files');
+
+            if($model->save())
+            {
+                Yii::$app->session->setFlash('taskChanged', 'Задача успешно обновлена');
+            }
+        }
 
         return $this->render('edit', [
-            'model' => $model
+            'model' => $model,
+            'task'  => $task
         ]);
-    }
-
-    public function actionDownload(int $id)
-    {
-        $file = TaskFileRepository::instance()->findOne(['id' => $id]);
-
-        if(!$file)
-        {
-            throw new NotFoundHttpException();
-        }
-
-        $headers = Yii::$app->response->getHeaders();
-
-        $headers->set('Content-Type', $file->getMimeType());
-
-        if($file->isImage())
-        {
-            $headers->set('Content-Disposition', 'inline');
-        }
-        else
-        {
-            $headers->set('ContentDisposition', 'attachment');
-        }
-
-        return Yii::$app->response->sendFile($file->getWebRootAlias(), $file->getOriginalName());
     }
 }

@@ -2,9 +2,12 @@
 
 namespace common\models\repositories;
 
+use common\components\helpers\NoticeHelper;
 use common\models\activerecords\Notice;
 use common\models\builders\NoticeEntityBuilder;
 use common\models\entities\NoticeEntity;
+use common\models\entities\TaskEntity;
+use common\models\entities\UserEntity;
 use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
@@ -170,4 +173,20 @@ class NoticeRepository implements IRepository
     // #################### UNIQUE METHODS OF CLASS ######################
 
 
+    /**
+     * @param TaskEntity $task
+     * @param string $link
+     * @throws Exception
+     */
+    public function saveNoticesForTask(TaskEntity $task, string $link)
+    {
+        $noticeHelper = new NoticeHelper($task->getContent());
+
+        foreach ($noticeHelper->getNoticedUsers() as $noticedUser)
+        {
+            $notice = new NoticeEntity($noticedUser->getId(), $task->getContent(), $link, $task->getAuthorId());
+
+            $this->add($notice);
+        }
+    }
 }

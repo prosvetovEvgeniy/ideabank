@@ -96,7 +96,7 @@ class DataController extends Controller
         $participantIds['newLoginStub'] = $this->addParticipantStub($userIds['newLogin']);
 
         $participantIds['newUserStub'] = $this->addParticipantStub($userIds['newUser']);
-
+        $participantIds['newUserGithub'] = $this->addParticipant($userIds['newUser'], $companyIds['eCompanyId'], $projectIds['github']);
 
         $participantIds['adminStub'] = $this->addParticipantStub($userIds['admin']);
         $participantIds['adminDirector'] = $this->addParticipantDirector($userIds['admin'], $companyIds['infSysId']);
@@ -127,19 +127,20 @@ class DataController extends Controller
         $auth->assign($director,$participantIds['edirectorVk']);
         $auth->assign($director,$participantIds['edirectorXabr']);
 
+        $auth->assign($user, $participantIds['newUserGithub']);
 
         //############### FILLING TASKS ###############
 
 
-        $tasksIds['firstTask'] = $this->addTask('Первая задача','Текст первой задачи', $userIds['evgeniy'], $projectIds['github'], 0);
-        $tasksIds['secondTask'] = $this->addTask('Вторая задача','Текст второй задачи', $userIds['evgeniy'], $projectIds['vk'], 0);
-        $tasksIds['thirdTask'] = $this->addTask('Третья задача','Текст третьей задачи', $userIds['evgeniy'], $projectIds['xabr'], 0);
-        $tasksIds['fourthTask'] = $this->addTask('Вторая задача','Текст второй задачи', $userIds['evgeniy'], $projectIds['github'], 1);
-        $tasksIds['fifthTask'] = $this->addTask('Третья задача','Текст третьей задачи', $userIds['evgeniy'], $projectIds['github'], 3, $tasksIds['fourthTask']);
-        $tasksIds['sixthTask'] = $this->addTask('Четвертая задача','Текст четвертой задачи', $userIds['evgeniy'], $projectIds['github'], 0);
-        $tasksIds['seventhTask'] = $this->addTask('Пятая задача','Текст пятой задачи', $userIds['evgeniy'], $projectIds['github'], 3, $tasksIds['sixthTask']);
-        $tasksIds['eightTask'] = $this->addTask('Шестая задача','Текст шестой задачи', $userIds['evgeniy'], $projectIds['github'], 0);
-        $tasksIds['ninthTask'] = $this->addTask('Седьмая задача','Текст седьмой задачи', $userIds['evgeniy'], $projectIds['github'], 2);
+        $tasksIds['firstTask'] = $this->addTask('Первая задача git','Текст первой задачи', $userIds['evgeniy'], $projectIds['github'], 0);
+        $tasksIds['secondTask'] = $this->addTask('Вторая задача vk','Текст второй задачи', $userIds['evgeniy'], $projectIds['vk'], 0);
+        $tasksIds['thirdTask'] = $this->addTask('Третья задача xabr','Текст третьей задачи', $userIds['evgeniy'], $projectIds['xabr'], 0);
+        $tasksIds['fourthTask'] = $this->addTask('Вторая задача git','Текст второй задачи', $userIds['evgeniy'], $projectIds['github'], 1);
+        $tasksIds['fifthTask'] = $this->addTask('Третья задача git','Текст третьей задачи', $userIds['evgeniy'], $projectIds['github'], 3, $tasksIds['fourthTask']);
+        $tasksIds['sixthTask'] = $this->addTask('Четвертая задача git','Текст четвертой задачи', $userIds['evgeniy'], $projectIds['github'], 0);
+        $tasksIds['seventhTask'] = $this->addTask('Пятая задача git','Текст пятой задачи', $userIds['evgeniy'], $projectIds['github'], 3, $tasksIds['sixthTask']);
+        $tasksIds['eightTask'] = $this->addTask('Шестая задача git','Текст шестой задачи', $userIds['evgeniy'], $projectIds['github'], 0);
+        $tasksIds['ninthTask'] = $this->addTask('Седьмая задача git','Текст седьмой задачи', $userIds['evgeniy'], $projectIds['github'], 2);
 
 
         //############### FILLING COMMENTS ###############

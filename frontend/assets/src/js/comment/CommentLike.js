@@ -3,6 +3,11 @@ $( document ).ready(function() {
 
     $('.comment-block .footer-comment .vote-up i').click(function () {
 
+        if($(this).data('user-guest'))
+        {
+            return false;
+        }
+
         var likeSelector = $(this);
         var comment = likeSelector.parents('.comment');
         var dislikeSelector = comment.find('.vote-down i');
@@ -60,6 +65,11 @@ $( document ).ready(function() {
     });
 
     $('.comment-block .vote-down i').click(function () {
+
+        if($(this).data('user-guest'))
+        {
+            return false;
+        }
 
         var dislikeSelector = $(this);
         var comment = dislikeSelector.parents('.comment');

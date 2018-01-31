@@ -247,11 +247,12 @@ class CommentEntity implements IEntity
     // #################### SECTION OF LOGIC ######################
 
     /**
-     * @return false|string
+     * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getDate()
     {
-        return date(self::DATE_FORMAT, $this->createdAt);
+        return  Yii::$app->formatter->asDate($this->getCreatedAt(), 'short');
     }
 
     /**

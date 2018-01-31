@@ -209,26 +209,51 @@ class ParticipantRepository implements IRepository
     /**
      * Возвращает проекты, в которым присоединен пользователь
      *
-     * @param UserEntity $user
      * @return ParticipantEntity[]
      */
-    public function getParticipantsInProjects(UserEntity $user = null)
+    public function getParticipantsInProjects()
     {
-        $condition = $this->getConditionOnParticipantsInProjects($user);
+        $condition = $this->getConditionOnParticipantsInProjects();
+
+        return $this->findAll($condition);
+    }
+
+    public function getRelationToProjects()
+    {
+        $condition = $this->getConditionOnRelationToProject();
 
         return $this->findAll($condition);
     }
 
     /**
-     * @param UserEntity|null $user
+     * Позвращает условия только для участников проектов
+     *
      * @return array
      */
-    public function getConditionOnParticipantsInProjects(UserEntity $user = null)
+    public function getConditionOnParticipantsInProjects()
     {
-        if(!$user)
-        {
-            $user = Yii::$app->user->identity->getUser();
-        }
+        $user = Yii::$app->user->identity->getUser();
+
+        return [
+            'and',
+            ['user_id' => $user->getId()],
+            ['not', ['company_id' => null]],
+            ['not', ['project_id' => null]],
+            ['approved' => true],
+            ['blocked' => false],
+            ['deleted' => false]
+        ];
+    }
+
+    /**
+     * Возвращает условия для любого отношения
+     * к проету(участник, забанен, на рассмотрении)
+     *
+     * @return array
+     */
+    public function getConditionOnRelationToProject()
+    {
+        $user = Yii::$app->user->identity->getUser();
 
         return [
             'and',
@@ -245,10 +270,7 @@ class ParticipantRepository implements IRepository
      */
     public function getDeletedParticipants(UserEntity $user = null)
     {
-        if(!$user)
-        {
-            $user = Yii::$app->user->identity->getUser();
-        }
+        $user = Yii::$app->user->identity->getUser();
 
         return $this->findAll([
             'and',
@@ -276,5 +298,10 @@ class ParticipantRepository implements IRepository
             'user_id'    => $user->getId(),
             'company_id' => null
         ]);
+    }
+
+    public function checkOnParticipantInProject()
+    {
+
     }
 }

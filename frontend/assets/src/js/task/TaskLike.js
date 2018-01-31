@@ -3,6 +3,11 @@ $( document ).ready(function() {
 
     $('.task .vote-up i').click(function () {
 
+        if($(this).data('user-guest'))
+        {
+            return false;
+        }
+
         var likeSelector = $(this);
         var taskSelector = likeSelector.parents('.task');
         var dislikeSelector = taskSelector.find('.vote-down i');
@@ -58,6 +63,11 @@ $( document ).ready(function() {
     });
 
     $('.task .vote-down i').click(function () {
+
+        if($(this).data('user-guest'))
+        {
+            return false;
+        }
 
         var dislikeSelector = $(this);
         var taskSelector = dislikeSelector.parents('.task');

@@ -10,6 +10,7 @@ use frontend\assets\CommentLikeAssset;
 use frontend\assets\CommentReplyAsset;
 use frontend\assets\TaskLikeAsset;
 use yii\widgets\LinkPager;
+use common\models\entities\TaskFileEntity;
 
 CommentLikeAssset::register($this);
 TaskLikeAsset::register($this);
@@ -45,39 +46,53 @@ $counter = 1; //счетчик для номера комментария
 
                 <div class="footer-comment">
                     <span class="vote-up" title="Нравится">
-                        <i class="glyphicon glyphicon-thumbs-up"><?= $task->getAmountLikes() ?></i>
+                        <i class="glyphicon glyphicon-thumbs-up" data-user-guest="<?= Yii::$app->user->isGuest ?>"><?= $task->getAmountLikes() ?></i>
                     </span>
                     <span class="vote-down" title="Не нравится">
-                        <i class="glyphicon glyphicon-thumbs-down"><?= $task->getAmountDislikes() ?></i>
+                        <i class="glyphicon glyphicon-thumbs-down" data-user-guest="<?= Yii::$app->user->isGuest ?>"><?= $task->getAmountDislikes() ?></i>
                     </span>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-8">
-                    <div class="task-images-block">
-                        <?php foreach ($task->getImagesToTask() as $image) : ?>
+                    <div class="task-files-block">
 
-                            <div>
+                        <?php if(!empty($task->getFiles())): ?>
+                            <h4>Файлы</h4>
+                        <?php endif; ?>
+
+                        <?php
+                        /**
+                         * @var TaskFileEntity $image
+                         */
+                        foreach ($task->getImagesToTask() as $image) :
+                            ?>
+
+                            <div class="file">
                                 <?php
-                                    $img = Html::img($image->getWebAlias());
-                                    echo Html::a($img, ['task/download', 'id' => $image->getId()], ['target' => '_blank']);
+                                $img = Html::img($image->getWebAlias(), ['class' => 'file-view']);
+                                echo Html::a($img, ['task-file/download', 'id' => $image->getId()], ['target' => '_blank']);
                                 ?>
                             </div>
 
                         <?php endforeach; ?>
-                    </div>
 
-                    <div class="task-files-block">
+                        <?php
+                        /**
+                         * @var TaskFileEntity $file
+                         */
+                        foreach ($task->getFilesToTask() as $file) :
+                            ?>
 
-                        <?php foreach ($task->getFilesToTask() as $file) : ?>
-
-                            <div>
-                                <?= Html::a($file->getOriginalName(), ['task/download', 'id' => $file->getId()], ['target' => '_blank']) ?>
+                            <div class="file">
+                                <?php
+                                $fileStubImg = Html::img($file->getFileStub(), ['class' => 'file-view']);
+                                echo Html::a($fileStubImg, ['task-file/download', 'id' => $file->getId()], ['target' => '_blank', 'title' => $file->getOriginalName()]);
+                                ?>
                             </div>
 
                         <?php endforeach; ?>
-
                     </div>
                 </div>
             </div>
@@ -89,16 +104,7 @@ $counter = 1; //счетчик для номера комментария
                 <tr>
                     <td>Проект</td>
                     <td>
-                        <?php
-                        if(Yii::$app->user->isGuest)
-                        {
-                            echo Html::a($task->getProject()->getName(), ['site/login']);
-                        }
-                        else
-                        {
-                            echo Html::a($task->getProject()->getName(), ['project/view', 'id' => $task->getProject()->getId()]);
-                        }
-                        ?>
+                        <?= Html::a($task->getProject()->getName(), ['project/view', 'id' => $task->getProject()->getId()]); ?>
                     </td>
                 </tr>
                 <tr>
@@ -261,15 +267,16 @@ $counter = 1; //счетчик для номера комментария
                                 <div class="footer-comment">
                                     <div class="footer-comment-left">
                                         <span class="comment-date"><?= $comment->getDate() ?></span>
-                                        <a href="#write-comment" class="comment-reply">Ответить</a>
+                                        <?php if(!Yii::$app->user->isGuest): ?>
+                                            <a href="#write-comment" class="comment-reply">Ответить</a>
+                                        <?php endif; ?>
                                     </div>
-
                                     <div class="footer-comment-right">
                                         <span class="vote-up" title="Нравится">
-                                            <i class="glyphicon glyphicon-thumbs-up"><?= $comment->getLikesAmount() ?></i>
+                                            <i class="glyphicon glyphicon-thumbs-up" data-user-guest="<?= Yii::$app->user->isGuest ?>"><?= $comment->getLikesAmount() ?></i>
                                         </span>
                                         <span class="vote-down" title="Нравится">
-                                            <i class="glyphicon glyphicon-thumbs-down"><?= $comment->getDislikesAmount() ?></i>
+                                            <i class="glyphicon glyphicon-thumbs-down" data-user-guest="<?= Yii::$app->user->isGuest ?>"><?= $comment->getDislikesAmount() ?></i>
                                         </span>
                                     </div>
                                 </div>

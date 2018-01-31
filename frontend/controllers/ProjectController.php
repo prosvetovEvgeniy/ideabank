@@ -15,7 +15,7 @@ class ProjectController extends Controller
 {
     public function actionIndex()
     {
-        $participants = ParticipantRepository::instance()->getParticipantsInProjects(Yii::$app->user->identity->getUser());
+        $participants = ParticipantRepository::instance()->getRelationToProjects();
 
         return $this->render('index', ['participants' => $participants]);
     }
@@ -40,7 +40,7 @@ class ProjectController extends Controller
             'condition' => [
                 'and',
                 ['deleted' => false],
-                ['like', 'lower(name)', strtolower($projectName)]
+                ['like', 'lower(name)', mb_strtolower($projectName)]
             ],
             'repositoryInstance' => ProjectRepository::instance(),
             'pagination' => [
