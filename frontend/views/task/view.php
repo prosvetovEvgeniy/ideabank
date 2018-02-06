@@ -6,20 +6,20 @@ use common\components\dataproviders\EntityDataProvider;
 use common\models\entities\CommentEntity;
 use yii\widgets\ActiveForm;
 use frontend\models\comment\CommentModel;
-use frontend\assets\CommentLikeAssset;
-use frontend\assets\CommentReplyAsset;
-use frontend\assets\TaskLikeAsset;
+use frontend\assets\CommentAsset;
+use frontend\assets\TaskAsset;
 use yii\widgets\LinkPager;
 use common\models\entities\TaskFileEntity;
+use common\models\entities\ParticipantEntity;
 
-CommentLikeAssset::register($this);
-TaskLikeAsset::register($this);
-CommentReplyAsset::register($this);
+TaskAsset::register($this);
+CommentAsset::register($this);
 
 /**
  * @var TaskEntity $task
  * @var EntityDataProvider $dataProvider
  * @var CommentModel $model
+ * @var boolean $isManager
  */
 
 $comments = $dataProvider->getModels();
@@ -245,23 +245,35 @@ $counter = 1; //счетчик для номера комментария
                                             <?php endif; ?>
                                         <?php endif; ?>
                                     </h5>
-                                    <p class="comment-number"><?php echo '#' . ($counter + $increment); $counter++; ?></p>
+                                    <p class="comment-number">
+                                        <?php echo '#' . ($counter + $increment); $counter++; ?>
+                                        <?php if($isManager): ?>
+                                            <i class="comment-edit glyphicon glyphicon-pencil" title="Редактировать"></i>
+                                        <?php endif; ?>
+                                    </p>
                                 </div>
 
-                                <div class="comment-content">
-                                    <?php if($comment->getParentId() !== null): ?>
+                                <?php if($comment->getParentId() !== null): ?>
 
-                                        <?php $parent = $comment->getParent(); ?>
+                                    <?php $parent = $comment->getParent(); ?>
 
-                                        <div class="comment-parent">
-                                            <div class="comment-parent-username">
-                                                <?= Html::a($parent->getUser()->getUsername(), ['/profile/view', 'id' => $parent->getUser()->getId()]) ?>
-                                            </div>
-                                            <div class="comment-parent-content">>> <?= $parent->getContent() ?> </div>
+                                    <div class="comment-parent">
+                                        <div class="comment-parent-username">
+                                            <?= Html::a($parent->getUser()->getUsername(), ['/profile/view', 'id' => $parent->getUser()->getId()]) ?>
                                         </div>
-                                    <?php endif; ?>
-                                    <p><?= $comment->getContent(); ?></p>
+                                        <div class="comment-parent-content"> <?= $parent->getContent() ?> </div>
+                                    </div>
+                                <?php endif; ?>
+                                <div class="comment-content" data-comment-id="<?= $comment->getId() ?>">
+                                    <?= $comment->getContent(); ?>
                                 </div>
+
+                                <?php if($isManager): ?>
+                                <div class="btn-edit-group">
+                                    <div class="edit-comment btn btn-primary btn-sm">Изменить</div>
+                                    <div class="cancel-edit-comment btn btn-primary btn-sm">Отмена</div>
+                                </div>
+                                <?php endif; ?>
 
 
                                 <div class="footer-comment">

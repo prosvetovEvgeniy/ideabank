@@ -18,7 +18,6 @@ class NoticeController extends Controller
         $dataProvider = new EntityDataProvider([
             'condition' => [
                 'recipient_id' => Yii::$app->user->identity->getUser()->getId(),
-                'viewed' => false
             ],
             'repositoryInstance' => NoticeRepository::instance(),
             'orderBy' => 'created_at DESC, viewed'

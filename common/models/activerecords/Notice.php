@@ -15,7 +15,6 @@ use yii\db\ActiveRecord;
  * @property string  $content
  * @property string  $link
  * @property integer $created_at
- * @property boolean $viewed
  *
  * @property Users $recipient
  * @property Users $sender
@@ -57,7 +56,6 @@ class Notice extends \yii\db\ActiveRecord
             [['recipient_id', 'content','link'], 'required'],
             [['recipient_id','created_at'], 'integer'],
             [['content','link'], 'string'],
-            [['viewed'], 'boolean'],
             [['sender_id'], 'integer', 'skipOnEmpty' => true],
             [['sender_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['recipient_id' => 'id']],
             [['recipient_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['recipient_id' => 'id']],

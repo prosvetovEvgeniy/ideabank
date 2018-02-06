@@ -18,8 +18,8 @@ class m171114_051233_create_notice_table extends Migration
             'sender_id' => $this->integer()->defaultValue(null),
             'content' => $this->text()->notNull(),
             'link' => $this->text()->notNull(),
+            'task_id' => $this->integer()->defaultValue(null),
             'created_at' => $this->integer(),
-            'viewed' => $this->boolean()->defaultValue(false)
         ]);
 
         $this->addForeignKey('notice_recipient_id_fk','notice','recipient_id', 'users','id');

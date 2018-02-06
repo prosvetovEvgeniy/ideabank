@@ -16,7 +16,6 @@ use common\models\repositories\UserRepository;
  * @property string $content
  * @property string $link
  * @property int $createdAt
- * @property bool $viewed
  *
  * @property UserEntity $sender;
  * @property UserEntity $recipient
@@ -31,7 +30,6 @@ class NoticeEntity implements IEntity
     protected $content;
     protected $link;
     protected $createdAt;
-    protected $viewed;
 
     //кеш связанных сущностей
     protected $sender;
@@ -98,11 +96,6 @@ class NoticeEntity implements IEntity
      * @return int | null
      */
     public function getCreatedAt() { return $this->createdAt; }
-
-    /**
-     * @return bool | null
-     */
-    public function getViewed() { return $this->viewed; }
 
 
     // #################### SECTION OF SETTERS ######################

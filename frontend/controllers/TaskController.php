@@ -4,11 +4,13 @@ namespace frontend\controllers;
 
 
 use common\components\dataproviders\EntityDataProvider;
+use common\models\entities\ParticipantEntity;
 use common\models\repositories\CommentViewRepository;
 use common\models\repositories\ParticipantRepository;
 use common\models\repositories\ProjectRepository;
 use common\models\repositories\TaskRepository;
 use common\models\searchmodels\task\TaskEntitySearch;
+use frontend\models\comment\CommentEditModel;
 use frontend\models\comment\CommentModel;
 use frontend\models\task\CreateTaskForm;
 use frontend\models\task\EditTaskForm;
@@ -71,13 +73,13 @@ class TaskController extends Controller
         return $this->render('view',[
             'task'         => $task,
             'dataProvider' => $dataProvider,
-            'model'        => $model
+            'model'        => $model,
+            'isManager'    => Yii::$app->user->is(ParticipantEntity::ROLE_MANAGER, $task->getProjectId())
         ]);
     }
 
     public function actionCreate()
     {
-
         $projects = ProjectRepository::instance()->getProjectsForUser();
 
         $model = new CreateTaskForm();
@@ -124,5 +126,15 @@ class TaskController extends Controller
             'model' => $model,
             'task'  => $task
         ]);
+    }
+
+    public function actionEditComment()
+    {
+        $model = new CommentEditModel();
+
+        if(!$model->load(Yii::$app->request->post()) || !$model->edit())
+        {
+            throw new BadRequestHttpException();
+        }
     }
 }

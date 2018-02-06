@@ -5,9 +5,9 @@ namespace common\models\repositories;
 use common\components\helpers\NoticeHelper;
 use common\models\activerecords\Notice;
 use common\models\builders\NoticeEntityBuilder;
+use common\models\entities\CommentEntity;
 use common\models\entities\NoticeEntity;
 use common\models\entities\TaskEntity;
-use common\models\entities\UserEntity;
 use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
@@ -30,6 +30,7 @@ class NoticeRepository implements IRepository
 
     // #################### STANDARD METHODS ######################
 
+
     /**
      * Возвращает экземпляр класса
      *
@@ -50,7 +51,7 @@ class NoticeRepository implements IRepository
     {
         $model = Notice::findOne($condition);
 
-        if(!$model || $model->viewed)
+        if(!$model)
         {
             return null;
         }
@@ -129,11 +130,12 @@ class NoticeRepository implements IRepository
     }
 
     /**
-     * Помечает сущность как удаленную в БД
-     *
      * @param NoticeEntity $notice
      * @return NoticeEntity
      * @throws Exception
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function delete(NoticeEntity $notice)
     {
@@ -144,14 +146,7 @@ class NoticeRepository implements IRepository
             throw new Exception('Notice with id = ' . $notice->getId() . ' does not exists');
         }
 
-        if($model->viewed)
-        {
-            throw new Exception('Notice with id = ' . $notice->getId() . ' already viewed');
-        }
-
-        $model->viewed = true;
-
-        if(!$model->save())
+        if(!$model->delete())
         {
             Yii::error($model->errors);
             throw new Exception('Cannot delete notice with id = ' . $notice->getId());
@@ -185,6 +180,23 @@ class NoticeRepository implements IRepository
         foreach ($noticeHelper->getNoticedUsers() as $noticedUser)
         {
             $notice = new NoticeEntity($noticedUser->getId(), $task->getContent(), $link, $task->getAuthorId());
+
+            $this->add($notice);
+        }
+    }
+
+    /**
+     * @param CommentEntity $comment
+     * @param string $link
+     * @throws Exception
+     */
+    public function saveNoticesForComment(CommentEntity $comment, string $link)
+    {
+        $noticeHelper = new NoticeHelper($comment->getContent());
+
+        foreach ($noticeHelper->getNoticedUsers() as $noticedUser)
+        {
+            $notice = new NoticeEntity($noticedUser->getId(), $comment->getContent(), $link, $comment->getSenderId());
 
             $this->add($notice);
         }
