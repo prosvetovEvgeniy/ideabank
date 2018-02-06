@@ -8,8 +8,6 @@ use common\models\repositories\CommentViewRepository;
 use common\models\repositories\ParticipantRepository;
 use common\models\repositories\ProjectRepository;
 use common\models\repositories\TaskRepository;
-use common\models\searchmodels\task\searchstrategy\ManagerTaskSearchStrategy;
-use common\models\searchmodels\task\searchstrategy\UserTaskSearchStrategy;
 use common\models\searchmodels\task\TaskEntitySearch;
 use frontend\models\comment\CommentModel;
 use frontend\models\task\CreateTaskForm;
@@ -24,7 +22,7 @@ class TaskController extends Controller
 {
     public function actionIndex()
     {
-        $searchModel = new TaskEntitySearch(new UserTaskSearchStrategy());
+        $searchModel = new TaskEntitySearch();
 
         if(!$searchModel->load(Yii::$app->request->queryParams) || !$searchModel->validate())
         {
@@ -33,7 +31,7 @@ class TaskController extends Controller
 
         $dataProvider = $searchModel->search();
 
-        $participants = ParticipantRepository::instance()->getParticipantsInProjects();
+        $participants = ParticipantRepository::instance()->getRelationToProjects();
 
         return $this->render('index', [
             'dataProvider'   => $dataProvider,
@@ -79,6 +77,7 @@ class TaskController extends Controller
 
     public function actionCreate()
     {
+
         $projects = ProjectRepository::instance()->getProjectsForUser();
 
         $model = new CreateTaskForm();

@@ -5,12 +5,14 @@ use yii\helpers\Html;
 use common\models\searchmodels\task\TaskEntitySearch;
 use common\models\entities\TaskEntity;
 use yii\grid\GridView;
+use common\models\entities\ProjectEntity;
+use common\models\entities\ParticipantEntity;
 
 /**
+ * @var TaskEntitySearch $searchModel
  * @var EntityDataProvider $dataProvider
- * @var \common\models\searchmodels\task\TaskEntitySearch $searchModel
- * @var \common\models\entities\ProjectEntity $currentProject
- * @var \common\models\entities\ParticipantEntity[] $participants
+ * @var ProjectEntity $currentProject
+ * @var ParticipantEntity[] $participants
  */
 
 $this->title = 'Предложения';
@@ -24,7 +26,7 @@ $this->title = 'Предложения';
 
                 <?php $project = $participant->getProject(); ?>
 
-                <?= Html::a($project->getName(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_ALL], ['class' => 'btn btn-default']) ?>
+                <?= Html::a($project->getName(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_ALL, 'projectId' => $project->getId()], ['class' => 'btn btn-default']) ?>
 
             <?php endforeach; ?>
         </div>
@@ -49,7 +51,7 @@ $this->title = 'Предложения';
                     'attribute' => 'title',
                     'header' => 'Заголовок',
                     'value' => function(TaskEntity $task) {
-                        return Html::a($task->getTitle(), ['task/view', 'id' => $task->getId()]);
+                        return Html::a($task->getTitle(), ['task/view', 'id' => $task->getId(), 'projectId' => $task->getProjectId()]);
                     },
                     'format' => 'html'
                 ],

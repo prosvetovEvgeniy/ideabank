@@ -4,12 +4,13 @@ namespace common\models\searchmodels\task;
 
 
 use common\components\dataproviders\EntityDataProvider;
-use common\models\activerecords\Task;
-use common\models\entities\TaskEntity;
+use common\models\entities\ParticipantEntity;
 use common\models\interfaces\ISearchEntityModel;
 use common\models\repositories\ProjectRepository;
 use common\models\repositories\TaskRepository;
 use common\models\searchmodels\task\searchstrategy\ITaskSearchStrategy;
+use common\models\searchmodels\task\searchstrategy\ManagerTaskSearchStrategy;
+use common\models\searchmodels\task\searchstrategy\UserTaskSearchStrategy;
 use yii\base\Model;
 use yii\db\Exception;
 use yii\web\NotFoundHttpException;
@@ -80,11 +81,18 @@ class TaskEntitySearch extends Model implements ISearchEntityModel
         ];
     }
 
-    public function __construct(ITaskSearchStrategy $searchStrategy, array $config = [])
+    public function afterValidate()
     {
-        parent::__construct($config);
+        parent::afterValidate();
 
-        $this->searchStrategyBehavior = $searchStrategy;
+        if (Yii::$app->user->is(ParticipantEntity::ROLE_MANAGER, $this->projectId))
+        {
+            $this->searchStrategyBehavior = new ManagerTaskSearchStrategy();
+        }
+        elseif (Yii::$app->user->is(ParticipantEntity::ROLE_USER, $this->projectId))
+        {
+            $this->searchStrategyBehavior = new UserTaskSearchStrategy();
+        }
     }
 
     /**

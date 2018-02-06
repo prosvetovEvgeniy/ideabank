@@ -1,6 +1,6 @@
 <?php
 
-use common\models\searchmodels\TaskEntitySearch;
+use common\models\searchmodels\task\TaskEntitySearch;
 use yii\helpers\Html;
 
 /**

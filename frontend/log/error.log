@@ -2890,3 +2890,32 @@ PHP message: PHP   7. class_exists(*uninitialized*) /home/evgeniy/ideabank/vendo
 PHP message: PHP   8. spl_autoload_call(*uninitialized*) /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Module.php:638
 PHP message: PHP   9. yii\BaseYii::autoload($className = *uninitialized*) /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/Module.php:638" while reading response header from upstream, client: 127.0.0.1, server: ideabank.local, request: "GET /profile/change-own-data HTTP/1.1", upstream: "fastcgi://unix:/var/run/php/php7.1-fpm.sock:", host: "ideabank.local", referrer: "http://ideabank.local/profile/my-tasks"
 2018/01/29 14:37:05 [error] 1279#1279: *514 client intended to send too large body: 108807071 bytes, client: 127.0.0.1, server: ideabank.local, request: "POST /task/create HTTP/1.1", host: "ideabank.local", referrer: "http://ideabank.local/task/create"
+2018/02/05 13:20:16 [error] 1292#1292: *486 FastCGI sent in stderr: "PHP message: An Error occurred while handling another error:
+Error: Call to undefined method common\components\MyUser::getIdentity() in /home/evgeniy/ideabank/vendor/yiisoft/yii2/log/Target.php:308
+Stack trace:
+#0 /home/evgeniy/ideabank/vendor/yiisoft/yii2/log/Target.php(280): yii\log\Target->getMessagePrefix(Array)
+#1 [internal function]: yii\log\Target->formatMessage(Array)
+#2 /home/evgeniy/ideabank/vendor/yiisoft/yii2/log/FileTarget.php(106): array_map(Array, Array)
+#3 /home/evgeniy/ideabank/vendor/yiisoft/yii2/log/Target.php(130): yii\log\FileTarget->export()
+#4 /home/evgeniy/ideabank/vendor/yiisoft/yii2/log/Dispatcher.php(189): yii\log\Target->collect(Array, true)
+#5 /home/evgeniy/ideabank/vendor/yiisoft/yii2/log/Logger.php(177): yii\log\Dispatcher->dispatch(Array, true)
+#6 /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/ErrorHandler.php(113): yii\log\Logger->flush(true)
+#7 [internal function]: yii\base\ErrorHandler->handleException(Object(yii\base\ErrorException))
+#8 {main}
+Previous exception:
+yii\b...
+PHP message: PHP Fatal error:  Uncaught Error: Call to undefined method common\components\MyUser::getIdentity() in /home/evgeniy/ideabank/vendor/yiisoft/yii2/log/Target.php:308
+Stack trace:
+#0 /home/evgeniy/ideabank/vendor/yiisoft/yii2/log/Target.php(280): yii\log\Target->getMessagePrefix(Array)
+#1 [internal function]: yii\log\Target->formatMessage(Array)
+#2 /home/evgeniy/ideabank/vendor/yiisoft/yii2/log/FileTarget.php(106): array_map(Array, Array)
+#3 /home/evgeniy/ideabank/vendor/yiisoft/yii2/log/Target.php(130): yii\log\FileTarget->export()
+#4 /home/evgeniy/ideabank/vendor/yiisoft/yii2/log/Dispatcher.php(189): yii\log\Target->collect(Array, true)
+#5 /home/evgeniy/ideabank/vendor/yiisoft/yii2/log/Logger.php(177): yii\log\Dispatcher->dispatch(Array, true)
+#6 [internal function]: yii\log\Logger->flush(true)
+#7 {main}
+  thrown in /home/evgeniy/ideabank/vendor/yiisoft/yii2/log/Target.php on line 308
+PHP message: PHP Stack trace:
+PHP message: P
+2018/02/05 13:20:16 [error] 1292#1292: *486 FastCGI sent in stderr: "andler->handleException($exception = *uninitialized*) /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/ErrorHandler.php:0
+PHP message: PHP   2. yii\web\ErrorHandler->handleFallbackExceptionMessage($exception = *uninitialized*, $previousException = *uninitialized*) /home/evgeniy/ideabank/vendor/yiisoft/yii2/base/ErrorHandler.php:124" while reading upstream, client: 127.0.0.1, server: ideabank.local, request: "GET /task/index?TaskEntitySearch%5BprojectId%5D=2&TaskEntitySearch%5Bstatus%5D=all&projectId=2 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php/php7.1-fpm.sock:", host: "ideabank.local", referrer: "http://ideabank.local/project/index"

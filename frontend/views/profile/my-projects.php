@@ -71,10 +71,19 @@ $this->title = 'Мои проекты';
                     [
                         'header' => '',
                         'value' => function(ParticipantEntity $participant){
-                            return Html::a('Покинуть', '/profile/delete-participant', [
+                            if($participant->isDirector())
+                            {
+                                return Html::a('Закрыть', '#', [
+                                    'data'  => ['participant-id' => $participant->getId()]
+                                ]);
+                            }
+                            else
+                            {
+                                return Html::a('Покинуть', '/profile/delete-participant', [
                                     'class' => 'leave-project',
                                     'data'  => ['participant-id' => $participant->getId()]
-                            ]);
+                                ]);
+                            }
                         },
                         'format' => 'raw',
                     ],

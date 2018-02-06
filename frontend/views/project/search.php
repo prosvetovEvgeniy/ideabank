@@ -7,7 +7,7 @@ use common\models\entities\ProjectEntity;
 use yii\helpers\Html;
 use common\models\entities\ParticipantEntity;
 use common\models\entities\UserEntity;
-use common\models\searchmodels\TaskEntitySearch;
+use common\models\searchmodels\task\TaskEntitySearch;
 use frontend\assets\ProjectJoinAsset;
 
 

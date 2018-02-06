@@ -218,6 +218,12 @@ class ParticipantRepository implements IRepository
         return $this->findAll($condition);
     }
 
+    /**
+     * Возвращает пользователя с любым отношением
+     * к проету(участник, на рассмотрении)
+     *
+     * @return ParticipantEntity[]
+     */
     public function getRelationToProjects()
     {
         $condition = $this->getConditionOnRelationToProject();
@@ -247,7 +253,7 @@ class ParticipantRepository implements IRepository
 
     /**
      * Возвращает условия для любого отношения
-     * к проету(участник, забанен, на рассмотрении)
+     * к проету(участник, на рассмотрении)
      *
      * @return array
      */
@@ -260,6 +266,7 @@ class ParticipantRepository implements IRepository
             ['user_id' => $user->getId()],
             ['not', ['company_id' => null]],
             ['not', ['project_id' => null]],
+            ['blocked' => false],
             ['deleted' => false]
         ];
     }
@@ -300,8 +307,17 @@ class ParticipantRepository implements IRepository
         ]);
     }
 
-    public function checkOnParticipantInProject()
+    /**
+     * @return ParticipantEntity
+     */
+    public function getParticipantStub()
     {
+        $userId = Yii::$app->user->identity->getUserId();
 
+        return $this->findOne([
+            'user_id'    => $userId,
+            'project_id' => null,
+            'company_id' => null
+        ]);
     }
 }

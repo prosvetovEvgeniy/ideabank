@@ -394,4 +394,19 @@ class ParticipantEntity implements IEntity, IdentityInterface
     {
         return ($this->approvedAt) ? date(self::DATE_FORMAT, $this->approvedAt) : self::DATE_ERROR_MESSAGE;
     }
+
+    /**
+     * @return bool
+     */
+    public function isDirector()
+    {
+        $role = $this->getRoleName();
+
+        if($role === self::ROLE_PROJECT_DIRECTOR || $role === self::ROLE_COMPANY_DIRECTOR)
+        {
+            return true;
+        }
+
+        return false;
+    }
 }

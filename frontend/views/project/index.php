@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use common\models\searchmodels\task\TaskEntitySearch;
 use common\components\widgets\RoleViewWidget;
+use common\models\entities\ProjectEntity;
 
 /**
  * @var \common\models\entities\ParticipantEntity[] $participants
@@ -28,16 +29,17 @@ $this->title = 'Проекты';
         <div class="col-lg-3">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <?= Html::a(HTML::encode($project->getName()), ['project/view', 'id' => $project->getId()], ['target' => '_blank']) ?>
+                    <?= Html::a(HTML::encode($project->getName()), ['project/view', 'id' => $project->getId()]) ?>
                     <?= RoleViewWidget::widget(['participant' => $participant]) ?>
                 </div>
-
+                <?php if($participant->getApproved() || $project->getDefaultVisibilityArea() === ProjectEntity::VISIBILITY_AREA_ALL): ?>
                 <div class="panel-body">
-                    <p><?= Html::a('Количество задач : ' . $project->getAmountTasks() , ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_ALL]) ?></p>
-                    <p><?= Html::a('Завершенные : ' . $project->getAmountCompletedTasks(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_COMPLETED]) ?></p>
-                    <p><?= Html::a('Не завершенные : ' . $project->getAmountNotCompletedTasks(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_NOT_COMPLETED]) ?></p>
-                    <p><?= Html::a('Мои задачи : ' . $project->getAmountTasksByAuthor($participant->getUser()), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(),'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_OWN]) ?></p>
+                    <p><?= Html::a('Количество задач : ' . $project->getAmountTasks() , ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_ALL, 'projectId' => $project->getId()]) ?></p>
+                    <p><?= Html::a('Завершенные : ' . $project->getAmountCompletedTasks(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_COMPLETED, 'projectId' => $project->getId()]) ?></p>
+                    <p><?= Html::a('Не завершенные : ' . $project->getAmountNotCompletedTasks(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_NOT_COMPLETED, 'projectId' => $project->getId()]) ?></p>
+                    <p><?= Html::a('Мои задачи : ' . $project->getAmountTasksByAuthor($participant->getUser()), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(),'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_OWN, 'projectId' => $project->getId()]) ?></p>
                 </div>
+                <?php endif; ?>
             </div>
         </div>
 

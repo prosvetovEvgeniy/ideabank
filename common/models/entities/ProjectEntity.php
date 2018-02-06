@@ -30,6 +30,10 @@ use yii\helpers\Html;
  */
 class ProjectEntity implements IEntity
 {
+    public const VISIBILITY_AREA_ALL = 0;
+    public const VISIBILITY_AREA_REGISTERED = 1;
+    public const VISIBILITY_AREA_PRIVATE = 2;
+
     private const DATE_FORMAT = 'Y-m-d';
 
     protected $id;
