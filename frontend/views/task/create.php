@@ -4,7 +4,7 @@ use frontend\models\task\CreateTaskForm;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use common\models\entities\ProjectEntity;
-use yii\helpers\ArrayHelper;
+use common\components\helpers\ProjectHelper;
 
 /**
  * @var CreateTaskForm  $model
@@ -24,17 +24,13 @@ $this->title = 'Создать задачу'
     $form = ActiveForm::begin([
         'id' => 'create-task-form'
     ]);
-
-    $projectItems = ArrayHelper::map($projects,
-        function($project){ return $project->getId(); },
-        function($project) { return $project->getName();});
     ?>
 
     <?= $form->field($model, 'title')->textInput() ?>
 
     <?= $form->field($model, 'content')->textarea(['rows' => 10]) ?>
 
-    <?= $form->field($model, 'projectId')->dropDownList($projectItems) ?>
+    <?= $form->field($model, 'projectId')->dropDownList(ProjectHelper::getProjectItems($projects)) ?>
 
     <?= $form->field($model, 'files[]')->fileInput(['multiple' => true, 'accept' => '*']) ?>
 

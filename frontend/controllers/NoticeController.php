@@ -20,13 +20,17 @@ class NoticeController extends Controller
                 'recipient_id' => Yii::$app->user->identity->getUser()->getId(),
             ],
             'repositoryInstance' => NoticeRepository::instance(),
-            'orderBy' => 'created_at DESC, viewed'
+            'orderBy' => 'created_at DESC'
         ]);
 
         return $this->render('index',[
             'dataProvider' => $dataProvider
         ]);
     }
+
+
+    //###################### AJAX ACTIONS ######################
+
 
     public function actionDelete()
     {

@@ -43,12 +43,11 @@ class NoticeEntity implements IEntity
      * @param int|null $senderId
      * @param int|null $id
      * @param int|null $createdAt
-     * @param bool|null $viewed
      * @param UserEntity|null $sender
      * @param UserEntity|null $recipient
      */
     public function __construct(int $recipientId, string $content,string $link, int $senderId = null,
-                                int $id = null, int $createdAt = null, bool $viewed = null,
+                                int $id = null, int $createdAt = null,
                                 UserEntity $sender = null, UserEntity $recipient = null)
     {
         $this->id = $id;
@@ -57,7 +56,6 @@ class NoticeEntity implements IEntity
         $this->content = $content;
         $this->link = $link;
         $this->createdAt = $createdAt;
-        $this->viewed = $viewed;
 
         $this->sender = $sender;
         $this->recipient = $recipient;

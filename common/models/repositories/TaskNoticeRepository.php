@@ -5,11 +5,13 @@ namespace common\models\repositories;
 
 use common\models\activerecords\TaskNotice;
 use common\models\builders\TaskNoticeBuilder;
+use common\models\interfaces\INotice;
 use common\models\interfaces\IRepository;
 use common\models\entities\TaskNoticeEntity;
 use common\models\interfaces\IEntity;
 use Yii;
 use yii\db\Exception;
+use yii\helpers\ArrayHelper;
 
 class TaskNoticeRepository implements IRepository
 {
@@ -30,7 +32,7 @@ class TaskNoticeRepository implements IRepository
 
     /**
      * @param array $condition
-     * @return TaskNoticeEntity|IEntity|null
+     * @return TaskNoticeEntity|IEntity|INotice|null
      */
     public function findOne(array $condition)
     {
@@ -49,7 +51,7 @@ class TaskNoticeRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
-     * @return TaskNoticeEntity[]|IEntity[]
+     * @return TaskNoticeEntity[]|IEntity[]|INotice[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
@@ -111,5 +113,20 @@ class TaskNoticeRepository implements IRepository
         }
 
         return $this->builderBehavior->buildEntity($model);
+    }
+
+    /**
+     * @param TaskNoticeEntity[] $taskNotices
+     */
+    public function deleteAll(array $taskNotices)
+    {
+        $ids = ArrayHelper::getColumn($taskNotices, function($taskNotice) {
+           /**
+            * @var TaskNoticeEntity $taskNotice
+            */
+           return $taskNotice->getId();
+        });
+
+        TaskNotice::deleteAll(['in', 'id', $ids]);
     }
 }

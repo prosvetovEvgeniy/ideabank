@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 
 use common\components\dataproviders\EntityDataProvider;
+use common\components\helpers\LinkHelper;
 use common\models\entities\ParticipantEntity;
 use common\models\repositories\CommentViewRepository;
 use common\models\repositories\ParticipantRepository;
@@ -11,7 +12,7 @@ use common\models\repositories\ProjectRepository;
 use common\models\repositories\TaskRepository;
 use common\models\searchmodels\task\TaskEntitySearch;
 use frontend\models\comment\CommentEditModel;
-use frontend\models\comment\CommentModel;
+use frontend\models\comment\CommentCreateForm;
 use frontend\models\task\CreateTaskForm;
 use frontend\models\task\EditTaskForm;
 use yii\web\BadRequestHttpException;
@@ -62,12 +63,12 @@ class TaskController extends Controller
             ]
         ]);
 
-        $model = new CommentModel();
+        $model = new CommentCreateForm();
         $model->taskId = $task->getId();
 
         if($model->load(Yii::$app->request->post()) && $model->save())
         {
-            $this->redirect($model->getLink());
+            return $this->redirect(LinkHelper::getLinkOnComment($model->getComment()));
         }
 
         return $this->render('view',[
@@ -80,10 +81,8 @@ class TaskController extends Controller
 
     public function actionCreate()
     {
-        $projects = ProjectRepository::instance()->getProjectsForUser();
-
         $model = new CreateTaskForm();
-        $model->authorId = Yii::$app->user->identity->getUser()->getId();
+        $model->authorId = Yii::$app->user->identity->getUserId();
 
         if($model->load(Yii::$app->request->post()))
         {
@@ -91,9 +90,11 @@ class TaskController extends Controller
 
             if($model->save())
             {
-                return $this->redirect($model->getLink());
+                return $this->redirect(LinkHelper::getLinkOnTask($model->getTask()));
             }
         }
+
+        $projects = ProjectRepository::instance()->getProjectsForUser();
 
         return $this->render('create', [
             'model'    => $model,

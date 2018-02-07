@@ -5,7 +5,7 @@ use yii\helpers\Html;
 use common\components\dataproviders\EntityDataProvider;
 use common\models\entities\CommentEntity;
 use yii\widgets\ActiveForm;
-use frontend\models\comment\CommentModel;
+use frontend\models\comment\CommentCreateForm;
 use frontend\assets\CommentAsset;
 use frontend\assets\TaskAsset;
 use yii\widgets\LinkPager;
@@ -18,7 +18,7 @@ CommentAsset::register($this);
 /**
  * @var TaskEntity $task
  * @var EntityDataProvider $dataProvider
- * @var CommentModel $model
+ * @var CommentCreateForm $model
  * @var boolean $isManager
  */
 

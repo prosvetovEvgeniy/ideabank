@@ -6,6 +6,7 @@ use yii\helpers\Html;
 use common\models\entities\TaskEntity;
 use common\models\entities\TaskFileEntity;
 use frontend\assets\TaskFileDeleteAsset;
+use common\components\helpers\ProjectHelper;
 
 
 /**
@@ -34,7 +35,7 @@ $this->title = 'Редактировать задачу';
 
 <?= $form->field($model, 'content')->textarea() ?>
 
-<?= $form->field($model, 'projectId')->dropDownList($model->getProjects()) ?>
+<?= $form->field($model, 'projectId')->dropDownList(ProjectHelper::getProjectItems()) ?>
 
 <div class="task-files-block">
 

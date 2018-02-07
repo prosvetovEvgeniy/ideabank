@@ -6,11 +6,15 @@ use common\components\helpers\NoticeHelper;
 use common\models\activerecords\Notice;
 use common\models\builders\NoticeEntityBuilder;
 use common\models\entities\CommentEntity;
+use common\models\entities\CommentNoticeEntity;
 use common\models\entities\NoticeEntity;
 use common\models\entities\TaskEntity;
+use common\models\entities\TaskNoticeEntity;
+use common\models\interfaces\INotice;
 use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class NoticeRepository
@@ -179,9 +183,17 @@ class NoticeRepository implements IRepository
 
         foreach ($noticeHelper->getNoticedUsers() as $noticedUser)
         {
-            $notice = new NoticeEntity($noticedUser->getId(), $task->getContent(), $link, $task->getAuthorId());
+            $notice = $this->add(new NoticeEntity(
+                $noticedUser->getId(),
+                $task->getContent(),
+                $link,
+                $task->getAuthorId()
+            ));
 
-            $this->add($notice);
+            TaskNoticeRepository::instance()->add(new TaskNoticeEntity(
+                $task->getId(),
+                $notice->getId()
+            ));
         }
     }
 
@@ -196,9 +208,32 @@ class NoticeRepository implements IRepository
 
         foreach ($noticeHelper->getNoticedUsers() as $noticedUser)
         {
-            $notice = new NoticeEntity($noticedUser->getId(), $comment->getContent(), $link, $comment->getSenderId());
+            $notice = $this->add(new NoticeEntity(
+                $noticedUser->getId(),
+                $comment->getContent(),
+                $link,
+                $comment->getSenderId()
+            ));
 
-            $this->add($notice);
+            CommentNoticeRepository::instance()->add(new CommentNoticeEntity(
+                $comment->getId(),
+                $notice->getId()
+            ));
         }
+    }
+
+    /**
+     * @param INotice[] $notices
+     */
+    public function deleteAll(array $notices)
+    {
+        $noticeIds = ArrayHelper::getColumn($notices, function($notice){
+           /**
+            * @var INotice $notice
+            */
+           return $notice->getNoticeId();
+        });
+
+        Notice::deleteAll(['in', 'id', $noticeIds]);
     }
 }

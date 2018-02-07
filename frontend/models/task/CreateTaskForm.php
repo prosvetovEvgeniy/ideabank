@@ -3,7 +3,9 @@
 namespace frontend\models\task;
 
 
+use common\components\facades\TaskFacade;
 use common\components\helpers\FileHelper;
+use common\components\helpers\LinkHelper;
 use common\components\helpers\NoticeHelper;
 use common\components\helpers\ParticipantHelper;
 use common\models\activerecords\Project;
@@ -32,7 +34,6 @@ use yii\web\UploadedFile;
  * @property UploadedFile[] $files
  *
  * @property TaskEntity $task
- * @property NoticeHelper $noticeHelper;
  */
 class CreateTaskForm extends Model
 {
@@ -44,8 +45,6 @@ class CreateTaskForm extends Model
 
     //сущность сохраненной задачи
     private $task;
-
-    private $noticeHelper;
 
     public function rules()
     {
@@ -96,45 +95,37 @@ class CreateTaskForm extends Model
             return false;
         }
 
-        $task = new TaskEntity(
-            $this->title,
-            $this->content,
-            $this->authorId,
-            $this->projectId,
-            TaskEntity::STATUS_ON_CONSIDERATION,
-            $project->getDefaultVisibilityArea()
-        );
-
         $transaction = Yii::$app->db->beginTransaction();
 
         try
         {
-            $this->task = TaskRepository::instance()->add($task);
-            TaskFileRepository::instance()->saveFiles($this->files, $this->task);
-            NoticeRepository::instance()->saveNoticesForTask($this->task, $this->getLink());
+            $this->task = TaskFacade::createTask(
+                new TaskEntity(
+                    $this->title,
+                    $this->content,
+                    $this->authorId,
+                    $this->projectId,
+                    TaskEntity::STATUS_ON_CONSIDERATION,
+                    $project->getDefaultVisibilityArea()
+                ),
+                $this->files
+            );
 
             $transaction->commit();
-
             return true;
         }
         catch (Exception $e)
         {
             $transaction->rollBack();
-
             return false;
         }
     }
 
     /**
-     * Возращает ссылку по которой будет находится созданная задача.
-     *
-     * @return string
+     * @return TaskEntity
      */
-    public function getLink()
+    public function getTask()
     {
-        return Yii::$app->urlManager->createAbsoluteUrl([
-            '/task/view',
-            'id' => $this->task->getId()
-        ]);
+        return $this->task;
     }
 }

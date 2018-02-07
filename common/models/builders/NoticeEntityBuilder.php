@@ -39,7 +39,7 @@ class NoticeEntityBuilder
         $sender = UserEntityBuilder::instance()->buildEntity($model->sender);
 
         return new NoticeEntity($model->recipient_id,$model->content ,$model->link, $model->sender_id,
-                                $model->id, $model->created_at, $model->viewed, $sender);
+                                $model->id, $model->created_at, $sender);
     }
 
     /**

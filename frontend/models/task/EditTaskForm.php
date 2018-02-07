@@ -3,13 +3,16 @@
 namespace frontend\models\task;
 
 
+use common\components\facades\TaskFacade;
 use common\components\helpers\FileHelper;
+use common\components\helpers\LinkHelper;
 use common\components\helpers\NoticeHelper;
 use common\models\entities\NoticeEntity;
 use common\models\entities\TaskEntity;
 use common\models\entities\UserEntity;
 use common\models\repositories\NoticeRepository;
 use common\models\repositories\TaskFileRepository;
+use common\models\repositories\TaskNoticeRepository;
 use common\models\repositories\TaskRepository;
 use yii\base\Model;
 use yii\db\Exception;
@@ -29,8 +32,7 @@ use common\models\repositories\ProjectRepository;
  * @property int            $projectId
  * @property UploadedFile[] $files
  *
- * @property TaskEntity     $task
- * @property NoticeHelper   $noticeHelper
+ * @property TaskEntity     $savedTask
  */
 class EditTaskForm extends Model
 {
@@ -41,8 +43,6 @@ class EditTaskForm extends Model
 
     //сущность изменяемой задачи
     private $task;
-
-    private $noticeHelper;
 
     /**
      * EditTaskForm constructor.
@@ -88,6 +88,11 @@ class EditTaskForm extends Model
         ];
     }
 
+    /**
+     * @return bool
+     * @throws Exception
+     * @throws \yii\base\Exception
+     */
     public function save()
     {
         if(!$this->validate())
@@ -103,51 +108,15 @@ class EditTaskForm extends Model
 
         try
         {
-            TaskRepository::instance()->update($this->task);
-            TaskFileRepository::instance()->saveFiles($this->files, $this->task);
-            NoticeRepository::instance()->saveNoticesForTask($this->task, $this->getLink());
+            TaskFacade::editTask($this->task, $this->files);
 
             $transaction->commit();
-
             return true;
         }
         catch (Exception $e)
         {
             $transaction->rollBack();
-
             return false;
         }
-    }
-
-    /**
-     * Возвращает проекты для определенного пользователя
-     *
-     * @return array
-     */
-    public function getProjects()
-    {
-        /**
-         * @var UserEntity $user
-         */
-        $user = Yii::$app->user->identity->getUser();
-
-        $projects = ProjectRepository::instance()->getProjectsForUser($user);
-
-        return ArrayHelper::map($projects,
-                                function($project){ return $project->getId(); },
-                                function($project) { return $project->getName();});
-    }
-
-    /**
-     * Возращает ссылку по которой будет находится созданная задача.
-     *
-     * @return string
-     */
-    public function getLink()
-    {
-        return Yii::$app->urlManager->createAbsoluteUrl([
-            '/task/view',
-            'id' => $this->task->getId()
-        ]);
     }
 }

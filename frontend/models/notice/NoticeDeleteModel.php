@@ -34,9 +34,12 @@ class NoticeDeleteModel extends Model
             return false;
         }
 
-        $notice = $this->getNotice();
+        $notice = NoticeRepository::instance()->findOne([
+            'id' => $this->id,
+            'recipient_id' => $this->recipientId
+        ]);
 
-        if($notice->getViewed() || !$notice)
+        if(!$notice)
         {
             return false;
         }
@@ -51,16 +54,5 @@ class NoticeDeleteModel extends Model
         {
             return false;
         }
-    }
-
-    /**
-     * @return NoticeEntity|null
-     */
-    private function getNotice()
-    {
-        return NoticeRepository::instance()->findOne([
-            'id' => $this->id,
-            'recipient_id' => $this->recipientId
-        ]);
     }
 }
