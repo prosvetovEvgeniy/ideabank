@@ -2,15 +2,8 @@
 namespace frontend\controllers;
 
 use common\components\dataproviders\EntityDataProvider;
-use common\models\activerecords\CommentNotice;
-use common\models\activerecords\TaskNotice;
-use common\models\entities\CommentNoticeEntity;
 use common\models\entities\TaskEntity;
-use common\models\entities\TaskNoticeEntity;
 use common\models\repositories\ActualTasksRepository;
-use common\models\repositories\CommentNoticeRepository;
-use common\models\repositories\CompanyRepository;
-use common\models\repositories\TaskNoticeRepository;
 use common\models\repositories\TaskRepository;
 use Yii;
 use yii\base\InvalidParamException;
