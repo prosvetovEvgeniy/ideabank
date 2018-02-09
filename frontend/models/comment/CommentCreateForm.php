@@ -89,28 +89,36 @@ class CommentCreateForm extends Model
             return false;
         }
 
+        $comment = new CommentEntity(
+            $this->taskId,
+            Yii::$app->user->identity->getUserId(),
+            $this->content,
+            $this->parentId
+        );
+
+        //если комментарий ссылается на удаленный или приватный
+        if($comment->getParentId())
+        {
+            $parentComment = CommentRepository::instance()->findOne(['id' => $comment->getParentId()]);
+
+            if(!$parentComment || $parentComment->getDeleted() || $parentComment->getPrivate())
+            {
+                return false;
+            }
+        }
+
         $transaction = Yii::$app->db->beginTransaction();
 
         try
         {
-            $this->comment = CommentFacade::createComment(
-                new CommentEntity(
-                    $this->taskId,
-                    Yii::$app->user->identity->getUserId(),
-                    $this->content,
-                    $this->parentId
-                )
-            );
-
+            $this->comment = CommentFacade::createComment($comment);
 
             $transaction->commit();
-
             return true;
         }
         catch (Exception $e)
         {
             $transaction->rollBack();
-
             return false;
         }
     }

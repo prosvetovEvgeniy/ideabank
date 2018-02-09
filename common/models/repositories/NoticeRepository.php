@@ -2,12 +2,14 @@
 
 namespace common\models\repositories;
 
+use common\components\helpers\LinkHelper;
 use common\components\helpers\NoticeHelper;
 use common\models\activerecords\Notice;
 use common\models\builders\NoticeEntityBuilder;
 use common\models\entities\CommentEntity;
 use common\models\entities\CommentNoticeEntity;
 use common\models\entities\NoticeEntity;
+use common\models\entities\ParticipantEntity;
 use common\models\entities\TaskEntity;
 use common\models\entities\TaskNoticeEntity;
 use common\models\interfaces\INotice;
@@ -199,10 +201,9 @@ class NoticeRepository implements IRepository
 
     /**
      * @param CommentEntity $comment
-     * @param string $link
      * @throws Exception
      */
-    public function saveNoticesForComment(CommentEntity $comment, string $link)
+    public function saveNoticesForComment(CommentEntity $comment)
     {
         $noticeHelper = new NoticeHelper($comment->getContent());
 
@@ -211,7 +212,7 @@ class NoticeRepository implements IRepository
             $notice = $this->add(new NoticeEntity(
                 $noticedUser->getId(),
                 $comment->getContent(),
-                $link,
+                LinkHelper::getLinkOnComment($comment, $noticedUser),
                 $comment->getSenderId()
             ));
 
@@ -219,6 +220,35 @@ class NoticeRepository implements IRepository
                 $comment->getId(),
                 $notice->getId()
             ));
+        }
+    }
+
+    /**
+     * @param CommentEntity $comment
+     * @throws Exception
+     */
+    public function saveNoticesForPrivateComment(CommentEntity $comment)
+    {
+        $noticeHelper = new NoticeHelper($comment->getContent());
+
+        foreach ($noticeHelper->getNoticedUsers() as $noticedUser)
+        {
+            $isManager = Yii::$app->user->is(ParticipantEntity::ROLE_MANAGER, $comment->getTask()->getProjectId(), $noticedUser->getId());
+
+            if($comment->getSenderId() === $noticedUser->getId() || $isManager)
+            {
+                $notice = $this->add(new NoticeEntity(
+                    $noticedUser->getId(),
+                    $comment->getContent(),
+                    LinkHelper::getLinkOnComment($comment, $noticedUser),
+                    $comment->getSenderId()
+                ));
+
+                CommentNoticeRepository::instance()->add(new CommentNoticeEntity(
+                    $comment->getId(),
+                    $notice->getId()
+                ));
+            }
         }
     }
 

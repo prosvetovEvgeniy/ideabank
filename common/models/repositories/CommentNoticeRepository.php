@@ -7,9 +7,11 @@ use common\models\activerecords\CommentNotice;
 use common\models\builders\CommentNoticeBuilder;
 use common\models\entities\CommentNoticeEntity;
 use common\models\interfaces\IEntity;
+use common\models\interfaces\INotice;
 use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 class CommentNoticeRepository implements IRepository
 {
@@ -30,7 +32,7 @@ class CommentNoticeRepository implements IRepository
 
     /**
      * @param array $condition
-     * @return CommentNoticeEntity|IEntity|null
+     * @return CommentNoticeEntity|IEntity|INotice|null
      */
     public function findOne(array $condition)
     {
@@ -49,7 +51,7 @@ class CommentNoticeRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
-     * @return CommentNoticeEntity[]|IEntity[]
+     * @return CommentNoticeEntity[]|IEntity[]|INotice[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
@@ -111,5 +113,25 @@ class CommentNoticeRepository implements IRepository
         }
 
         return $this->builderBehavior->buildEntity($model);
+    }
+
+    /**
+     * @param array $condition
+     * @return CommentNoticeEntity[]|IEntity[]|INotice[]
+     */
+    public function deleteAll(array $condition)
+    {
+        $commentNotices = CommentNoticeRepository::findAll($condition);
+
+        $ids = ArrayHelper::getColumn($commentNotices, function($commentNotice) {
+            /**
+             * @var CommentNoticeEntity $commentNotice
+             */
+            return $commentNotice->getId();
+        });
+
+        CommentNotice::deleteAll(['in', 'id', $ids]);
+
+        return $commentNotices;
     }
 }

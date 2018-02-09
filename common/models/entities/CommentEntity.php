@@ -76,7 +76,7 @@ class CommentEntity implements IEntity
      * @param int|null $id
      * @param int|null $createdAt
      * @param int|null $updatedAt
-     * @param bool|null $deleted
+     * @param bool $deleted
      * @param int $likesAmount
      * @param int $dislikesAmount
      * @param UserEntity|null $user
@@ -85,8 +85,8 @@ class CommentEntity implements IEntity
      * @param bool|null $currentUserDislikedIt
      */
     public function __construct(int $taskId, int $senderId, string $content,int $parentId = null,
-                                bool $private = null, int $id = null, int $createdAt = null,
-                                int $updatedAt = null, bool $deleted = null, int $likesAmount = 0,
+                                bool $private = false, int $id = null, int $createdAt = null,
+                                int $updatedAt = null, bool $deleted = false, int $likesAmount = 0,
                                 int $dislikesAmount = 0, UserEntity $user = null, CommentEntity $parent = null,
                                 bool $currentUserLikedIt = null, bool $currentUserDislikedIt = null)
     {
@@ -186,6 +186,11 @@ class CommentEntity implements IEntity
      * @param bool $value
      */
     public function setPrivate (bool $value) { $this->private = $value; }
+
+    /**
+     * @param bool $value
+     */
+    public function setDeleted (bool $value) { $this->deleted = $value; }
 
 
     // #################### SECTION OF RELATIONS ######################

@@ -44,8 +44,7 @@ class TaskFacade
         TaskFileRepository::instance()->saveFiles($files, $task);
 
         //если заметки были, то очищаем их
-        $taskNotices = TaskNoticeRepository::instance()->findAll(['task_id' => $task->getId()]);
-        TaskNoticeRepository::instance()->deleteAll($taskNotices);
+        $taskNotices = TaskNoticeRepository::instance()->deleteAll(['task_id' => $task->getId()]);
         NoticeRepository::instance()->deleteAll($taskNotices);
 
         //и создаем новые

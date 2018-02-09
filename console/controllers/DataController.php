@@ -94,9 +94,12 @@ class DataController extends Controller
         $participantIds['evgeniyVulcanm'] = $this->addParticipant($userIds['evgeniy'], $companyIds['infSysId'], $projectIds['vulcan']);
 
         $participantIds['newLoginStub'] = $this->addParticipantStub($userIds['newLogin']);
+        $participantIds['newLoginVulcan'] = $this->addParticipant($userIds['newLogin'], $companyIds['infSysId'], $projectIds['vulcan']);
+
 
         $participantIds['newUserStub'] = $this->addParticipantStub($userIds['newUser']);
         $participantIds['newUserGithub'] = $this->addParticipant($userIds['newUser'], $companyIds['eCompanyId'], $projectIds['github']);
+        $participantIds['newUserVulcan'] = $this->addParticipant($userIds['newUser'], $companyIds['infSysId'], $projectIds['vulcan']);
 
         $participantIds['adminStub'] = $this->addParticipantStub($userIds['admin']);
         $participantIds['adminDirector'] = $this->addParticipantDirector($userIds['admin'], $companyIds['infSysId']);
@@ -128,6 +131,9 @@ class DataController extends Controller
         $auth->assign($director,$participantIds['edirectorXabr']);
 
         $auth->assign($user, $participantIds['newUserGithub']);
+        $auth->assign($user, $participantIds['newUserVulcan']);
+
+        $auth->assign($user, $participantIds['newLoginVulcan']);
 
         //############### FILLING TASKS ###############
 
@@ -141,12 +147,12 @@ class DataController extends Controller
         $tasksIds['seventhTask'] = $this->addTask('Пятая задача git','Текст пятой задачи', $userIds['evgeniy'], $projectIds['github'], 3, $tasksIds['sixthTask']);
         $tasksIds['eightTask'] = $this->addTask('Шестая задача git','Текст шестой задачи', $userIds['evgeniy'], $projectIds['github'], 0);
         $tasksIds['ninthTask'] = $this->addTask('Седьмая задача git','Текст седьмой задачи', $userIds['evgeniy'], $projectIds['github'], 2);
-
+        $tasksIds['vulcanTask'] = $this->addTask('New task for github', 'New task For github', $userIds['evgeniy'], $projectIds['vulcan'], 0);
 
         //############### FILLING COMMENTS ###############
 
 
-        $commentsIds = $this->generateComments($tasksIds['firstTask'], $userIds['newUser'], 110);
+        //$commentsIds = $this->generateComments($tasksIds['firstTask'], $userIds['newUser'], 110);
 
 
         //############### FILLING TASKLIKES ###############
@@ -158,7 +164,7 @@ class DataController extends Controller
         //############### FILLING COMMENTLIKES ###############
 
 
-        $commentLikeIds = $this->generateCommentLikes($commentsIds, $userIds['evgeniy']);
+        //$commentLikeIds = $this->generateCommentLikes($commentsIds, $userIds['evgeniy']);
 
 
         //############### FILLING MESSAGES ###############

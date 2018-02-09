@@ -116,10 +116,13 @@ class TaskNoticeRepository implements IRepository
     }
 
     /**
-     * @param TaskNoticeEntity[] $taskNotices
+     * @param array $condition
+     * @return TaskNoticeEntity[]|IEntity[]|INotice[]
      */
-    public function deleteAll(array $taskNotices)
+    public function deleteAll(array $condition)
     {
+        $taskNotices = $this->findAll($condition);
+
         $ids = ArrayHelper::getColumn($taskNotices, function($taskNotice) {
            /**
             * @var TaskNoticeEntity $taskNotice
@@ -128,5 +131,7 @@ class TaskNoticeRepository implements IRepository
         });
 
         TaskNotice::deleteAll(['in', 'id', $ids]);
+
+        return $taskNotices;
     }
 }

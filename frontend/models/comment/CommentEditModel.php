@@ -3,6 +3,7 @@
 namespace frontend\models\comment;
 
 
+use common\components\facades\CommentFacade;
 use common\models\entities\ParticipantEntity;
 use common\models\repositories\CommentRepository;
 use yii\base\Model;
@@ -15,7 +16,6 @@ use yii\db\Exception;
  *
  * @property int    $id
  * @property string $content
- * @property int    $userId
  */
 class CommentEditModel extends Model
 {
@@ -34,7 +34,7 @@ class CommentEditModel extends Model
     /**
      * @return bool
      */
-    public function edit()
+    public function update()
     {
         if(!$this->validate())
         {
@@ -43,7 +43,7 @@ class CommentEditModel extends Model
 
         $comment = CommentRepository::instance()->findOne(['id' => $this->id]);
 
-        if(!$comment)
+        if(!$comment || $comment->getDeleted())
         {
             return false;
         }
@@ -53,11 +53,11 @@ class CommentEditModel extends Model
             return false;
         }
 
+        $comment->setContent($this->content);
+
         try
         {
-            $comment->setContent($this->content);
-
-            CommentRepository::instance()->update($comment);
+            CommentFacade::editComment($comment);
 
             return true;
         }

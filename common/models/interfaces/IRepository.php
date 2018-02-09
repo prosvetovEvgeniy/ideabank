@@ -10,11 +10,11 @@ interface IRepository
      */
     public static function instance(): IRepository;
 
-    /**
-     * @param array $condition
-     * @return IEntity | null
-     */
-    public function findOne(array $condition);
+//    /**
+//     * @param array $condition
+//     * @return IEntity | null
+//     */
+//    public function findOne(array $condition);
 
     /**
      * @param array $condition

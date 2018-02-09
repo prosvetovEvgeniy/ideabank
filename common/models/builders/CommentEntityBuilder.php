@@ -30,6 +30,7 @@ class CommentEntityBuilder
         $model->content = Html::encode($comment->getContent());
         $model->parent_id = $comment->getParentId();
         $model->private = $comment->getPrivate();
+        $model->deleted = $comment->getDeleted();
     }
 
     /**

@@ -328,15 +328,42 @@ a.desc:after {
     word-break: break-all;
 }
 
-.comment-edit{
-    transition: all 0.2s;
+.comment-edit-icon{
+    margin-left: 5px;
     color: #333;
     font-size: 14px;
     cursor: pointer;
 }
 
-.comment-edit:hover{
-    font-size: 15px;
+.comment-delete-icon{
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.comment-reestablish{
+    margin-left: 5px;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.comment-make-private-icon
+{
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.comment-make-public-icon{
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.deleted-comment{
+    color: darkred;
+    text-align: center;
 }
 
 .btn-edit-group{

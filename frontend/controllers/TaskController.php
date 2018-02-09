@@ -11,6 +11,7 @@ use common\models\repositories\ParticipantRepository;
 use common\models\repositories\ProjectRepository;
 use common\models\repositories\TaskRepository;
 use common\models\searchmodels\task\TaskEntitySearch;
+use frontend\models\comment\CommentDeleteModel;
 use frontend\models\comment\CommentEditModel;
 use frontend\models\comment\CommentCreateForm;
 use frontend\models\task\CreateTaskForm;
@@ -127,15 +128,5 @@ class TaskController extends Controller
             'model' => $model,
             'task'  => $task
         ]);
-    }
-
-    public function actionEditComment()
-    {
-        $model = new CommentEditModel();
-
-        if(!$model->load(Yii::$app->request->post()) || !$model->edit())
-        {
-            throw new BadRequestHttpException();
-        }
     }
 }

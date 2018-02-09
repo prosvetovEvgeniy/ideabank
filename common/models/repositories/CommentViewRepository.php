@@ -4,6 +4,8 @@ namespace common\models\repositories;
 
 
 use common\models\builders\CommentViewEntityBuilder;
+use common\models\entities\ParticipantEntity;
+use common\models\entities\UserEntity;
 use common\models\interfaces\IRepository;
 use Yii;
 use common\models\activerecords\CommentView;
@@ -23,7 +25,7 @@ use yii\base\NotSupportedException;
  */
 class CommentViewRepository implements IRepository
 {
-    public const COMMENTS_PER_PAGE = 30;
+    public const COMMENTS_PER_PAGE = 2;
 
     private $builderBehavior;
 
@@ -47,10 +49,6 @@ class CommentViewRepository implements IRepository
         return new self();
     }
 
-    public function findOne(array $condition)
-    {
-        throw new NotSupportedException();
-    }
 
     /**
      * Возвращает массив сущностей по условию
@@ -63,31 +61,32 @@ class CommentViewRepository implements IRepository
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
-        $identity = Yii::$app->user->identity;
-
         /*
          * если пользователь не зарегистрирован, то он и не оставлял
          * комментарий => поле current_user_liked_it будет FALSE
          * (данное поле используется на frontend). Аналогично
          * для поля current_user_disliked_it
          */
-        $userId = ($identity !== null) ? $identity->getId() : 'NULL';
+        $userId = (Yii::$app->user->identity !== null) ? Yii::$app->user->identity->getUserId() : 'NULL';
 
-        $models = CommentView::find()->where($condition)
+        $models = CommentView::find()->addSelect('c.*')
+                                     ->addSelect('(SELECT COUNT(*) FROM comment_like WHERE comment_id = c.id AND liked = TRUE) as likes_amount')
+                                     ->addSelect('(SELECT COUNT(*) FROM comment_like WHERE comment_id = c.id AND liked = FALSE) as dislikes_amount')
+                                     ->addSelect('EXISTS(SELECT id FROM comment_like WHERE comment_id = c.id AND liked = TRUE AND user_id = ' . $userId . ') as current_user_liked_it')
+                                     ->addSelect('EXISTS(SELECT id FROM comment_like WHERE comment_id = c.id AND liked = FALSE AND user_id = ' . $userId . ') as current_user_disliked_it')
+                                     ->from('comment c')
+                                     ->where($condition)
                                      ->with('user')
-                                     ->with('parent')
-                                     ->joinWith('commentLikes')
-                                     ->addSelect('comment.*')
-                                     ->addSelect('SUM(CASE WHEN comment_like.liked = TRUE THEN 1 ELSE 0 END) AS likes_amount')
-                                     ->addSelect('SUM(CASE WHEN comment_like.liked = FALSE THEN 1 ELSE 0 END) AS dislikes_amount')
-                                     ->addSelect('(CASE WHEN comment_like.user_id = ' . $userId . ' AND comment_like.liked = TRUE THEN TRUE ELSE FALSE END) as current_user_liked_it')
-                                     ->addSelect('(CASE WHEN comment_like.user_id = ' . $userId . ' AND comment_like.liked = FALSE THEN TRUE ELSE FALSE END) as current_user_disliked_it')
-                                     ->groupBy('comment.id, comment_like.user_id, comment_like.liked')
-                                     ->orderBy('id ASC')
-                                     ->limit($limit)
-                                     ->offset($offset)
-                                     ->orderBy($orderBy)
-                                     ->all();
+                                     ->with('parent');
+
+        $task = TaskRepository::instance()->findOne(['id' => $condition['task_id']]);
+
+        if(!Yii::$app->user->is(ParticipantEntity::ROLE_MANAGER, $task->getProjectId()))
+        {
+            $models = $models->andWhere('private = false OR sender_id = ' . $userId);
+        }
+
+        $models = $models->orderBy($orderBy)->limit($limit)->offset($offset)->all();
 
         return $this->builderBehavior->buildEntities($models);
     }
@@ -98,7 +97,18 @@ class CommentViewRepository implements IRepository
      */
     public function getTotalCountByCondition(array $condition): int
     {
-        return (int) Comment::find()->where($condition)->count();
+        $userId = (Yii::$app->user->identity !== null) ? Yii::$app->user->identity->getUserId() : 'NULL';
+
+        $models= CommentView::find()->where($condition);
+
+        $task = TaskRepository::instance()->findOne(['id' => $condition['task_id']]);
+
+        if(!Yii::$app->user->is(ParticipantEntity::ROLE_MANAGER, $task->getProjectId()))
+        {
+            $models = $models->andWhere('private = false OR sender_id = ' . $userId);
+        }
+
+        return (int) $models->count();
     }
 
 
@@ -106,18 +116,23 @@ class CommentViewRepository implements IRepository
 
 
     /**
-     * Рассчитывает количество комментриев до текущего
+     * Расчитывает позицию нового комментария
+     * для определенног пользователя
      *
      * @param CommentEntity $comment
      * @return int|string
      */
-    public function getCountRecordsBeforeComment(CommentEntity $comment)
+    public function getNewCommentIndex(CommentEntity $comment, UserEntity $user)
     {
-        return $this->getTotalCountByCondition([
-            'and',
-            ['task_id' => $comment->getTaskId()],
-            ['<', 'id', $comment->getId()],
-            ['<', 'created_at', $comment->getCreatedAt()]
-        ]);
+        $models = CommentView::find()->where(['task_id' => $comment->getTaskId()])
+                                     ->andWhere(['<', 'id', $comment->getId()])
+                                     ->andWhere(['<', 'created_at', $comment->getCreatedAt()]);
+
+        if(!Yii::$app->user->is(ParticipantEntity::ROLE_MANAGER, $comment->getTask()->getProjectId(), $user->getId()))
+        {
+            $models = $models->andWhere(['or', ['private' => false], ['sender_id' => $user->getId()]]);
+        }
+
+        return (int) $models->count() + 1;
     }
 }

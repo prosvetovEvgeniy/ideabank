@@ -28,6 +28,7 @@ class CommentRepository implements IRepository
 
     // #################### STANDARD METHODS ######################
 
+
     /**
      * Возвращает экземпляр класса
      *
@@ -48,7 +49,7 @@ class CommentRepository implements IRepository
     {
         $model = Comment::findOne($condition);
 
-        if(!$model || $model->deleted)
+        if(!$model)
         {
             return null;
         }
@@ -162,21 +163,4 @@ class CommentRepository implements IRepository
 
 
     // #################### UNIQUE METHODS OF CLASS ######################
-
-
-    /**
-     * Рассчитывает количество комментриев до текущего
-     *
-     * @param CommentEntity $comment
-     * @return int|string
-     */
-    public function getCountRecordsBeforeComment(CommentEntity $comment)
-    {
-        return $this->getTotalCountByCondition([
-            'and',
-            ['task_id' => $comment->getTaskId()],
-            ['<', 'id', $comment->getId()],
-            ['<', 'created_at', $comment->getCreatedAt()]
-        ]);
-    }
 }

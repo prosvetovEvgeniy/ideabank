@@ -5,7 +5,7 @@ namespace common\components\helpers;
 
 use common\models\entities\CommentEntity;
 use common\models\entities\TaskEntity;
-use common\models\repositories\CommentRepository;
+use common\models\entities\UserEntity;
 use common\models\repositories\CommentViewRepository;
 use Yii;
 use yii\data\Pagination;
@@ -26,21 +26,31 @@ class LinkHelper
 
     /**
      * @param CommentEntity $comment
+     * @param UserEntity $user
      * @return string
      */
-    public static function getLinkOnComment(CommentEntity $comment)
+    public static function getLinkOnComment(CommentEntity $comment, UserEntity $user = null)
     {
+        $user = $user ?? Yii::$app->user->identity->getUser();
+
         //расчитываем номер страницы, на которой будет находится комментарий
-        $count = CommentRepository::instance()->getCountRecordsBeforeComment($comment);
+        $index = CommentViewRepository::instance()->getNewCommentIndex($comment, $user);
         $perPage = CommentViewRepository::COMMENTS_PER_PAGE;
 
-        $pageNumber = floor($count/$perPage) + 1;
+        if($index % $perPage === 0)
+        {
+            $pageNumber = $index/$perPage;
+        }
+        else
+        {
+            $pageNumber = floor($index/$perPage) + 1;
+        }
 
         //из класс yii\data\Pagination получаем названия GET-параметров (page, per-page)
         $pagination = new Pagination();
 
         return Yii::$app->urlManager->createAbsoluteUrl([
-            Yii::$app->request->pathInfo,
+            'task/view',
             'id' => $comment->getTaskId(),
             $pagination->pageParam => $pageNumber,
             $pagination->pageSizeParam => CommentViewRepository::COMMENTS_PER_PAGE,

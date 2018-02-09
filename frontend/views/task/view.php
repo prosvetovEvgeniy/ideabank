@@ -221,7 +221,6 @@ $counter = 1; //счетчик для номера комментария
                  */
                 foreach ($comments as $comment):
                 ?>
-
                     <div class="comment-block <?php if($comment->isOwn()) { echo 'own-comment'; } ?>">
 
                         <div class="comment"
@@ -230,68 +229,112 @@ $counter = 1; //счетчик для номера комментария
                              data-current-user-disliked-it="<?= $comment->getCurrentUserDislikedIt() ?>">
 
                             <div class="media-left">
-                                <?= Html::img($comment->getUser()->getAvatarAlias(), ['class' => 'comment-avatar']) ?>
+                                <?php
+                                if(!$comment->getDeleted())
+                                {
+                                    echo Html::img($comment->getUser()->getAvatarAlias(), ['class' => 'comment-avatar']);
+                                }
+                                ?>
                             </div>
                             <div class="media-right">
                                 <div class="comment-title">
                                     <h5 class="comment-fio no-margin-top">
-                                        <?php if(Yii::$app->user->isGuest): ?>
-                                            <?= Html::a($comment->getUser()->getUsername(), ['/site/login'], ['name' => $comment->getId()]) ?>
-                                        <?php else: ?>
-                                            <?php if($comment->getSenderId() === Yii::$app->user->identity->getUser()->getId()): ?>
-                                                <?= Html::a($comment->getUser()->getUsername(), ['/profile/my-projects'], ['name' => $comment->getId()]) ?>
-                                            <?php else: ?>
-                                                <?= Html::a($comment->getUser()->getUsername(), ['/profile/view', 'id' => $comment->getUser()->getId()], ['name' => $comment->getId()]) ?>
-                                            <?php endif; ?>
-                                        <?php endif; ?>
+                                        <?php
+                                        if(!$comment->getDeleted())
+                                        {
+                                            if(Yii::$app->user->isGuest)
+                                            {
+                                                echo Html::a($comment->getUser()->getUsername(), ['/site/login'], ['name' => $comment->getId()]);
+                                            }
+                                            else
+                                            {
+                                                if($comment->getSenderId() === Yii::$app->user->identity->getUser()->getId())
+                                                {
+                                                    echo Html::a($comment->getUser()->getUsername(), ['/profile/my-projects'], ['name' => $comment->getId()]);
+                                                }
+                                                else
+                                                {
+                                                    echo Html::a($comment->getUser()->getUsername(), ['/profile/view', 'id' => $comment->getUser()->getId()], ['name' => $comment->getId()]);
+                                                }
+                                            }
+                                        }
+                                        ?>
+                                        <?php
+                                        if($comment->getPrivate())
+                                        {
+                                            echo '(Приватный комментарий)';
+                                        }
+                                        ?>
                                     </h5>
                                     <p class="comment-number">
                                         <?php echo '#' . ($counter + $increment); $counter++; ?>
                                         <?php if($isManager): ?>
-                                            <i class="comment-edit glyphicon glyphicon-pencil" title="Редактировать"></i>
+                                            <?php if(!$comment->getDeleted()): ?>
+                                                <i class="comment-edit-icon glyphicon glyphicon-pencil" title="Редактировать"></i>
+                                                <i class="comment-delete-icon glyphicon glyphicon-trash" title="Удалить" data-comment-id="<?= $comment->getId() ?>"></i>
+                                                <?php if($comment->getPrivate()): ?>
+                                                    <i class="comment-make-public-icon glyphicon glyphicon-eye-open" title="Сделать публичным" data-comment-id="<?= $comment->getId() ?>"></i>
+                                                <?php else: ?>
+                                                    <i class="comment-make-private-icon glyphicon glyphicon-eye-close" title="Сделать приватным" data-comment-id="<?= $comment->getId() ?>"></i>
+                                                <?php endif; ?>
+                                            <?php else: ?>
+                                                <i class="comment-reestablish glyphicon glyphicon-share" title="Восстановить" data-comment-id="<?= $comment->getId() ?>"></i>
+                                            <?php endif; ?>
                                         <?php endif; ?>
                                     </p>
                                 </div>
 
-                                <?php if($comment->getParentId() !== null): ?>
+                                <?php if(!$comment->getDeleted()): ?>
 
-                                    <?php $parent = $comment->getParent(); ?>
+                                    <?php if($comment->getParentId() !== null): ?>
 
-                                    <div class="comment-parent">
-                                        <div class="comment-parent-username">
-                                            <?= Html::a($parent->getUser()->getUsername(), ['/profile/view', 'id' => $parent->getUser()->getId()]) ?>
+                                        <?php $parent = $comment->getParent(); ?>
+                                        <div class="comment-parent">
+                                            <?php if(!$parent->getDeleted()): ?>
+                                                <div class="comment-parent-username">
+                                                    <?= Html::a($parent->getUser()->getUsername(), ['/profile/view', 'id' => $parent->getUser()->getId()]) ?>
+                                                </div>
+                                                <div class="comment-parent-content"> <?= $parent->getContent() ?> </div>
+                                            <?php else: ?>
+                                                Комментарий удален
+                                            <?php endif; ?>
                                         </div>
-                                        <div class="comment-parent-content"> <?= $parent->getContent() ?> </div>
+                                    <?php endif; ?>
+                                    <div class="comment-content" data-comment-id="<?= $comment->getId() ?>">
+                                        <?= $comment->getContent(); ?>
                                     </div>
-                                <?php endif; ?>
-                                <div class="comment-content" data-comment-id="<?= $comment->getId() ?>">
-                                    <?= $comment->getContent(); ?>
-                                </div>
 
-                                <?php if($isManager): ?>
-                                <div class="btn-edit-group">
-                                    <div class="edit-comment btn btn-primary btn-sm">Изменить</div>
-                                    <div class="cancel-edit-comment btn btn-primary btn-sm">Отмена</div>
-                                </div>
-                                <?php endif; ?>
-
-
-                                <div class="footer-comment">
-                                    <div class="footer-comment-left">
-                                        <span class="comment-date"><?= $comment->getDate() ?></span>
-                                        <?php if(!Yii::$app->user->isGuest): ?>
-                                            <a href="#write-comment" class="comment-reply">Ответить</a>
-                                        <?php endif; ?>
+                                    <?php if($isManager): ?>
+                                    <div class="btn-edit-group">
+                                        <div class="change-comment btn btn-primary btn-sm">Изменить</div>
+                                        <div class="cancel-edit-comment btn btn-primary btn-sm">Отмена</div>
                                     </div>
-                                    <div class="footer-comment-right">
+                                    <?php endif; ?>
+
+                                <?php else: ?>
+
+                                    <div class="deleted-comment">Комментарий удален</div>
+
+                                <?php endif; ?>
+
+                                <?php if(!$comment->getDeleted()): ?>
+                                    <div class="footer-comment">
+                                        <div class="footer-comment-left">
+                                            <span class="comment-date"><?= $comment->getDate() ?></span>
+                                            <?php if(!Yii::$app->user->isGuest): ?>
+                                                <a href="#write-comment" class="comment-reply">Ответить</a>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="footer-comment-right">
                                         <span class="vote-up" title="Нравится">
                                             <i class="glyphicon glyphicon-thumbs-up" data-user-guest="<?= Yii::$app->user->isGuest ?>"><?= $comment->getLikesAmount() ?></i>
                                         </span>
-                                        <span class="vote-down" title="Нравится">
+                                            <span class="vote-down" title="Нравится">
                                             <i class="glyphicon glyphicon-thumbs-down" data-user-guest="<?= Yii::$app->user->isGuest ?>"><?= $comment->getDislikesAmount() ?></i>
                                         </span>
+                                        </div>
                                     </div>
-                                </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>

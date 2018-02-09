@@ -32,14 +32,6 @@ class NoticeHelper
     }
 
     /**
-     * @return bool
-     */
-    public function hasNotice()
-    {
-        return (empty($this->matches)) ? false : true ;
-    }
-
-    /**
      * @return UserEntity[]
      */
     public function getNoticedUsers()

@@ -33,7 +33,7 @@ use yii\web\UploadedFile;
  * @property int            $projectId
  * @property UploadedFile[] $files
  *
- * @property TaskEntity $task
+ * @property TaskEntity     $task
  */
 class CreateTaskForm extends Model
 {

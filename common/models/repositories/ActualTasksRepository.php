@@ -31,26 +31,15 @@ class ActualTasksRepository implements IRepository
         return new self();
     }
 
-    public function findOne(array $condition)
-    {
-        throw new NotSupportedException();
-    }
-
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
-        $comments = Comment::find()->addSelect('c.task_id')
-                                   ->from('comment c')
-                                   ->leftJoin('task t', 'c.task_id = t.id')
-                                   ->where('t.visibility_area = ' . TaskEntity::VISIBILITY_AREA_ALL)
-                                   ->groupBy('c.task_id')
-                                   ->orderBy('COUNT(*) DESC')
-                                   ->offset($offset)
-                                   ->limit($limit)
-                                   ->all();
+        $models = Task::find()->where(['or', ['status' => TaskEntity::STATUS_ON_CONSIDERATION], ['status' => TaskEntity::STATUS_IN_PROGRESS]])
+                              ->andWhere(['visibility_area' => TaskEntity::VISIBILITY_AREA_ALL])
+                              ->andWhere(['deleted' => false])
+                              ->andWhere('id IN (SELECT task_id FROM comment WHERE private = FALSE AND deleted = FALSE GROUP BY task_id ORDER BY COUNT(*) DESC)')
+                              ->all();
 
-        $tasks = Task::find()->where(['in', 'id', ArrayHelper::getColumn($comments, 'task_id')])->all();
-
-        return $this->builderBehavior->buildEntities($tasks);
+        return $this->builderBehavior->buildEntities($models);
     }
 
     /**
@@ -59,11 +48,10 @@ class ActualTasksRepository implements IRepository
      */
     public function getTotalCountByCondition(array $condition): int
     {
-        return (int) Comment::find()->addSelect('c.task_id')
-                                    ->from('comment c')
-                                    ->leftJoin('task t', 'c.task_id = t.id')
-                                    ->where('t.visibility_area = ' . TaskEntity::VISIBILITY_AREA_ALL)
-                                    ->groupBy('c.task_id')
-                                    ->count();
+        return (int) Task::find()->where(['or', ['status' => TaskEntity::STATUS_ON_CONSIDERATION], ['status' => TaskEntity::STATUS_IN_PROGRESS]])
+                                 ->andWhere(['visibility_area' => TaskEntity::VISIBILITY_AREA_ALL])
+                                 ->andWhere(['deleted' => false])
+                                 ->andWhere('id IN (SELECT task_id FROM comment WHERE private = FALSE AND deleted = FALSE GROUP BY task_id)')
+                                 ->count();
     }
 }

@@ -15,14 +15,22 @@ class ExtendedUser extends User
     /**
      * @param string $permissionName
      * @param int $projectId
-     * @return bool
+     * @param int|null $userId
+     * @return bool|mixed
      */
-    public function is(string $permissionName, int $projectId)
+    public function is(string $permissionName, int $projectId, int $userId = null)
     {
+        if(Yii::$app->user->isGuest)
+        {
+            return false;
+        }
+
+        $userId = $userId ?? Yii::$app->user->identity->getUserId();
+
         $cache = Yii::$app->cache;
 
         $key = [
-            Yii::$app->user->identity->getUserId(),
+            $userId,
             $projectId,
             $permissionName
         ];
@@ -35,7 +43,7 @@ class ExtendedUser extends User
         }
 
         $participant = ParticipantRepository::instance()->findOne([
-            'user_id' => Yii::$app->user->identity->getUserId(),
+            'user_id' => $userId,
             'project_id' => $projectId
         ]);
 
@@ -47,7 +55,7 @@ class ExtendedUser extends User
         $access = $this->getAccessChecker()->checkAccess($participant->getId(), $permissionName);
 
         Yii::$app->cache->set([
-            Yii::$app->user->identity->getUserId(),
+            $userId,
             $projectId,
             $permissionName
         ], $access);
