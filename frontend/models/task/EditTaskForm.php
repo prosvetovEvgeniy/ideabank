@@ -4,24 +4,12 @@ namespace frontend\models\task;
 
 
 use common\components\facades\TaskFacade;
-use common\components\helpers\FileHelper;
-use common\components\helpers\LinkHelper;
-use common\components\helpers\NoticeHelper;
-use common\models\entities\NoticeEntity;
 use common\models\entities\TaskEntity;
-use common\models\entities\UserEntity;
-use common\models\repositories\NoticeRepository;
-use common\models\repositories\TaskFileRepository;
-use common\models\repositories\TaskNoticeRepository;
-use common\models\repositories\TaskRepository;
 use yii\base\Model;
 use yii\db\Exception;
-use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
 use common\models\entities\TaskFileEntity;
 use Yii;
-use common\models\activerecords\Project;
-use common\models\repositories\ProjectRepository;
 
 /**
  * Class EditTaskForm
@@ -31,17 +19,28 @@ use common\models\repositories\ProjectRepository;
  * @property string         $content
  * @property int            $projectId
  * @property UploadedFile[] $files
+ * @property int            $status
+ * @property int            $visibilityArea
+ * @property int            $plannedEndAt
+ * @property int            $parentId
  *
- * @property TaskEntity     $savedTask
+ * @property TaskEntity     $task
  */
 class EditTaskForm extends Model
 {
+    public const SCENARIO_ADMIN_EDIT = 'scenario admin edit';
+    public const DATE_FORMAT = 'dd.MM.yyyy';
+
     public $title;
     public $content;
-    public $projectId;
     public $files;
+    public $status;
+    public $visibilityArea;
+    public $plannedEndAt;
+    public $parentId;
 
-    //сущность изменяемой задачи
+
+    //сущность сохраненой задачи
     private $task;
 
     /**
@@ -55,7 +54,13 @@ class EditTaskForm extends Model
 
         $this->title = $task->getTitle();
         $this->content = $task->getContent();
-        $this->projectId = $task->getProjectId();
+
+        if(Yii::$app->user->isManager($task->getProjectId())){
+            $this->status = $task->getStatus();
+            $this->visibilityArea = $task->getVisibilityArea();
+            $this->plannedEndAt = $task->getPlannedEndAt();
+            $this->parentId = $task->getParentId();
+        }
 
         $this->task = $task;
     }
@@ -63,28 +68,73 @@ class EditTaskForm extends Model
     public function rules()
     {
         return [
-            [['title', 'content', 'projectId'], 'required'],
-            [['projectId'], 'integer'],
-            [['projectId'], 'exist', 'targetClass' => Project::className(), 'targetAttribute' => ['projectId' => 'id']],
+            [['title', 'content'], 'required', 'on' => self::SCENARIO_DEFAULT],
+            [['title', 'content', 'status', 'visibilityArea'], 'required', 'on' => self::SCENARIO_ADMIN_EDIT],
+
             [['title'], 'string', 'length' => [
                 TaskEntity::TITLE_MIN_LENGTH,
                 TaskEntity::TITLE_MAX_LENGTH
             ]],
+
             [['content'], 'string', 'length' => [
                 TaskEntity::CONTENT_MIN_LENGTH,
                 TaskEntity::CONTENT_MAX_LENGTH
             ]],
+
+            [['status'], 'integer'],
+            [['status'], 'in', 'range' => [
+                TaskEntity::STATUS_ON_CONSIDERATION,
+                TaskEntity::STATUS_IN_PROGRESS,
+                TaskEntity::STATUS_COMPLETED,
+                TaskEntity::STATUS_MERGED
+            ]],
+            [['status'], 'filter', 'filter' => function($value){
+                return ($value != '') ? (int) $value : null ;
+            }],
+
+            [['visibilityArea'], 'integer'],
+            [['visibilityArea'], 'in', 'range' => [
+                TaskEntity::VISIBILITY_AREA_ALL,
+                TaskEntity::VISIBILITY_AREA_REGISTERED,
+                TaskEntity::VISIBILITY_AREA_PRIVATE
+            ]],
+            [['visibilityArea'], 'filter', 'filter' => function($value){
+                return ($value != '') ? (int) $value : null ;
+            }],
+
+            [['plannedEndAt'], 'date', 'format' => self::DATE_FORMAT, 'timestampAttribute' => 'plannedEndAt'],
+
+            [['parentId'], 'integer'],
+            [['parentId'], 'filter', 'filter' => function($value){
+                return ($value != '') ? (int) $value : null ;
+            }],
+            [['parentId'], 'checkOnStatus', 'skipOnEmpty' => false],
+
             [['files'], 'file', 'skipOnEmpty' => true, 'maxFiles' => TaskFileEntity::MAX_FILES_TO_TASK, 'maxSize' => TaskFileEntity::MAX_SIZE_FILES] //maxSize = 100MB
         ];
+    }
+
+    public function checkOnStatus($attribute, $params)
+    {
+        if($this->$attribute !== null){
+            $this->status = TaskEntity::STATUS_MERGED;
+        }
+
+        if($this->$attribute === null && $this->status === TaskEntity::STATUS_MERGED){
+            $this->addError($attribute, 'Задача не имеет родителя, но помечена как объединенная');
+        }
     }
 
     public function attributeLabels()
     {
         return [
-            'title'     => 'Заголовок',
-            'content'   => 'Содержание',
-            'projectId' => 'Проект',
-            'files'     => 'Добавить файлы'
+            'title'          => 'Заголовок',
+            'content'        => 'Содержание',
+            'files'          => 'Добавить файлы',
+            'status'         => 'Статус',
+            'visibilityArea' => 'Область видимости',
+            'plannedEndAt'   => 'Планируемая дата завершения',
+            'parentId'       => 'Родительская задача'
         ];
     }
 
@@ -93,7 +143,7 @@ class EditTaskForm extends Model
      * @throws Exception
      * @throws \yii\base\Exception
      */
-    public function save()
+    public function update()
     {
         if(!$this->validate())
         {
@@ -102,13 +152,23 @@ class EditTaskForm extends Model
 
         $this->task->setTitle($this->title);
         $this->task->setContent($this->content);
-        $this->task->setProjectId($this->projectId);
+
+        if(Yii::$app->user->isManager($this->task->getProjectId())){
+            $this->task->setStatus($this->status);
+            $this->task->setVisibilityArea($this->visibilityArea);
+            $this->task->setPlannedEndAt($this->plannedEndAt);
+            $this->task->setParentId($this->parentId);
+
+            if($this->status === TaskEntity::STATUS_COMPLETED){
+                $this->task->setEndAt(time());
+            }
+        }
 
         $transaction = Yii::$app->db->beginTransaction();
 
         try
         {
-            TaskFacade::editTask($this->task, $this->files);
+            $this->task = TaskFacade::editTask($this->task, $this->files);
 
             $transaction->commit();
             return true;
@@ -118,5 +178,13 @@ class EditTaskForm extends Model
             $transaction->rollBack();
             return false;
         }
+    }
+
+    /**
+     * @return TaskEntity
+     */
+    public function getTask()
+    {
+        return $this->task;
     }
 }

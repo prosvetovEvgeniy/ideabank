@@ -30,8 +30,7 @@ class TaskFileDeleteModel extends Model
 
     public function delete()
     {
-        if(!$this->validate())
-        {
+        if(!$this->validate()) {
             return false;
         }
 
@@ -40,26 +39,22 @@ class TaskFileDeleteModel extends Model
             'task_id' => $this->taskId
         ]);
 
-        if(!$taskFile)
+        if(!$taskFile) {
+            return false;
+        }
+
+        if($taskFile->getTask()->getAuthorId() !== Yii::$app->user->identity->getUser()->getId() &&
+           !Yii::$app->user->isManager($taskFile->getTask()->getProjectId()))
         {
             return false;
         }
 
-        $taskAuthorId = $taskFile->getTask()->getAuthorId();
-
-        if($taskAuthorId !== Yii::$app->user->identity->getUser()->getId())
-        {
-            return false;
-        }
-
-        try
-        {
+        try {
             TaskFileRepository::instance()->delete($taskFile);
 
             return true;
         }
-        catch (Exception $e)
-        {
+        catch (Exception $e) {
             return false;
         }
     }

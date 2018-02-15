@@ -3,13 +3,10 @@
 namespace common\models\repositories;
 
 
-use common\models\activerecords\Comment;
 use common\models\activerecords\Task;
 use common\models\builders\TaskEntityBuilder;
 use common\models\entities\TaskEntity;
 use common\models\interfaces\IRepository;
-use yii\base\NotSupportedException;
-use yii\helpers\ArrayHelper;
 
 /**
  * Class ActualTasksRepository

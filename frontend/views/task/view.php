@@ -111,18 +111,14 @@ $counter = 1; //счетчик для номера комментария
                     <td>Создал</td>
                     <td>
                         <?php
-                        if(Yii::$app->user->isGuest)
-                        {
+                        if(Yii::$app->user->isGuest) {
                             echo Html::a($task->getAuthor()->getUsername(), ['/site/login']);
                         }
-                        else
-                        {
-                            if(Yii::$app->user->identity->getUser()->getId() === $task->getAuthorId())
-                            {
+                        else {
+                            if(Yii::$app->user->identity->getUser()->getId() === $task->getAuthorId()) {
                                 echo Html::a($task->getAuthor()->getUsername(), '/profile/my-tasks');
                             }
-                            else
-                            {
+                            else {
                                 echo Html::a($task->getAuthor()->getUsername(), ['/profile/view', 'id' => $task->getAuthorId()]);
                             }
                         }
@@ -142,23 +138,21 @@ $counter = 1; //счетчик для номера комментария
                     <td> <?= $task->getStatusAsText() ?> </td>
                 </tr>
 
-                <?php $status = $task->getStatus(); ?>
-
-                <?php if($status === TaskEntity::STATUS_ON_CONSIDERATION || $status === TaskEntity::STATUS_IN_PROGRESS): ?>
+                <?php if($task->getStatus() === TaskEntity::STATUS_ON_CONSIDERATION || $task->getStatus() === TaskEntity::STATUS_IN_PROGRESS): ?>
 
                     <tr>
                         <td>Будет завершена</td>
                         <td><code><?= $task->getPlannedEndDate() ?></code></td>
                     </tr>
 
-                <?php elseif ($status === TaskEntity::STATUS_COMPLETED): ?>
+                <?php elseif ($task->getStatus() === TaskEntity::STATUS_COMPLETED): ?>
 
                     <tr>
                         <td>Дата завершения</td>
                         <td><code><?= $task->getEndDate() ?></code></td>
                     </tr>
 
-                <?php elseif ($status === TaskEntity::STATUS_MERGED): ?>
+                <?php elseif ($task->getStatus() === TaskEntity::STATUS_MERGED): ?>
 
                     <?php
                         $parentTask = $task->getParent();
@@ -166,13 +160,22 @@ $counter = 1; //счетчик для номера комментария
 
                     <tr>
                         <td>Задача</td>
-                        <td> <?= Html::a($task->getParent()->getTitle(), ['task/view', 'taskId' => $task->getParent()->getId()]) ?> </td>
+                        <td> <?= Html::a($task->getParent()->getTitle(), ['task/view', 'id' => $task->getParent()->getId()]) ?> </td>
                     </tr>
 
                 <?php endif; ?>
 
                 </tbody>
             </table>
+
+            <?php
+            if(Yii::$app->user->isManager($task->getProjectId()) ||
+                Yii::$app->user->identity->getUserId() === $task->getAuthorId())
+            {
+                echo Html::a('Редактировать', ['/task/edit', 'id' => $task->getId()], ['class' => 'btn btn-success edit-task-btn']);
+            }
+            ?>
+
         </div>
     </div>
 
@@ -230,8 +233,7 @@ $counter = 1; //счетчик для номера комментария
 
                             <div class="media-left">
                                 <?php
-                                if(!$comment->getDeleted())
-                                {
+                                if(!$comment->getDeleted()) {
                                     echo Html::img($comment->getUser()->getAvatarAlias(), ['class' => 'comment-avatar']);
                                 }
                                 ?>
@@ -240,20 +242,15 @@ $counter = 1; //счетчик для номера комментария
                                 <div class="comment-title">
                                     <h5 class="comment-fio no-margin-top">
                                         <?php
-                                        if(!$comment->getDeleted())
-                                        {
-                                            if(Yii::$app->user->isGuest)
-                                            {
+                                        if(!$comment->getDeleted()) {
+                                            if(Yii::$app->user->isGuest) {
                                                 echo Html::a($comment->getUser()->getUsername(), ['/site/login'], ['name' => $comment->getId()]);
                                             }
-                                            else
-                                            {
-                                                if($comment->getSenderId() === Yii::$app->user->identity->getUser()->getId())
-                                                {
+                                            else {
+                                                if($comment->getSenderId() === Yii::$app->user->identity->getUser()->getId()) {
                                                     echo Html::a($comment->getUser()->getUsername(), ['/profile/my-projects'], ['name' => $comment->getId()]);
                                                 }
-                                                else
-                                                {
+                                                else {
                                                     echo Html::a($comment->getUser()->getUsername(), ['/profile/view', 'id' => $comment->getUser()->getId()], ['name' => $comment->getId()]);
                                                 }
                                             }

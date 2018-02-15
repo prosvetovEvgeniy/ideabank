@@ -99,20 +99,6 @@ $this->title = 'Мои задачи';
                         return $tag;
                     },
                     'format' => 'html'
-                ],
-                [
-                    'header' => '',
-                    'value' => function(TaskEntity $task) {
-                        $tag = '';
-
-                        if($task->checkStatus(TaskEntity::STATUS_ON_CONSIDERATION) || $task->checkStatus(TaskEntity::STATUS_IN_PROGRESS))
-                        {
-                            $tag = Html::a('ред.', ['/task/edit', 'id' => $task->getId()]);
-                        }
-
-                        return $tag;
-                    },
-                    'format' => 'html'
                 ]
             ]
         ]);

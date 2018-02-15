@@ -186,7 +186,7 @@ class TaskFileRepository implements IRepository
 
             $this->add($taskFile);
 
-            //если файл не сохранился на диск, то вырбасываем исключение
+            //если файл не сохранился на диск, то выбрасываем исключение
             if (!$file->saveAs(TaskFileEntity::PATH_TO_FILE . $hashName))
             {
                 throw new \yii\base\Exception();

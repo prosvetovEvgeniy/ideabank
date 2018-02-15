@@ -2,6 +2,7 @@
 
 namespace common\components\user;
 
+use common\models\entities\ParticipantEntity;
 use common\models\repositories\ParticipantRepository;
 use yii\web\User;
 use Yii;
@@ -20,8 +21,7 @@ class ExtendedUser extends User
      */
     public function is(string $permissionName, int $projectId, int $userId = null)
     {
-        if(Yii::$app->user->isGuest)
-        {
+        if(Yii::$app->user->isGuest) {
             return false;
         }
 
@@ -37,8 +37,7 @@ class ExtendedUser extends User
 
         $cacheValue = $cache->get($key);
 
-        if($cacheValue)
-        {
+        if($cacheValue) {
             return $cacheValue;
         }
 
@@ -47,8 +46,7 @@ class ExtendedUser extends User
             'project_id' => $projectId
         ]);
 
-        if(!$participant)
-        {
+        if(!$participant) {
             return false;
         }
 
@@ -61,5 +59,15 @@ class ExtendedUser extends User
         ], $access);
 
         return $access;
+    }
+
+    /**
+     * @param int $projectId
+     * @param int $userId
+     * @return bool
+     */
+    public function isManager(int $projectId, int $userId = null)
+    {
+        return $this->is(ParticipantEntity::ROLE_MANAGER, $projectId, $userId);
     }
 }

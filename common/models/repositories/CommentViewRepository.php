@@ -25,11 +25,13 @@ use yii\base\NotSupportedException;
  */
 class CommentViewRepository implements IRepository
 {
-    public const COMMENTS_PER_PAGE = 2;
+    public const COMMENTS_PER_PAGE = 40;
 
     private $builderBehavior;
 
-
+    /**
+     * CommentViewRepository constructor.
+     */
     public function __construct()
     {
         $this->builderBehavior = new CommentViewEntityBuilder();
@@ -67,7 +69,7 @@ class CommentViewRepository implements IRepository
          * (данное поле используется на frontend). Аналогично
          * для поля current_user_disliked_it
          */
-        $userId = (Yii::$app->user->identity !== null) ? Yii::$app->user->identity->getUserId() : 'NULL';
+        $userId = Yii::$app->user->identity->getUserId() ?? 'NULL';
 
         $models = CommentView::find()->addSelect('c.*')
                                      ->addSelect('(SELECT COUNT(*) FROM comment_like WHERE comment_id = c.id AND liked = TRUE) as likes_amount')
@@ -81,9 +83,12 @@ class CommentViewRepository implements IRepository
 
         $task = TaskRepository::instance()->findOne(['id' => $condition['task_id']]);
 
-        if(!Yii::$app->user->is(ParticipantEntity::ROLE_MANAGER, $task->getProjectId()))
-        {
-            $models = $models->andWhere('private = false OR sender_id = ' . $userId);
+        if(!Yii::$app->user->is(ParticipantEntity::ROLE_MANAGER, $task->getProjectId())) {
+            $models = $models->andWhere([
+                'or',
+                ['private' => false],
+                ['sender_id' => $userId]
+            ]);
         }
 
         $models = $models->orderBy($orderBy)->limit($limit)->offset($offset)->all();
@@ -97,15 +102,18 @@ class CommentViewRepository implements IRepository
      */
     public function getTotalCountByCondition(array $condition): int
     {
-        $userId = (Yii::$app->user->identity !== null) ? Yii::$app->user->identity->getUserId() : 'NULL';
+        $userId = Yii::$app->user->identity->getUserId() ?? 'NULL';
 
         $models= CommentView::find()->where($condition);
 
         $task = TaskRepository::instance()->findOne(['id' => $condition['task_id']]);
 
-        if(!Yii::$app->user->is(ParticipantEntity::ROLE_MANAGER, $task->getProjectId()))
-        {
-            $models = $models->andWhere('private = false OR sender_id = ' . $userId);
+        if(!Yii::$app->user->is(ParticipantEntity::ROLE_MANAGER, $task->getProjectId())) {
+            $models = $models->andWhere([
+                'or',
+                ['private' => false],
+                ['sender_id' => $userId]
+            ]);
         }
 
         return (int) $models->count();
@@ -114,25 +122,4 @@ class CommentViewRepository implements IRepository
 
     // #################### UNIQUE METHODS OF CLASS ######################
 
-
-    /**
-     * Расчитывает позицию нового комментария
-     * для определенног пользователя
-     *
-     * @param CommentEntity $comment
-     * @return int|string
-     */
-    public function getNewCommentIndex(CommentEntity $comment, UserEntity $user)
-    {
-        $models = CommentView::find()->where(['task_id' => $comment->getTaskId()])
-                                     ->andWhere(['<', 'id', $comment->getId()])
-                                     ->andWhere(['<', 'created_at', $comment->getCreatedAt()]);
-
-        if(!Yii::$app->user->is(ParticipantEntity::ROLE_MANAGER, $comment->getTask()->getProjectId(), $user->getId()))
-        {
-            $models = $models->andWhere(['or', ['private' => false], ['sender_id' => $user->getId()]]);
-        }
-
-        return (int) $models->count() + 1;
-    }
 }

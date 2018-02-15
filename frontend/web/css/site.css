@@ -145,7 +145,8 @@ a.desc:after {
 }
 
 .task-files-block{
-    margin: 50px 0;
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 .task-files-block div{
@@ -181,6 +182,10 @@ a.desc:after {
 .file-view{
     width: 100px;
     height: 100px;
+}
+
+.edit-task-btn{
+    display: block;
 }
 
 /* ########## COMMENT FORM RULES ##########*/
@@ -590,6 +595,14 @@ a.desc:after {
     text-align: center;
 }
 
+/* ########## PROJECT RULES ######## */
+
+.child-task{
+    background-color: #bce8f1;
+    padding: 10px;
+    border-radius: 8px;
+    margin-right: 5px;
+}
 
 /* ########## MEDIA RULES ##########*/
 

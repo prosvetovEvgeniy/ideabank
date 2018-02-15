@@ -123,10 +123,7 @@ class TaskNoticeRepository implements IRepository
     {
         $taskNotices = $this->findAll($condition);
 
-        $ids = ArrayHelper::getColumn($taskNotices, function($taskNotice) {
-           /**
-            * @var TaskNoticeEntity $taskNotice
-            */
+        $ids = ArrayHelper::getColumn($taskNotices, function(TaskNoticeEntity $taskNotice) {
            return $taskNotice->getId();
         });
 

@@ -9,8 +9,6 @@ use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 use common\models\forms\LoginForm;
 use frontend\models\authentication\PasswordResetRequestForm;
 use frontend\models\authentication\ResetPasswordForm;
@@ -20,10 +18,10 @@ use frontend\models\authentication\SignupForm;
  * Site controller
  */
 class SiteController extends Controller
+     
 {
     /**
      * @inheritdoc
-     */
     public function behaviors()
     {
         return [
@@ -85,7 +83,10 @@ class SiteController extends Controller
 
         $lastTasksDataProvider = new EntityDataProvider([
             'condition' => [
-                'visibility_area' => TaskEntity::VISIBILITY_AREA_ALL
+                'and',
+                ['visibility_area' => TaskEntity::VISIBILITY_AREA_ALL],
+                ['deleted' => false],
+                ['not', ['status' => TaskEntity::STATUS_MERGED]]
             ],
             'repositoryInstance' => TaskRepository::instance(),
             'pagination' => [

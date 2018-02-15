@@ -39,13 +39,13 @@ use yii\helpers\Html;
  * @property CommentEntity[]  $comments
  * @propery  TaskEntity       $parent
  * @property TaskFileEntity[] $files
- *
+ * @property TaskEntity[]     $children
  */
 class TaskEntity implements IEntity
 {
     /*
      * количество актуальных задач,
-     * которые оторбражаются на странице
+     * которые оторбражаются на странице /index
      */
     public const ACTUAL_TASKS_COUNT = 5;
 
@@ -63,17 +63,29 @@ class TaskEntity implements IEntity
     public const VISIBILITY_AREA_REGISTERED = 1;
     public const VISIBILITY_AREA_PRIVATE = 2;
 
-    public const LIST_STATUSES_AS_TEXT = [
+    public const LIST_STATUSES = [
         self::STATUS_ON_CONSIDERATION => 'на рассмотрении',
         self::STATUS_IN_PROGRESS      => 'в процессе',
         self::STATUS_COMPLETED        => 'завершена',
         self::STATUS_MERGED           => 'объединена с другой'
     ];
 
+    public const LIST_STATUSES_PRIVATE_TASK = [
+        self::STATUS_ON_CONSIDERATION => 'на рассмотрении',
+        self::STATUS_IN_PROGRESS      => 'в процессе',
+        self::STATUS_COMPLETED        => 'завершена',
+    ];
+
+    public const LIST_VISIBILITY_AREAS = [
+        self::VISIBILITY_AREA_ALL        => 'доступна для всех',
+        self::VISIBILITY_AREA_REGISTERED => 'доступна только для зарегистрированных',
+        self::VISIBILITY_AREA_PRIVATE    => 'приватная'
+    ];
+
     protected const DATE_ERROR_MESSAGE = 'дата не определена';
     protected const STATUS_ERROR_MESSAGE = 'статус не определен';
 
-    protected const DATE_FORMAT = 'd-m-Y';
+    protected const DATE_FORMAT = 'd.m.Y';
 
     protected $id;
     protected $title;
@@ -96,6 +108,7 @@ class TaskEntity implements IEntity
     protected $comments;
     protected $parent;
     protected $files;
+    protected $children;
 
 
     /**
@@ -240,12 +253,12 @@ class TaskEntity implements IEntity
     /**
      * @param int $value
      */
-    public function setParentId (int $value) { $this->parentId = $value; }
+    public function setParentId (int $value = null) { $this->parentId = $value; }
 
     /**
      * @param int $value
      */
-    public function setPlannedEndAt (int $value) { $this->plannedEndAt = $value; }
+    public function setPlannedEndAt (int $value = null) { $this->plannedEndAt = $value; }
 
     /**
      * @param int $value
@@ -331,43 +344,54 @@ class TaskEntity implements IEntity
         return $this->files;
     }
 
+    /**
+     * @return TaskEntity[]|IEntity[]
+     */
+    public function getChildren()
+    {
+        if($this->children === null){
+            $this->children = TaskRepository::instance()->findAll([
+                'parent_id' => $this->id,
+                'deleted'   => false
+            ]);
+        }
+
+        return $this->children;
+    }
+
 
     // #################### SECTION OF LOGIC ######################
 
     /**
-     * @return string
-     * @throws \yii\base\InvalidConfigException
+     * @return false|string
      */
     public function getCreatedDate()
     {
-        return ($this->createdAt !== null) ?  Yii::$app->formatter->asDate($this->getCreatedAt(), 'short') : self::DATE_ERROR_MESSAGE;
+        return ($this->createdAt !== null) ?  date(self::DATE_FORMAT, $this->createdAt) : self::DATE_ERROR_MESSAGE;
     }
 
     /**
-     * @return string
-     * @throws \yii\base\InvalidConfigException
+     * @return false|string
      */
     public function getUpdatedDate()
     {
-        return ($this->updatedAt !== null) ?  Yii::$app->formatter->asDate($this->getUpdatedAt(), 'short') : self::DATE_ERROR_MESSAGE;
+        return ($this->updatedAt !== null) ?  date(self::DATE_FORMAT, $this->updatedAt) : self::DATE_ERROR_MESSAGE;
     }
 
     /**
-     * @return string
-     * @throws \yii\base\InvalidConfigException
+     * @return false|string
      */
     public function getPlannedEndDate()
     {
-        return ($this->plannedEndAt !== null) ?  Yii::$app->formatter->asDate($this->getPlannedEndAt(), 'short') : self::DATE_ERROR_MESSAGE;
+        return ($this->plannedEndAt !== null) ? date(self::DATE_FORMAT, $this->plannedEndAt) : self::DATE_ERROR_MESSAGE;
     }
 
     /**
-     * @return string
-     * @throws \yii\base\InvalidConfigException
+     * @return false|string
      */
     public function getEndDate()
     {
-        return ($this->endAt !== null) ?  Yii::$app->formatter->asDate($this->getEndAt(), 'short') : self::DATE_ERROR_MESSAGE;
+        return ($this->endAt !== null) ? date(self::DATE_FORMAT, $this->endAt) : self::DATE_ERROR_MESSAGE;
     }
 
     /**
@@ -375,7 +399,7 @@ class TaskEntity implements IEntity
      */
     public function getStatusAsText()
     {
-        return self::LIST_STATUSES_AS_TEXT[$this->status] ?? self::STATUS_ERROR_MESSAGE;
+        return self::LIST_STATUSES[$this->status] ?? self::STATUS_ERROR_MESSAGE;
     }
 
     /**
@@ -505,6 +529,30 @@ class TaskEntity implements IEntity
     public function checkStatus(int $status)
     {
         return ($this->getStatus() === $status) ? true : false ;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasChildren()
+    {
+        return (empty($this->getChildren())) ? false : true ;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPrivate()
+    {
+        return ($this->visibilityArea === self::VISIBILITY_AREA_PRIVATE) ? true : false ;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasFiles()
+    {
+        return (empty($this->getFiles())) ? false : true ;
     }
 }
 

@@ -4,11 +4,13 @@ namespace common\components\helpers;
 
 
 use common\models\entities\CommentEntity;
+use common\models\entities\ProjectEntity;
 use common\models\entities\TaskEntity;
 use common\models\entities\UserEntity;
 use common\models\repositories\CommentViewRepository;
+use common\models\searchmodels\task\TaskEntitySearch;
 use Yii;
-use yii\data\Pagination;
+
 
 class LinkHelper
 {
@@ -34,27 +36,35 @@ class LinkHelper
         $user = $user ?? Yii::$app->user->identity->getUser();
 
         //расчитываем номер страницы, на которой будет находится комментарий
-        $index = CommentViewRepository::instance()->getNewCommentIndex($comment, $user);
+        $index = CommentHelper::getNewCommentIndex($comment, $user);
         $perPage = CommentViewRepository::COMMENTS_PER_PAGE;
 
-        if($index % $perPage === 0)
-        {
+        if($index % $perPage === 0) {
             $pageNumber = $index/$perPage;
         }
-        else
-        {
+        else {
             $pageNumber = floor($index/$perPage) + 1;
         }
 
-        //из класс yii\data\Pagination получаем названия GET-параметров (page, per-page)
-        $pagination = new Pagination();
-
         return Yii::$app->urlManager->createAbsoluteUrl([
             'task/view',
-            'id' => $comment->getTaskId(),
-            $pagination->pageParam => $pageNumber,
-            $pagination->pageSizeParam => CommentViewRepository::COMMENTS_PER_PAGE,
-            '#' => $comment->getId()
+            'id'       => $comment->getTaskId(),
+            'page'     => $pageNumber,
+            'per-page' => $perPage,
+            '#'        => $comment->getId()
+        ]);
+    }
+
+    /**
+     * @param ProjectEntity $project
+     * @return string
+     */
+    public static function getLinkOnTaskIndex(ProjectEntity $project)
+    {
+        return Yii::$app->urlManager->createAbsoluteUrl([
+            'task/index',
+            'TaskEntitySearch[projectId]' => $project->getId(),
+            'TaskEntitySearch[status]'    => TaskEntitySearch::STATUS_ALL,
         ]);
     }
 }

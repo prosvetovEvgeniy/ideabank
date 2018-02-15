@@ -119,7 +119,7 @@ class DataController extends Controller
         $manager = $auth->getRole('manager');
         $director = $auth->getRole('projectDirector');
 
-        $auth->assign($user,$participantIds['evgeniyGithub']);
+        $auth->assign($manager,$participantIds['evgeniyGithub']);
         $auth->assign($user,$participantIds['evgeniyVk']);
         $auth->assign($user,$participantIds['evgeniyXabr']);
         $auth->assign($manager, $participantIds['evgeniyVulcanm']);
@@ -147,7 +147,11 @@ class DataController extends Controller
         $tasksIds['seventhTask'] = $this->addTask('Пятая задача git','Текст пятой задачи', $userIds['evgeniy'], $projectIds['github'], 3, $tasksIds['sixthTask']);
         $tasksIds['eightTask'] = $this->addTask('Шестая задача git','Текст шестой задачи', $userIds['evgeniy'], $projectIds['github'], 0);
         $tasksIds['ninthTask'] = $this->addTask('Седьмая задача git','Текст седьмой задачи', $userIds['evgeniy'], $projectIds['github'], 2);
-        $tasksIds['vulcanTask'] = $this->addTask('New task for github', 'New task For github', $userIds['evgeniy'], $projectIds['vulcan'], 0);
+        $tasksIds['vulcanTask1'] = $this->addTask('New task for vulcan 1', 'New task for vulcan 1', $userIds['evgeniy'], $projectIds['vulcan'], 0);
+        $tasksIds['vulcanTask2'] = $this->addTask('New task for vulcan 2', 'New task for vulcan 2', $userIds['newUser'], $projectIds['vulcan'], 1);
+        $tasksIds['vulcanTask3'] = $this->addTask('New task for vulcan 3', 'New task for vulcan 3', $userIds['newLogin'], $projectIds['vulcan'], 2);
+        $tasksIds['vulcanTask4'] = $this->addTask('New task for vulcan 4', 'New task for vulcan 4', $userIds['evgeniy'], $projectIds['vulcan'], 0);
+
 
         //############### FILLING COMMENTS ###############
 

@@ -17,8 +17,7 @@ class TaskFileController extends Controller
     {
         $file = TaskFileRepository::instance()->findOne(['id' => $id]);
 
-        if(!$file)
-        {
+        if(!$file) {
             throw new NotFoundHttpException();
         }
 
@@ -26,12 +25,10 @@ class TaskFileController extends Controller
 
         $headers->set('Content-Type', $file->getMimeType());
 
-        if($file->isImage())
-        {
+        if($file->isImage()) {
             $headers->set('Content-Disposition', 'inline');
         }
-        else
-        {
+        else {
             $headers->set('ContentDisposition', 'attachment');
         }
 
@@ -46,8 +43,7 @@ class TaskFileController extends Controller
     {
         $model = new TaskFileDeleteModel();
 
-        if(!$model->load(Yii::$app->request->post()) || !$model->delete())
-        {
+        if(!$model->load(Yii::$app->request->post()) || !$model->delete()) {
             throw new BadRequestHttpException();
         }
     }

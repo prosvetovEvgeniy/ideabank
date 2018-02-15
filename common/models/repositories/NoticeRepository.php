@@ -176,26 +176,65 @@ class NoticeRepository implements IRepository
 
     /**
      * @param TaskEntity $task
-     * @param string $link
      * @throws Exception
      */
-    public function saveNoticesForTask(TaskEntity $task, string $link)
+    public function saveNoticesForTask(TaskEntity $task)
     {
         $noticeHelper = new NoticeHelper($task->getContent());
 
+        $link = LinkHelper::getLinkOnTask($task);
+
         foreach ($noticeHelper->getNoticedUsers() as $noticedUser)
         {
-            $notice = $this->add(new NoticeEntity(
-                $noticedUser->getId(),
-                $task->getContent(),
-                $link,
-                $task->getAuthorId()
-            ));
+            $notice = $this->add(
+                new NoticeEntity(
+                    $noticedUser->getId(),
+                    $task->getContent(),
+                    $link,
+                    $task->getAuthorId()
+                )
+            );
 
-            TaskNoticeRepository::instance()->add(new TaskNoticeEntity(
-                $task->getId(),
-                $notice->getId()
-            ));
+            TaskNoticeRepository::instance()->add(
+                new TaskNoticeEntity(
+                    $task->getId(),
+                    $notice->getId()
+                )
+            );
+        }
+    }
+
+    /**
+     * @param TaskEntity $task
+     * @throws Exception
+     */
+    public function saveNoticesForPrivateTask(TaskEntity $task)
+    {
+        $noticeHelper = new NoticeHelper($task->getContent());
+
+        $link = LinkHelper::getLinkOnTask($task);
+
+        foreach ($noticeHelper->getNoticedUsers() as $noticedUser)
+        {
+            $isManager = Yii::$app->user->is(ParticipantEntity::ROLE_MANAGER, $task->getProjectId(), $noticedUser->getId());
+
+            if($task->getAuthorId() === Yii::$app->user->identity->getUserId() || $isManager){
+                $notice = $this->add(
+                    new NoticeEntity(
+                        $noticedUser->getId(),
+                        $task->getContent(),
+                        $link,
+                        $task->getAuthorId()
+                    )
+                );
+
+                TaskNoticeRepository::instance()->add(
+                    new TaskNoticeEntity(
+                        $task->getId(),
+                        $notice->getId()
+                    )
+                );
+            }
         }
     }
 
@@ -209,17 +248,21 @@ class NoticeRepository implements IRepository
 
         foreach ($noticeHelper->getNoticedUsers() as $noticedUser)
         {
-            $notice = $this->add(new NoticeEntity(
-                $noticedUser->getId(),
-                $comment->getContent(),
-                LinkHelper::getLinkOnComment($comment, $noticedUser),
-                $comment->getSenderId()
-            ));
+            $notice = $this->add(
+                new NoticeEntity(
+                    $noticedUser->getId(),
+                    $comment->getContent(),
+                    LinkHelper::getLinkOnComment($comment, $noticedUser),
+                    $comment->getSenderId()
+                )
+            );
 
-            CommentNoticeRepository::instance()->add(new CommentNoticeEntity(
-                $comment->getId(),
-                $notice->getId()
-            ));
+            CommentNoticeRepository::instance()->add(
+                new CommentNoticeEntity(
+                    $comment->getId(),
+                    $notice->getId()
+                )
+            );
         }
     }
 
@@ -237,17 +280,21 @@ class NoticeRepository implements IRepository
 
             if($comment->getSenderId() === $noticedUser->getId() || $isManager)
             {
-                $notice = $this->add(new NoticeEntity(
-                    $noticedUser->getId(),
-                    $comment->getContent(),
-                    LinkHelper::getLinkOnComment($comment, $noticedUser),
-                    $comment->getSenderId()
-                ));
+                $notice = $this->add(
+                    new NoticeEntity(
+                        $noticedUser->getId(),
+                        $comment->getContent(),
+                        LinkHelper::getLinkOnComment($comment, $noticedUser),
+                        $comment->getSenderId()
+                    )
+                );
 
-                CommentNoticeRepository::instance()->add(new CommentNoticeEntity(
-                    $comment->getId(),
-                    $notice->getId()
-                ));
+                CommentNoticeRepository::instance()->add(
+                    new CommentNoticeEntity(
+                        $comment->getId(),
+                        $notice->getId()
+                    )
+                );
             }
         }
     }

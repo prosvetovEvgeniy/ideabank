@@ -29,8 +29,7 @@ class NoticeDeleteModel extends Model
 
     public function delete()
     {
-        if(!$this->validate())
-        {
+        if(!$this->validate()) {
             return false;
         }
 
@@ -39,19 +38,16 @@ class NoticeDeleteModel extends Model
             'recipient_id' => $this->recipientId
         ]);
 
-        if(!$notice)
-        {
+        if(!$notice) {
             return false;
         }
 
-        try
-        {
+        try {
             NoticeRepository::instance()->delete($notice);
 
             return true;
         }
-        catch (Exception $e)
-        {
+        catch (Exception $e) {
             return false;
         }
     }

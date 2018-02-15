@@ -9,6 +9,7 @@ use common\models\entities\CommentEntity;
 use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
+use common\models\interfaces\IEntity;
 
 /**
  * Class CommentRepository
@@ -49,8 +50,7 @@ class CommentRepository implements IRepository
     {
         $model = Comment::findOne($condition);
 
-        if(!$model)
-        {
+        if(!$model) {
             return null;
         }
 
@@ -62,7 +62,7 @@ class CommentRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
-     * @return CommentEntity|\common\models\interfaces\IEntity[]
+     * @return CommentEntity[]|IEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
@@ -84,8 +84,7 @@ class CommentRepository implements IRepository
 
         $this->builderBehavior->assignProperties($model, $comment);
 
-        if(!$model->save())
-        {
+        if(!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot save comment with content = ' . $comment->getContent());
         }
@@ -104,15 +103,13 @@ class CommentRepository implements IRepository
     {
         $model = Comment::findOne(['id' => $comment->getId()]);
 
-        if(!$model)
-        {
+        if(!$model) {
             throw new Exception('Comment with id = ' . $comment->getId() . ' does not exists');
         }
 
         $this->builderBehavior->assignProperties($model, $comment);
 
-        if(!$model->save())
-        {
+        if(!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot update comment with id = ' . $comment->getId());
         }
@@ -131,20 +128,17 @@ class CommentRepository implements IRepository
     {
         $model = Comment::findOne(['id' => $comment->getId()]);
 
-        if(!$model)
-        {
+        if(!$model) {
             throw new Exception('Comment with id = ' . $comment->getId() . ' does not exists');
         }
 
-        if($model->deleted)
-        {
+        if($model->deleted) {
             throw new Exception('Comment with id = ' . $comment->getId() . ' already deleted');
         }
 
         $model->deleted = true;
 
-        if(!$model->save())
-        {
+        if(!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot delete comment with id = ' . $comment->getId());
         }
@@ -163,4 +157,12 @@ class CommentRepository implements IRepository
 
 
     // #################### UNIQUE METHODS OF CLASS ######################
+
+    /**
+     * @param array $condition
+     */
+    public function deleteAll(array $condition)
+    {
+        Comment::updateAll(['deleted' => true], $condition);
+    }
 }

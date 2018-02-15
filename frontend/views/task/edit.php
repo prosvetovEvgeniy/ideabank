@@ -7,7 +7,9 @@ use common\models\entities\TaskEntity;
 use common\models\entities\TaskFileEntity;
 use frontend\assets\TaskFileDeleteAsset;
 use common\components\helpers\ProjectHelper;
-
+use yii\jui\DatePicker;
+use common\components\helpers\TaskHelper;
+use frontend\assets\TaskDeleteAsset;
 
 /**
  * @var EditTaskForm $model
@@ -15,6 +17,7 @@ use common\components\helpers\ProjectHelper;
  */
 
 TaskFileDeleteAsset::register($this);
+TaskDeleteAsset::register($this);
 
 $this->title = 'Редактировать задачу';
 ?>
@@ -35,7 +38,35 @@ $this->title = 'Редактировать задачу';
 
 <?= $form->field($model, 'content')->textarea() ?>
 
-<?= $form->field($model, 'projectId')->dropDownList(ProjectHelper::getProjectItems()) ?>
+<?php if(Yii::$app->user->isManager($task->getProjectId())): ?>
+
+    <?php if($task->hasChildren()): ?>
+        <?= $form->field($model, 'status')->dropDownList(TaskEntity::LIST_STATUSES_PRIVATE_TASK); ?>
+    <?php else: ?>
+        <?= $form->field($model, 'status')->dropDownList(TaskEntity::LIST_STATUSES); ?>
+    <?php endif; ?>
+
+    <?= $form->field($model, 'visibilityArea')->dropDownList(TaskEntity::LIST_VISIBILITY_AREAS) ?>
+
+    <?= $form->field($model, 'plannedEndAt')->widget(DatePicker::className(), [
+        'dateFormat' => $model::DATE_FORMAT,
+        'options' => ['class' => 'form-control']
+    ]) ?>
+
+    <?php if($task->hasChildren()): ?>
+        <p><b>Дочерние задачи</b></p>
+        <?php foreach ($task->getChildren() as $child): ?>
+            <?= Html::a($child->getTitle(), ['/task/view', 'id' => $child->getId()], ['class' => 'child-task']); ?>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <?= $form->field($model, 'parentId')->dropDownList(TaskHelper::getParentTasksItems($task), ['prompt' => 'Отсутствует']) ?>
+    <?php endif; ?>
+
+    <?php if($task->getAuthorId() !== Yii::$app->user->identity->getUserId()): ?>
+        <p><b>Создал</b>: <?= Html::a($task->getAuthor()->getUsername(), ['/profile/view', 'id' => $task->getAuthorId()]) ?></p>
+    <?php endif; ?>
+
+<?php endif; ?>
 
 <div class="task-files-block">
 
@@ -83,6 +114,6 @@ $this->title = 'Редактировать задачу';
 
 <?= Html::submitButton('Изменить', ['class' => 'btn btn-primary']) ?>
 
-<?= Html::a('Перейти к задаче', ['task/view', 'id' => $task->getId()], ['class' => 'btn btn-primary']) ?>
+<button class="btn btn-danger delete-task-btn" data-task-id="<?= $task->getId() ?>">Удалить</button>
 
 <?php ActiveForm::end() ?>

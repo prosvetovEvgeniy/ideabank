@@ -11,10 +11,9 @@ use common\models\repositories\ParticipantRepository;
 use common\models\repositories\ProjectRepository;
 use common\models\repositories\TaskRepository;
 use common\models\searchmodels\task\TaskEntitySearch;
-use frontend\models\comment\CommentDeleteModel;
-use frontend\models\comment\CommentEditModel;
 use frontend\models\comment\CommentCreateForm;
 use frontend\models\task\CreateTaskForm;
+use frontend\models\task\DeleteTaskModel;
 use frontend\models\task\EditTaskForm;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -28,8 +27,7 @@ class TaskController extends Controller
     {
         $searchModel = new TaskEntitySearch();
 
-        if(!$searchModel->load(Yii::$app->request->queryParams) || !$searchModel->validate())
-        {
+        if(!$searchModel->load(Yii::$app->request->queryParams) || !$searchModel->validate()) {
             throw new NotFoundHttpException();
         }
 
@@ -49,8 +47,7 @@ class TaskController extends Controller
     {
         $task = TaskRepository::instance()->findOne(['id' => $id]);
 
-        if(!$task)
-        {
+        if(!$task) {
             throw new NotFoundHttpException();
         }
 
@@ -67,8 +64,7 @@ class TaskController extends Controller
         $model = new CommentCreateForm();
         $model->taskId = $task->getId();
 
-        if($model->load(Yii::$app->request->post()) && $model->save())
-        {
+        if($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(LinkHelper::getLinkOnComment($model->getComment()));
         }
 
@@ -76,7 +72,7 @@ class TaskController extends Controller
             'task'         => $task,
             'dataProvider' => $dataProvider,
             'model'        => $model,
-            'isManager'    => Yii::$app->user->is(ParticipantEntity::ROLE_MANAGER, $task->getProjectId())
+            'isManager'    => Yii::$app->user->isManager($task->getProjectId())
         ]);
     }
 
@@ -85,12 +81,10 @@ class TaskController extends Controller
         $model = new CreateTaskForm();
         $model->authorId = Yii::$app->user->identity->getUserId();
 
-        if($model->load(Yii::$app->request->post()))
-        {
+        if($model->load(Yii::$app->request->post())) {
             $model->files = UploadedFile::getInstances($model, 'files');
 
-            if($model->save())
-            {
+            if($model->save()) {
                 return $this->redirect(LinkHelper::getLinkOnTask($model->getTask()));
             }
         }
@@ -107,20 +101,21 @@ class TaskController extends Controller
     {
         $task = TaskRepository::instance()->findOne(['id' => $id]);
 
-        if(!$task)
-        {
+        if(!$task) {
             throw new BadRequestHttpException();
         }
 
         $model = new EditTaskForm($task);
 
-        if($model->load(Yii::$app->request->post()))
-        {
+        if(Yii::$app->user->isManager($task->getProjectId())){
+            $model->scenario = EditTaskForm::SCENARIO_ADMIN_EDIT;
+        }
+
+        if($model->load(Yii::$app->request->post())) {
             $model->files = UploadedFile::getInstances($model, 'files');
 
-            if($model->save())
-            {
-                Yii::$app->session->setFlash('taskChanged', 'Задача успешно обновлена');
+            if($model->update()) {
+                $this->redirect(['/task/view', 'id' => $model->getTask()->getId()]);
             }
         }
 
@@ -128,5 +123,16 @@ class TaskController extends Controller
             'model' => $model,
             'task'  => $task
         ]);
+    }
+
+    public function actionDelete()
+    {
+        $model = new DeleteTaskModel();
+
+        if(!$model->load(Yii::$app->request->post()) || !$model->delete()){
+            throw new BadRequestHttpException();
+        }
+
+        return LinkHelper::getLinkOnTaskIndex($model->getTask()->getProject());
     }
 }

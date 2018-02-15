@@ -3,11 +3,9 @@
 namespace common\components\facades;
 
 
-use common\components\helpers\LinkHelper;
 use common\models\entities\TaskEntity;
 use common\models\repositories\NoticeRepository;
 use common\models\repositories\TaskFileRepository;
-use common\models\repositories\TaskNoticeRepository;
 use common\models\repositories\TaskRepository;
 use yii\web\UploadedFile;
 
@@ -24,7 +22,7 @@ class TaskFacade
     {
         $task = TaskRepository::instance()->add($task);
         TaskFileRepository::instance()->saveFiles($files, $task);
-        NoticeRepository::instance()->saveNoticesForTask($task, LinkHelper::getLinkOnTask($task));
+        NoticeRepository::instance()->saveNoticesForTask($task);
 
         return $task;
     }
@@ -43,13 +41,34 @@ class TaskFacade
         //если есть файлы, то сохраняем их
         TaskFileRepository::instance()->saveFiles($files, $task);
 
-        //если заметки были, то очищаем их
-        $taskNotices = TaskNoticeRepository::instance()->deleteAll(['task_id' => $task->getId()]);
-        NoticeRepository::instance()->deleteAll($taskNotices);
+        TaskNoticesFacade::deleteNotices($task);
 
-        //и создаем новые
-        NoticeRepository::instance()->saveNoticesForTask($task, LinkHelper::getLinkOnTask($task));
+        if($task->isPrivate()){
+            NoticeRepository::instance()->saveNoticesForPrivateTask($task);
+        }
+        else{
+            NoticeRepository::instance()->saveNoticesForTask($task);
+        }
 
         return $task;
+    }
+
+    /**
+     * @param TaskEntity $task
+     * @return TaskEntity
+     * @throws \yii\db\Exception
+     */
+    public static function deleteTask(TaskEntity $task)
+    {
+        if($task->hasChildren()){
+            foreach ($task->getChildren() as $child){
+                TaskNoticesFacade::deleteNotices($child);
+                TaskRepository::instance()->delete($child);
+            }
+        }
+
+        TaskNoticesFacade::deleteNotices($task);
+
+        return TaskRepository::instance()->delete($task);
     }
 }
