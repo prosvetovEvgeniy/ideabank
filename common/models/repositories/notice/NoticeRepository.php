@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models\repositories;
+namespace common\models\repositories\notice;
 
 use common\components\helpers\LinkHelper;
 use common\components\helpers\NoticeHelper;
@@ -14,6 +14,8 @@ use common\models\entities\TaskEntity;
 use common\models\entities\TaskNoticeEntity;
 use common\models\interfaces\INotice;
 use common\models\interfaces\IRepository;
+use common\models\repositories\notice\CommentNoticeRepository;
+use common\models\repositories\notice\TaskNoticeRepository;
 use yii\db\Exception;
 use Yii;
 use yii\helpers\ArrayHelper;

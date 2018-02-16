@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models\repositories;
+namespace common\models\repositories\task;
 
 
 use common\models\activerecords\Task;
@@ -9,6 +9,7 @@ use common\models\entities\ProjectEntity;
 use common\models\entities\TaskEntity;
 use common\models\entities\UserEntity;
 use common\models\interfaces\IRepository;
+use common\models\repositories\participant\ParticipantRepository;
 use yii\db\Exception;
 use Yii;
 use yii\helpers\ArrayHelper;

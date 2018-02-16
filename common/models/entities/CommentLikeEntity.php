@@ -4,8 +4,8 @@ namespace common\models\entities;
 
 
 use common\models\interfaces\IEntity;
-use common\models\repositories\CommentRepository;
-use common\models\repositories\UserRepository;
+use common\models\repositories\comment\CommentRepository;
+use common\models\repositories\user\UserRepository;
 
 /**
  * Class CommentLikeEntity

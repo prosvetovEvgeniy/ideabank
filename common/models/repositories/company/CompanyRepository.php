@@ -1,38 +1,36 @@
 <?php
 
-namespace common\models\repositories;
+namespace common\models\repositories\company;
 
-
-use common\models\activerecords\Users;
-use common\models\builders\UserEntityBuilder;
-use common\models\entities\UserEntity;
+use common\models\activerecords\Company;
+use common\models\builders\CompanyEntityBuilder;
+use common\models\entities\CompanyEntity;
 use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
 
 /**
- * Class UserRepository
+ * Class CompanyRepository
  * @package common\models\repositories
  *
- * @property UserEntityBuilder $builderBehavior
+ * @property CompanyEntityBuilder $builderBehavior
  */
-class UserRepository implements IRepository
+class CompanyRepository implements IRepository
 {
-    public $builderBehavior;
+    private $builderBehavior;
 
     public function __construct()
     {
-        $this->builderBehavior = new UserEntityBuilder();
+        $this->builderBehavior = new CompanyEntityBuilder();
     }
 
 
     // #################### STANDARD METHODS ######################
 
-
     /**
      * Возвращает экземпляр класса
      *
-     * @return UserRepository
+     * @return CompanyRepository
      */
     public static function instance(): IRepository
     {
@@ -43,14 +41,11 @@ class UserRepository implements IRepository
      * Возвращает сущность по условию
      *
      * @param array $condition
-     * @return UserEntity|null
+     * @return CompanyEntity|null
      */
     public function findOne(array $condition)
     {
-        /**
-         * @var Users $model
-         */
-        $model = Users::find()->where($condition)->one();
+        $model = Company::findOne($condition);
 
         if(!$model || $model->deleted)
         {
@@ -61,17 +56,15 @@ class UserRepository implements IRepository
     }
 
     /**
-     * Возвращает массив сущностей по условию
-     *
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
-     * @return UserEntity[]
+     * @return CompanyEntity|\common\models\interfaces\IEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
-        $models = Users::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
+        $models = Company::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
 
         return $this->builderBehavior->buildEntities($models);
     }
@@ -79,21 +72,20 @@ class UserRepository implements IRepository
     /**
      * Добавляет сущность в БД
      *
-     * @param UserEntity $user
-     * @return UserEntity
+     * @param CompanyEntity $company
+     * @return CompanyEntity
      * @throws Exception
-     * @throws \yii\base\Exception
      */
-    public function add(UserEntity $user)
+    public function add(CompanyEntity $company)
     {
-        $model = new Users();
+        $model = new Company();
 
-        $this->builderBehavior->assignProperties($model, $user);
+        $this->builderBehavior->assignProperties($model, $company);
 
         if(!$model->save())
         {
             Yii::error($model->errors);
-            throw new Exception('Cannot save user with username = ' . $user->getUsername());
+            throw new Exception("Cannot save company with name = " . $company->getName());
         }
 
         return $this->builderBehavior->buildEntity($model);
@@ -102,26 +94,25 @@ class UserRepository implements IRepository
     /**
      * Обновляет сущность в БД
      *
-     * @param UserEntity $user
-     * @return UserEntity
+     * @param CompanyEntity $company
+     * @return CompanyEntity
      * @throws Exception
-     * @throws \yii\base\Exception
      */
-    public function update(UserEntity $user)
+    public function update(CompanyEntity $company)
     {
-        $model = Users::findOne(['id' => $user->getId()]);
+        $model = Company::findOne(['id' => $company->getId()]);
 
         if(!$model)
         {
-            throw new Exception('User with id = ' . $user->getId() . ' does not exists');
+            throw new Exception('Company with id = ' . $company->getId() . ' does not exists');
         }
 
-        $this->builderBehavior->assignProperties($model, $user);
+        $this->builderBehavior->assignProperties($model, $company);
 
         if(!$model->save())
         {
             Yii::error($model->errors);
-            throw new Exception('Cannot update user with id = ' . $user->getId());
+            throw new Exception('Cannot update company with id = ' . $company->getId());
         }
 
         return $this->builderBehavior->buildEntity($model);
@@ -130,22 +121,22 @@ class UserRepository implements IRepository
     /**
      * Помечает сущность как удаленную в БД
      *
-     * @param UserEntity $user
-     * @return UserEntity
+     * @param CompanyEntity $company
+     * @return CompanyEntity
      * @throws Exception
      */
-    public function delete(UserEntity $user)
+    public function delete(CompanyEntity $company)
     {
-        $model = Users::findOne(['id' => $user->getId()]);
+        $model = Company::findOne(['id' => $company->getId()]);
 
         if(!$model)
         {
-            throw new Exception('User with id = ' . $user->getId() . ' does not exists');
+            throw new Exception('Company with id = ' . $company->getId() . ' does not exists');
         }
 
         if($model->deleted)
         {
-            throw new Exception('User with id = ' . $user->getId() . ' already deleted');
+            throw new Exception('Company with id = ' . $company->getId() . ' already deleted');
         }
 
         $model->deleted = true;
@@ -153,7 +144,7 @@ class UserRepository implements IRepository
         if(!$model->save())
         {
             Yii::error($model->errors);
-            throw new Exception('Cannot delete user with id = ' . $user->getId());
+            throw new Exception('Cannot delete company with id = ' . $company->getId());
         }
 
         return $this->builderBehavior->buildEntity($model);
@@ -165,10 +156,11 @@ class UserRepository implements IRepository
      */
     public function getTotalCountByCondition(array $condition): int
     {
-        return (int) Users::find()->where($condition)->count();
+        return (int) Company::find()->where($condition)->count();
     }
 
     // #################### UNIQUE METHODS OF CLASS ######################
+
 
 
 }

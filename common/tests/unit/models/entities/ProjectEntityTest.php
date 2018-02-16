@@ -5,7 +5,7 @@ namespace common\tests\models\entities;
 use common\models\entities\CompanyEntity;
 use common\models\entities\ProjectEntity;
 use common\models\entities\TaskEntity;
-use common\models\repositories\ProjectRepository;
+use common\models\repositories\project\ProjectRepository;
 
 class ProjectEntityTest extends \Codeception\Test\Unit
 {

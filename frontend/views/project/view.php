@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use common\components\helpers\LinkHelper;
+use common\models\searchmodels\task\TaskSearchForm;
 
 /**
  * @var \common\models\entities\ProjectEntity $project
@@ -15,8 +16,11 @@ $this->title = $project->getName();
         <div class="center-block">
             <div><h2><?= $project->getName() ?></h2></div>
             <div><?= $project->getDescription() ?></div>
-            <div><?= Html::a('Количество задач : ' . $project->getAmountTasks(), LinkHelper::getLinkOnTaskIndex($project)) ?></div>
-            
+            <div><?= Html::a('Количество задач : ' . $project->getAmountTasks(), LinkHelper::getLinkOnActionTaskIndex($project, TaskSearchForm::STATUS_ALL)) ?></div>
+
+            <?php if(Yii::$app->user->isManager($project->getId())): ?>
+                <div><?= Html::a('Участники проекта', ['/project/participants', 'ParticipantSearchForm[projectId]' => $project->getId()]) ?></div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

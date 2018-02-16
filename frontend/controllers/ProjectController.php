@@ -3,11 +3,11 @@
 namespace frontend\controllers;
 
 use common\components\dataproviders\EntityDataProvider;
-use common\models\repositories\ParticipantRepository;
-use common\models\repositories\ProjectRepository;
+use common\models\repositories\participant\ParticipantRepository;
+use common\models\repositories\project\ProjectRepository;
 use frontend\models\project\JoinToProjectModel;
-use yii\db\Exception;
 use yii\web\BadRequestHttpException;
+use common\models\searchmodels\project\ParticipantSearchForm;
 use yii\web\Controller;
 use Yii;
 
@@ -22,12 +22,9 @@ class ProjectController extends Controller
 
     public function actionView(int $id)
     {
-        try
-        {
-            $project = ProjectRepository::instance()->findOne(['id' => $id]);
-        }
-        catch (Exception $e)
-        {
+        $project = ProjectRepository::instance()->findOne(['id' => $id]);
+
+        if(!$project){
             throw new BadRequestHttpException();
         }
 
@@ -54,6 +51,22 @@ class ProjectController extends Controller
         ]);
     }
 
+    public function actionParticipants()
+    {
+        $searchModel = new ParticipantSearchForm();
+
+        if(!$searchModel->load(Yii::$app->request->queryParams) || !$searchModel->validate()){
+            throw new BadRequestHttpException();
+        }
+
+        $dataProvider = $searchModel->search();
+
+        return $this->render('participants', [
+            'dataProvider' => $dataProvider,
+            'model' => $searchModel
+        ]);
+    }
+
 
     //############### AJAX ACTIONS ##################
 
@@ -62,8 +75,7 @@ class ProjectController extends Controller
     {
         $model = new JoinToProjectModel();
 
-        if(!$model->load(Yii::$app->request->post()) || !$model->save())
-        {
+        if(!$model->load(Yii::$app->request->post()) || !$model->save()) {
             throw new BadRequestHttpException();
         }
     }

@@ -6,14 +6,13 @@ namespace common\models\searchmodels\task;
 use common\components\dataproviders\EntityDataProvider;
 use common\models\entities\ParticipantEntity;
 use common\models\interfaces\ISearchEntityModel;
-use common\models\repositories\ProjectRepository;
-use common\models\repositories\TaskRepository;
+use common\models\repositories\project\ProjectRepository;
+use common\models\repositories\task\TaskRepository;
 use common\models\searchmodels\task\searchstrategy\ITaskSearchStrategy;
 use common\models\searchmodels\task\searchstrategy\ManagerTaskSearchStrategy;
 use common\models\searchmodels\task\searchstrategy\UserTaskSearchStrategy;
 use yii\base\Model;
-use yii\db\Exception;
-use yii\web\NotFoundHttpException;
+use common\models\entities\ProjectEntity;
 use Yii;
 
 /**
@@ -28,7 +27,7 @@ use Yii;
  * @property array  $skipOnBuildLike
  * @property ITaskSearchStrategy $searchStrategyBehavior
  */
-class TaskEntitySearch extends Model implements ISearchEntityModel
+class TaskSearchForm extends Model implements ISearchEntityModel
 {
     /**
      * Список статусов для поиска.
@@ -113,17 +112,13 @@ class TaskEntitySearch extends Model implements ISearchEntityModel
      */
     public function search(int $pageSize = 20): EntityDataProvider
     {
-        $condition = $this->buildCondition();
-
-        $dataProvider = new EntityDataProvider([
-            'condition' => $condition,
+        return new EntityDataProvider([
+            'condition' =>  $this->buildCondition(),
             'repositoryInstance' => TaskRepository::instance(),
             'pagination' => [
                 'pageSize' => $pageSize
             ]
         ]);
-
-        return $dataProvider;
     }
 
     /**
@@ -140,18 +135,10 @@ class TaskEntitySearch extends Model implements ISearchEntityModel
     }
 
     /**
-     * @return \common\models\entities\ProjectEntity
-     * @throws NotFoundHttpException
+     * @return ProjectEntity|null
      */
     public function getProject()
     {
-        try
-        {
-            return ProjectRepository::instance()->findOne(['id' => $this->projectId]);
-        }
-        catch (Exception $e)
-        {
-            throw new NotFoundHttpException();
-        }
+        return ProjectRepository::instance()->findOne(['id' => $this->projectId]);
     }
 }

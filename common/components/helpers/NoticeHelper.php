@@ -4,8 +4,8 @@ namespace common\components\helpers;
 
 
 use common\models\entities\UserEntity;
-use common\models\repositories\UserRepository;
-use common\models\repositories\NoticeRepository;
+use common\models\repositories\user\UserRepository;
+use common\models\repositories\notice\NoticeRepository;
 use common\models\entities\NoticeEntity;
 use yii\db\Exception;
 

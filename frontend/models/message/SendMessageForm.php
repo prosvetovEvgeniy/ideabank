@@ -3,7 +3,7 @@
 namespace frontend\models\message;
 
 use common\models\entities\MessageEntity;
-use common\models\repositories\MessageRepository;
+use common\models\repositories\message\MessageRepository;
 use yii\base\Model;
 use yii\db\Exception;
 use Yii;

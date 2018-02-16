@@ -4,7 +4,7 @@ namespace common\tests\models\entities;
 
 use common\models\entities\MessageEntity;
 use common\models\entities\UserEntity;
-use common\models\repositories\MessageRepository;
+use common\models\repositories\message\MessageRepository;
 
 class MessageEntityTest extends \Codeception\Test\Unit
 {

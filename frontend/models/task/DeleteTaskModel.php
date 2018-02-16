@@ -5,7 +5,7 @@ namespace frontend\models\task;
 
 use common\components\facades\TaskFacade;
 use common\models\entities\TaskEntity;
-use common\models\repositories\TaskRepository;
+use common\models\repositories\task\TaskRepository;
 use yii\base\Model;
 use Yii;
 use yii\db\Exception;

@@ -4,13 +4,13 @@ namespace common\models\entities;
 
 
 use common\models\interfaces\IEntity;
-use common\models\repositories\CommentLikeRepository;
-use common\models\repositories\CommentViewRepository;
-use common\models\repositories\MessageRepository;
-use common\models\repositories\NoticeRepository;
-use common\models\repositories\ParticipantRepository;
-use common\models\repositories\TaskLikeRepository;
-use common\models\repositories\TaskRepository;
+use common\models\repositories\comment\CommentLikeRepository;
+use common\models\repositories\comment\CommentViewRepository;
+use common\models\repositories\message\MessageRepository;
+use common\models\repositories\notice\NoticeRepository;
+use common\models\repositories\participant\ParticipantRepository;
+use common\models\repositories\task\TaskLikeRepository;
+use common\models\repositories\task\TaskRepository;
 use Yii;
 
 /**

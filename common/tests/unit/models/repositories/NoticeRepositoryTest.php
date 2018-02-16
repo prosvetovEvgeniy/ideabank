@@ -4,7 +4,7 @@ namespace common\tests\models\repositories;
 
 
 use common\models\entities\NoticeEntity;
-use common\models\repositories\NoticeRepository;
+use common\models\repositories\notice\NoticeRepository;
 
 class NoticeRepositoryTest extends BaseRepositoryTest
 {

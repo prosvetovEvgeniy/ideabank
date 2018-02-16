@@ -4,7 +4,7 @@ namespace frontend\models\profile;
 
 
 use common\models\entities\UserEntity;
-use common\models\repositories\UserRepository;
+use common\models\repositories\user\UserRepository;
 use yii\base\Model;
 use Yii;
 use yii\db\Exception;

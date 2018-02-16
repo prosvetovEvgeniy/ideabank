@@ -7,8 +7,8 @@ use common\models\entities\CommentEntity;
 use common\models\entities\ProjectEntity;
 use common\models\entities\TaskEntity;
 use common\models\entities\UserEntity;
-use common\models\repositories\CommentViewRepository;
-use common\models\searchmodels\task\TaskEntitySearch;
+use common\models\repositories\comment\CommentViewRepository;
+use common\models\searchmodels\task\TaskSearchForm;
 use Yii;
 
 
@@ -56,15 +56,18 @@ class LinkHelper
     }
 
     /**
+     * Возвращает ссылку на страницу поиска задачи
+     *
      * @param ProjectEntity $project
+     * @param string $status
      * @return string
      */
-    public static function getLinkOnTaskIndex(ProjectEntity $project)
+    public static function getLinkOnActionTaskIndex(ProjectEntity $project, string $status)
     {
         return Yii::$app->urlManager->createAbsoluteUrl([
             'task/index',
-            'TaskEntitySearch[projectId]' => $project->getId(),
-            'TaskEntitySearch[status]'    => TaskEntitySearch::STATUS_ALL,
+            'TaskSearchForm[projectId]' => $project->getId(),
+            'TaskSearchForm[status]'    => $status,
         ]);
     }
 }

@@ -5,7 +5,7 @@ namespace frontend\models\comment;
 
 use common\components\facades\CommentFacade;
 use common\models\entities\ParticipantEntity;
-use common\models\repositories\CommentRepository;
+use common\models\repositories\comment\CommentRepository;
 use yii\base\Model;
 use Yii;
 use yii\db\Exception;

@@ -3,8 +3,10 @@ namespace frontend\controllers;
 
 use common\components\dataproviders\EntityDataProvider;
 use common\models\entities\TaskEntity;
-use common\models\repositories\ActualTasksRepository;
-use common\models\repositories\TaskRepository;
+use common\models\repositories\task\ActualTasksRepository;
+use common\models\repositories\project\ProjectsManagerRepository;
+use common\models\repositories\task\TaskRepository;
+use common\models\repositories\user\UserRepository;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;

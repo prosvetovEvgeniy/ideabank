@@ -4,9 +4,9 @@ namespace common\components\facades;
 
 
 use common\models\entities\TaskEntity;
-use common\models\repositories\NoticeRepository;
-use common\models\repositories\TaskFileRepository;
-use common\models\repositories\TaskRepository;
+use common\models\repositories\notice\NoticeRepository;
+use common\models\repositories\task\TaskFileRepository;
+use common\models\repositories\task\TaskRepository;
 use yii\web\UploadedFile;
 
 class TaskFacade

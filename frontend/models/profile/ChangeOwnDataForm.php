@@ -5,7 +5,7 @@ namespace frontend\models\profile;
 
 use common\components\helpers\FileHelper;
 use common\models\entities\UserEntity;
-use common\models\repositories\UserRepository;
+use common\models\repositories\user\UserRepository;
 use yii\base\Model;
 use yii\db\Exception;
 use Yii;

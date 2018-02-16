@@ -4,7 +4,7 @@ namespace common\components\helpers;
 
 
 use common\models\entities\TaskEntity;
-use common\models\repositories\TaskRepository;
+use common\models\repositories\task\TaskRepository;
 use yii\helpers\ArrayHelper;
 
 class TaskHelper

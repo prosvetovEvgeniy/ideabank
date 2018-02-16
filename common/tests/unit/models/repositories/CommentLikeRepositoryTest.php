@@ -4,7 +4,7 @@ namespace common\tests\models\repositories;
 
 
 use common\models\entities\CommentLikeEntity;
-use common\models\repositories\CommentLikeRepository;
+use common\models\repositories\comment\CommentLikeRepository;
 
 
 class CommentLikeRepositoryTest extends BaseRepositoryTest

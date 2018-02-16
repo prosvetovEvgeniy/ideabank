@@ -4,7 +4,7 @@ namespace common\tests\models\repositories;
 
 
 use common\models\entities\UserEntity;
-use common\models\repositories\UserRepository;
+use common\models\repositories\user\UserRepository;
 
 
 class UserRepositoryTest extends BaseRepositoryTest

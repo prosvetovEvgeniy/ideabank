@@ -4,8 +4,8 @@ namespace common\components\facades;
 
 
 use common\models\entities\TaskEntity;
-use common\models\repositories\NoticeRepository;
-use common\models\repositories\TaskNoticeRepository;
+use common\models\repositories\notice\NoticeRepository;
+use common\models\repositories\notice\TaskNoticeRepository;
 
 class TaskNoticesFacade
 {

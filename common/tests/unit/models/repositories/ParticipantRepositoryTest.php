@@ -4,7 +4,7 @@ namespace common\tests\models\repositories;
 
 
 use common\models\entities\ParticipantEntity;
-use common\models\repositories\ParticipantRepository;
+use common\models\repositories\participant\ParticipantRepository;
 
 
 class ParticipantRepositoryTest extends BaseRepositoryTest

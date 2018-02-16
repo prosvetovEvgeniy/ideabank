@@ -2,7 +2,7 @@
 namespace common\models\forms;
 
 use common\models\entities\ParticipantEntity;
-use common\models\repositories\ParticipantRepository;
+use common\models\repositories\participant\ParticipantRepository;
 use Yii;
 use yii\base\Model;
 

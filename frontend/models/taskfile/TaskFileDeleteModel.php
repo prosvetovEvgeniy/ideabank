@@ -2,7 +2,7 @@
 
 namespace frontend\models\taskfile;
 
-use common\models\repositories\TaskFileRepository;
+use common\models\repositories\task\TaskFileRepository;
 use yii\base\Model;
 use Yii;
 use yii\db\Exception;

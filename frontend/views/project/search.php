@@ -7,7 +7,7 @@ use common\models\entities\ProjectEntity;
 use yii\helpers\Html;
 use common\models\entities\ParticipantEntity;
 use common\models\entities\UserEntity;
-use common\models\searchmodels\task\TaskEntitySearch;
+use common\models\searchmodels\task\TaskSearchForm;
 use frontend\assets\ProjectJoinAsset;
 
 
@@ -109,7 +109,7 @@ $this->title = 'Поиск';
                                     {
                                         if($participant->getApproved() && !$participant->getBlocked())
                                         {
-                                            return Html::a('Перейти', ['/task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_ALL]);
+                                            return Html::a('Перейти', ['/task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskSearchForm::STATUS_ALL]);
                                         }
                                         else if(!$participant->getApproved())
                                         {

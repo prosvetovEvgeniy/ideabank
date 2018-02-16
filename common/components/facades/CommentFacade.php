@@ -4,8 +4,8 @@ namespace common\components\facades;
 
 
 use common\models\entities\CommentEntity;
-use common\models\repositories\CommentRepository;
-use common\models\repositories\NoticeRepository;
+use common\models\repositories\comment\CommentRepository;
+use common\models\repositories\notice\NoticeRepository;
 use yii\db\Exception;
 
 class CommentFacade

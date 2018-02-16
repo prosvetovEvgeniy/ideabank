@@ -4,11 +4,11 @@ namespace common\models\entities;
 
 
 use common\models\interfaces\IEntity;
-use common\models\repositories\AuthAssignmentRepository;
-use common\models\repositories\CompanyRepository;
-use common\models\repositories\ParticipantRepository;
-use common\models\repositories\ProjectRepository;
-use common\models\repositories\UserRepository;
+use common\models\repositories\rbac\AuthAssignmentRepository;
+use common\models\repositories\company\CompanyRepository;
+use common\models\repositories\participant\ParticipantRepository;
+use common\models\repositories\project\ProjectRepository;
+use common\models\repositories\user\UserRepository;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
@@ -59,7 +59,7 @@ class ParticipantEntity implements IEntity, IdentityInterface
 
     protected const DATE_ERROR_MESSAGE = '-';
 
-    private const DATE_FORMAT = 'Y-m-d';
+    private const DATE_FORMAT = 'd.m.Y';
 
     protected $id;
     protected $userId;
@@ -359,20 +359,16 @@ class ParticipantEntity implements IEntity, IdentityInterface
      */
     public function getRoleName()
     {
-        if($this->blocked)
-        {
+        if($this->blocked) {
             return self::ROLE_BLOCKED;
         }
-        else if(!$this->approved && !$this->blocked)
-        {
+        else if(!$this->approved && !$this->blocked) {
             return self::ROLE_ON_CONSIDERATION;
         }
-        else if($this->getAuthAssignment() !== null)
-        {
+        else if($this->getAuthAssignment() !== null) {
             return $this->getAuthAssignment()->getItemName();
         }
-        else
-        {
+        else {
             return self::ROLE_UNDEFINED;
         }
     }

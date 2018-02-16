@@ -6,11 +6,11 @@ namespace frontend\controllers;
 use common\components\dataproviders\EntityDataProvider;
 use common\components\helpers\LinkHelper;
 use common\models\entities\ParticipantEntity;
-use common\models\repositories\CommentViewRepository;
-use common\models\repositories\ParticipantRepository;
-use common\models\repositories\ProjectRepository;
-use common\models\repositories\TaskRepository;
-use common\models\searchmodels\task\TaskEntitySearch;
+use common\models\repositories\comment\CommentViewRepository;
+use common\models\repositories\participant\ParticipantRepository;
+use common\models\repositories\project\ProjectRepository;
+use common\models\repositories\task\TaskRepository;
+use common\models\searchmodels\task\TaskSearchForm;
 use frontend\models\comment\CommentCreateForm;
 use frontend\models\task\CreateTaskForm;
 use frontend\models\task\DeleteTaskModel;
@@ -25,7 +25,7 @@ class TaskController extends Controller
 {
     public function actionIndex()
     {
-        $searchModel = new TaskEntitySearch();
+        $searchModel = new TaskSearchForm();
 
         if(!$searchModel->load(Yii::$app->request->queryParams) || !$searchModel->validate()) {
             throw new NotFoundHttpException();
@@ -133,6 +133,6 @@ class TaskController extends Controller
             throw new BadRequestHttpException();
         }
 
-        return LinkHelper::getLinkOnTaskIndex($model->getTask()->getProject());
+        return LinkHelper::getLinkOnActionTaskIndex($model->getTask()->getProject(), TaskSearchForm::STATUS_ALL);
     }
 }

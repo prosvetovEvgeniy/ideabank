@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models\repositories;
+namespace common\models\repositories\rbac;
 
 
 use common\models\activerecords\AuthAssignment;

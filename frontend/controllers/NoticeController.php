@@ -4,7 +4,7 @@ namespace frontend\controllers;
 
 
 use common\components\dataproviders\EntityDataProvider;
-use common\models\repositories\NoticeRepository;
+use common\models\repositories\notice\NoticeRepository;
 use frontend\models\notice\NoticeDeleteModel;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;

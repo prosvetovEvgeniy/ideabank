@@ -5,8 +5,8 @@ namespace common\models\entities;
 
 use common\models\interfaces\IEntity;
 use common\models\interfaces\INotice;
-use common\models\repositories\NoticeRepository;
-use common\models\repositories\TaskRepository;
+use common\models\repositories\notice\NoticeRepository;
+use common\models\repositories\task\TaskRepository;
 
 /**
  * Class TaskNoticeEntity

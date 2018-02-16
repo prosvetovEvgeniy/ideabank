@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models\repositories;
+namespace common\models\repositories\message;
 
 
 use common\models\activerecords\Message;

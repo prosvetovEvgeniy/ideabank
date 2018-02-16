@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models\repositories;
+namespace common\models\repositories\project;
 
 
 use common\models\activerecords\Project;
@@ -8,6 +8,7 @@ use common\models\builders\ProjectEntityBuilder;
 use common\models\entities\ProjectEntity;
 use common\models\entities\UserEntity;
 use common\models\interfaces\IRepository;
+use common\models\repositories\participant\ParticipantRepository;
 use yii\db\Exception;
 use Yii;
 
@@ -178,8 +179,7 @@ class ProjectRepository implements IRepository
 
         $projects = [];
 
-        foreach ($participants as $participant)
-        {
+        foreach ($participants as $participant) {
             $projects[] = $participant->getProject();
         }
 

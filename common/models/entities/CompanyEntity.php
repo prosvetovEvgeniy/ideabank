@@ -3,8 +3,8 @@
 namespace common\models\entities;
 
 use common\models\interfaces\IEntity;
-use common\models\repositories\ParticipantRepository;
-use common\models\repositories\ProjectRepository;
+use common\models\repositories\participant\ParticipantRepository;
+use common\models\repositories\project\ProjectRepository;
 use yii\helpers\Html;
 
 /**

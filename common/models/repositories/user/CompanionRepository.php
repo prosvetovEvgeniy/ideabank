@@ -1,28 +1,29 @@
 <?php
 
-namespace common\models\repositories;
+namespace common\models\repositories\user;
 
 
-use common\models\builders\MessageEntityBuilder;
-use common\models\entities\MessageEntity;
 use common\models\activerecords\Message;
+use common\models\activerecords\Users;
+use common\models\builders\UserEntityBuilder;
+use common\models\entities\UserEntity;
 use common\models\interfaces\IRepository;
 use yii\base\NotSupportedException;
-
+use yii\helpers\ArrayHelper;
 
 /**
- * Class DialogRepository
+ * Class CompanionRepository
  * @package common\models\repositories
  *
- * @property MessageEntityBuilder $builderBehavior
+ * @property UserEntityBuilder $builderBehavior
  */
-class DialogRepository implements IRepository
+class CompanionRepository implements IRepository
 {
-    private $builderBehavior;
+    public $builderBehavior;
 
     public function __construct()
     {
-        $this->builderBehavior = new MessageEntityBuilder();
+        $this->builderBehavior = new UserEntityBuilder();
     }
 
     // #################### STANDARD METHODS ######################
@@ -30,18 +31,13 @@ class DialogRepository implements IRepository
     /**
      * Возвращает экземпляр класса
      *
-     * @return DialogRepository
+     * @return CompanionRepository
      */
     public static function instance(): IRepository
     {
         return new self();
     }
 
-    /**
-     * @param array $condition
-     * @return \common\models\interfaces\IEntity|null|void
-     * @throws NotSupportedException
-     */
     public function findOne(array $condition)
     {
         throw new NotSupportedException();
@@ -54,21 +50,19 @@ class DialogRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string $orderBy
-     * @return MessageEntity[]
+     * @return UserEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
-        $dialogIds = Message::find()->select('MAX(id) as id')
-                                    ->where($condition )
-                                    ->offset($offset)
-                                    ->limit($limit)
-                                    ->groupBy('companion_id')
-                                    ->all();
+        $companionIds = Message::find()->select('companion_id')
+                                       ->where($condition )
+                                       ->distinct('companion_id')
+                                       ->offset($offset)
+                                       ->limit($limit)
+                                       ->orderBy($orderBy)
+                                       ->all();
 
-        $models = Message::find()->with('companion')
-                                 ->where(['in', 'id', $dialogIds])
-                                 ->orderBy($orderBy)
-                                 ->all();
+        $models = Users::find()->where(['in', 'id', ArrayHelper::getColumn($companionIds,'companion_id')])->all();
 
         return $this->builderBehavior->buildEntities($models);
     }
@@ -79,9 +73,9 @@ class DialogRepository implements IRepository
      */
     public function getTotalCountByCondition(array $condition): int
     {
-        return (int) Message::find()->select('MAX(id) as id')
+        return (int) Message::find()->select('companion_id')
                                     ->where($condition )
-                                    ->groupBy('companion_id')
+                                    ->distinct('companion_id')
                                     ->count();
     }
 }

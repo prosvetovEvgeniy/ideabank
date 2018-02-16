@@ -7,7 +7,7 @@ use common\models\entities\ProjectEntity;
 use common\models\entities\TaskEntity;
 use common\models\entities\TaskLikeEntity;
 use common\models\entities\UserEntity;
-use common\models\repositories\TaskRepository;
+use common\models\repositories\task\TaskRepository;
 
 class TaskEntityTest extends \Codeception\Test\Unit
 {

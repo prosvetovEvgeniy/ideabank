@@ -3,7 +3,7 @@
 namespace common\components\user;
 
 use common\models\entities\ParticipantEntity;
-use common\models\repositories\ParticipantRepository;
+use common\models\repositories\participant\ParticipantRepository;
 use yii\web\User;
 use Yii;
 

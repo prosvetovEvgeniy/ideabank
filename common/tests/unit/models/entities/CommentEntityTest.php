@@ -6,7 +6,7 @@ use common\models\entities\CommentEntity;
 use common\models\entities\CommentLikeEntity;
 use common\models\entities\TaskEntity;
 use common\models\entities\UserEntity;
-use common\models\repositories\CommentRepository;
+use common\models\repositories\comment\CommentRepository;
 
 class CommentEntityTest extends \Codeception\Test\Unit
 {

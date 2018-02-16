@@ -10,7 +10,7 @@ use common\models\entities\ParticipantEntity;
 use common\models\entities\TaskEntity;
 use common\models\entities\TaskLikeEntity;
 use common\models\entities\UserEntity;
-use common\models\repositories\UserRepository;
+use common\models\repositories\user\UserRepository;
 
 class UserEntityTest extends \Codeception\Test\Unit
 {

@@ -4,7 +4,7 @@ namespace common\tests\models\repositories;
 
 
 use common\models\entities\ProjectEntity;
-use common\models\repositories\ProjectRepository;
+use common\models\repositories\project\ProjectRepository;
 
 class ProjectRepositoryTest extends BaseRepositoryTest
 {

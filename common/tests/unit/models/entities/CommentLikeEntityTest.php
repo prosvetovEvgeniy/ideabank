@@ -5,7 +5,7 @@ namespace common\tests\models\entities;
 use common\models\entities\CommentEntity;
 use common\models\entities\CommentLikeEntity;
 use common\models\entities\UserEntity;
-use common\models\repositories\CommentLikeRepository;
+use common\models\repositories\comment\CommentLikeRepository;
 
 class CommentLikeEntityTest extends \Codeception\Test\Unit
 {

@@ -1,17 +1,15 @@
 <?php
 
-namespace common\models\repositories;
+namespace common\models\repositories\comment;
 
 
 use common\models\builders\CommentViewEntityBuilder;
 use common\models\entities\ParticipantEntity;
-use common\models\entities\UserEntity;
 use common\models\interfaces\IRepository;
+use common\models\repositories\task\TaskRepository;
 use Yii;
 use common\models\activerecords\CommentView;
 use common\models\entities\CommentEntity;
-use common\models\activerecords\Comment;
-use yii\base\NotSupportedException;
 
 /**
  * Этот репозиторий используется
@@ -19,7 +17,7 @@ use yii\base\NotSupportedException;
  * с помощью жадной загрузки
  *
  * Class CommentViewRepository
- * @package common\models\repositories
+ * @package common\models\repositories\comment
  *
  * @property CommentViewEntityBuilder $builderBehavior
  */

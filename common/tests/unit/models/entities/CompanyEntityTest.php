@@ -4,7 +4,7 @@ namespace common\tests\models\entities;
 use common\models\entities\CompanyEntity;
 use common\models\entities\ParticipantEntity;
 use common\models\entities\ProjectEntity;
-use common\models\repositories\CompanyRepository;
+use common\models\repositories\company\CompanyRepository;
 
 class CompanyEntityTest extends \Codeception\Test\Unit
 {

@@ -3,9 +3,9 @@
 namespace common\models\entities;
 
 use common\models\interfaces\INotice;
-use common\models\repositories\CommentRepository;
+use common\models\repositories\comment\CommentRepository;
 use common\models\interfaces\IEntity;
-use common\models\repositories\NoticeRepository;
+use common\models\repositories\notice\NoticeRepository;
 
 /**
  * Class TaskNoticeEntity

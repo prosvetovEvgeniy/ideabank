@@ -4,7 +4,7 @@ namespace common\tests\models\repositories;
 
 
 use common\models\entities\CompanyEntity;
-use common\models\repositories\CompanyRepository;
+use common\models\repositories\company\CompanyRepository;
 
 class CompanyRepositoryTest extends BaseRepositoryTest
 {

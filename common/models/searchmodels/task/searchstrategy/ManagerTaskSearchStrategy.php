@@ -2,7 +2,7 @@
 
 namespace common\models\searchmodels\task\searchstrategy;
 
-use common\models\searchmodels\task\TaskEntitySearch;
+use common\models\searchmodels\task\TaskSearchForm;
 use Yii;
 use common\models\entities\TaskEntity;
 
@@ -14,7 +14,7 @@ class ManagerTaskSearchStrategy implements ITaskSearchStrategy
         $title = mb_strtolower($title);
         $content = mb_strtolower($content);
 
-        if($status === TaskEntitySearch::STATUS_ALL)
+        if($status === TaskSearchForm::STATUS_ALL)
         {
             return [
                 'and',
@@ -24,7 +24,7 @@ class ManagerTaskSearchStrategy implements ITaskSearchStrategy
                 ['deleted' => false],
             ];
         }
-        else if($status === TaskEntitySearch::STATUS_COMPLETED)
+        else if($status === TaskSearchForm::STATUS_COMPLETED)
         {
             return [
                 'and',
@@ -35,7 +35,7 @@ class ManagerTaskSearchStrategy implements ITaskSearchStrategy
                 ['status' => TaskEntity::STATUS_COMPLETED],
             ];
         }
-        else if($status === TaskEntitySearch::STATUS_NOT_COMPLETED)
+        else if($status === TaskSearchForm::STATUS_NOT_COMPLETED)
         {
             return [
                 'and',
@@ -46,7 +46,7 @@ class ManagerTaskSearchStrategy implements ITaskSearchStrategy
                 ['in', 'status', [TaskEntity::STATUS_ON_CONSIDERATION, TaskEntity::STATUS_IN_PROGRESS]],
             ];
         }
-        else if($status === TaskEntitySearch::STATUS_MERGED)
+        else if($status === TaskSearchForm::STATUS_MERGED)
         {
             return [
                 'and',
@@ -57,7 +57,7 @@ class ManagerTaskSearchStrategy implements ITaskSearchStrategy
                 ['deleted' => false],
             ];
         }
-        else if($status === TaskEntitySearch::STATUS_OWN)
+        else if($status === TaskSearchForm::STATUS_OWN)
         {
             return [
                 'and',

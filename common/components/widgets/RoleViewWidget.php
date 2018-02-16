@@ -21,8 +21,7 @@ class RoleViewWidget extends Widget
     {
         parent::init();
 
-        if($this->participant === null)
-        {
+        if($this->participant === null) {
             throw new Exception('Participant must be set');
         }
     }

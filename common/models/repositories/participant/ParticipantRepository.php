@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models\repositories;
+namespace common\models\repositories\participant;
 
 
 use common\models\activerecords\Participant;
@@ -8,6 +8,7 @@ use common\models\builders\ParticipantEntityBuilder;
 use common\models\entities\ParticipantEntity;
 use common\models\entities\UserEntity;
 use common\models\interfaces\IRepository;
+use common\models\repositories\user\UserRepository;
 use yii\db\Exception;
 use Yii;
 
@@ -50,8 +51,7 @@ class ParticipantRepository implements IRepository
     {
         $model = Participant::findOne($condition);
 
-        if(!$model || $model->blocked)
-        {
+        if(!$model || $model->blocked) {
             return null;
         }
 
@@ -139,21 +139,18 @@ class ParticipantRepository implements IRepository
     {
         $model = Participant::findOne(['id' => $participant->getId()]);
 
-        if(!$model)
-        {
+        if(!$model) {
             throw new Exception('Participant with id = ' . $participant->getId() . ' does not exists');
         }
 
-        if($model->blocked)
-        {
+        if($model->blocked) {
             throw new Exception('Participant with id = ' . $participant->getId() . ' already blocked');
         }
 
         $model->blocked = true;
         $model->blocked_at = time();
 
-        if(!$model->save())
-        {
+        if(!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot block participant with id = ' . $participant->getId());
         }
@@ -170,21 +167,18 @@ class ParticipantRepository implements IRepository
     {
         $model = Participant::findOne(['id' => $participant->getId()]);
 
-        if(!$model)
-        {
+        if(!$model) {
             throw new Exception('Participant with id = ' . $participant->getId() . ' does not exists');
         }
 
-        if($model->deleted)
-        {
+        if($model->deleted) {
             throw new Exception('Participant with id = ' . $participant->getId() . ' already deleted');
         }
 
         $model->deleted = true;
         $model->deleted_at = time();
 
-        if(!$model->save())
-        {
+        if(!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot delete participant with id = ' . $participant->getId());
         }

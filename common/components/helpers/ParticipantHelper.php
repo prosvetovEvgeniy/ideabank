@@ -4,7 +4,7 @@ namespace common\components\helpers;
 
 
 use common\models\entities\ProjectEntity;
-use common\models\repositories\ParticipantRepository;
+use common\models\repositories\participant\ParticipantRepository;
 use Yii;
 
 class ParticipantHelper

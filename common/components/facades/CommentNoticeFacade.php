@@ -4,8 +4,8 @@ namespace common\components\facades;
 
 
 use common\models\entities\CommentEntity;
-use common\models\repositories\CommentNoticeRepository;
-use common\models\repositories\NoticeRepository;
+use common\models\repositories\notice\CommentNoticeRepository;
+use common\models\repositories\notice\NoticeRepository;
 use Exception;
 
 class CommentNoticeFacade

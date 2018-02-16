@@ -6,7 +6,7 @@ use common\models\entities\CompanyEntity;
 use common\models\entities\ParticipantEntity;
 use common\models\entities\ProjectEntity;
 use common\models\entities\UserEntity;
-use common\models\repositories\ParticipantRepository;
+use common\models\repositories\participant\ParticipantRepository;
 
 class ParticipantEntityTest extends \Codeception\Test\Unit
 {

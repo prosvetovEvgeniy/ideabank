@@ -9,7 +9,7 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
 use common\widgets\Alert;
-use common\models\repositories\MessageRepository;
+use common\models\repositories\message\MessageRepository;
 
 AppAsset::register($this);
 ?>

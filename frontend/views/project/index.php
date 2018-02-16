@@ -1,9 +1,11 @@
 <?php
 
 use yii\helpers\Html;
-use common\models\searchmodels\task\TaskEntitySearch;
+use common\models\searchmodels\task\TaskSearchForm;
 use common\components\widgets\RoleViewWidget;
 use common\models\entities\ProjectEntity;
+use common\components\helpers\LinkHelper;
+use common\models\entities\TaskEntity;
 
 /**
  * @var \common\models\entities\ParticipantEntity[] $participants
@@ -34,15 +36,14 @@ $this->title = 'Проекты';
                 </div>
                 <?php if($participant->getApproved() || $project->getDefaultVisibilityArea() === ProjectEntity::VISIBILITY_AREA_ALL): ?>
                 <div class="panel-body">
-                    <p><?= Html::a('Количество задач : ' . $project->getAmountTasks() , ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_ALL, 'projectId' => $project->getId()]) ?></p>
-                    <p><?= Html::a('Завершенные : ' . $project->getAmountCompletedTasks(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_COMPLETED, 'projectId' => $project->getId()]) ?></p>
-                    <p><?= Html::a('Не завершенные : ' . $project->getAmountNotCompletedTasks(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_NOT_COMPLETED, 'projectId' => $project->getId()]) ?></p>
-                    <p><?= Html::a('Мои задачи : ' . $project->getAmountTasksByAuthor($participant->getUser()), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(),'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_OWN, 'projectId' => $project->getId()]) ?></p>
+                    <p><?= Html::a('Количество задач : ' . $project->getAmountTasks() , LinkHelper::getLinkOnActionTaskIndex($project, TaskSearchForm::STATUS_ALL)) ?></p>
+                    <p><?= Html::a('Завершенные : ' . $project->getAmountCompletedTasks(), LinkHelper::getLinkOnActionTaskIndex($project,  TaskSearchForm::STATUS_COMPLETED)) ?></p>
+                    <p><?= Html::a('Не завершенные : ' . $project->getAmountNotCompletedTasks(), LinkHelper::getLinkOnActionTaskIndex($project, TaskSearchForm::STATUS_NOT_COMPLETED)) ?></p>
+                    <p><?= Html::a('Мои задачи : ' . $project->getAmountTasksByAuthor($participant->getUser()), ['task/index', 'TaskSearchForm[projectId]' => $project->getId(),'TaskSearchForm[status]' => TaskSearchForm::STATUS_OWN]) ?></p>
                 </div>
                 <?php endif; ?>
             </div>
         </div>
 
     <?php endforeach; ?>
-
 </div>

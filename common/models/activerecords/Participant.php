@@ -23,7 +23,7 @@ use yii\behaviors\TimestampBehavior;
  * @property boolean $deleted
  *
  * @property Company $company
- * @property Users   $profile
+ * @property Users   $user
  * @property Project $project
  *
  * @property UserEntity $userEntity
@@ -92,7 +92,7 @@ class Participant extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProfile()
+    public function getUser()
     {
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
     }

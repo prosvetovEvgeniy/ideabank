@@ -3,7 +3,7 @@
 namespace common\tests\models\repositories;
 
 use common\models\entities\MessageEntity;
-use common\models\repositories\MessageRepository;
+use common\models\repositories\message\MessageRepository;
 
 class MessageRepositoryTest extends BaseRepositoryTest
 {

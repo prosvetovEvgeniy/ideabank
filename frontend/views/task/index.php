@@ -2,14 +2,14 @@
 
 use common\components\dataproviders\EntityDataProvider;
 use yii\helpers\Html;
-use common\models\searchmodels\task\TaskEntitySearch;
+use common\models\searchmodels\task\TaskSearchForm;
 use common\models\entities\TaskEntity;
 use yii\grid\GridView;
 use common\models\entities\ProjectEntity;
 use common\models\entities\ParticipantEntity;
 
 /**
- * @var TaskEntitySearch $searchModel
+ * @var TaskSearchForm $searchModel
  * @var EntityDataProvider $dataProvider
  * @var ProjectEntity $currentProject
  * @var ParticipantEntity[] $participants
@@ -26,7 +26,7 @@ $this->title = 'Предложения';
 
                 <?php $project = $participant->getProject(); ?>
 
-                <?= Html::a($project->getName(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskEntitySearch::STATUS_ALL, 'projectId' => $project->getId()], ['class' => 'btn btn-default']) ?>
+                <?= Html::a($project->getName(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskSearchForm::STATUS_ALL, 'projectId' => $project->getId()], ['class' => 'btn btn-default']) ?>
 
             <?php endforeach; ?>
         </div>

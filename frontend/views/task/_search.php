@@ -1,10 +1,10 @@
 <?php
 
 use yii\widgets\ActiveForm;
-use common\models\searchmodels\task\TaskEntitySearch;
+use common\models\searchmodels\task\TaskSearchForm;
 
 /* @var $this yii\web\View */
-/* @var $model \common\models\searchmodels\task\TaskEntitySearch */
+/* @var $model \common\models\searchmodels\task\TaskSearchForm */
 /* @var $form yii\widgets\ActiveForm */
 
 ?>
@@ -22,7 +22,7 @@ use common\models\searchmodels\task\TaskEntitySearch;
 
     <?= $form->field($model, 'content')->textInput(['placeholder' => $model->getAttributeLabel('content')])->label(false) ?>
 
-    <?= $form->field($model, 'status')->dropDownList(TaskEntitySearch::LIST_STATUSES_AS_TEXT)->label(false) ?>
+    <?= $form->field($model, 'status')->dropDownList(TaskSearchForm::LIST_STATUSES_AS_TEXT)->label(false) ?>
 
     <?= $form->field($model, 'projectId')->hiddenInput()->label(false) ?>
 

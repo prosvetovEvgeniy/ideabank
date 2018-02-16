@@ -3,7 +3,7 @@
 namespace common\tests\models\repositories;
 
 use common\models\entities\CommentEntity;
-use common\models\repositories\CommentRepository;
+use common\models\repositories\comment\CommentRepository;
 
 class CommentRepositoryTest extends BaseRepositoryTest
 {

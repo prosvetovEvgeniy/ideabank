@@ -3,7 +3,7 @@
 namespace frontend\models\notice;
 
 
-use common\models\repositories\NoticeRepository;
+use common\models\repositories\notice\NoticeRepository;
 use common\models\entities\NoticeEntity;
 use yii\base\Model;
 use yii\db\Exception;

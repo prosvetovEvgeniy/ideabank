@@ -5,7 +5,7 @@ namespace frontend\models\task;
 
 use common\models\activerecords\TaskLike;
 use yii\base\Model;
-use common\models\repositories\TaskLikeRepository;
+use common\models\repositories\task\TaskLikeRepository;
 use common\models\entities\TaskLikeEntity;
 use yii\db\Exception;
 use Yii;

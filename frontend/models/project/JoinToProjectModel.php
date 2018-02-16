@@ -6,8 +6,8 @@ use common\models\entities\ParticipantEntity;
 use common\models\entities\UserEntity;
 use yii\base\Model;
 use Yii;
-use common\models\repositories\ProjectRepository;
-use common\models\repositories\ParticipantRepository;
+use common\models\repositories\project\ProjectRepository;
+use common\models\repositories\participant\ParticipantRepository;
 use yii\db\Exception;
 
 /**

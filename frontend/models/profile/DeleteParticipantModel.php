@@ -3,8 +3,8 @@
 namespace frontend\models\profile;
 
 
-use common\models\repositories\AuthAssignmentRepository;
-use common\models\repositories\ParticipantRepository;
+use common\models\repositories\rbac\AuthAssignmentRepository;
+use common\models\repositories\participant\ParticipantRepository;
 use yii\base\Model;
 use Yii;
 use yii\db\Exception;

@@ -2,8 +2,8 @@
 
 namespace common\models\entities;
 use common\models\interfaces\IEntity;
-use common\models\repositories\TaskRepository;
-use common\models\repositories\UserRepository;
+use common\models\repositories\task\TaskRepository;
+use common\models\repositories\user\UserRepository;
 
 /**
  * Class TaskLikeEntity

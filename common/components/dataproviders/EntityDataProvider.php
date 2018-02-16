@@ -10,16 +10,14 @@ use yii\data\BaseDataProvider;
  * Class EntityDataProvider
  * @package common\components\dataproviders
  *
- * @property array $condition
+ * @property array       $condition
  * @property IRepository $repositoryInstance
- * @property string $orderBy
+ * @property string      $orderBy
  */
 class EntityDataProvider extends BaseDataProvider
 {
     public $condition;
-
     public $repositoryInstance;
-
     public $orderBy = 'id ASC';
 
     /**
@@ -29,12 +27,10 @@ class EntityDataProvider extends BaseDataProvider
     {
         $pagination = $this->getPagination();
 
-        if($pagination !== false)
-        {
+        if($pagination !== false) {
             $pagination->totalCount = $this->getTotalCount();
 
-            if($pagination->totalCount === 0)
-            {
+            if($pagination->totalCount === 0) {
                 return [];
             }
         }

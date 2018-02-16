@@ -4,10 +4,10 @@ namespace common\models\entities;
 
 
 use common\models\interfaces\IEntity;
-use common\models\repositories\CommentLikeRepository;
-use common\models\repositories\CommentRepository;
-use common\models\repositories\TaskRepository;
-use common\models\repositories\UserRepository;
+use common\models\repositories\comment\CommentLikeRepository;
+use common\models\repositories\comment\CommentRepository;
+use common\models\repositories\task\TaskRepository;
+use common\models\repositories\user\UserRepository;
 use yii\helpers\Html;
 use Yii;
 

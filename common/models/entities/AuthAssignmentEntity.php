@@ -2,7 +2,7 @@
 
 namespace common\models\entities;
 use common\models\interfaces\IEntity;
-use common\models\repositories\UserRepository;
+use common\models\repositories\user\UserRepository;
 
 /**
  * Class AuthAssignmentEntity

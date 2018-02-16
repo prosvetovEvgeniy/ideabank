@@ -7,7 +7,7 @@ use common\components\dataproviders\EntityDataProvider;
 use yii\widgets\LinkPager;
 use yii\helpers\Html;
 use frontend\assets\MessageDeleteAsset;
-use common\models\repositories\MessageRepository;
+use common\models\repositories\message\MessageRepository;
 
 SubMenuAsset::register($this);
 MessageDeleteAsset::register($this);

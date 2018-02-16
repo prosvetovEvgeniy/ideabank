@@ -4,9 +4,9 @@ namespace common\models\entities;
 
 
 use common\models\interfaces\IEntity;
-use common\models\repositories\CompanyRepository;
-use common\models\repositories\ParticipantRepository;
-use common\models\repositories\TaskRepository;
+use common\models\repositories\company\CompanyRepository;
+use common\models\repositories\participant\ParticipantRepository;
+use common\models\repositories\task\TaskRepository;
 use yii\helpers\Html;
 
 /**

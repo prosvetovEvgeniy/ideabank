@@ -4,7 +4,7 @@ namespace common\tests\models\entities;
 
 use common\models\entities\NoticeEntity;
 use common\models\entities\UserEntity;
-use common\models\repositories\NoticeRepository;
+use common\models\repositories\notice\NoticeRepository;
 
 class NoticeEntityTest extends \Codeception\Test\Unit
 {

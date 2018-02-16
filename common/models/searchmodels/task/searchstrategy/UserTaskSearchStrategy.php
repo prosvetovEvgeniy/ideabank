@@ -2,7 +2,7 @@
 
 namespace common\models\searchmodels\task\searchstrategy;
 
-use common\models\searchmodels\task\TaskEntitySearch;
+use common\models\searchmodels\task\TaskSearchForm;
 use Yii;
 use common\models\entities\TaskEntity;
 
@@ -25,7 +25,7 @@ class UserTaskSearchStrategy implements ITaskSearchStrategy
             ]
         ];
 
-        if($status === TaskEntitySearch::STATUS_ALL)
+        if($status === TaskSearchForm::STATUS_ALL)
         {
             return [
                 'and',
@@ -36,7 +36,7 @@ class UserTaskSearchStrategy implements ITaskSearchStrategy
                 $skipPrivate
             ];
         }
-        else if($status === TaskEntitySearch::STATUS_COMPLETED)
+        else if($status === TaskSearchForm::STATUS_COMPLETED)
         {
             return [
                 'and',
@@ -48,7 +48,7 @@ class UserTaskSearchStrategy implements ITaskSearchStrategy
                 $skipPrivate
             ];
         }
-        else if($status === TaskEntitySearch::STATUS_NOT_COMPLETED)
+        else if($status === TaskSearchForm::STATUS_NOT_COMPLETED)
         {
             return [
                 'and',
@@ -60,7 +60,7 @@ class UserTaskSearchStrategy implements ITaskSearchStrategy
                 $skipPrivate
             ];
         }
-        else if($status === TaskEntitySearch::STATUS_MERGED)
+        else if($status === TaskSearchForm::STATUS_MERGED)
         {
             return [
                 'and',
@@ -72,7 +72,7 @@ class UserTaskSearchStrategy implements ITaskSearchStrategy
                 $skipPrivate
             ];
         }
-        else if($status === TaskEntitySearch::STATUS_OWN)
+        else if($status === TaskSearchForm::STATUS_OWN)
         {
             return [
                 'and',

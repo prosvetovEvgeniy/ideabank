@@ -5,10 +5,10 @@ namespace frontend\controllers;
 
 use common\components\dataproviders\EntityDataProvider;
 use common\models\entities\UserEntity;
-use common\models\repositories\CompanionRepository;
-use common\models\repositories\DialogRepository;
-use common\models\repositories\MessageRepository;
-use common\models\repositories\UserRepository;
+use common\models\repositories\user\CompanionRepository;
+use common\models\repositories\message\DialogRepository;
+use common\models\repositories\message\MessageRepository;
+use common\models\repositories\user\UserRepository;
 use frontend\models\message\DeleteMessageModel;
 use frontend\models\message\SendMessageForm;
 use yii\web\BadRequestHttpException;

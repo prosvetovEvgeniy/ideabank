@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models\repositories;
+namespace common\models\repositories\task;
 
 
 use common\components\helpers\FileHelper;

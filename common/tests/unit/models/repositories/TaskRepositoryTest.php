@@ -4,7 +4,7 @@ namespace common\tests\models\repositories;
 
 
 use common\models\entities\TaskEntity;
-use common\models\repositories\TaskRepository;
+use common\models\repositories\task\TaskRepository;
 
 class TaskRepositoryTest extends BaseRepositoryTest
 {

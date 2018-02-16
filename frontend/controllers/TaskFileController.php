@@ -3,7 +3,7 @@
 namespace frontend\controllers;
 
 
-use common\models\repositories\TaskFileRepository;
+use common\models\repositories\task\TaskFileRepository;
 use frontend\models\taskfile\TaskFileDeleteModel;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
