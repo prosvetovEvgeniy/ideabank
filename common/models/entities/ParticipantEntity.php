@@ -12,6 +12,7 @@ use common\models\repositories\user\UserRepository;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
+use yii\rbac\ManagerInterface;
 
 
 /**
@@ -36,17 +37,10 @@ use yii\web\IdentityInterface;
  * @property UserEntity           $user
  * @property AuthAssignmentEntity $authAssignment
  *
- * @property array $roleList
- * @property \yii\rbac\ManagerInterface $auth
+ * @property ManagerInterface $auth
  */
 class ParticipantEntity implements IEntity, IdentityInterface
 {
-    //названия ролей из RBAC
-    public const ROLE_USER = 'user';
-    public const ROLE_MANAGER = 'manager';
-    public const ROLE_PROJECT_DIRECTOR = 'projectDirector';
-    public const ROLE_COMPANY_DIRECTOR = 'companyDirector';
-
     /**
      * эти константы используются в видах для
      * отображения статуса пользователя, если
@@ -55,7 +49,17 @@ class ParticipantEntity implements IEntity, IdentityInterface
      */
     public const ROLE_BLOCKED = 'blocked';
     public const ROLE_ON_CONSIDERATION = 'on consideration';
-    public const ROLE_UNDEFINED = 'role undefined';
+
+    /**
+     * список ролей и состояний
+     */
+    public const LIST_ROLES = [
+        AuthAssignmentEntity::ROLE_USER             => 'Участник',
+        AuthAssignmentEntity::ROLE_MANAGER          => 'Менеджер',
+        AuthAssignmentEntity::ROLE_PROJECT_DIRECTOR => 'Директор проекта',
+        self::ROLE_BLOCKED                          => 'Заблокирован',
+        self::ROLE_ON_CONSIDERATION                 => 'На рассмотрении',
+    ];
 
     protected const DATE_ERROR_MESSAGE = '-';
 
@@ -80,20 +84,6 @@ class ParticipantEntity implements IEntity, IdentityInterface
     protected $user;
     protected $authAssignment;
 
-    /**
-     * список ролей и состояний на русском языке
-     * @see getRoleNameOnRussian()
-     */
-    protected $roleList = [
-        self::ROLE_USER             => 'Участник',
-        self::ROLE_MANAGER          => 'Менеджер',
-        self::ROLE_PROJECT_DIRECTOR => 'Директор проекта',
-        self::ROLE_COMPANY_DIRECTOR => 'Директор компании',
-        self::ROLE_BLOCKED          => 'Заблокирован',
-        self::ROLE_ON_CONSIDERATION => 'На рассмотрении',
-        self::ROLE_UNDEFINED        => 'Роль не определена'
-    ];
-
     protected $auth;
 
     /**
@@ -101,9 +91,9 @@ class ParticipantEntity implements IEntity, IdentityInterface
      * @param int $userId
      * @param int|null $companyId
      * @param int|null $projectId
-     * @param bool|null $approved
+     * @param bool $approved
      * @param int|null $approvedAt
-     * @param bool|null $blocked
+     * @param bool $blocked
      * @param int|null $blockedAt
      * @param int|null $id
      * @param int|null $createdAt
@@ -113,12 +103,14 @@ class ParticipantEntity implements IEntity, IdentityInterface
      * @param ProjectEntity|null $project
      * @param UserEntity|null $user
      * @param CompanyEntity|null $company
+     * @param AuthAssignmentEntity|null $authAssignment
      */
     public function __construct(int $userId, int $companyId = null, int $projectId = null, bool $approved = false,
                                 int $approvedAt = null, bool $blocked = false, int $blockedAt = null,
                                 int $id = null, int $createdAt = null, int $updatedAt = null,
                                 int $deletedAt = null, bool $deleted = false, ProjectEntity $project = null,
-                                UserEntity $user = null, CompanyEntity $company = null)
+                                UserEntity $user = null, CompanyEntity $company = null,
+                                AuthAssignmentEntity $authAssignment = null)
     {
         $this->id = $id;
         $this->userId = $userId;
@@ -138,6 +130,7 @@ class ParticipantEntity implements IEntity, IdentityInterface
         $this->project = $project;
         $this->user = $user;
         $this->company = $company;
+        $this->authAssignment = $authAssignment;
     }
 
 
@@ -299,8 +292,7 @@ class ParticipantEntity implements IEntity, IdentityInterface
      */
     public function getCompany()
     {
-        if($this->company === null)
-        {
+        if($this->company === null) {
             $this->company = CompanyRepository::instance()->findOne(['id' => $this->getCompanyId()]);
         }
 
@@ -312,8 +304,7 @@ class ParticipantEntity implements IEntity, IdentityInterface
      */
     public function getProject()
     {
-        if($this->project === null)
-        {
+        if($this->project === null) {
             $this->project = ProjectRepository::instance()->findOne(['id' => $this->getProjectId()]);
         }
 
@@ -325,8 +316,7 @@ class ParticipantEntity implements IEntity, IdentityInterface
      */
     public function getUser()
     {
-        if($this->user === null)
-        {
+        if($this->user === null) {
             $this->user = UserRepository::instance()->findOne(['id' => $this->getUserId()]);
         }
 
@@ -338,8 +328,7 @@ class ParticipantEntity implements IEntity, IdentityInterface
      */
     public function getAuthAssignment()
     {
-        if($this->authAssignment === null)
-        {
+        if($this->authAssignment === null) {
             $this->authAssignment = AuthAssignmentRepository::instance()->findOne(['user_id' => $this->getId()]);
         }
 
@@ -353,7 +342,6 @@ class ParticipantEntity implements IEntity, IdentityInterface
     /**
      * Возвращает значение роли пользователя (из RBAC)
      * или его статус (заблокирован, на рассмотрении),
-     * если он не имеет роли
      *
      * @return int|null|string
      */
@@ -365,22 +353,8 @@ class ParticipantEntity implements IEntity, IdentityInterface
         else if(!$this->approved && !$this->blocked) {
             return self::ROLE_ON_CONSIDERATION;
         }
-        else if($this->getAuthAssignment() !== null) {
-            return $this->getAuthAssignment()->getItemName();
-        }
-        else {
-            return self::ROLE_UNDEFINED;
-        }
-    }
 
-    /**
-     * @return string
-     */
-    public function getRoleNameOnRussian()
-    {
-        $roleName = $this->getRoleName();
-
-        return $this->roleList[$roleName];
+        return $this->getAuthAssignment()->getItemName();
     }
 
     /**
@@ -398,11 +372,6 @@ class ParticipantEntity implements IEntity, IdentityInterface
     {
         $role = $this->getRoleName();
 
-        if($role === self::ROLE_PROJECT_DIRECTOR || $role === self::ROLE_COMPANY_DIRECTOR)
-        {
-            return true;
-        }
-
-        return false;
+        return ($role === AuthAssignmentEntity::ROLE_PROJECT_DIRECTOR) ? true : false ;
     }
 }

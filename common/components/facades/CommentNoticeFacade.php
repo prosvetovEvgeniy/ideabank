@@ -3,17 +3,86 @@
 namespace common\components\facades;
 
 
+use common\components\helpers\LinkHelper;
+use common\components\helpers\NoticeHelper;
+use common\models\entities\AuthAssignmentEntity;
 use common\models\entities\CommentEntity;
+use common\models\entities\CommentNoticeEntity;
+use common\models\entities\NoticeEntity;
 use common\models\repositories\notice\CommentNoticeRepository;
 use common\models\repositories\notice\NoticeRepository;
-use Exception;
+use Yii;
 
+/**
+ * Class CommentNoticeFacade
+ * @package common\components\facades
+ */
 class CommentNoticeFacade
 {
+
+    /**
+     * @param CommentEntity $comment
+     * @throws \yii\db\Exception
+     */
+    public function saveNotices(CommentEntity $comment)
+    {
+        $noticeHelper = new NoticeHelper($comment->getContent());
+
+        foreach ($noticeHelper->getNoticedUsers() as $noticedUser)
+        {
+            $notice = NoticeRepository::instance()->add(
+                new NoticeEntity(
+                    $noticedUser->getId(),
+                    $comment->getContent(),
+                    LinkHelper::getLinkOnComment($comment, $noticedUser),
+                    $comment->getSenderId()
+                )
+            );
+
+            CommentNoticeRepository::instance()->add(
+                new CommentNoticeEntity(
+                    $comment->getId(),
+                    $notice->getId()
+                )
+            );
+        }
+    }
+
+    /**
+     * @param CommentEntity $comment
+     * @throws \yii\db\Exception
+     */
+    public function savePrivateNotices(CommentEntity $comment)
+    {
+        $noticeHelper = new NoticeHelper($comment->getContent());
+
+        foreach ($noticeHelper->getNoticedUsers() as $noticedUser) {
+            $isManager = Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $comment->getTask()->getProjectId(), $noticedUser->getId());
+
+            if($comment->getSenderId() === $noticedUser->getId() || $isManager) {
+                $notice = NoticeRepository::instance()->add(
+                    new NoticeEntity(
+                        $noticedUser->getId(),
+                        $comment->getContent(),
+                        LinkHelper::getLinkOnComment($comment, $noticedUser),
+                        $comment->getSenderId()
+                    )
+                );
+
+                CommentNoticeRepository::instance()->add(
+                    new CommentNoticeEntity(
+                        $comment->getId(),
+                        $notice->getId()
+                    )
+                );
+            }
+        }
+    }
+
     /**
      * @param CommentEntity $comment
      */
-    public static function deleteNotices(CommentEntity $comment)
+    public function deleteNotices(CommentEntity $comment)
     {
         $commentNotices = CommentNoticeRepository::instance()->deleteAll(['comment_id' => $comment->getId()]);
         NoticeRepository::instance()->deleteAll($commentNotices);
@@ -21,20 +90,11 @@ class CommentNoticeFacade
 
     /**
      * @param CommentEntity $comment
-     * @throws Exception
+     * @throws \yii\db\Exception
      */
-    public static function saveNotices(CommentEntity $comment)
+    public function deleteAndSaveNotices(CommentEntity $comment)
     {
-        NoticeRepository::instance()->saveNoticesForComment($comment);
-    }
-
-    /**
-     * @param CommentEntity $comment
-     * @throws Exception
-     */
-    public static function deleteAndSaveNotices(CommentEntity $comment)
-    {
-        self::deleteNotices($comment);
-        self::saveNotices($comment);
+        $this->deleteNotices($comment);
+        $this->saveNotices($comment);
     }
 }

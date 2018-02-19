@@ -604,6 +604,17 @@ a.desc:after {
     margin-right: 5px;
 }
 
+
+/* ########## PROJECT-PARTICIPANT RULES ######## */
+
+
+.participant-action-tag{
+    margin-right: 5px;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
 /* ########## MEDIA RULES ##########*/
 
 @media(max-width: 400px){

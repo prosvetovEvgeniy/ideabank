@@ -4,6 +4,7 @@ namespace common\models\searchmodels\task;
 
 
 use common\components\dataproviders\EntityDataProvider;
+use common\models\entities\AuthAssignmentEntity;
 use common\models\entities\ParticipantEntity;
 use common\models\interfaces\ISearchEntityModel;
 use common\models\repositories\project\ProjectRepository;
@@ -84,11 +85,11 @@ class TaskSearchForm extends Model implements ISearchEntityModel
     {
         parent::afterValidate();
 
-        if (Yii::$app->user->is(ParticipantEntity::ROLE_MANAGER, $this->projectId))
+        if (Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $this->projectId))
         {
             $this->searchStrategyBehavior = new ManagerTaskSearchStrategy();
         }
-        elseif (Yii::$app->user->is(ParticipantEntity::ROLE_USER, $this->projectId))
+        elseif (Yii::$app->user->is(AuthAssignmentEntity::ROLE_USER, $this->projectId))
         {
             $this->searchStrategyBehavior = new UserTaskSearchStrategy();
         }

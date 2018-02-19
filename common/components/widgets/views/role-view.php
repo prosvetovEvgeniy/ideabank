@@ -1,5 +1,6 @@
 <?php
 use common\models\entities\ParticipantEntity;
+use common\models\entities\AuthAssignmentEntity;
 
 /**
  * @var ParticipantEntity $participant
@@ -8,33 +9,27 @@ use common\models\entities\ParticipantEntity;
 
 <div>
 
-    <?php if ($participant->getRoleName() === ParticipantEntity::ROLE_USER): ?>
+    <?php $role = $participant->getRoleName(); ?>
 
-        <span class="label label-success"><?= $participant->getRoleNameOnRussian() ?></span>
+    <?php if ($role === AuthAssignmentEntity::ROLE_USER): ?>
 
-    <?php elseif ($participant->getRoleName() === ParticipantEntity::ROLE_MANAGER): ?>
+        <span class="label label-success"><?= ParticipantEntity::LIST_ROLES[$role] ?></span>
 
-        <span class="label label-warning"><?= $participant->getRoleNameOnRussian() ?></span>
+    <?php elseif ($role === AuthAssignmentEntity::ROLE_MANAGER): ?>
 
-    <?php elseif ($participant->getRoleName() === ParticipantEntity::ROLE_PROJECT_DIRECTOR): ?>
+        <span class="label label-warning"><?= ParticipantEntity::LIST_ROLES[$role] ?></span>
 
-        <span class="label label-primary"><?= $participant->getRoleNameOnRussian() ?></span>
+    <?php elseif ($role === AuthAssignmentEntity::ROLE_PROJECT_DIRECTOR): ?>
 
-    <?php elseif ($participant->getRoleName() === ParticipantEntity::ROLE_COMPANY_DIRECTOR): ?>
+        <span class="label label-primary"><?= ParticipantEntity::LIST_ROLES[$role] ?></span>
 
-        <span class="label label-info"><?= $participant->getRoleNameOnRussian() ?></span>
+    <?php elseif ($role === ParticipantEntity::ROLE_ON_CONSIDERATION): ?>
 
-    <?php elseif ($participant->getRoleName() === ParticipantEntity::ROLE_ON_CONSIDERATION): ?>
+        <span class="label label-default"><?= ParticipantEntity::LIST_ROLES[$role] ?></span>
 
-        <span class="label label-default"><?= $participant->getRoleNameOnRussian() ?></span>
+    <?php elseif ($role === ParticipantEntity::ROLE_BLOCKED): ?>
 
-    <?php elseif ($participant->getRoleName() === ParticipantEntity::ROLE_BLOCKED): ?>
-
-        <span class="label label-danger"><?= $participant->getRoleNameOnRussian() ?></span>
-
-    <?php elseif ($participant->getRoleName() === ParticipantEntity::ROLE_UNDEFINED): ?>
-
-        <span class="label label-danger"><?= $participant->getRoleNameOnRussian() ?></span>
+        <span class="label label-danger"><?= ParticipantEntity::LIST_ROLES[$role] ?></span>
 
     <?php endif; ?>
 </div>

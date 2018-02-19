@@ -22,9 +22,10 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $deleted_at
  * @property boolean $deleted
  *
- * @property Company $company
- * @property Users   $user
- * @property Project $project
+ * @property Company        $company
+ * @property Users          $user
+ * @property Project        $project
+ * @property AuthAssignment $authAssignment
  *
  * @property UserEntity $userEntity
  */
@@ -95,5 +96,13 @@ class Participant extends ActiveRecord
     public function getUser()
     {
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAuthAssignment()
+    {
+        return $this->hasOne(AuthAssignment::className(), ['user_id' => 'id']);
     }
 }

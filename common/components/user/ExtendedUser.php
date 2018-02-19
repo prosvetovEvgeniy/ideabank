@@ -2,6 +2,7 @@
 
 namespace common\components\user;
 
+use common\models\entities\AuthAssignmentEntity;
 use common\models\entities\ParticipantEntity;
 use common\models\repositories\participant\ParticipantRepository;
 use yii\web\User;
@@ -68,6 +69,6 @@ class ExtendedUser extends User
      */
     public function isManager(int $projectId, int $userId = null)
     {
-        return $this->is(ParticipantEntity::ROLE_MANAGER, $projectId, $userId);
+        return $this->is(AuthAssignmentEntity::ROLE_MANAGER, $projectId, $userId);
     }
 }

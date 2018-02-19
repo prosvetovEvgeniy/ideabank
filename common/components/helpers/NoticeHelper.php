@@ -38,8 +38,7 @@ class NoticeHelper
     {
         $userNames = [];
 
-        foreach ($this->matches as $match)
-        {
+        foreach ($this->matches as $match) {
             $userNames[] = explode('#', $match)[1];
         }
 

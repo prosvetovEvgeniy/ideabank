@@ -6,6 +6,7 @@ use common\components\helpers\LinkHelper;
 use common\components\helpers\NoticeHelper;
 use common\models\activerecords\Notice;
 use common\models\builders\NoticeEntityBuilder;
+use common\models\entities\AuthAssignmentEntity;
 use common\models\entities\CommentEntity;
 use common\models\entities\CommentNoticeEntity;
 use common\models\entities\NoticeEntity;
@@ -59,8 +60,7 @@ class NoticeRepository implements IRepository
     {
         $model = Notice::findOne($condition);
 
-        if(!$model)
-        {
+        if(!$model) {
             return null;
         }
 
@@ -101,8 +101,7 @@ class NoticeRepository implements IRepository
 
         $this->builderBehavior->assignProperties($model, $notice);
 
-        if(!$model->save())
-        {
+        if(!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot save notice with link = ' . $notice->getLink());
         }
@@ -121,15 +120,13 @@ class NoticeRepository implements IRepository
     {
         $model = Notice::findOne(['id' => $notice->getId()]);
 
-        if(!$model)
-        {
+        if(!$model) {
             throw new Exception('Notice with id = ' . $notice->getId() . ' does not exists');
         }
 
         $this->builderBehavior->assignProperties($model, $notice);
 
-        if(!$model->save())
-        {
+        if(!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot update notice with id = ' . $notice->getId());
         }
@@ -175,141 +172,12 @@ class NoticeRepository implements IRepository
 
     // #################### UNIQUE METHODS OF CLASS ######################
 
-
-    /**
-     * @param TaskEntity $task
-     * @throws Exception
-     */
-    public function saveNoticesForTask(TaskEntity $task)
-    {
-        $noticeHelper = new NoticeHelper($task->getContent());
-
-        $link = LinkHelper::getLinkOnTask($task);
-
-        foreach ($noticeHelper->getNoticedUsers() as $noticedUser)
-        {
-            $notice = $this->add(
-                new NoticeEntity(
-                    $noticedUser->getId(),
-                    $task->getContent(),
-                    $link,
-                    $task->getAuthorId()
-                )
-            );
-
-            TaskNoticeRepository::instance()->add(
-                new TaskNoticeEntity(
-                    $task->getId(),
-                    $notice->getId()
-                )
-            );
-        }
-    }
-
-    /**
-     * @param TaskEntity $task
-     * @throws Exception
-     */
-    public function saveNoticesForPrivateTask(TaskEntity $task)
-    {
-        $noticeHelper = new NoticeHelper($task->getContent());
-
-        $link = LinkHelper::getLinkOnTask($task);
-
-        foreach ($noticeHelper->getNoticedUsers() as $noticedUser)
-        {
-            $isManager = Yii::$app->user->is(ParticipantEntity::ROLE_MANAGER, $task->getProjectId(), $noticedUser->getId());
-
-            if($task->getAuthorId() === Yii::$app->user->identity->getUserId() || $isManager){
-                $notice = $this->add(
-                    new NoticeEntity(
-                        $noticedUser->getId(),
-                        $task->getContent(),
-                        $link,
-                        $task->getAuthorId()
-                    )
-                );
-
-                TaskNoticeRepository::instance()->add(
-                    new TaskNoticeEntity(
-                        $task->getId(),
-                        $notice->getId()
-                    )
-                );
-            }
-        }
-    }
-
-    /**
-     * @param CommentEntity $comment
-     * @throws Exception
-     */
-    public function saveNoticesForComment(CommentEntity $comment)
-    {
-        $noticeHelper = new NoticeHelper($comment->getContent());
-
-        foreach ($noticeHelper->getNoticedUsers() as $noticedUser)
-        {
-            $notice = $this->add(
-                new NoticeEntity(
-                    $noticedUser->getId(),
-                    $comment->getContent(),
-                    LinkHelper::getLinkOnComment($comment, $noticedUser),
-                    $comment->getSenderId()
-                )
-            );
-
-            CommentNoticeRepository::instance()->add(
-                new CommentNoticeEntity(
-                    $comment->getId(),
-                    $notice->getId()
-                )
-            );
-        }
-    }
-
-    /**
-     * @param CommentEntity $comment
-     * @throws Exception
-     */
-    public function saveNoticesForPrivateComment(CommentEntity $comment)
-    {
-        $noticeHelper = new NoticeHelper($comment->getContent());
-
-        foreach ($noticeHelper->getNoticedUsers() as $noticedUser)
-        {
-            $isManager = Yii::$app->user->is(ParticipantEntity::ROLE_MANAGER, $comment->getTask()->getProjectId(), $noticedUser->getId());
-
-            if($comment->getSenderId() === $noticedUser->getId() || $isManager)
-            {
-                $notice = $this->add(
-                    new NoticeEntity(
-                        $noticedUser->getId(),
-                        $comment->getContent(),
-                        LinkHelper::getLinkOnComment($comment, $noticedUser),
-                        $comment->getSenderId()
-                    )
-                );
-
-                CommentNoticeRepository::instance()->add(
-                    new CommentNoticeEntity(
-                        $comment->getId(),
-                        $notice->getId()
-                    )
-                );
-            }
-        }
-    }
-
     /**
      * @param INotice[] $notices
      */
     public function deleteAll(array $notices)
     {
-        $noticeIds = ArrayHelper::getColumn($notices, function($notice){
-           /**
-            * @var INotice $notice
-            */
+        $noticeIds = ArrayHelper::getColumn($notices, function(INotice $notice){
            return $notice->getNoticeId();
         });
 

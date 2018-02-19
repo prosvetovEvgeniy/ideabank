@@ -80,8 +80,7 @@ class CreateTaskForm extends Model
      */
     public function save()
     {
-        if (!$this->validate())
-        {
+        if (!$this->validate()) {
             return false;
         }
 
@@ -90,16 +89,16 @@ class CreateTaskForm extends Model
         /**
          * если пользователь не является участником проекта по каким то причинам
          */
-        if(!ParticipantHelper::instance()->checkOnParticipantInProject($project))
-        {
+        if(!ParticipantHelper::instance()->checkOnParticipantInProject($project)) {
             return false;
         }
 
+        $taskFacade = new TaskFacade();
+
         $transaction = Yii::$app->db->beginTransaction();
 
-        try
-        {
-            $this->task = TaskFacade::createTask(
+        try {
+            $this->task = $taskFacade->createTask(
                 new TaskEntity(
                     $this->title,
                     $this->content,
@@ -114,8 +113,7 @@ class CreateTaskForm extends Model
             $transaction->commit();
             return true;
         }
-        catch (Exception $e)
-        {
+        catch (Exception $e) {
             $transaction->rollBack();
             return false;
         }

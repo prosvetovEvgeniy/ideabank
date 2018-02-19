@@ -7,14 +7,10 @@ use common\components\facades\CommentFacade;
 use common\components\helpers\NoticeHelper;
 use common\models\activerecords\Comment;
 use common\models\entities\CommentEntity;
-use common\models\entities\NoticeEntity;
 use common\models\repositories\comment\CommentRepository;
-use common\models\repositories\comment\CommentViewRepository;
-use common\models\repositories\notice\NoticeRepository;
 use yii\base\Model;
 use common\models\activerecords\Task;
 use Yii;
-use yii\data\Pagination;
 use yii\db\Exception;
 
 /**
@@ -69,8 +65,7 @@ class CommentCreateForm extends Model
     {
         $parentComment = Comment::findOne(['id' => $this->$attribute, 'task_id' => $this->taskId]);
 
-        if(!$parentComment)
-        {
+        if(!$parentComment) {
             $this->addError($attribute);
         }
     }
@@ -84,8 +79,7 @@ class CommentCreateForm extends Model
 
     public function save()
     {
-        if(!$this->validate())
-        {
+        if(!$this->validate()) {
             return false;
         }
 
@@ -97,27 +91,25 @@ class CommentCreateForm extends Model
         );
 
         //если комментарий ссылается на удаленный или приватный
-        if($comment->getParentId())
-        {
+        if($comment->getParentId()) {
             $parentComment = CommentRepository::instance()->findOne(['id' => $comment->getParentId()]);
 
-            if(!$parentComment || $parentComment->getDeleted() || $parentComment->getPrivate())
-            {
+            if(!$parentComment || $parentComment->getDeleted() || $parentComment->getPrivate()) {
                 return false;
             }
         }
 
+        $commentFacade = new CommentFacade();
+
         $transaction = Yii::$app->db->beginTransaction();
 
-        try
-        {
-            $this->comment = CommentFacade::createComment($comment);
+        try {
+            $this->comment = $commentFacade->createComment($comment);
 
             $transaction->commit();
             return true;
         }
-        catch (Exception $e)
-        {
+        catch (Exception $e) {
             $transaction->rollBack();
             return false;
         }

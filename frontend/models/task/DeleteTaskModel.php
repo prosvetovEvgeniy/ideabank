@@ -57,10 +57,12 @@ class DeleteTaskModel extends Model
             return false;
         }
 
+        $taskFacade = new TaskFacade();
+
         $transaction = Yii::$app->db->beginTransaction();
 
         try{
-            $this->task = TaskFacade::deleteTask($task);
+            $this->task = $taskFacade->deleteTask($task);
 
             $transaction->commit();
             return true;

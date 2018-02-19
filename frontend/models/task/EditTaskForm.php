@@ -145,8 +145,7 @@ class EditTaskForm extends Model
      */
     public function update()
     {
-        if(!$this->validate())
-        {
+        if(!$this->validate()) {
             return false;
         }
 
@@ -164,17 +163,17 @@ class EditTaskForm extends Model
             }
         }
 
+        $taskFacade = new TaskFacade();
+
         $transaction = Yii::$app->db->beginTransaction();
 
-        try
-        {
-            $this->task = TaskFacade::editTask($this->task, $this->files);
+        try {
+            $this->task = $taskFacade->editTask($this->task, $this->files);
 
             $transaction->commit();
             return true;
         }
-        catch (Exception $e)
-        {
+        catch (Exception $e) {
             $transaction->rollBack();
             return false;
         }

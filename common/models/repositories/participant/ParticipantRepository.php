@@ -51,7 +51,7 @@ class ParticipantRepository implements IRepository
     {
         $model = Participant::findOne($condition);
 
-        if(!$model || $model->blocked) {
+        if(!$model) {
             return null;
         }
 

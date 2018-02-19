@@ -4,10 +4,9 @@ namespace common\models\searchmodels\project;
 
 
 use common\components\dataproviders\EntityDataProvider;
-use common\components\helpers\EntityHelper;
+use common\models\entities\ParticipantEntity;
 use common\models\interfaces\ISearchEntityModel;
 use common\models\repositories\participant\ParticipantViewRepository;
-use common\models\repositories\user\UserRepository;
 use yii\base\Model;
 
 /**
@@ -19,6 +18,7 @@ use yii\base\Model;
  * @property string $secondName
  * @property string $email
  * @property string $role
+ * @property string $phone
  * @property int    $projectId
  */
 class ParticipantSearchForm extends Model implements ISearchEntityModel
@@ -28,6 +28,7 @@ class ParticipantSearchForm extends Model implements ISearchEntityModel
     public $secondName;
     public $email;
     public $role;
+    public $phone;
     public $projectId;
 
     public function rules()
@@ -36,7 +37,23 @@ class ParticipantSearchForm extends Model implements ISearchEntityModel
             [['projectId'], 'required'],
 
             [['username'], 'string'],
-            [['username'], 'default', 'value' => ''],
+            [['username'], 'default', 'value' => null],
+
+            [['firstName'], 'string'],
+            [['firstName'], 'default', 'value' => null],
+
+            [['secondName'], 'string'],
+            [['secondName'], 'default', 'value' => null],
+
+            [['email'], 'string'],
+            [['email'], 'default', 'value' => null],
+
+            [['role'], 'string'],
+            [['role'], 'default', 'value' => null],
+            [['role'], 'in', 'range' => array_keys(ParticipantEntity::LIST_ROLES)],
+
+            [['phone'], 'string'],
+            [['phone'], 'default', 'value' => null],
 
             [['projectId'], 'integer']
         ];
@@ -45,8 +62,13 @@ class ParticipantSearchForm extends Model implements ISearchEntityModel
     public function attributeLabels()
     {
         return [
-            'username'  => 'Логин',
-            'projectId' => 'Проект'
+            'username'     => 'Логин',
+            'firstName'    => 'Имя',
+            'secondName'   => 'Фамилия',
+            'email'        => 'Email',
+            'role'         => 'Роль',
+            'projectId'    => 'Проект',
+            'phone'        => 'Номер телефона'
         ];
     }
 
@@ -57,12 +79,56 @@ class ParticipantSearchForm extends Model implements ISearchEntityModel
     public function search(int $pageSize = 20): EntityDataProvider
     {
         return new EntityDataProvider([
-            'condition' => [
-                'and',
-                ['project_id' => $this->projectId],
-                ['like', 'username', $this->username]
-            ],
-            'repositoryInstance' => ParticipantViewRepository::instance()
+            'condition' => $this->buildCondition(),
+            'repositoryInstance' => ParticipantViewRepository::instance(),
+            'pagination' => [
+                'pageSize' => $pageSize
+            ]
         ]);
+    }
+
+    /**
+     * @return array
+     */
+    private function buildCondition()
+    {
+        $condition = [
+            'and',
+            ['project_id' => $this->projectId]
+        ];
+
+        if($this->username){
+            array_push($condition, ['like', 'lower(username)', strtolower($this->username)]);
+        }
+
+        if($this->firstName){
+            array_push($condition, ['like', 'lower(first_name)', strtolower($this->firstName)]);
+        }
+
+        if($this->secondName){
+            array_push($condition, ['like', 'lower(second_name)', strtolower($this->secondName)]);
+        }
+
+        if($this->email){
+            array_push($condition, ['like', 'lower(email)', strtolower($this->email)]);
+        }
+
+        if($this->phone){
+            array_push($condition, ['like', 'phone', $this->phone]);
+        }
+
+        if($this->role !== null){
+            if($this->role === ParticipantEntity::ROLE_ON_CONSIDERATION){
+                array_push($condition, ['blocked' => false, 'approved' => false]);
+            }
+            else if($this->role === ParticipantEntity::ROLE_BLOCKED){
+                array_push($condition, ['blocked' => true]);
+            }
+            else{
+                array_push($condition, ['item_name' => $this->role]);
+            }
+        }
+
+        return $condition;
     }
 }

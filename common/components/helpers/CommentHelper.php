@@ -4,6 +4,7 @@ namespace common\components\helpers;
 
 
 use common\models\activerecords\CommentView;
+use common\models\entities\AuthAssignmentEntity;
 use common\models\entities\CommentEntity;
 use Yii;
 use common\models\entities\ParticipantEntity;
@@ -28,7 +29,7 @@ class CommentHelper
             ['<=', 'created_at', $comment->getCreatedAt()]
         ]);
 
-        if(!Yii::$app->user->is(ParticipantEntity::ROLE_MANAGER, $comment->getTask()->getProjectId(), $user->getId())) {
+        if(!Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $comment->getTask()->getProjectId(), $user->getId())) {
             $models = $models->andWhere([
                 'or',
                 ['private' => false],

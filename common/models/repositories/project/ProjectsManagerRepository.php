@@ -5,7 +5,7 @@ namespace common\models\repositories\project;
 
 use common\models\activerecords\Project;
 use common\models\builders\ProjectEntityBuilder;
-use common\models\entities\ParticipantEntity;
+use common\models\entities\AuthAssignmentEntity;
 use common\models\interfaces\IRepository;
 use Yii;
 
@@ -52,7 +52,7 @@ class ProjectsManagerRepository implements IRepository
                                  ->where([
                                      'and',
                                      ['pc.user_id'    => Yii::$app->user->identity->getUserId()],
-                                     ['not', ['a_u.item_name' => ParticipantEntity::ROLE_USER]]
+                                     ['not', ['a_u.item_name' => AuthAssignmentEntity::ROLE_USER]]
                                  ])
                                  ->offset($offset)
                                  ->limit($limit)
@@ -73,8 +73,8 @@ class ProjectsManagerRepository implements IRepository
                                     ->leftJoin('auth_assignment a_u ON a_u.user_id = pc.id')
                                     ->where([
                                         'p.user_id' => Yii::$app->user->identity->getUserId(),
-                                        'a_u.item_name' => ParticipantEntity::ROLE_MANAGER
+                                        'a_u.item_name' => AuthAssignmentEntity::ROLE_MANAGER
                                      ])
-                                     ->count();
+                                    ->count();
     }
 }

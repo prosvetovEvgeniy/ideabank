@@ -4,14 +4,12 @@ namespace frontend\controllers;
 
 
 use common\components\dataproviders\EntityDataProvider;
-use common\models\repositories\rbac\AuthAssignmentRepository;
 use common\models\repositories\participant\ParticipantRepository;
 use common\models\repositories\task\TaskRepository;
 use common\models\repositories\user\UserRepository;
 use frontend\models\profile\ChangeOwnDataForm;
 use frontend\models\profile\ChangePasswordForm;
 use frontend\models\profile\DeleteParticipantModel;
-use yii\db\Exception;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use Yii;

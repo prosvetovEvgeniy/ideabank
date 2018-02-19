@@ -40,9 +40,11 @@ class ParticipantViewRepository implements IRepository
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
         $models = Participant::find()->leftJoin('users', 'participant.user_id = users.id')
+                                     ->leftJoin('auth_assignment', 'auth_assignment.user_id = participant.id')
                                      ->where($condition)
                                      ->with('user')
                                      ->with('project')
+                                     ->with('authAssignment')
                                      ->offset($offset)
                                      ->limit($limit)
                                      ->orderBy($orderBy)
@@ -58,6 +60,7 @@ class ParticipantViewRepository implements IRepository
     public function getTotalCountByCondition(array $condition): int
     {
         return (int) Participant::find()->leftJoin('users', 'participant.user_id = users.id')
+                                        ->leftJoin('auth_assignment', 'auth_assignment.user_id = participant.id')
                                         ->where($condition)
                                         ->count();
     }

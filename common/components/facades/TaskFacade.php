@@ -4,13 +4,28 @@ namespace common\components\facades;
 
 
 use common\models\entities\TaskEntity;
-use common\models\repositories\notice\NoticeRepository;
 use common\models\repositories\task\TaskFileRepository;
 use common\models\repositories\task\TaskRepository;
 use yii\web\UploadedFile;
 
+/**
+ * Class TaskFacade
+ * @package common\components\facades
+ *
+ * @property TaskNoticesFacade $taskNoticesFacade
+ */
 class TaskFacade
 {
+    private $taskNoticesFacade;
+
+    /**
+     * TaskFacade constructor.
+     */
+    public function __construct()
+    {
+        $this->taskNoticesFacade = new TaskNoticesFacade();
+    }
+
     /**
      * @param TaskEntity $task
      * @param UploadedFile[] $files
@@ -18,11 +33,13 @@ class TaskFacade
      * @throws \yii\base\Exception
      * @throws \yii\db\Exception
      */
-    public static function createTask(TaskEntity $task, array $files)
+    public function createTask(TaskEntity $task, array $files)
     {
         $task = TaskRepository::instance()->add($task);
+
+        $this->taskNoticesFacade->saveNotices($task);
+
         TaskFileRepository::instance()->saveFiles($files, $task);
-        NoticeRepository::instance()->saveNoticesForTask($task);
 
         return $task;
     }
@@ -34,21 +51,14 @@ class TaskFacade
      * @throws \yii\base\Exception
      * @throws \yii\db\Exception
      */
-    public static function editTask(TaskEntity $task, array $files)
+    public function editTask(TaskEntity $task, array $files)
     {
         $task = TaskRepository::instance()->update($task);
 
-        //если есть файлы, то сохраняем их
         TaskFileRepository::instance()->saveFiles($files, $task);
 
-        TaskNoticesFacade::deleteNotices($task);
-
-        if($task->isPrivate()){
-            NoticeRepository::instance()->saveNoticesForPrivateTask($task);
-        }
-        else{
-            NoticeRepository::instance()->saveNoticesForTask($task);
-        }
+        $this->taskNoticesFacade->deleteNotices($task);
+        $this->taskNoticesFacade->saveNotices($task);
 
         return $task;
     }
@@ -58,16 +68,16 @@ class TaskFacade
      * @return TaskEntity
      * @throws \yii\db\Exception
      */
-    public static function deleteTask(TaskEntity $task)
+    public function deleteTask(TaskEntity $task)
     {
         if($task->hasChildren()){
             foreach ($task->getChildren() as $child){
-                TaskNoticesFacade::deleteNotices($child);
+                $this->taskNoticesFacade->deleteNotices($child);
                 TaskRepository::instance()->delete($child);
             }
         }
 
-        TaskNoticesFacade::deleteNotices($task);
+        $this->taskNoticesFacade->deleteNotices($task);
 
         return TaskRepository::instance()->delete($task);
     }

@@ -16,6 +16,13 @@ use common\models\repositories\user\UserRepository;
  */
 class AuthAssignmentEntity implements IEntity
 {
+    //Название ролей из RBAC
+    public const ROLE_USER = 'user';
+    public const ROLE_MANAGER = 'manager';
+    public const ROLE_PROJECT_DIRECTOR = 'projectDirector';
+    public const ROLE_COMPANY_DIRECTOR = 'companyDirector';
+
+
     protected $itemName;
     protected $userId;
     protected $createdAt;

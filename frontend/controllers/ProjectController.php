@@ -59,11 +59,16 @@ class ProjectController extends Controller
             throw new BadRequestHttpException();
         }
 
-        $dataProvider = $searchModel->search();
-
         return $this->render('participants', [
-            'dataProvider' => $dataProvider,
-            'model' => $searchModel
+            'model'        => $searchModel,
+            'dataProvider' => $searchModel->search()
+        ]);
+    }
+
+    public function actionParticipantView(int $id)
+    {
+        return $this->render('participant-view', [
+
         ]);
     }
 

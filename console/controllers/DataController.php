@@ -20,21 +20,6 @@ class DataController extends Controller
 
     public function actionInit()
     {
-        /*$this->db->createCommand("TRUNCATE company CASCADE")->execute();
-        $this->db->createCommand("TRUNCATE project CASCADE")->execute();
-        $this->db->createCommand("TRUNCATE users CASCADE")->execute();
-        $this->db->createCommand("TRUNCATE participant CASCADE")->execute();
-        $this->db->createCommand("TRUNCATE auth_assignment CASCADE")->execute();
-        $this->db->createCommand("TRUNCATE task CASCADE")->execute();
-        $this->db->createCommand("TRUNCATE comment CASCADE")->execute();
-        $this->db->createCommand("TRUNCATE task_like CASCADE")->execute();
-        $this->db->createCommand("TRUNCATE comment_like CASCADE")->execute();
-        $this->db->createCommand("TRUNCATE message CASCADE")->execute();
-        $this->db->createCommand("TRUNCATE notice CASCADE")->execute();*/
-
-        //$this->db->createCommand("TRUNCATE notice CASCADE")->execute();
-
-
         $auth = Yii::$app->authManager;
 
         $companyIds = [];
@@ -83,6 +68,9 @@ class DataController extends Controller
         $userIds['edirector'] = $this->addUser('edirector','123456','edirector@mail.ru',
             '89131841102','edirector_first_name', 'edirector_second_name', 'edirector_last_name');
 
+        $userIds['blockedUser'] = $this->addUser('blockedUser', '123456', 'blockedUser@mail.ru',
+            '89131841102', 'blocked_user_first_name', 'blocked_user_second_name','blocked_user_last_name');
+
 
         //############### FILLING PARTICIPANTS ###############
 
@@ -95,7 +83,6 @@ class DataController extends Controller
 
         $participantIds['newLoginStub'] = $this->addParticipantStub($userIds['newLogin']);
         $participantIds['newLoginVulcan'] = $this->addParticipant($userIds['newLogin'], $companyIds['infSysId'], $projectIds['vulcan']);
-
 
         $participantIds['newUserStub'] = $this->addParticipantStub($userIds['newUser']);
         $participantIds['newUserGithub'] = $this->addParticipant($userIds['newUser'], $companyIds['eCompanyId'], $projectIds['github']);
@@ -110,6 +97,13 @@ class DataController extends Controller
         $participantIds['edirectorGithub'] = $this->addParticipant($userIds['edirector'], $companyIds['eCompanyId'], $projectIds['github']);
         $participantIds['edirectorVk'] = $this->addParticipant($userIds['edirector'], $companyIds['eCompanyId'], $projectIds['vk']);
         $participantIds['edirectorXabr'] = $this->addParticipant($userIds['edirector'], $companyIds['eCompanyId'], $projectIds['xabr']);
+        $participantIds['edirectorVulcanConsidiration'] = $this->addOnConsidirationParticipant($userIds['edirector'], $companyIds['infSysId'], $projectIds['vulcan']);
+
+
+        $participantIds['blockedUserStub'] = $this->addParticipantStub($userIds['blockedUser']);
+        $participantIds['blockedUserGithub'] = $this->addBlockedParticipant($userIds['blockedUser'], $companyIds['eCompanyId'], $projectIds['github']);
+        $participantIds['blockedUserVulcan'] = $this->addBlockedParticipant($userIds['blockedUser'], $companyIds['infSysId'], $projectIds['vulcan']);
+
 
 
         //############### FILLING AUTH ###############
@@ -135,6 +129,7 @@ class DataController extends Controller
 
         $auth->assign($user, $participantIds['newLoginVulcan']);
 
+
         //############### FILLING TASKS ###############
 
 
@@ -156,7 +151,7 @@ class DataController extends Controller
         //############### FILLING COMMENTS ###############
 
 
-        //$commentsIds = $this->generateComments($tasksIds['firstTask'], $userIds['newUser'], 110);
+        $commentsIds = $this->generateComments($tasksIds['firstTask'], $userIds['newUser'], 110);
 
 
         //############### FILLING TASKLIKES ###############
@@ -168,7 +163,7 @@ class DataController extends Controller
         //############### FILLING COMMENTLIKES ###############
 
 
-        //$commentLikeIds = $this->generateCommentLikes($commentsIds, $userIds['evgeniy']);
+        $commentLikeIds = $this->generateCommentLikes($commentsIds, $userIds['evgeniy']);
 
 
         //############### FILLING MESSAGES ###############
@@ -418,6 +413,15 @@ class DataController extends Controller
         return $this->db->getLastInsertID('participant_id_seq');
     }
 
+    public function addBlockedParticipant($userId, $companyId, $projectId)
+    {
+        $this->db->createCommand("INSERT INTO participant (user_id, company_id, project_id, approved, approved_at,created_at, updated_at, blocked, blocked_at) 
+                                      VALUES ({$userId},{$companyId}, {$projectId}, FALSE, {$this->getTime()},{$this->getTime()}, {$this->getTime()}, TRUE, {$this->getTime()})")
+            ->execute();
+
+        return $this->db->getLastInsertID('participant_id_seq');
+    }
+
     public function addParticipantDirector($userId, $companyId)
     {
         $this->db->createCommand("INSERT INTO participant (user_id, company_id, approved, approved_at,created_at, updated_at) 
@@ -426,7 +430,15 @@ class DataController extends Controller
         return $this->db->getLastInsertID('participant_id_seq');
     }
 
-    
+    public function addOnConsidirationParticipant($userId, $companyId, $projectId)
+    {
+        $this->db->createCommand("INSERT INTO participant (user_id, company_id, project_id, approved) 
+                                      VALUES ({$userId},{$companyId}, {$projectId}, FALSE)")
+            ->execute();
+
+        return $this->db->getLastInsertID('participant_id_seq');
+    }
+
     private function getTime()
     {
         return time();

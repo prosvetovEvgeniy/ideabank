@@ -30,8 +30,7 @@ class ParticipantHelper
             'project_id' => $project->getId()
         ]);
 
-        if(!$participant || $participant->getDeleted() || !$participant->getApproved() || $participant->getBlocked())
-        {
+        if(!$participant || $participant->getDeleted() || !$participant->getApproved() || $participant->getBlocked()) {
             return false;
         }
 
