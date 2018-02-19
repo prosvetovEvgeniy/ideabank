@@ -13,6 +13,12 @@ use Yii;
 use yii\db\Exception;
 use yii\helpers\ArrayHelper;
 
+/**
+ * Class TaskNoticeRepository
+ * @package common\models\repositories\notice
+ * 
+ * @property TaskNoticeBuilder $builderBehavior
+ */
 class TaskNoticeRepository implements IRepository
 {
     private $builderBehavior;
@@ -38,8 +44,7 @@ class TaskNoticeRepository implements IRepository
     {
         $model = TaskNotice::findOne($condition);
 
-        if(!$model)
-        {
+        if (!$model) {
             return null;
         }
 
@@ -80,8 +85,7 @@ class TaskNoticeRepository implements IRepository
 
         $this->builderBehavior->assignProperties($model, $taskNotice);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot save task_notice with id = ' . $taskNotice->getId());
         }
@@ -101,13 +105,11 @@ class TaskNoticeRepository implements IRepository
     {
         $model = TaskNotice::findOne(['id' => $taskNotice->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('TaskNotice with id = ' . $taskNotice->getId() . ' does not exists');
         }
 
-        if(!$model->delete())
-        {
+        if (!$model->delete()) {
             Yii::error($model->errors);
             throw new Exception('Cannot delete task_notice with id = ' . $taskNotice->getId());
         }

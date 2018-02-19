@@ -2,7 +2,6 @@
 
 namespace common\models\builders;
 
-
 use common\models\activerecords\Company;
 use common\models\entities\CompanyEntity;
 
@@ -46,15 +45,13 @@ class CompanyEntityBuilder
      */
     public function buildEntities(array $models)
     {
-        if(!$models)
-        {
+        if (!$models) {
             return [];
         }
 
         $entities = [];
 
-        foreach ($models as $model)
-        {
+        foreach ($models as $model) {
             $entities[] = $this->buildEntity($model);
         }
 

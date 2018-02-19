@@ -3,7 +3,6 @@
 namespace common\components\user;
 
 use common\models\entities\AuthAssignmentEntity;
-use common\models\entities\ParticipantEntity;
 use common\models\repositories\participant\ParticipantRepository;
 use yii\web\User;
 use Yii;
@@ -22,7 +21,7 @@ class ExtendedUser extends User
      */
     public function is(string $permissionName, int $projectId, int $userId = null)
     {
-        if(Yii::$app->user->isGuest) {
+        if (Yii::$app->user->isGuest) {
             return false;
         }
 
@@ -47,7 +46,7 @@ class ExtendedUser extends User
             'project_id' => $projectId
         ]);
 
-        if(!$participant) {
+        if (!$participant) {
             return false;
         }
 

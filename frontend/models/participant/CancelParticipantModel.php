@@ -2,7 +2,6 @@
 
 namespace frontend\models\participant;
 
-
 use common\components\facades\ParticipantFacade;
 use common\models\repositories\participant\ParticipantRepository;
 use yii\base\Model;
@@ -31,7 +30,7 @@ class CancelParticipantModel extends Model
      */
     public function save()
     {
-        if(!$this->validate()){
+        if (!$this->validate()){
             return false;
         }
 
@@ -39,12 +38,10 @@ class CancelParticipantModel extends Model
 
         $participantFacade = new ParticipantFacade();
         
-        try{
+        try {
             $participantFacade->cancel($participant);
-
             return true;
-        }
-        catch (Exception $e){
+        } catch (Exception $e) {
             return false;
         }
     }

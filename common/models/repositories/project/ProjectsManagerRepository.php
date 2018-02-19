@@ -2,12 +2,13 @@
 
 namespace common\models\repositories\project;
 
-
 use common\models\activerecords\Project;
 use common\models\builders\ProjectEntityBuilder;
 use common\models\entities\AuthAssignmentEntity;
 use common\models\interfaces\IRepository;
 use Yii;
+use common\models\entities\ProjectEntity;
+use common\models\interfaces\IEntity;
 
 /**
  * Возвращает проекты в которых текущий пользователь менеджер
@@ -42,7 +43,7 @@ class ProjectsManagerRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
-     * @return \common\models\entities\ProjectEntity[]|\common\models\interfaces\IEntity[]
+     * @return ProjectEntity[]|IEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {

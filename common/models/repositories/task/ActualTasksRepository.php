@@ -7,6 +7,7 @@ use common\models\activerecords\Task;
 use common\models\builders\TaskEntityBuilder;
 use common\models\entities\TaskEntity;
 use common\models\interfaces\IRepository;
+use common\models\interfaces\IEntity;
 
 /**
  * Class ActualTasksRepository
@@ -28,6 +29,13 @@ class ActualTasksRepository implements IRepository
         return new self();
     }
 
+    /**
+     * @param array $condition
+     * @param int $limit
+     * @param int|null $offset
+     * @param string|null $orderBy
+     * @return TaskEntity[]|IEntity[]
+     */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
         $models = Task::find()->where(['or', ['status' => TaskEntity::STATUS_ON_CONSIDERATION], ['status' => TaskEntity::STATUS_IN_PROGRESS]])

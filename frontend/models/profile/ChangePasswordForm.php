@@ -2,7 +2,6 @@
 
 namespace frontend\models\profile;
 
-
 use common\models\entities\UserEntity;
 use common\models\repositories\user\UserRepository;
 use yii\base\Model;
@@ -49,8 +48,7 @@ class ChangePasswordForm extends Model
     {
         $user = $this->getUser();
 
-        if(!Yii::$app->security->validatePassword($this->oldPassword, $user->getPassword()))
-        {
+        if (!Yii::$app->security->validatePassword($this->oldPassword, $user->getPassword())) {
             $this->addError('oldPassword', 'Старый пароль введен не правильно');
         }
     }
@@ -60,34 +58,28 @@ class ChangePasswordForm extends Model
      */
     public function validateNewPassword($attribute, $params)
     {
-        if($this->$attribute !== $this->confirmNewPassword)
-        {
+        if ($this->$attribute !== $this->confirmNewPassword) {
             $this->addError('newPassword', 'Пароли не совпадают');
         }
     }
 
     /**
      * @return bool
+     * @throws \yii\base\Exception
      */
     public function update()
     {
-        if(!$this->validate())
-        {
+        if (!$this->validate()) {
             return false;
         }
 
-        try
-        {
+        try {
             $user = $this->getUser();
-
             $user->setPassword($this->newPassword);
-
             UserRepository::instance()->update($user);
 
             return true;
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return false;
         }
     }

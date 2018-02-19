@@ -2,7 +2,6 @@
 
 namespace common\models\entities;
 
-
 use common\models\interfaces\IEntity;
 use common\models\repositories\comment\CommentLikeRepository;
 use common\models\repositories\comment\CommentViewRepository;
@@ -159,10 +158,7 @@ class UserEntity implements IEntity
     /**
      * @return string | null
      */
-    public function getAvatar()
-    {
-        return $this->avatar;
-    }
+    public function getAvatar() { return $this->avatar; }
 
     /**
      * @return string | null
@@ -191,6 +187,7 @@ class UserEntity implements IEntity
 
 
     // #################### SECTION OF SETTERS ######################
+
 
     /**
      * @param string $value
@@ -251,8 +248,7 @@ class UserEntity implements IEntity
      */
     public function getParticipants()
     {
-        if($this->participants === null)
-        {
+        if ($this->participants === null) {
             $this->participants = ParticipantRepository::instance()->findAll(['user_id' => $this->getId()]);
         }
 
@@ -264,8 +260,7 @@ class UserEntity implements IEntity
      */
     public function getCommentLikes()
     {
-        if($this->commentLikes === null)
-        {
+        if ($this->commentLikes === null) {
             $this->commentLikes = CommentLikeRepository::instance()->findAll(['user_id' => $this->getId()]);
         }
 
@@ -277,8 +272,7 @@ class UserEntity implements IEntity
      */
     public function getComments()
     {
-        if($this->comments === null)
-        {
+        if ($this->comments === null) {
             $this->comments = CommentViewRepository::instance()->findAll(['sender_id' => $this->getId()]);
         }
 
@@ -290,8 +284,7 @@ class UserEntity implements IEntity
      */
     public function getTasks()
     {
-        if($this->tasks === null)
-        {
+        if ($this->tasks === null) {
             $this->tasks = TaskRepository::instance()->findAll(['author_id' => $this->getId()]);
         }
 
@@ -303,8 +296,7 @@ class UserEntity implements IEntity
      */
     public function getTaskLikes()
     {
-        if($this->taskLikes === null)
-        {
+        if ($this->taskLikes === null) {
             $this->taskLikes = TaskLikeRepository::instance()->findAll(['user_id' => $this->getId()]);
         }
 
@@ -316,8 +308,7 @@ class UserEntity implements IEntity
      */
     public function getNotices()
     {
-        if($this->notices === null)
-        {
+        if ($this->notices === null) {
             $this->notices = NoticeRepository::instance()->findAll(['recipient_id' => $this->getId()]);
         }
 
@@ -329,8 +320,7 @@ class UserEntity implements IEntity
      */
     public function getMessages()
     {
-        if($this->messages === null)
-        {
+        if ($this->messages === null) {
             $this->messages = MessageRepository::instance()->findAll(['self_id' => $this->getId()]);
         }
 
@@ -359,8 +349,7 @@ class UserEntity implements IEntity
      */
     public function getAvatarAlias()
     {
-        if(!$this->avatar)
-        {
+        if (!$this->avatar) {
             return Yii::getAlias('@web/' . self::PATH_TO_AVATAR_STUB);
         }
 

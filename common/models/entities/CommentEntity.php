@@ -2,13 +2,11 @@
 
 namespace common\models\entities;
 
-
 use common\models\interfaces\IEntity;
 use common\models\repositories\comment\CommentLikeRepository;
 use common\models\repositories\comment\CommentRepository;
 use common\models\repositories\task\TaskRepository;
 use common\models\repositories\user\UserRepository;
-use yii\helpers\Html;
 use Yii;
 
 /**
@@ -57,8 +55,7 @@ class CommentEntity implements IEntity
     protected $commentLikes;
 
     /**
-     * поля вычисленные по
-     * таблице CommentLike
+     * вычисляемые поля
      */
     protected $likesAmount;
     protected $dislikesAmount;
@@ -201,8 +198,7 @@ class CommentEntity implements IEntity
      */
     public function getParent()
     {
-        if($this->parent === null)
-        {
+        if ($this->parent === null) {
             $this->parent = CommentRepository::instance()->findOne(['id' => $this->getParentId()]);
         }
 
@@ -214,8 +210,7 @@ class CommentEntity implements IEntity
      */
     public function getTask()
     {
-        if($this->task === null)
-        {
+        if ($this->task === null) {
             $this->task = TaskRepository::instance()->findOne(['id' => $this->getTaskId()]);
         }
 
@@ -227,8 +222,7 @@ class CommentEntity implements IEntity
      */
     public function getUser()
     {
-        if($this->user === null)
-        {
+        if ($this->user === null) {
             $this->user = UserRepository::instance()->findOne(['id' => $this->getSenderId()]);
         }
 
@@ -240,8 +234,7 @@ class CommentEntity implements IEntity
      */
     public function getCommentLikes()
     {
-        if($this->commentLikes === null)
-        {
+        if ($this->commentLikes === null) {
             $this->commentLikes = CommentLikeRepository::instance()->findAll(['comment_id' => $this->getId()]);
         }
 
@@ -275,8 +268,7 @@ class CommentEntity implements IEntity
      */
     public function isOwn()
     {
-        if(Yii::$app->user->isGuest)
-        {
+        if (Yii::$app->user->isGuest) {
             return false;
         }
 

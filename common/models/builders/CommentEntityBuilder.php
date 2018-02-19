@@ -2,7 +2,6 @@
 
 namespace common\models\builders;
 
-
 use common\models\activerecords\Comment;
 use common\models\entities\CommentEntity;
 use yii\helpers\Html;
@@ -23,7 +22,7 @@ class CommentEntityBuilder
      * @param Comment $model
      * @param CommentEntity $comment
      */
-    public function assignProperties(&$model, &$comment)
+    public function assignProperties(Comment &$model, CommentEntity &$comment)
     {
         $model->task_id = $comment->getTaskId();
         $model->sender_id = $comment->getSenderId();
@@ -54,15 +53,13 @@ class CommentEntityBuilder
      */
     public function buildEntities(array $models)
     {
-        if(!$models)
-        {
+        if (!$models) {
             return [];
         }
 
         $entities = [];
 
-        foreach ($models as $model)
-        {
+        foreach ($models as $model) {
             $entities[] = $this->buildEntity($model);
         }
 

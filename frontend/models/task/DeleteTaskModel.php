@@ -2,7 +2,6 @@
 
 namespace frontend\models\task;
 
-
 use common\components\facades\TaskFacade;
 use common\models\entities\TaskEntity;
 use common\models\repositories\task\TaskRepository;
@@ -20,7 +19,6 @@ use yii\db\Exception;
 class DeleteTaskModel extends Model
 {
     public $id;
-
     private $task;
 
     public function rules()
@@ -37,7 +35,7 @@ class DeleteTaskModel extends Model
      */
     public function delete()
     {
-        if(!$this->validate()){
+        if (!$this->validate()){
             return false;
         }
 
@@ -45,15 +43,15 @@ class DeleteTaskModel extends Model
 
         $user = Yii::$app->user;
 
-        if(!$task || $task->getDeleted()) {
+        if (!$task || $task->getDeleted()) {
             return false;
         }
 
-        if($task->getAuthorId() !== $user->identity->getUserId() && !$user->isManager($task->getProjectId())){
+        if ($task->getAuthorId() !== $user->identity->getUserId() && !$user->isManager($task->getProjectId())){
             return false;
         }
 
-        if($task->hasChildren() && !$user->isManager($task->getProjectId())){
+        if ($task->hasChildren() && !$user->isManager($task->getProjectId())){
             return false;
         }
 
@@ -61,13 +59,12 @@ class DeleteTaskModel extends Model
 
         $transaction = Yii::$app->db->beginTransaction();
 
-        try{
+        try {
             $this->task = $taskFacade->deleteTask($task);
 
             $transaction->commit();
             return true;
-        }
-        catch (Exception $e){
+        } catch (Exception $e) {
             $transaction->rollBack();
             return false;
         }

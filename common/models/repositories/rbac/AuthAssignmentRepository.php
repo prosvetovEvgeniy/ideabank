@@ -2,7 +2,6 @@
 
 namespace common\models\repositories\rbac;
 
-
 use common\models\activerecords\AuthAssignment;
 use common\models\builders\AuthAssignmentEntityBuilder;
 use common\models\entities\AuthAssignmentEntity;
@@ -24,7 +23,10 @@ class AuthAssignmentRepository implements IRepository
     {
         $this->builderBehavior = new AuthAssignmentEntityBuilder();
     }
+
+
     // #################### STANDARD METHODS ######################
+
 
     /**
      * Возвращает экземпляр класса
@@ -46,8 +48,7 @@ class AuthAssignmentRepository implements IRepository
     {
         $model = AuthAssignment::findOne($condition);
 
-        if(!$model)
-        {
+        if (!$model) {
             return null;
         }
 
@@ -83,8 +84,7 @@ class AuthAssignmentRepository implements IRepository
 
         $this->builderBehavior->assignProperties($model, $authAssignment);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot save auth_assignment with user_id = ' . $authAssignment->getUserId());
         }
@@ -103,15 +103,13 @@ class AuthAssignmentRepository implements IRepository
     {
         $model = AuthAssignment::findOne(['user_id' => $authAssignment->getUserId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('auth_assignment with user_id = ' . $authAssignment->getUserId() . ' does not exists');
         }
 
         $this->builderBehavior->assignProperties($model, $commentLike);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot update auth_assignment with user_id = ' . $authAssignment->getUserId());
         }
@@ -131,13 +129,11 @@ class AuthAssignmentRepository implements IRepository
     {
         $model = AuthAssignment::findOne(['user_id' => $authAssignment->getUserId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('auth_assignment with user_id = ' . $authAssignment->getUserId() . ' does not exists');
         }
 
-        if(!$model->delete())
-        {
+        if (!$model->delete()) {
             Yii::error($model->errors);
             throw new Exception('Cannot delete auth_assignment with user_id = ' . $authAssignment->getUserId());
         }

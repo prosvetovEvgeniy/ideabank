@@ -2,13 +2,11 @@
 
 namespace common\models\repositories\participant;
 
-
 use common\models\activerecords\Participant;
 use common\models\builders\ParticipantEntityBuilder;
 use common\models\interfaces\IRepository;
 use common\models\interfaces\IEntity;
 use common\models\entities\ParticipantEntity;
-
 
 /**
  * Class ParticipantViewRepository

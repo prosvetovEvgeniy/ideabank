@@ -49,8 +49,7 @@ $this->title = 'Мои задачи';
                     'value' => function(TaskEntity $task) {
                         $tag = '';
 
-                        if($task->checkStatus(TaskEntity::STATUS_ON_CONSIDERATION))
-                        {
+                        if ($task->checkStatus(TaskEntity::STATUS_ON_CONSIDERATION)) {
                             $tag = Html::tag('i', '', ['class' => 'glyphicon glyphicon-asterisk']);
                         }
 
@@ -63,8 +62,7 @@ $this->title = 'Мои задачи';
                     'value' => function(TaskEntity $task) {
                         $tag = '';
 
-                        if($task->checkStatus(TaskEntity::STATUS_IN_PROGRESS))
-                        {
+                        if ($task->checkStatus(TaskEntity::STATUS_IN_PROGRESS)) {
                             $tag = Html::tag('i', '', ['class' => 'glyphicon glyphicon-asterisk']);
                         }
 
@@ -77,8 +75,7 @@ $this->title = 'Мои задачи';
                     'value' => function(TaskEntity $task) {
                         $tag = '';
 
-                        if($task->checkStatus(TaskEntity::STATUS_COMPLETED))
-                        {
+                        if ($task->checkStatus(TaskEntity::STATUS_COMPLETED)) {
                             $tag = Html::tag('i', '', ['class' => 'glyphicon glyphicon-asterisk']);
                         }
 
@@ -91,8 +88,7 @@ $this->title = 'Мои задачи';
                     'value' => function(TaskEntity $task) {
                         $tag = '';
 
-                        if($task->checkStatus(TaskEntity::STATUS_MERGED))
-                        {
+                        if ($task->checkStatus(TaskEntity::STATUS_MERGED)) {
                             $tag = Html::tag('i', '', ['class' => 'glyphicon glyphicon-asterisk']);
                         }
 

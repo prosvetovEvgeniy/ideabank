@@ -2,7 +2,6 @@
 
 namespace frontend\controllers;
 
-
 use frontend\models\participant\AddParticipantModel;
 use frontend\models\participant\BlockParticipantModel;
 use frontend\models\participant\CancelParticipantModel;
@@ -17,7 +16,7 @@ class ParticipantController extends Controller
     {
         $model = new AddParticipantModel();
 
-        if(!$model->load(Yii::$app->request->post()) || !$model->save()){
+        if (!$model->load(Yii::$app->request->post()) || !$model->save()){
             throw new BadRequestHttpException();
         }
     }
@@ -26,7 +25,7 @@ class ParticipantController extends Controller
     {
         $model = new CancelParticipantModel();
 
-        if(!$model->load(Yii::$app->request->post()) || !$model->save()){
+        if (!$model->load(Yii::$app->request->post()) || !$model->save()){
             throw new BadRequestHttpException();
         }
     }
@@ -35,7 +34,7 @@ class ParticipantController extends Controller
     {
         $model = new BlockParticipantModel();
 
-        if(!$model->load(Yii::$app->request->post()) || !$model->save()){
+        if (!$model->load(Yii::$app->request->post()) || !$model->save()){
             throw new BadRequestHttpException();
         }
     }
@@ -44,7 +43,7 @@ class ParticipantController extends Controller
     {
         $model = new UnBlockParticipantModel();
 
-        if(!$model->load(Yii::$app->request->post()) || !$model->save()){
+        if (!$model->load(Yii::$app->request->post()) || !$model->save()){
             throw new BadRequestHttpException();
         }
     }

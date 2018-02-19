@@ -2,7 +2,6 @@
 
 namespace frontend\controllers;
 
-
 use common\components\dataproviders\EntityDataProvider;
 use common\models\repositories\notice\NoticeRepository;
 use frontend\models\notice\NoticeDeleteModel;
@@ -38,8 +37,7 @@ class NoticeController extends Controller
         $model->recipientId = Yii::$app->user->identity->getUser()->getId();
         $model->id = Yii::$app->request->get('id');
 
-        if(!$model->delete())
-        {
+        if (!$model->delete()) {
             throw new BadRequestHttpException();
         }
 

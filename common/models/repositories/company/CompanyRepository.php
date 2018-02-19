@@ -47,8 +47,7 @@ class CompanyRepository implements IRepository
     {
         $model = Company::findOne($condition);
 
-        if(!$model || $model->deleted)
-        {
+        if (!$model || $model->deleted) {
             return null;
         }
 
@@ -82,8 +81,7 @@ class CompanyRepository implements IRepository
 
         $this->builderBehavior->assignProperties($model, $company);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception("Cannot save company with name = " . $company->getName());
         }
@@ -102,15 +100,13 @@ class CompanyRepository implements IRepository
     {
         $model = Company::findOne(['id' => $company->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('Company with id = ' . $company->getId() . ' does not exists');
         }
 
         $this->builderBehavior->assignProperties($model, $company);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot update company with id = ' . $company->getId());
         }
@@ -129,20 +125,17 @@ class CompanyRepository implements IRepository
     {
         $model = Company::findOne(['id' => $company->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('Company with id = ' . $company->getId() . ' does not exists');
         }
 
-        if($model->deleted)
-        {
+        if ($model->deleted) {
             throw new Exception('Company with id = ' . $company->getId() . ' already deleted');
         }
 
         $model->deleted = true;
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot delete company with id = ' . $company->getId());
         }

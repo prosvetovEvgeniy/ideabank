@@ -14,8 +14,7 @@ class TaskLikeController extends Controller
         $model = new TaskVoteModel();
         $model->userId = Yii::$app->user->identity->getUserId();
 
-        if(!$model->load(Yii::$app->request->post()) || !$model->add())
-        {
+        if (!$model->load(Yii::$app->request->post()) || !$model->add()) {
             throw new BadRequestHttpException();
         }
     }
@@ -27,8 +26,7 @@ class TaskLikeController extends Controller
 
         $model->userId = Yii::$app->user->identity->getUserId();
 
-        if(!$model->load(Yii::$app->request->post()) || !$model->delete())
-        {
+        if (!$model->load(Yii::$app->request->post()) || !$model->delete()) {
             throw new BadRequestHttpException();
         }
     }
@@ -38,8 +36,7 @@ class TaskLikeController extends Controller
         $model = new TaskVoteModel();
         $model->userId = Yii::$app->user->identity->getUserId();
 
-        if(!$model->load(Yii::$app->request->post()) || !$model->reverse())
-        {
+        if (!$model->load(Yii::$app->request->post()) || !$model->reverse()) {
             throw new BadRequestHttpException();
         }
     }

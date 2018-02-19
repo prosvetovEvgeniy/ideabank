@@ -2,7 +2,6 @@
 
 namespace common\models\repositories\notice;
 
-
 use common\models\activerecords\CommentNotice;
 use common\models\builders\CommentNoticeBuilder;
 use common\models\entities\CommentNoticeEntity;
@@ -13,6 +12,12 @@ use yii\db\Exception;
 use Yii;
 use yii\helpers\ArrayHelper;
 
+/**
+ * Class CommentNoticeRepository
+ * @package common\models\repositories\notice
+ *
+ * @property CommentNoticeBuilder $builderBehavior
+ */
 class CommentNoticeRepository implements IRepository
 {
     private $builderBehavior;
@@ -38,8 +43,7 @@ class CommentNoticeRepository implements IRepository
     {
         $model = CommentNotice::findOne($condition);
 
-        if(!$model)
-        {
+        if (!$model) {
             return null;
         }
 
@@ -80,8 +84,7 @@ class CommentNoticeRepository implements IRepository
 
         $this->builderBehavior->assignProperties($model, $commentNotice);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot save comment_notice with id = ' . $commentNotice->getId());
         }
@@ -101,13 +104,11 @@ class CommentNoticeRepository implements IRepository
     {
         $model = CommentNotice::findOne(['id' => $commentNotice->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('CommentNotice with id = ' . $commentNotice->getId() . ' does not exists');
         }
 
-        if(!$model->delete())
-        {
+        if (!$model->delete()) {
             Yii::error($model->errors);
             throw new Exception('Cannot delete comment_notice with id = ' . $commentNotice->getId());
         }
@@ -123,10 +124,7 @@ class CommentNoticeRepository implements IRepository
     {
         $commentNotices = CommentNoticeRepository::findAll($condition);
 
-        $ids = ArrayHelper::getColumn($commentNotices, function($commentNotice) {
-            /**
-             * @var CommentNoticeEntity $commentNotice
-             */
+        $ids = ArrayHelper::getColumn($commentNotices, function(CommentNoticeEntity $commentNotice) {
             return $commentNotice->getId();
         });
 

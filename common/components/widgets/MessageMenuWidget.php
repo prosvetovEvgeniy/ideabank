@@ -2,7 +2,6 @@
 
 namespace common\components\widgets;
 
-
 use yii\base\Widget;
 
 class MessageMenuWidget extends Widget

@@ -2,7 +2,6 @@
 
 namespace common\components\facades;
 
-
 use common\models\entities\ParticipantEntity;
 
 /**

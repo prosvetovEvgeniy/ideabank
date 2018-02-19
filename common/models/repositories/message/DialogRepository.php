@@ -2,13 +2,11 @@
 
 namespace common\models\repositories\message;
 
-
 use common\models\builders\MessageEntityBuilder;
 use common\models\entities\MessageEntity;
 use common\models\activerecords\Message;
 use common\models\interfaces\IRepository;
 use yii\base\NotSupportedException;
-
 
 /**
  * Class DialogRepository

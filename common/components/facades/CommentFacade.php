@@ -2,7 +2,6 @@
 
 namespace common\components\facades;
 
-
 use common\models\entities\CommentEntity;
 use common\models\repositories\comment\CommentRepository;
 use yii\db\Exception;

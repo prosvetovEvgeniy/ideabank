@@ -2,7 +2,6 @@
 
 namespace common\models\entities;
 
-
 use common\models\interfaces\IEntity;
 use common\models\interfaces\INotice;
 use common\models\repositories\notice\NoticeRepository;
@@ -24,6 +23,7 @@ class TaskNoticeEntity implements IEntity, INotice
     private $taskId;
     private $noticeId;
 
+    //кеш связанных сущностей
     private $task;
     private $notice;
 
@@ -60,8 +60,7 @@ class TaskNoticeEntity implements IEntity, INotice
      */
     public function getTask()
     {
-        if($this->task === null)
-        {
+        if ($this->task === null) {
             $this->task = TaskRepository::instance()->findOne(['id' => $this->taskId]);
         }
 
@@ -73,8 +72,7 @@ class TaskNoticeEntity implements IEntity, INotice
      */
     public function getNotice()
     {
-        if($this->notice === null)
-        {
+        if ($this->notice === null) {
             $this->notice = NoticeRepository::instance()->findOne(['id' => $this->noticeId]);
         }
 

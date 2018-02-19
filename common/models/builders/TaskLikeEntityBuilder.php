@@ -2,7 +2,6 @@
 
 namespace common\models\builders;
 
-
 use common\models\activerecords\TaskLike;
 use common\models\entities\TaskLikeEntity;
 
@@ -22,7 +21,7 @@ class TaskLikeEntityBuilder
      * @param TaskLike $model
      * @param TaskLikeEntity $taskLike
      */
-    public function assignProperties(&$model, &$taskLike)
+    public function assignProperties(TaskLike &$model, TaskLikeEntity &$taskLike)
     {
         $model->task_id = $taskLike->getTaskId();
         $model->user_id = $taskLike->getUserId();
@@ -49,19 +48,16 @@ class TaskLikeEntityBuilder
      */
     public function buildEntities(array $models)
     {
-        if(!$models)
-        {
+        if (!$models) {
             return [];
         }
 
         $entities = [];
 
-        foreach ($models as $model)
-        {
+        foreach ($models as $model) {
             $entities[] = $this->buildEntity($model);
         }
 
         return $entities;
     }
-
 }

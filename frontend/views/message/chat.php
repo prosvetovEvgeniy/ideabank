@@ -37,14 +37,10 @@ ChatAsset::register($this);
 
                     <div class="message <?= ($message->getIsSender()) ? null : 'message-from-companion' ?>">
                         <?php
-                            if($message->getIsSender())
-                            {
+                            if($message->getIsSender()) {
                                 echo Html::img($message->getSelf()->getAvatarAlias(), ['class' => 'comment-avatar']);
-                            }
-                            else
-                            {
+                            } else {
                                 echo Html::img($message->getCompanion()->getAvatarAlias(), ['class' => 'comment-avatar']);
-
                             }
                         ?>
                         <div class="chat-message-content">

@@ -2,11 +2,11 @@
 
 namespace common\models\repositories\user;
 
-
 use common\models\activerecords\Message;
 use common\models\activerecords\Users;
 use common\models\builders\UserEntityBuilder;
 use common\models\entities\UserEntity;
+use common\models\interfaces\IEntity;
 use common\models\interfaces\IRepository;
 use yii\base\NotSupportedException;
 use yii\helpers\ArrayHelper;
@@ -26,7 +26,9 @@ class CompanionRepository implements IRepository
         $this->builderBehavior = new UserEntityBuilder();
     }
 
+
     // #################### STANDARD METHODS ######################
+
 
     /**
      * Возвращает экземпляр класса
@@ -38,11 +40,6 @@ class CompanionRepository implements IRepository
         return new self();
     }
 
-    public function findOne(array $condition)
-    {
-        throw new NotSupportedException();
-    }
-
     /**
      * Возвращает массив сущностей по условию
      *
@@ -50,7 +47,7 @@ class CompanionRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string $orderBy
-     * @return UserEntity[]
+     * @return UserEntity[]|IEntity
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {

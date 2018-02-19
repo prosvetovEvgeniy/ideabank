@@ -2,7 +2,6 @@
 
 namespace common\components\facades;
 
-
 use common\components\helpers\LinkHelper;
 use common\components\helpers\NoticeHelper;
 use common\models\entities\AuthAssignmentEntity;
@@ -26,7 +25,7 @@ class TaskNoticesFacade
     public function saveNotices(TaskEntity $task)
     {
         //если задача приватная
-        if($task->isPrivate()){
+        if ($task->isPrivate()) {
             $this->savePrivateNotices($task);
             return;
         }
@@ -68,7 +67,7 @@ class TaskNoticesFacade
 
             $isManager = Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $task->getProjectId(), $noticedUser->getId());
 
-            if($task->getAuthorId() === Yii::$app->user->identity->getUserId() || $isManager){
+            if ($task->getAuthorId() === Yii::$app->user->identity->getUserId() || $isManager) {
 
                 $notice = NoticeRepository::instance()->add(
                     new NoticeEntity(

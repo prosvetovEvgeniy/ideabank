@@ -2,7 +2,6 @@
 
 namespace frontend\controllers;
 
-
 use frontend\models\comment\CommentDeleteModel;
 use frontend\models\comment\CommentEditModel;
 use frontend\models\comment\CommentPrivateModel;
@@ -18,8 +17,7 @@ class CommentController extends Controller
     {
         $model = new CommentEditModel();
 
-        if(!$model->load(Yii::$app->request->post()) || !$model->update())
-        {
+        if (!$model->load(Yii::$app->request->post()) || !$model->update()) {
             throw new BadRequestHttpException();
         }
     }
@@ -28,8 +26,7 @@ class CommentController extends Controller
     {
         $model = new CommentDeleteModel();
 
-        if(!$model->load(Yii::$app->request->post()) || !$model->delete())
-        {
+        if (!$model->load(Yii::$app->request->post()) || !$model->delete()) {
             throw new BadRequestHttpException();
         }
     }
@@ -38,8 +35,7 @@ class CommentController extends Controller
     {
         $model = new CommentReestablishModel();
 
-        if(!$model->load(Yii::$app->request->post()) || !$model->update())
-        {
+        if (!$model->load(Yii::$app->request->post()) || !$model->update()) {
             throw new BadRequestHttpException();
         }
     }
@@ -48,8 +44,7 @@ class CommentController extends Controller
     {
         $model = new CommentPrivateModel();
 
-        if(!$model->load(Yii::$app->request->post()) || !$model->update())
-        {
+        if (!$model->load(Yii::$app->request->post()) || !$model->update()) {
             throw new BadRequestHttpException();
         }
     }
@@ -58,8 +53,7 @@ class CommentController extends Controller
     {
         $model = new CommentPublicModel();
 
-        if(!$model->load(Yii::$app->request->post()) || !$model->update())
-        {
+        if (!$model->load(Yii::$app->request->post()) || !$model->update()) {
             throw new BadRequestHttpException();
         }
     }

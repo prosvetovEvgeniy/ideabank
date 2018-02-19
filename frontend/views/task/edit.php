@@ -6,7 +6,6 @@ use yii\helpers\Html;
 use common\models\entities\TaskEntity;
 use common\models\entities\TaskFileEntity;
 use frontend\assets\TaskFileDeleteAsset;
-use common\components\helpers\ProjectHelper;
 use yii\jui\DatePicker;
 use common\components\helpers\TaskHelper;
 use frontend\assets\TaskDeleteAsset;

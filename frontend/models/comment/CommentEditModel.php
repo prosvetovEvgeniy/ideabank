@@ -2,7 +2,6 @@
 
 namespace frontend\models\comment;
 
-
 use common\components\facades\CommentFacade;
 use common\models\entities\AuthAssignmentEntity;
 use common\models\repositories\comment\CommentRepository;
@@ -37,17 +36,17 @@ class CommentEditModel extends Model
      */
     public function update()
     {
-        if(!$this->validate()) {
+        if (!$this->validate()) {
             return false;
         }
 
         $comment = CommentRepository::instance()->findOne(['id' => $this->id]);
 
-        if(!$comment || $comment->getDeleted()) {
+        if (!$comment || $comment->getDeleted()) {
             return false;
         }
 
-        if(!Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $comment->getTask()->getProjectId())) {
+        if (!Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $comment->getTask()->getProjectId())) {
             return false;
         }
 
@@ -59,8 +58,7 @@ class CommentEditModel extends Model
             $commentFacade->editComment($comment);
 
             return true;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

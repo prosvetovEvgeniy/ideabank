@@ -2,7 +2,6 @@
 
 namespace common\components\widgets;
 
-
 use common\models\entities\ParticipantEntity;
 use yii\base\Exception;
 use yii\base\Widget;
@@ -21,7 +20,7 @@ class RoleViewWidget extends Widget
     {
         parent::init();
 
-        if($this->participant === null) {
+        if ($this->participant === null) {
             throw new Exception('Participant must be set');
         }
     }

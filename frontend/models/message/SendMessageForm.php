@@ -53,20 +53,15 @@ class SendMessageForm extends Model
 
         $transaction = Yii::$app->db->beginTransaction();
 
-        try
-        {
+        try {
             $this->messageToSelf = MessageRepository::instance()->add($messageToSelf);
 
             MessageRepository::instance()->add($messageToCompanion);
 
             $transaction->commit();
-
             return true;
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $transaction->rollBack();
-
             return false;
         }
     }

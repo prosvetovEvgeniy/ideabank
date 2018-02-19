@@ -71,14 +71,11 @@ $this->title = 'Мои проекты';
                     [
                         'header' => '',
                         'value' => function(ParticipantEntity $participant){
-                            if($participant->isDirector())
-                            {
+                            if ($participant->isDirector()) {
                                 return Html::a('Закрыть', '#', [
                                     'data'  => ['participant-id' => $participant->getId()]
                                 ]);
-                            }
-                            else
-                            {
+                            } else {
                                 return Html::a('Покинуть', '/profile/delete-participant', [
                                     'class' => 'leave-project',
                                     'data'  => ['participant-id' => $participant->getId()]

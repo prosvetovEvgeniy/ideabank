@@ -26,14 +26,19 @@ class JoinToProjectModel extends Model
     {
         return [
             [['projectId', 'userId'], 'required'],
-            [['projectId', 'userId'], 'integer']
+            [['projectId', 'userId'], 'integer'],
+            [['userId'], 'filter', 'filter' => function($value) {
+                return (int) $value;
+            }]
         ];
     }
 
+    /**
+     * @return bool
+     */
     public function save()
     {
-        if(!$this->validate())
-        {
+        if (!$this->validate()) {
             return false;
         }
 
@@ -43,8 +48,7 @@ class JoinToProjectModel extends Model
         $user = Yii::$app->user->identity->getUser();
         $project = ProjectRepository::instance()->findOne(['id' => $this->projectId]);
 
-        if((int) $this->userId !== $user->getId() || !$project)
-        {
+        if ($this->userId !== $user->getId() || !$project) {
             return false;
         }
 
@@ -54,22 +58,17 @@ class JoinToProjectModel extends Model
         ]);
 
         //если пользователь уже был присоединен к проекту, но покинул его
-        if($participantExist)
-        {
-            if($participantExist->getDeleted())
-            {
+        if($participantExist) {
+            if($participantExist->getDeleted()) {
                 $participantExist->setApproved(false);
                 $participantExist->setApprovedAt();
                 $participantExist->setDeleted(false);
                 $participantExist->setDeletedAt();
 
-                try
-                {
+                try {
                     ParticipantRepository::instance()->update($participantExist);
                     return true;
-                }
-                catch (Exception $e)
-                {
+                } catch (Exception $e) {
                     return false;
                 }
             }
@@ -80,13 +79,10 @@ class JoinToProjectModel extends Model
         //если пользователь присоединяется к проекту впервые
         $participant = new ParticipantEntity($this->userId, $project->getCompanyId(), $project->getId());
 
-        try
-        {
+        try {
             ParticipantRepository::instance()->add($participant);
             return true;
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return false;
         }
     }

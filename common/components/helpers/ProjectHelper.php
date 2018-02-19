@@ -2,10 +2,7 @@
 
 namespace common\components\helpers;
 
-
-use common\models\entities\ParticipantEntity;
 use common\models\entities\ProjectEntity;
-use common\models\repositories\participant\ParticipantRepository;
 use common\models\repositories\project\ProjectsManagerRepository;
 use common\models\repositories\project\ProjectRepository;
 use yii\helpers\ArrayHelper;
@@ -32,8 +29,7 @@ class ProjectHelper
                                 function(ProjectEntity $project) {
 
                                     return $project->getName();
-                                }
-                                );
+                                });
     }
 
     /**

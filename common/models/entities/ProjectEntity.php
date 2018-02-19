@@ -2,12 +2,10 @@
 
 namespace common\models\entities;
 
-
 use common\models\interfaces\IEntity;
 use common\models\repositories\company\CompanyRepository;
 use common\models\repositories\participant\ParticipantRepository;
 use common\models\repositories\task\TaskRepository;
-use yii\helpers\Html;
 
 /**
  * Class ProjectEntity
@@ -156,8 +154,7 @@ class ProjectEntity implements IEntity
      */
     public function getCompany()
     {
-        if($this->company === null)
-        {
+        if ($this->company === null) {
             $this->company = CompanyRepository::instance()->findOne(['id' => $this->getCompanyId(), 'deleted' => false]);
         }
 
@@ -169,8 +166,7 @@ class ProjectEntity implements IEntity
      */
     public function getTasks()
     {
-        if($this->tasks === null)
-        {
+        if ($this->tasks === null) {
             $this->tasks = TaskRepository::instance()->findAll(['project_id' => $this->getId(), 'deleted' => false]);
         }
 

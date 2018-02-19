@@ -2,10 +2,8 @@
 
 namespace common\models\entities;
 
-
 use common\models\interfaces\IEntity;
 use common\models\repositories\user\UserRepository;
-use yii\helpers\Html;
 use Yii;
 
 /**
@@ -137,8 +135,7 @@ class MessageEntity implements IEntity
      */
     public function getSelf()
     {
-        if($this->self === null)
-        {
+        if($this->self === null) {
             $this->self = UserRepository::instance()->findOne(['id' => $this->getSelfId()]);
         }
 
@@ -150,8 +147,7 @@ class MessageEntity implements IEntity
      */
     public function getCompanion()
     {
-        if($this->companion === null)
-        {
+        if($this->companion === null) {
             $this->companion = UserRepository::instance()->findOne(['id' => $this->getCompanionId()]);
         }
 
@@ -160,6 +156,7 @@ class MessageEntity implements IEntity
 
 
     // #################### SECTION OF LOGIC ######################
+
 
     /**
      * @return string

@@ -2,7 +2,6 @@
 
 namespace common\models\entities;
 
-
 use common\models\interfaces\IEntity;
 use common\models\repositories\rbac\AuthAssignmentRepository;
 use common\models\repositories\company\CompanyRepository;
@@ -292,7 +291,7 @@ class ParticipantEntity implements IEntity, IdentityInterface
      */
     public function getCompany()
     {
-        if($this->company === null) {
+        if ($this->company === null) {
             $this->company = CompanyRepository::instance()->findOne(['id' => $this->getCompanyId()]);
         }
 
@@ -304,7 +303,7 @@ class ParticipantEntity implements IEntity, IdentityInterface
      */
     public function getProject()
     {
-        if($this->project === null) {
+        if ($this->project === null) {
             $this->project = ProjectRepository::instance()->findOne(['id' => $this->getProjectId()]);
         }
 
@@ -316,7 +315,7 @@ class ParticipantEntity implements IEntity, IdentityInterface
      */
     public function getUser()
     {
-        if($this->user === null) {
+        if ($this->user === null) {
             $this->user = UserRepository::instance()->findOne(['id' => $this->getUserId()]);
         }
 
@@ -328,7 +327,7 @@ class ParticipantEntity implements IEntity, IdentityInterface
      */
     public function getAuthAssignment()
     {
-        if($this->authAssignment === null) {
+        if ($this->authAssignment === null) {
             $this->authAssignment = AuthAssignmentRepository::instance()->findOne(['user_id' => $this->getId()]);
         }
 
@@ -347,7 +346,7 @@ class ParticipantEntity implements IEntity, IdentityInterface
      */
     public function getRoleName()
     {
-        if($this->blocked) {
+        if ($this->blocked) {
             return self::ROLE_BLOCKED;
         }
         else if(!$this->approved && !$this->blocked) {
@@ -370,8 +369,6 @@ class ParticipantEntity implements IEntity, IdentityInterface
      */
     public function isDirector()
     {
-        $role = $this->getRoleName();
-
-        return ($role === AuthAssignmentEntity::ROLE_PROJECT_DIRECTOR) ? true : false ;
+        return ($this->getRoleName() === AuthAssignmentEntity::ROLE_PROJECT_DIRECTOR) ? true : false ;
     }
 }

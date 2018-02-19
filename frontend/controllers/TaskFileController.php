@@ -2,7 +2,6 @@
 
 namespace frontend\controllers;
 
-
 use common\models\repositories\task\TaskFileRepository;
 use frontend\models\taskfile\TaskFileDeleteModel;
 use yii\web\BadRequestHttpException;
@@ -10,14 +9,13 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use Yii;
 
-
 class TaskFileController extends Controller
 {
     public function actionDownload(int $id)
     {
         $file = TaskFileRepository::instance()->findOne(['id' => $id]);
 
-        if(!$file) {
+        if (!$file) {
             throw new NotFoundHttpException();
         }
 
@@ -25,10 +23,9 @@ class TaskFileController extends Controller
 
         $headers->set('Content-Type', $file->getMimeType());
 
-        if($file->isImage()) {
+        if ($file->isImage()) {
             $headers->set('Content-Disposition', 'inline');
-        }
-        else {
+        } else {
             $headers->set('ContentDisposition', 'attachment');
         }
 
@@ -43,7 +40,7 @@ class TaskFileController extends Controller
     {
         $model = new TaskFileDeleteModel();
 
-        if(!$model->load(Yii::$app->request->post()) || !$model->delete()) {
+        if (!$model->load(Yii::$app->request->post()) || !$model->delete()) {
             throw new BadRequestHttpException();
         }
     }

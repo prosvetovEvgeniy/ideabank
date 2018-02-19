@@ -2,7 +2,6 @@
 
 namespace common\models\repositories\task;
 
-
 use common\components\helpers\FileHelper;
 use common\models\activerecords\TaskFile;
 use common\models\builders\TaskFileEntityBuilder;
@@ -51,8 +50,7 @@ class TaskFileRepository implements IRepository
     {
         $model = TaskFile::findOne($condition);
 
-        if(!$model || $model->deleted)
-        {
+        if (!$model || $model->deleted) {
             return null;
         }
 
@@ -88,8 +86,7 @@ class TaskFileRepository implements IRepository
 
         $this->builderBehavior->assignProperties($model, $taskFile);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot save task_file with hash_name = ' . $taskFile->getHashName());
         }
@@ -108,15 +105,13 @@ class TaskFileRepository implements IRepository
     {
         $model = TaskFile::findOne(['id' => $taskFile->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('Task_file with id = ' . $taskFile->getId() . ' does not exists');
         }
 
         $this->builderBehavior->assignProperties($model, $taskFile);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot update task_file with id = ' . $taskFile->getId());
         }
@@ -135,20 +130,17 @@ class TaskFileRepository implements IRepository
     {
         $model = TaskFile::findOne(['id' => $taskFile->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('Task_file with id = ' . $taskFile->getId() . ' does not exists');
         }
 
-        if($model->deleted)
-        {
+        if ($model->deleted) {
             throw new Exception('Task_file with id = ' . $taskFile->getId() . ' already deleted');
         }
 
         $model->deleted = true;
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot delete task_file with id = ' . $taskFile->getId());
         }
@@ -177,8 +169,7 @@ class TaskFileRepository implements IRepository
      */
     public function saveFiles(array $files, TaskEntity $task)
     {
-        foreach ($files as $file)
-        {
+        foreach ($files as $file) {
             $fileHelper = new FileHelper($file->extension, self::instance());
             $hashName = $fileHelper->getHash('hash_name');
 
@@ -187,8 +178,7 @@ class TaskFileRepository implements IRepository
             $this->add($taskFile);
 
             //если файл не сохранился на диск, то выбрасываем исключение
-            if (!$file->saveAs(TaskFileEntity::PATH_TO_FILE . $hashName))
-            {
+            if (!$file->saveAs(TaskFileEntity::PATH_TO_FILE . $hashName)) {
                 throw new \yii\base\Exception();
             }
         }

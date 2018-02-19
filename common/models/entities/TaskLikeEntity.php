@@ -1,6 +1,7 @@
 <?php
 
 namespace common\models\entities;
+
 use common\models\interfaces\IEntity;
 use common\models\repositories\task\TaskRepository;
 use common\models\repositories\user\UserRepository;
@@ -55,6 +56,7 @@ class TaskLikeEntity implements IEntity
 
     // #################### SECTION OF GETTERS ######################
 
+
     /**
      * @return int | null
      */
@@ -96,8 +98,7 @@ class TaskLikeEntity implements IEntity
      */
     public function getTask()
     {
-        if($this->task === null)
-        {
+        if ($this->task === null) {
             $this->task = TaskRepository::instance()->findOne(['id' => $this->getTaskId()]);
         }
 
@@ -109,8 +110,7 @@ class TaskLikeEntity implements IEntity
      */
     public function getUser()
     {
-        if($this->user === null)
-        {
+        if ($this->user === null) {
             $this->user = UserRepository::instance()->findOne(['id' => $this->getUserId()]);
         }
 

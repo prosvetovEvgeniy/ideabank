@@ -2,7 +2,6 @@
 
 namespace common\components\facades;
 
-
 use common\models\entities\TaskEntity;
 use common\models\repositories\task\TaskFileRepository;
 use common\models\repositories\task\TaskRepository;
@@ -70,8 +69,8 @@ class TaskFacade
      */
     public function deleteTask(TaskEntity $task)
     {
-        if($task->hasChildren()){
-            foreach ($task->getChildren() as $child){
+        if ($task->hasChildren()) {
+            foreach ($task->getChildren() as $child) {
                 $this->taskNoticesFacade->deleteNotices($child);
                 TaskRepository::instance()->delete($child);
             }

@@ -2,15 +2,12 @@
 
 namespace common\components\helpers;
 
-
 use common\models\entities\CommentEntity;
 use common\models\entities\ProjectEntity;
 use common\models\entities\TaskEntity;
 use common\models\entities\UserEntity;
 use common\models\repositories\comment\CommentViewRepository;
-use common\models\searchmodels\task\TaskSearchForm;
 use Yii;
-
 
 class LinkHelper
 {
@@ -39,13 +36,12 @@ class LinkHelper
         $index = CommentHelper::getNewCommentIndex($comment, $user);
         $perPage = CommentViewRepository::COMMENTS_PER_PAGE;
 
-        if($index % $perPage === 0) {
+        if ($index % $perPage === 0) {
             $pageNumber = $index/$perPage;
-        }
-        else {
+        } else {
             $pageNumber = floor($index/$perPage) + 1;
         }
-
+        
         return Yii::$app->urlManager->createAbsoluteUrl([
             'task/view',
             'id'       => $comment->getTaskId(),

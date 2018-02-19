@@ -2,10 +2,10 @@
 
 namespace common\models\searchmodels\task;
 
-
 use common\components\dataproviders\EntityDataProvider;
 use common\models\entities\AuthAssignmentEntity;
-use common\models\entities\ParticipantEntity;
+use common\models\entities\TaskEntity;
+use common\models\interfaces\IEntity;
 use common\models\interfaces\ISearchEntityModel;
 use common\models\repositories\project\ProjectRepository;
 use common\models\repositories\task\TaskRepository;
@@ -85,12 +85,10 @@ class TaskSearchForm extends Model implements ISearchEntityModel
     {
         parent::afterValidate();
 
-        if (Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $this->projectId))
-        {
+        if (Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $this->projectId)) {
             $this->searchStrategyBehavior = new ManagerTaskSearchStrategy();
         }
-        elseif (Yii::$app->user->is(AuthAssignmentEntity::ROLE_USER, $this->projectId))
-        {
+        elseif (Yii::$app->user->is(AuthAssignmentEntity::ROLE_USER, $this->projectId)) {
             $this->searchStrategyBehavior = new UserTaskSearchStrategy();
         }
     }
@@ -128,15 +126,18 @@ class TaskSearchForm extends Model implements ISearchEntityModel
     private function buildCondition()
     {
         return $this->searchStrategyBehavior->buildCondition(
-            $this->status,
-            $this->projectId,
-            $this->title,
-            $this->content
+            new TaskEntity(
+                $this->title,
+                $this->content,
+                null,
+                $this->projectId,
+                $this->status
+            )
         );
     }
 
     /**
-     * @return ProjectEntity|null
+     * @return ProjectEntity|IEntity|null
      */
     public function getProject()
     {

@@ -5,7 +5,6 @@ use common\models\searchmodels\task\TaskSearchForm;
 use common\components\widgets\RoleViewWidget;
 use common\models\entities\ProjectEntity;
 use common\components\helpers\LinkHelper;
-use common\models\entities\TaskEntity;
 
 /**
  * @var \common\models\entities\ParticipantEntity[] $participants

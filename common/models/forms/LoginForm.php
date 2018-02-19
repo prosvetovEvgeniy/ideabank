@@ -53,8 +53,7 @@ class LoginForm extends Model
     {
         $participantStub = $this->getParticipantStub();
 
-        if (!$participantStub || !$participantStub->validatePassword($this->$attribute))
-        {
+        if (!$participantStub || !$participantStub->validatePassword($this->$attribute)) {
             $this->addError($attribute, 'Incorrect username or password.');
         }
     }
@@ -64,8 +63,7 @@ class LoginForm extends Model
      */
     public function login()
     {
-        if (!$this->validate())
-        {
+        if (!$this->validate()) {
             return false;
         }
 
@@ -79,8 +77,7 @@ class LoginForm extends Model
      */
     protected function getParticipantStub()
     {
-        if ($this->user === null)
-        {
+        if ($this->user === null) {
             $this->user = ParticipantRepository::instance()->findByUserName($this->username);
         }
 

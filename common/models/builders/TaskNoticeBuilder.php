@@ -2,10 +2,8 @@
 
 namespace common\models\builders;
 
-
 use common\models\activerecords\TaskNotice;
 use common\models\entities\TaskNoticeEntity;
-use common\models\interfaces\INotice;
 
 class TaskNoticeBuilder
 {
@@ -42,15 +40,13 @@ class TaskNoticeBuilder
      */
     public function buildEntities(array $models)
     {
-        if(!$models)
-        {
+        if (!$models) {
             return [];
         }
 
         $entities = [];
 
-        foreach ($models as $model)
-        {
+        foreach ($models as $model) {
             $entities[] = $this->buildEntity($model);
         }
 

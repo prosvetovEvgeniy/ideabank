@@ -2,7 +2,6 @@
 
 namespace frontend\models\message;
 
-
 use common\models\entities\MessageEntity;
 use yii\base\Model;
 
@@ -38,7 +37,8 @@ class MessageViewModel extends Model
     public function getContent() { return $this->selfMessage->getContent(); }
 
     /**
-     * @return false|string
+     * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getCreationDate() { return $this->selfMessage->getCreationDate(); }
 

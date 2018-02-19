@@ -2,7 +2,6 @@
 
 namespace common\models\builders;
 
-
 use common\models\activerecords\Notice;
 use common\models\entities\NoticeEntity;
 
@@ -22,7 +21,7 @@ class NoticeEntityBuilder
      * @param Notice $model
      * @param NoticeEntity $notice
      */
-    public function assignProperties(&$model, &$notice)
+    public function assignProperties(Notice &$model, NoticeEntity &$notice)
     {
         $model->recipient_id = $notice->getRecipientId();
         $model->sender_id = $notice->getSenderId();
@@ -50,15 +49,13 @@ class NoticeEntityBuilder
      */
     public function buildEntities(array $models)
     {
-        if(!$models)
-        {
+        if (!$models) {
             return [];
         }
 
         $entities = [];
 
-        foreach ($models as $model)
-        {
+        foreach ($models as $model) {
             $entities[] = $this->buildEntity($model);
         }
 

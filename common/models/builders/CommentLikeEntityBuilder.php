@@ -22,7 +22,7 @@ class CommentLikeEntityBuilder
      * @param CommentLike $model
      * @param CommentLikeEntity $commentLike
      */
-    public function assignProperties(&$model, &$commentLike)
+    public function assignProperties(CommentLike &$model, CommentLikeEntity &$commentLike)
     {
         $model->comment_id = $commentLike->getCommentId();
         $model->user_id = $commentLike->getUserId();
@@ -49,15 +49,13 @@ class CommentLikeEntityBuilder
      */
     public function buildEntities(array $models)
     {
-        if(!$models)
-        {
+        if (!$models) {
             return [];
         }
 
         $entities = [];
 
-        foreach ($models as $model)
-        {
+        foreach ($models as $model) {
             $entities[] = $this->buildEntity($model);
         }
 

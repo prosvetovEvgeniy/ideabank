@@ -2,7 +2,6 @@
 
 namespace frontend\models\participant;
 
-
 use common\components\facades\ParticipantFacade;
 use common\models\repositories\participant\ParticipantRepository;
 use yii\base\Model;
@@ -31,7 +30,7 @@ class UnBlockParticipantModel extends Model
      */
     public function save()
     {
-        if(!$this->validate()){
+        if (!$this->validate()){
             return false;
         }
 
@@ -41,10 +40,8 @@ class UnBlockParticipantModel extends Model
         
         try{
             $participantFacade->unBlock($participant);
-
             return true;
-        }
-        catch (Exception $e){
+        } catch (Exception $e) {
             return false;
         }
     }

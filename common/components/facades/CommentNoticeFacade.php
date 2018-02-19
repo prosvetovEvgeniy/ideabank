@@ -2,7 +2,6 @@
 
 namespace common\components\facades;
 
-
 use common\components\helpers\LinkHelper;
 use common\components\helpers\NoticeHelper;
 use common\models\entities\AuthAssignmentEntity;

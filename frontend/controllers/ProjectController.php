@@ -24,7 +24,7 @@ class ProjectController extends Controller
     {
         $project = ProjectRepository::instance()->findOne(['id' => $id]);
 
-        if(!$project){
+        if (!$project){
             throw new BadRequestHttpException();
         }
 
@@ -55,7 +55,7 @@ class ProjectController extends Controller
     {
         $searchModel = new ParticipantSearchForm();
 
-        if(!$searchModel->load(Yii::$app->request->queryParams) || !$searchModel->validate()){
+        if (!$searchModel->load(Yii::$app->request->queryParams) || !$searchModel->validate()){
             throw new BadRequestHttpException();
         }
 
@@ -64,14 +64,6 @@ class ProjectController extends Controller
             'dataProvider' => $searchModel->search()
         ]);
     }
-
-    public function actionParticipantView(int $id)
-    {
-        return $this->render('participant-view', [
-
-        ]);
-    }
-
 
     //############### AJAX ACTIONS ##################
 

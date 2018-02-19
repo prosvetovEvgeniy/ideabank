@@ -2,22 +2,13 @@
 
 namespace frontend\models\task;
 
-
 use common\components\facades\TaskFacade;
-use common\components\helpers\FileHelper;
-use common\components\helpers\LinkHelper;
-use common\components\helpers\NoticeHelper;
 use common\components\helpers\ParticipantHelper;
 use common\models\activerecords\Project;
 use common\models\activerecords\Users;
-use common\models\entities\NoticeEntity;
 use common\models\entities\TaskEntity;
 use common\models\entities\TaskFileEntity;
-use common\models\repositories\notice\NoticeRepository;
-use common\models\repositories\participant\ParticipantRepository;
 use common\models\repositories\project\ProjectRepository;
-use common\models\repositories\task\TaskFileRepository;
-use common\models\repositories\task\TaskRepository;
 use Yii;
 use yii\base\Model;
 use yii\db\Exception;
@@ -87,9 +78,9 @@ class CreateTaskForm extends Model
         $project = ProjectRepository::instance()->findOne(['id' => $this->projectId]);
 
         /**
-         * если пользователь не является участником проекта по каким то причинам
+         * если пользователь не является участником проекта
          */
-        if(!ParticipantHelper::instance()->checkOnParticipantInProject($project)) {
+        if (!ParticipantHelper::instance()->checkOnParticipantInProject($project)) {
             return false;
         }
 
@@ -112,8 +103,7 @@ class CreateTaskForm extends Model
 
             $transaction->commit();
             return true;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $transaction->rollBack();
             return false;
         }

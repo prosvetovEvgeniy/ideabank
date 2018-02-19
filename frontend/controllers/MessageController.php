@@ -2,7 +2,6 @@
 
 namespace frontend\controllers;
 
-
 use common\components\dataproviders\EntityDataProvider;
 use common\models\entities\UserEntity;
 use common\models\repositories\user\CompanionRepository;
@@ -14,7 +13,6 @@ use frontend\models\message\SendMessageForm;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use Yii;
-use yii\web\UnauthorizedHttpException;
 
 class MessageController extends Controller
 {
@@ -60,8 +58,7 @@ class MessageController extends Controller
 
         $companion = UserRepository::instance()->findOne(['id' => $companionId]);
 
-        if(!$companion)
-        {
+        if (!$companion) {
             throw new BadRequestHttpException();
         }
 
@@ -100,8 +97,7 @@ class MessageController extends Controller
 
         $model->load(Yii::$app->request->post());
 
-        if(!$model->validate() || !$model->deleteMessage())
-        {
+        if (!$model->validate() || !$model->delete()) {
             throw new BadRequestHttpException();
         }
     }
@@ -115,8 +111,7 @@ class MessageController extends Controller
 
         $model->load(Yii::$app->request->post());
 
-        if(!$model->validate() || !$model->deleteDialog())
-        {
+        if (!$model->validate() || !$model->deleteDialog()) {
             throw new BadRequestHttpException();
         }
     }
@@ -128,8 +123,7 @@ class MessageController extends Controller
 
         $model->load(Yii::$app->request->post());
 
-        if($model->validate() && $model->save())
-        {
+        if ($model->validate() && $model->save()) {
             Yii::$app->layout = false;
 
             return $this->render('chat-message', ['message' => $model->getSelfMessage()]);

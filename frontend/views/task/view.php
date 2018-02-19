@@ -10,7 +10,6 @@ use frontend\assets\CommentAsset;
 use frontend\assets\TaskAsset;
 use yii\widgets\LinkPager;
 use common\models\entities\TaskFileEntity;
-use common\models\entities\ParticipantEntity;
 
 TaskAsset::register($this);
 CommentAsset::register($this);
@@ -83,7 +82,7 @@ $counter = 1; //счетчик для номера комментария
                          * @var TaskFileEntity $file
                          */
                         foreach ($task->getFilesToTask() as $file) :
-                            ?>
+                        ?>
 
                             <div class="file">
                                 <?php
@@ -111,14 +110,12 @@ $counter = 1; //счетчик для номера комментария
                     <td>Создал</td>
                     <td>
                         <?php
-                        if(Yii::$app->user->isGuest) {
+                        if (Yii::$app->user->isGuest) {
                             echo Html::a($task->getAuthor()->getUsername(), ['/site/login']);
-                        }
-                        else {
-                            if(Yii::$app->user->identity->getUser()->getId() === $task->getAuthorId()) {
+                        } else {
+                            if (Yii::$app->user->identity->getUser()->getId() === $task->getAuthorId()) {
                                 echo Html::a($task->getAuthor()->getUsername(), '/profile/my-tasks');
-                            }
-                            else {
+                            } else {
                                 echo Html::a($task->getAuthor()->getUsername(), ['/profile/view', 'id' => $task->getAuthorId()]);
                             }
                         }
@@ -242,23 +239,20 @@ $counter = 1; //счетчик для номера комментария
                                 <div class="comment-title">
                                     <h5 class="comment-fio no-margin-top">
                                         <?php
-                                        if(!$comment->getDeleted()) {
-                                            if(Yii::$app->user->isGuest) {
+                                        if (!$comment->getDeleted()) {
+                                            if (Yii::$app->user->isGuest) {
                                                 echo Html::a($comment->getUser()->getUsername(), ['/site/login'], ['name' => $comment->getId()]);
-                                            }
-                                            else {
-                                                if($comment->getSenderId() === Yii::$app->user->identity->getUser()->getId()) {
+                                            } else {
+                                                if ($comment->getSenderId() === Yii::$app->user->identity->getUser()->getId()) {
                                                     echo Html::a($comment->getUser()->getUsername(), ['/profile/my-projects'], ['name' => $comment->getId()]);
-                                                }
-                                                else {
+                                                } else {
                                                     echo Html::a($comment->getUser()->getUsername(), ['/profile/view', 'id' => $comment->getUser()->getId()], ['name' => $comment->getId()]);
                                                 }
                                             }
                                         }
                                         ?>
                                         <?php
-                                        if($comment->getPrivate())
-                                        {
+                                        if ($comment->getPrivate()) {
                                             echo '(Приватный комментарий)';
                                         }
                                         ?>

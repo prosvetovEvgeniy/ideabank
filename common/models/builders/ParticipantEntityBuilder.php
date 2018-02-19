@@ -2,7 +2,6 @@
 
 namespace common\models\builders;
 
-
 use common\models\activerecords\Participant;
 use common\models\entities\ParticipantEntity;
 
@@ -22,7 +21,7 @@ class ParticipantEntityBuilder
      * @param Participant $model
      * @param ParticipantEntity $participant
      */
-    public function assignProperties(&$model, &$participant)
+    public function assignProperties(Participant &$model, ParticipantEntity &$participant)
     {
         $model->user_id = $participant->getUserId();
         $model->company_id = $participant->getCompanyId();
@@ -60,7 +59,7 @@ class ParticipantEntityBuilder
      */
     public function buildEntities(array $models)
     {
-        if(!$models) {
+        if (!$models) {
             return [];
         }
 

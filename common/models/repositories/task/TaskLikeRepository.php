@@ -2,7 +2,6 @@
 
 namespace common\models\repositories\task;
 
-
 use common\models\activerecords\TaskLike;
 use common\models\builders\TaskLikeEntityBuilder;
 use common\models\entities\TaskEntity;
@@ -29,6 +28,7 @@ class TaskLikeRepository implements IRepository
 
     // #################### STANDARD METHODS ######################
 
+
     /**
      * Возвращает экземпляр класса
      *
@@ -49,8 +49,7 @@ class TaskLikeRepository implements IRepository
     {
         $model = TaskLike::findOne($condition);
 
-        if(!$model)
-        {
+        if (!$model) {
             return null;
         }
 
@@ -86,8 +85,7 @@ class TaskLikeRepository implements IRepository
 
         $this->builderBehavior->assignProperties($model, $taskLike);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot save task_like with task_id = ' . $taskLike->getTaskId() .
                                 ' and user_id = ' . $taskLike->getUserId());
@@ -107,15 +105,13 @@ class TaskLikeRepository implements IRepository
     {
         $model = TaskLike::findOne(['id' => $taskLike->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('task_like with id = ' . $taskLike->getId() . ' does not exists');
         }
 
         $this->builderBehavior->assignProperties($model, $taskLike);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot update task_like with id = ' . $taskLike->getId());
         }
@@ -135,13 +131,11 @@ class TaskLikeRepository implements IRepository
     {
         $model = TaskLike::findOne(['id' => $taskLike->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('task_like with id = ' . $taskLike->getId() . ' does not exists');
         }
 
-        if(!$model->delete())
-        {
+        if (!$model->delete()) {
             Yii::error($model->errors);
             throw new Exception('Cannot delete task_like with id = ' . $taskLike->getId());
         }

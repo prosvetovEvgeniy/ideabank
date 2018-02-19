@@ -1,6 +1,7 @@
 <?php
 
 namespace common\models\entities;
+
 use common\models\interfaces\IEntity;
 use common\models\repositories\user\UserRepository;
 
@@ -79,13 +80,13 @@ class AuthAssignmentEntity implements IEntity
 
     // #################### SECTION OF RELATIONS ######################
 
+
     /**
      * @return UserEntity|null
      */
     public function getUser()
     {
-        if($this->user === null)
-        {
+        if($this->user === null) {
             $this->user = UserRepository::instance()->findOne(['id' => $this->getUserId()]);
         }
 

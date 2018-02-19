@@ -2,7 +2,6 @@
 
 namespace frontend\models\comment;
 
-
 use common\components\facades\CommentFacade;
 use common\components\helpers\NoticeHelper;
 use common\models\activerecords\Comment;
@@ -33,9 +32,6 @@ class CommentCreateForm extends Model
     //сущность сохраненного комментария
     private $comment;
 
-    //ссылка для перехода по новому комментарию (кешируется)
-
-
     public function rules()
     {
         return [
@@ -52,7 +48,6 @@ class CommentCreateForm extends Model
         ];
     }
 
-
     /**
      * @param $attribute
      * @param $params
@@ -65,7 +60,7 @@ class CommentCreateForm extends Model
     {
         $parentComment = Comment::findOne(['id' => $this->$attribute, 'task_id' => $this->taskId]);
 
-        if(!$parentComment) {
+        if (!$parentComment) {
             $this->addError($attribute);
         }
     }
@@ -77,9 +72,13 @@ class CommentCreateForm extends Model
         ];
     }
 
+    /**
+     * @return bool
+     * @throws Exception
+     */
     public function save()
     {
-        if(!$this->validate()) {
+        if (!$this->validate()) {
             return false;
         }
 
@@ -91,10 +90,10 @@ class CommentCreateForm extends Model
         );
 
         //если комментарий ссылается на удаленный или приватный
-        if($comment->getParentId()) {
+        if ($comment->getParentId()) {
             $parentComment = CommentRepository::instance()->findOne(['id' => $comment->getParentId()]);
 
-            if(!$parentComment || $parentComment->getDeleted() || $parentComment->getPrivate()) {
+            if (!$parentComment || $parentComment->getDeleted() || $parentComment->getPrivate()) {
                 return false;
             }
         }
@@ -108,13 +107,15 @@ class CommentCreateForm extends Model
 
             $transaction->commit();
             return true;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $transaction->rollBack();
             return false;
         }
     }
 
+    /**
+     * @return CommentEntity
+     */
     public function getComment()
     {
         return $this->comment;

@@ -2,7 +2,6 @@
 
 namespace common\models\repositories\message;
 
-
 use common\models\activerecords\Message;
 use common\models\builders\MessageEntityBuilder;
 use common\models\entities\MessageEntity;
@@ -48,8 +47,7 @@ class MessageRepository implements IRepository
     {
         $model = Message::findOne($condition);
 
-        if(!$model || $model->deleted)
-        {
+        if (!$model || $model->deleted) {
             return null;
         }
 
@@ -91,8 +89,7 @@ class MessageRepository implements IRepository
 
         $this->builderBehavior->assignProperties($model, $message);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot save message with content = ' . $message->getContent());
         }
@@ -111,15 +108,13 @@ class MessageRepository implements IRepository
     {
         $model = Message::findOne(['id' => $message->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('Message with id = ' . $message->getId() . ' does not exists');
         }
 
         $this->builderBehavior->assignProperties($model, $message);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot update message with id = ' . $message->getId());
         }
@@ -138,20 +133,17 @@ class MessageRepository implements IRepository
     {
         $model = Message::findOne(['id' => $message->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('Message with id = ' . $message->getId() . ' does not exists');
         }
 
-        if($model->deleted)
-        {
+        if ($model->deleted) {
             throw new Exception('Message with id = ' . $message->getId() . ' already deleted');
         }
 
         $model->deleted = true;
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot delete message with id = ' . $message->getId());
         }

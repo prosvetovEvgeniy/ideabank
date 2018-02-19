@@ -2,7 +2,6 @@
 
 namespace frontend\models\participant;
 
-
 use common\components\facades\ParticipantFacade;
 use common\models\repositories\participant\ParticipantRepository;
 use yii\base\Model;
@@ -31,24 +30,23 @@ class BlockParticipantModel extends Model
      */
     public function save()
     {
-        if(!$this->validate()){
+        if (!$this->validate()){
             return false;
         }
 
         $participant = ParticipantRepository::instance()->findOne(['id' => $this->id]);
 
-        if(!$participant || $participant->getBlocked() || $participant->getDeleted()){
+        if (!$participant || $participant->getBlocked() || $participant->getDeleted()){
             return false;
         }
         
         $participantFacade = new ParticipantFacade();
 
-        try{
+        try {
             $participantFacade->block($participant);
 
             return true;
-        }
-        catch (Exception $e){
+        } catch (Exception $e) {
             return false;
         }
     }

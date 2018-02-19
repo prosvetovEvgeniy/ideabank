@@ -52,12 +52,9 @@ AppAsset::register($this);
 
         $unViewedMessagesCount = MessageRepository::instance()->getAllUnviewedMsgCount();
 
-        if($unViewedMessagesCount !== 0)
-        {
+        if($unViewedMessagesCount !== 0) {
             $unViewedMessagesCount = ' <code>+(' . $unViewedMessagesCount . ') </code>' ;
-        }
-        else
-        {
+        } else {
             $unViewedMessagesCount = null;
         }
 

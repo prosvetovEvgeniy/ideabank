@@ -2,7 +2,6 @@
 
 namespace common\models\entities;
 
-
 use common\models\interfaces\IEntity;
 use common\models\repositories\comment\CommentViewRepository;
 use common\models\repositories\project\ProjectRepository;
@@ -11,7 +10,6 @@ use common\models\repositories\task\TaskLikeRepository;
 use common\models\repositories\task\TaskRepository;
 use common\models\repositories\user\UserRepository;
 use Yii;
-use yii\helpers\Html;
 
 /**
  * Class TaskEntity
@@ -274,8 +272,7 @@ class TaskEntity implements IEntity
      */
     public function getProject()
     {
-        if($this->project === null)
-        {
+        if ($this->project === null) {
             $this->project = ProjectRepository::instance()->findOne(['id' => $this->getProjectId()]);
         }
 
@@ -287,8 +284,7 @@ class TaskEntity implements IEntity
      */
     public function getAuthor()
     {
-        if($this->author === null)
-        {
+        if ($this->author === null) {
             $this->author = UserRepository::instance()->findOne(['id' => $this->getAuthorId()]);
         }
 
@@ -300,8 +296,7 @@ class TaskEntity implements IEntity
      */
     public function getTaskLikes()
     {
-        if($this->taskLikes === null)
-        {
+        if ($this->taskLikes === null) {
             $this->taskLikes = TaskLikeRepository::instance()->findAll(['task_id' => $this->getId()]);
         }
 
@@ -313,8 +308,7 @@ class TaskEntity implements IEntity
      */
     public function getComments()
     {
-        if($this->comments === null)
-        {
+        if ($this->comments === null) {
             $this->comments = CommentViewRepository::instance()->findAll(['task_id' => $this->getId()]);
         }
 
@@ -326,8 +320,7 @@ class TaskEntity implements IEntity
      */
     public function getParent()
     {
-        if($this->parent === null && $this->parentId !== null)
-        {
+        if ($this->parent === null && $this->parentId !== null) {
             $this->parent = TaskRepository::instance()->findOne(['id' => $this->getParentId()]);
         }
 
@@ -336,8 +329,7 @@ class TaskEntity implements IEntity
 
     public function getFiles()
     {
-        if($this->files === null)
-        {
+        if ($this->files === null) {
             $this->files = TaskFileRepository::instance()->findAll(['task_id' => $this->getId(), 'deleted' => false]);
         }
 
@@ -349,7 +341,7 @@ class TaskEntity implements IEntity
      */
     public function getChildren()
     {
-        if($this->children === null){
+        if ($this->children === null){
             $this->children = TaskRepository::instance()->findAll([
                 'parent_id' => $this->id,
                 'deleted'   => false
@@ -423,8 +415,7 @@ class TaskEntity implements IEntity
      */
     public function getCurrentUser()
     {
-        if(Yii::$app->user->isGuest)
-        {
+        if (Yii::$app->user->isGuest) {
             return null;
         }
 
@@ -440,8 +431,7 @@ class TaskEntity implements IEntity
     {
         $user = $this->getCurrentUser();
 
-        if(!$user)
-        {
+        if (!$user) {
             return false;
         }
 
@@ -461,8 +451,7 @@ class TaskEntity implements IEntity
     {
         $user = $this->getCurrentUser();
 
-        if(!$user)
-        {
+        if (!$user) {
             return false;
         }
 
@@ -487,10 +476,8 @@ class TaskEntity implements IEntity
     {
         $imagesToTask = [];
 
-        foreach ($this->getFiles() as $file)
-        {
-            if($file->isImage())
-            {
+        foreach ($this->getFiles() as $file) {
+            if($file->isImage()) {
                 $imagesToTask[] = $file;
             }
         }
@@ -511,10 +498,8 @@ class TaskEntity implements IEntity
     {
         $filesToTask = [];
 
-        foreach ($this->getFiles() as $file)
-        {
-            if(!$file->isImage())
-            {
+        foreach ($this->getFiles() as $file) {
+            if(!$file->isImage()) {
                 $filesToTask[] = $file;
             }
         }

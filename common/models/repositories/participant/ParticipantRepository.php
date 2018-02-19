@@ -2,7 +2,6 @@
 
 namespace common\models\repositories\participant;
 
-
 use common\models\activerecords\Participant;
 use common\models\builders\ParticipantEntityBuilder;
 use common\models\entities\ParticipantEntity;
@@ -51,7 +50,7 @@ class ParticipantRepository implements IRepository
     {
         $model = Participant::findOne($condition);
 
-        if(!$model) {
+        if (!$model) {
             return null;
         }
 
@@ -92,8 +91,7 @@ class ParticipantRepository implements IRepository
 
         $this->builderBehavior->assignProperties($model, $participant);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot save participant with user_id = ' . $participant->getUserId());
         }
@@ -112,15 +110,13 @@ class ParticipantRepository implements IRepository
     {
         $model = Participant::findOne(['id' => $participant->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('Participant with id = ' . $participant->getId() . ' does not exists');
         }
 
         $this->builderBehavior->assignProperties($model, $participant);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot update participant with id = ' . $participant->getId());
         }
@@ -139,18 +135,18 @@ class ParticipantRepository implements IRepository
     {
         $model = Participant::findOne(['id' => $participant->getId()]);
 
-        if(!$model) {
+        if (!$model) {
             throw new Exception('Participant with id = ' . $participant->getId() . ' does not exists');
         }
 
-        if($model->blocked) {
+        if ($model->blocked) {
             throw new Exception('Participant with id = ' . $participant->getId() . ' already blocked');
         }
 
         $model->blocked = true;
         $model->blocked_at = time();
 
-        if(!$model->save()) {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot block participant with id = ' . $participant->getId());
         }
@@ -167,18 +163,18 @@ class ParticipantRepository implements IRepository
     {
         $model = Participant::findOne(['id' => $participant->getId()]);
 
-        if(!$model) {
+        if (!$model) {
             throw new Exception('Participant with id = ' . $participant->getId() . ' does not exists');
         }
 
-        if($model->deleted) {
+        if ($model->deleted) {
             throw new Exception('Participant with id = ' . $participant->getId() . ' already deleted');
         }
 
         $model->deleted = true;
         $model->deleted_at = time();
 
-        if(!$model->save()) {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot delete participant with id = ' . $participant->getId());
         }
@@ -290,8 +286,7 @@ class ParticipantRepository implements IRepository
     {
         $user = UserRepository::instance()->findOne(['username' => $username]);
 
-        if(!$user)
-        {
+        if (!$user) {
             return null;
         }
 

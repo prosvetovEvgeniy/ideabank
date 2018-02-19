@@ -2,21 +2,11 @@
 
 namespace common\models\repositories\notice;
 
-use common\components\helpers\LinkHelper;
-use common\components\helpers\NoticeHelper;
 use common\models\activerecords\Notice;
 use common\models\builders\NoticeEntityBuilder;
-use common\models\entities\AuthAssignmentEntity;
-use common\models\entities\CommentEntity;
-use common\models\entities\CommentNoticeEntity;
 use common\models\entities\NoticeEntity;
-use common\models\entities\ParticipantEntity;
-use common\models\entities\TaskEntity;
-use common\models\entities\TaskNoticeEntity;
 use common\models\interfaces\INotice;
 use common\models\interfaces\IRepository;
-use common\models\repositories\notice\CommentNoticeRepository;
-use common\models\repositories\notice\TaskNoticeRepository;
 use yii\db\Exception;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -60,7 +50,7 @@ class NoticeRepository implements IRepository
     {
         $model = Notice::findOne($condition);
 
-        if(!$model) {
+        if (!$model) {
             return null;
         }
 
@@ -101,7 +91,7 @@ class NoticeRepository implements IRepository
 
         $this->builderBehavior->assignProperties($model, $notice);
 
-        if(!$model->save()) {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot save notice with link = ' . $notice->getLink());
         }
@@ -120,13 +110,13 @@ class NoticeRepository implements IRepository
     {
         $model = Notice::findOne(['id' => $notice->getId()]);
 
-        if(!$model) {
+        if (!$model) {
             throw new Exception('Notice with id = ' . $notice->getId() . ' does not exists');
         }
 
         $this->builderBehavior->assignProperties($model, $notice);
 
-        if(!$model->save()) {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot update notice with id = ' . $notice->getId());
         }
@@ -146,13 +136,11 @@ class NoticeRepository implements IRepository
     {
         $model = Notice::findOne(['id' => $notice->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('Notice with id = ' . $notice->getId() . ' does not exists');
         }
 
-        if(!$model->delete())
-        {
+        if (!$model->delete()) {
             Yii::error($model->errors);
             throw new Exception('Cannot delete notice with id = ' . $notice->getId());
         }

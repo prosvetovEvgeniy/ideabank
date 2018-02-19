@@ -2,7 +2,6 @@
 
 namespace common\models\entities;
 
-
 use common\models\interfaces\IEntity;
 use common\models\repositories\user\UserRepository;
 
@@ -126,8 +125,7 @@ class NoticeEntity implements IEntity
      */
     public function getSender()
     {
-        if($this->sender === null)
-        {
+        if ($this->sender === null) {
             $this->sender = UserRepository::instance()->findOne(['id' => $this->getSenderId()]);
         }
 
@@ -139,8 +137,7 @@ class NoticeEntity implements IEntity
      */
     public function getRecipient()
     {
-        if($this->recipient === null)
-        {
+        if ($this->recipient === null) {
             $this->recipient = UserRepository::instance()->findOne(['id' => $this->getRecipientId()]);
         }
 

@@ -2,7 +2,6 @@
 
 namespace common\components\dataproviders;
 
-
 use common\models\interfaces\IRepository;
 use yii\data\BaseDataProvider;
 

@@ -7,7 +7,6 @@ use common\models\repositories\task\TaskRepository;
 use Yii;
 use yii\helpers\FileHelper;
 
-
 /**
  * Class TaskFileEntity
  * @package common\models\entities
@@ -138,8 +137,7 @@ class TaskFileEntity implements IEntity
 
     public function getTask()
     {
-        if($this->task === null)
-        {
+        if ($this->task === null) {
             $this->task = TaskRepository::instance()->findOne(['id' => $this->taskId]);
         }
 

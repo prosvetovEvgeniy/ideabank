@@ -3,7 +3,6 @@
 namespace common\models\interfaces;
 
 use common\components\dataproviders\EntityDataProvider;
-use yii\web\NotFoundHttpException;
 
 interface ISearchEntityModel
 {

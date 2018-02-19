@@ -103,11 +103,9 @@ ProjectParticipantsAsset::register($this);
                     'value' => function(ParticipantEntity $participant) use ($addTag, $blockTag, $unBlockTag, $cancelTag){
                         if($participant->getRoleName() === ParticipantEntity::ROLE_BLOCKED){
                             return Html::tag('div', $unBlockTag, ['data' => ['participant-id' => $participant->getId()]]);
-                        }
-                        elseif($participant->getRoleName() === ParticipantEntity::ROLE_ON_CONSIDERATION){
+                        } elseif($participant->getRoleName() === ParticipantEntity::ROLE_ON_CONSIDERATION) {
                             return Html::tag('div', $addTag . $cancelTag, ['data' => ['participant-id' => $participant->getId()]]);
-                        }
-                        elseif($participant->getRoleName() === AuthAssignmentEntity::ROLE_USER) {
+                        } elseif($participant->getRoleName() === AuthAssignmentEntity::ROLE_USER) {
                             return Html::tag('div', $blockTag, ['data' => ['participant-id' => $participant->getId()]]);
                         }
 
@@ -119,7 +117,7 @@ ProjectParticipantsAsset::register($this);
                     'attribute' => '',
                     'header' => '',
                     'value' => function(ParticipantEntity $participant) use ($viewTag){
-                        if($participant->getRoleName() !== ParticipantEntity::ROLE_ON_CONSIDERATION){
+                        if ($participant->getRoleName() !== ParticipantEntity::ROLE_ON_CONSIDERATION){
                             return Html::a($viewTag, ['/project/participant-view', 'id' => $participant->getId()]);
                         }
 

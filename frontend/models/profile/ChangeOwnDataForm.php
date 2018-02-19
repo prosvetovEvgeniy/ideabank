@@ -2,7 +2,6 @@
 
 namespace frontend\models\profile;
 
-
 use common\components\helpers\FileHelper;
 use common\models\entities\UserEntity;
 use common\models\repositories\user\UserRepository;
@@ -89,8 +88,7 @@ class ChangeOwnDataForm extends Model
             ['not', ['id' => $user->getId()]]
         ]);
 
-        if($recordExists)
-        {
+        if ($recordExists) {
             $this->addError('username', 'Данный логин уже занят');
         }
     }
@@ -108,8 +106,7 @@ class ChangeOwnDataForm extends Model
             ['not', ['id' => $user->getId()]]
         ]);
 
-        if($recordExists)
-        {
+        if ($recordExists) {
             $this->addError('email', 'Данный email уже занят');
         }
     }
@@ -121,8 +118,7 @@ class ChangeOwnDataForm extends Model
     {
         $phoneLength = strlen($this->$attribute);
 
-        if($phoneLength < 10 || $phoneLength > 12)
-        {
+        if ($phoneLength < 10 || $phoneLength > 12) {
             $errorMsg= 'Номер телефона не корректный';
             $this->addError('phone', $errorMsg);
         }
@@ -130,16 +126,12 @@ class ChangeOwnDataForm extends Model
 
     public function update()
     {
-        if(!$this->validate())
-        {
+        if (!$this->validate()) {
             return false;
         }
 
         try
         {
-            /**
-             * @var UserEntity $user
-             */
             $user = $this->getUser();
 
             $user->setUsername($this->username);
@@ -149,26 +141,20 @@ class ChangeOwnDataForm extends Model
             $user->setLastName($this->lastName);
             $user->setPhone($this->phone);
 
-            if($this->avatar)
-            {
+            if ($this->avatar) {
+
                 $fileHelper = new FileHelper($this->avatar->extension, UserRepository::instance());
-
                 $hashName = $fileHelper->getHash('avatar');
-
                 $user->setAvatar($hashName);
 
-                if(!$this->avatar->saveAs(UserEntity::PATH_TO_AVATAR . $hashName))
-                {
+                if (!$this->avatar->saveAs(UserEntity::PATH_TO_AVATAR . $hashName)) {
                     return false;
                 }
             }
 
             UserRepository::instance()->update($user);
-
             return true;
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -179,13 +165,9 @@ class ChangeOwnDataForm extends Model
      */
     public function fillFields()
     {
-        /**
-         * @var UserEntity $user
-         */
         $user = $this->getUser();
 
-        if($user)
-        {
+        if ($user) {
             $this->username = $user->getUsername();
             $this->email = $user->getEmail();
             $this->firstName = $user->getFirstName();

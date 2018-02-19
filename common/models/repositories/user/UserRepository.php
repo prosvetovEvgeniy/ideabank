@@ -2,10 +2,10 @@
 
 namespace common\models\repositories\user;
 
-
 use common\models\activerecords\Users;
 use common\models\builders\UserEntityBuilder;
 use common\models\entities\UserEntity;
+use common\models\interfaces\IEntity;
 use common\models\interfaces\IRepository;
 use yii\db\Exception;
 use Yii;
@@ -52,8 +52,7 @@ class UserRepository implements IRepository
          */
         $model = Users::find()->where($condition)->one();
 
-        if(!$model || $model->deleted)
-        {
+        if (!$model || $model->deleted) {
             return null;
         }
 
@@ -67,7 +66,7 @@ class UserRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
-     * @return UserEntity[]
+     * @return UserEntity[]|IEntity
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
@@ -90,8 +89,7 @@ class UserRepository implements IRepository
 
         $this->builderBehavior->assignProperties($model, $user);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot save user with username = ' . $user->getUsername());
         }
@@ -111,15 +109,13 @@ class UserRepository implements IRepository
     {
         $model = Users::findOne(['id' => $user->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('User with id = ' . $user->getId() . ' does not exists');
         }
 
         $this->builderBehavior->assignProperties($model, $user);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot update user with id = ' . $user->getId());
         }
@@ -138,20 +134,17 @@ class UserRepository implements IRepository
     {
         $model = Users::findOne(['id' => $user->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('User with id = ' . $user->getId() . ' does not exists');
         }
 
-        if($model->deleted)
-        {
+        if ($model->deleted) {
             throw new Exception('User with id = ' . $user->getId() . ' already deleted');
         }
 
         $model->deleted = true;
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot delete user with id = ' . $user->getId());
         }
@@ -168,7 +161,6 @@ class UserRepository implements IRepository
         return (int) Users::find()->where($condition)->count();
     }
 
+
     // #################### UNIQUE METHODS OF CLASS ######################
-
-
 }

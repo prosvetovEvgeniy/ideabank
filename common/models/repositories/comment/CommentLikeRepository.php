@@ -2,7 +2,6 @@
 
 namespace common\models\repositories\comment;
 
-
 use common\models\activerecords\CommentLike;
 use common\models\builders\CommentLikeEntityBuilder;
 use common\models\entities\CommentEntity;
@@ -48,8 +47,7 @@ class CommentLikeRepository implements IRepository
     {
         $model = CommentLike::findOne($condition);
 
-        if(!$model)
-        {
+        if(!$model) {
             return null;
         }
 
@@ -85,8 +83,7 @@ class CommentLikeRepository implements IRepository
 
         $this->builderBehavior->assignProperties($model, $commentLike);
 
-        if(!$model->save())
-        {
+        if(!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot save comment_like with comment_id = ' . $commentLike->getCommentId() .
                 ' and user_id = ' . $commentLike->getUserId());
@@ -106,15 +103,13 @@ class CommentLikeRepository implements IRepository
     {
         $model = CommentLike::findOne(['id' => $commentLike->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('comment_like with id = ' . $commentLike->getId() . ' does not exists');
         }
 
         $this->builderBehavior->assignProperties($model, $commentLike);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot update comment_like with id = ' . $commentLike->getId());
         }
@@ -134,13 +129,11 @@ class CommentLikeRepository implements IRepository
     {
         $model = CommentLike::findOne(['id' => $commentLike->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('comment_like with id = ' . $commentLike->getId() . ' does not exists');
         }
 
-        if(!$model->delete())
-        {
+        if (!$model->delete()) {
             Yii::error($model->errors);
             throw new Exception('Cannot delete comment_like with id = ' . $commentLike->getId());
         }

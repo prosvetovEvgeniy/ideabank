@@ -90,15 +90,13 @@ class SignupForm extends Model
      */
     public function signUpUser()
     {
-        if (!$this->validate() || $this->scenario !== self::SCENARIO_USER_SIGNUP)
-        {
+        if (!$this->validate() || $this->scenario !== self::SCENARIO_USER_SIGNUP) {
             return false;
         }
 
         $transaction = Yii::$app->db->beginTransaction();
 
-        try
-        {
+        try {
             $user = UserRepository::instance()->add(
                 new UserEntity($this->username, $this->password, $this->email)
             );
@@ -110,11 +108,9 @@ class SignupForm extends Model
             $transaction->commit();
 
             return true;
-        }
-        catch (Exception $e)
-        {
-            $transaction->rollBack();
+        } catch (Exception $e) {
 
+            $transaction->rollBack();
             return false;
         }
     }
@@ -126,15 +122,13 @@ class SignupForm extends Model
      */
     public function signUpDirector()
     {
-        if (!$this->validate() || $this->scenario !== self::SCENARIO_DIRECTOR_SIGNUP)
-        {
+        if (!$this->validate() || $this->scenario !== self::SCENARIO_DIRECTOR_SIGNUP) {
             return false;
         }
 
         $transaction = Yii::$app->db->beginTransaction();
 
-        try
-        {
+        try {
             $user = UserRepository::instance()->add(
                 new UserEntity(
                     $this->username, $this->password, $this->email,
@@ -163,11 +157,9 @@ class SignupForm extends Model
             $transaction->commit();
 
             return true;
-        }
-        catch (Exception $e)
-        {
-            $transaction->rollBack();
+        } catch (Exception $e) {
 
+            $transaction->rollBack();
             return false;
         }
     }

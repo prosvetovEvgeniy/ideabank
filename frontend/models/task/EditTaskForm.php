@@ -2,7 +2,6 @@
 
 namespace frontend\models\task;
 
-
 use common\components\facades\TaskFacade;
 use common\models\entities\TaskEntity;
 use yii\base\Model;
@@ -39,7 +38,6 @@ class EditTaskForm extends Model
     public $plannedEndAt;
     public $parentId;
 
-
     //сущность сохраненой задачи
     private $task;
 
@@ -55,7 +53,7 @@ class EditTaskForm extends Model
         $this->title = $task->getTitle();
         $this->content = $task->getContent();
 
-        if(Yii::$app->user->isManager($task->getProjectId())){
+        if (Yii::$app->user->isManager($task->getProjectId())){
             $this->status = $task->getStatus();
             $this->visibilityArea = $task->getVisibilityArea();
             $this->plannedEndAt = $task->getPlannedEndAt();
@@ -172,8 +170,7 @@ class EditTaskForm extends Model
 
             $transaction->commit();
             return true;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $transaction->rollBack();
             return false;
         }

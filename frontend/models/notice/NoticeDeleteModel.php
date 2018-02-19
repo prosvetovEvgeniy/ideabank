@@ -4,15 +4,12 @@ namespace frontend\models\notice;
 
 
 use common\models\repositories\notice\NoticeRepository;
-use common\models\entities\NoticeEntity;
 use yii\base\Model;
 use yii\db\Exception;
 
 /**
  * Class NoticeDeleteModel
  * @package frontend\models\notice
- *
- *
  */
 class NoticeDeleteModel extends Model
 {
@@ -29,7 +26,7 @@ class NoticeDeleteModel extends Model
 
     public function delete()
     {
-        if(!$this->validate()) {
+        if (!$this->validate()) {
             return false;
         }
 
@@ -38,16 +35,14 @@ class NoticeDeleteModel extends Model
             'recipient_id' => $this->recipientId
         ]);
 
-        if(!$notice) {
+        if (!$notice) {
             return false;
         }
 
         try {
             NoticeRepository::instance()->delete($notice);
-
             return true;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

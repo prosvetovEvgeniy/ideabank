@@ -2,7 +2,6 @@
 
 namespace frontend\models\comment;
 
-
 use common\components\facades\CommentFacade;
 use common\models\entities\AuthAssignmentEntity;
 use common\models\repositories\comment\CommentRepository;
@@ -34,17 +33,17 @@ class CommentDeleteModel extends Model
      */
     public function delete()
     {
-        if(!$this->validate()) {
+        if (!$this->validate()) {
             return false;
         }
 
         $comment = CommentRepository::instance()->findOne(['id' => $this->id]);
 
-        if(!$comment || $comment->getDeleted()) {
+        if (!$comment || $comment->getDeleted()) {
             return false;
         }
 
-        if(!Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $comment->getTask()->getProjectId())) {
+        if (!Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $comment->getTask()->getProjectId())) {
             return false;
         }
 
@@ -57,8 +56,7 @@ class CommentDeleteModel extends Model
 
             $transaction->commit();
             return true;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $transaction->rollBack();
             return false;
         }

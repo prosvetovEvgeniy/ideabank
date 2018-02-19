@@ -4,9 +4,7 @@ namespace frontend\controllers;
 use common\components\dataproviders\EntityDataProvider;
 use common\models\entities\TaskEntity;
 use common\models\repositories\task\ActualTasksRepository;
-use common\models\repositories\project\ProjectsManagerRepository;
 use common\models\repositories\task\TaskRepository;
-use common\models\repositories\user\UserRepository;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -105,15 +103,13 @@ class SiteController extends Controller
 
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest)
-        {
+        if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
         $model = new LoginForm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->login())
-        {
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         }
 
@@ -139,10 +135,8 @@ class SiteController extends Controller
         $model = new SignupForm();
         $model->scenario = SignupForm::SCENARIO_USER_SIGNUP;
 
-        if($model->load(Yii::$app->request->post()) && $model->signUpUser())
-        {
-            if(Yii::$app->getUser()->login($model->getParticipant()))
-            {
+        if ($model->load(Yii::$app->request->post()) && $model->signUpUser()) {
+            if(Yii::$app->getUser()->login($model->getParticipant())) {
                 return $this->goHome();
             }
         }
@@ -155,10 +149,8 @@ class SiteController extends Controller
         $model = new SignupForm();
         $model->scenario = SignupForm::SCENARIO_DIRECTOR_SIGNUP;
 
-        if($model->load(Yii::$app->request->post()) && $model->signUpDirector())
-        {
-            if(Yii::$app->getUser()->login($model->getParticipant()))
-            {
+        if($model->load(Yii::$app->request->post()) && $model->signUpDirector()) {
+            if(Yii::$app->getUser()->login($model->getParticipant())) {
                 return $this->goHome();
             }
         }

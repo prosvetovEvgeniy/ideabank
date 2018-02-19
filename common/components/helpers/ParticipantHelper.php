@@ -2,7 +2,6 @@
 
 namespace common\components\helpers;
 
-
 use common\models\entities\ProjectEntity;
 use common\models\repositories\participant\ParticipantRepository;
 use Yii;
@@ -30,7 +29,7 @@ class ParticipantHelper
             'project_id' => $project->getId()
         ]);
 
-        if(!$participant || $participant->getDeleted() || !$participant->getApproved() || $participant->getBlocked()) {
+        if (!$participant || $participant->getDeleted() || !$participant->getApproved() || $participant->getBlocked()) {
             return false;
         }
 

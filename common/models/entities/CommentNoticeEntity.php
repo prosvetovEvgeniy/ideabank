@@ -23,8 +23,10 @@ class CommentNoticeEntity implements IEntity, INotice
     private $commentId;
     private $noticeId;
 
+    //кеш связанных сущностей
     private $comment;
     private $notice;
+
 
     /**
      * CommentNoticeEntity constructor.
@@ -59,8 +61,7 @@ class CommentNoticeEntity implements IEntity, INotice
      */
     public function getComment()
     {
-        if($this->comment === null)
-        {
+        if ($this->comment === null) {
             $this->comment = CommentRepository::instance()->findOne(['id' => $this->commentId]);
         }
 
@@ -72,8 +73,7 @@ class CommentNoticeEntity implements IEntity, INotice
      */
     public function getNotice()
     {
-        if($this->notice === null)
-        {
+        if ($this->notice === null) {
             $this->notice = NoticeRepository::instance()->findOne(['id' => $this->noticeId]);
         }
 

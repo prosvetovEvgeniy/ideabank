@@ -2,7 +2,6 @@
 
 namespace frontend\controllers;
 
-
 use common\components\dataproviders\EntityDataProvider;
 use common\models\repositories\participant\ParticipantRepository;
 use common\models\repositories\task\TaskRepository;
@@ -21,12 +20,10 @@ class ProfileController extends Controller
     {
         $model = new ChangeOwnDataForm();
 
-        if($model->load(Yii::$app->request->post()))
-        {
+        if($model->load(Yii::$app->request->post())) {
             $model->avatar = UploadedFile::getInstance($model, 'avatar');
 
-            if($model->update())
-            {
+            if($model->update()) {
                 Yii::$app->session->setFlash('ownDataChanged', 'Вы успешно изменили свои данные');
             }
         }
@@ -43,10 +40,8 @@ class ProfileController extends Controller
     {
         $model = new ChangePasswordForm();
 
-        if($model->load(Yii::$app->request->post()) && $model->update())
-        {
+        if($model->load(Yii::$app->request->post()) && $model->update()) {
             $model = new ChangePasswordForm();
-
             Yii::$app->session->setFlash('passwordChanged', 'Пароль успешно изменен');
         }
 
@@ -74,8 +69,7 @@ class ProfileController extends Controller
     {
         $user = UserRepository::instance()->findOne(['id' => $id]);
 
-        if(!$user)
-        {
+        if (!$user) {
             throw new BadRequestHttpException();
         }
 
@@ -100,6 +94,7 @@ class ProfileController extends Controller
         ]);
     }
 
+    
     //###################### AJAX ACTIONS ######################
 
 
@@ -108,8 +103,7 @@ class ProfileController extends Controller
     {
         $model = new DeleteParticipantModel();
 
-        if(!$model->load(Yii::$app->request->post()) || !$model->delete())
-        {
+        if(!$model->load(Yii::$app->request->post()) || !$model->delete()) {
             throw new BadRequestHttpException();
         }
     }

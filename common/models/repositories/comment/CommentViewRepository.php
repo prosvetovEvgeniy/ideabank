@@ -2,10 +2,8 @@
 
 namespace common\models\repositories\comment;
 
-
 use common\models\builders\CommentViewEntityBuilder;
 use common\models\entities\AuthAssignmentEntity;
-use common\models\entities\ParticipantEntity;
 use common\models\interfaces\IRepository;
 use common\models\repositories\task\TaskRepository;
 use Yii;
@@ -82,7 +80,7 @@ class CommentViewRepository implements IRepository
 
         $task = TaskRepository::instance()->findOne(['id' => $condition['task_id']]);
 
-        if(!Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $task->getProjectId())) {
+        if (!Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $task->getProjectId())) {
             $models = $models->andWhere([
                 'or',
                 ['private' => false],
@@ -107,7 +105,7 @@ class CommentViewRepository implements IRepository
 
         $task = TaskRepository::instance()->findOne(['id' => $condition['task_id']]);
 
-        if(!Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $task->getProjectId())) {
+        if (!Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $task->getProjectId())) {
             $models = $models->andWhere([
                 'or',
                 ['private' => false],

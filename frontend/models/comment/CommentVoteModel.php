@@ -2,7 +2,6 @@
 
 namespace frontend\models\comment;
 
-
 use yii\base\Model;
 use common\models\entities\CommentLikeEntity;
 use common\models\repositories\comment\CommentLikeRepository;
@@ -36,21 +35,17 @@ class CommentVoteModel extends Model
 
     public function add()
     {
-        if(!$this->validate() || $this->recordExist())
-        {
+        if (!$this->validate() || $this->recordExist()) {
             return false;
         }
 
         $commentLike = new CommentLikeEntity($this->commentId, $this->userId, $this->liked);
 
-        try
-        {
+        try {
             CommentLikeRepository::instance()->add($commentLike);
 
             return true;
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -62,26 +57,20 @@ class CommentVoteModel extends Model
      */
     public function delete()
     {
-        if(!$this->validate())
-        {
+        if (!$this->validate()) {
             return false;
         }
 
         $commentLike = $this->getCommentLike();
 
-        if(!$commentLike)
-        {
+        if (!$commentLike) {
             return false;
         }
 
-        try
-        {
+        try {
             CommentLikeRepository::instance()->delete($commentLike);
-
             return true;
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -91,28 +80,22 @@ class CommentVoteModel extends Model
      */
     public function reverse()
     {
-        if(!$this->validate())
-        {
+        if (!$this->validate()) {
             return false;
         }
 
         $commentLike = $this->getCommentLike();
 
-        if(!$commentLike)
-        {
+        if (!$commentLike) {
             return false;
         }
 
         ($commentLike->getLiked() === true) ? $commentLike->dislike() : $commentLike->like();
 
-        try
-        {
+        try {
             CommentLikeRepository::instance()->update($commentLike);
-
             return true;
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return false;
         }
     }

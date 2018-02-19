@@ -2,17 +2,16 @@
 
 namespace common\models\repositories\task;
 
-
 use common\models\activerecords\Task;
 use common\models\builders\TaskEntityBuilder;
 use common\models\entities\ProjectEntity;
 use common\models\entities\TaskEntity;
 use common\models\entities\UserEntity;
+use common\models\interfaces\IEntity;
 use common\models\interfaces\IRepository;
 use common\models\repositories\participant\ParticipantRepository;
 use yii\db\Exception;
 use Yii;
-use yii\helpers\ArrayHelper;
 
 /**
  * Class TaskRepository
@@ -53,8 +52,7 @@ class TaskRepository implements IRepository
     {
         $model = Task::findOne($condition);
 
-        if(!$model || $model->deleted)
-        {
+        if (!$model || $model->deleted) {
             return null;
         }
 
@@ -68,7 +66,7 @@ class TaskRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
-     * @return TaskEntity[]
+     * @return TaskEntity[]|IEntity
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
@@ -90,8 +88,7 @@ class TaskRepository implements IRepository
 
         $this->builderBehavior->assignProperties($model, $task);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot save task with title = ' . $task->getTitle());
         }
@@ -110,15 +107,13 @@ class TaskRepository implements IRepository
     {
         $model = Task::findOne(['id' => $task->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('Task with id = ' . $task->getId() . ' does not exists');
         }
 
         $this->builderBehavior->assignProperties($model, $task);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot update task with id = ' . $task->getId());
         }
@@ -137,20 +132,17 @@ class TaskRepository implements IRepository
     {
         $model = Task::findOne(['id' => $task->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('Task with id = ' . $task->getId() . ' does not exists');
         }
 
-        if($model->deleted)
-        {
+        if ($model->deleted) {
             throw new Exception('Task with id = ' . $task->getId() . ' already deleted');
         }
 
         $model->deleted = true;
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot delete task with id = ' . $task->getId());
         }
@@ -299,8 +291,7 @@ class TaskRepository implements IRepository
 
         $projectIds = [];
 
-        foreach ($participants as $participant)
-        {
+        foreach ($participants as $participant) {
             $projectIds[] = $participant->getProjectId();
         }
 

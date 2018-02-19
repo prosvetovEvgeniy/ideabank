@@ -2,11 +2,9 @@
 
 namespace frontend\models\message;
 
-
 use common\models\repositories\message\MessageRepository;
 use yii\base\Model;
 use yii\db\Exception;
-use common\models\entities\MessageEntity;
 
 /**
  * Class DeleteMessageModel
@@ -35,26 +33,23 @@ class DeleteMessageModel extends Model
     }
 
     /**
-     * @return bool | MessageEntity
+     * @return bool
      */
-    public function deleteMessage()
+    public function delete()
     {
         $message = MessageRepository::instance()->findOne([
             'self_id' => $this->selfId,
             'id'      => $this->messageId
         ]);
 
-        if(!$message)
-        {
+        if (!$message) {
             return false;
         }
 
-        try
-        {
-            return MessageRepository::instance()->delete($message);
-        }
-        catch (Exception $e)
-        {
+        try {
+            MessageRepository::instance()->delete($message);
+            return true;
+        } catch (Exception $e) {
             return false;
         }
     }

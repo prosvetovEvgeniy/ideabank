@@ -2,7 +2,6 @@
 
 namespace frontend\models\profile;
 
-
 use common\models\repositories\rbac\AuthAssignmentRepository;
 use common\models\repositories\participant\ParticipantRepository;
 use yii\base\Model;
@@ -29,8 +28,7 @@ class DeleteParticipantModel extends Model
 
     public function delete()
     {
-        if(!$this->validate())
-        {
+        if (!$this->validate()) {
             return false;
         }
 
@@ -47,23 +45,17 @@ class DeleteParticipantModel extends Model
 
         $transaction = Yii::$app->db->beginTransaction();
 
-        try
-        {
-            if($authAssignment)
-            {
+        try {
+            if ($authAssignment) {
                 AuthAssignmentRepository::instance()->delete($authAssignment);
             }
 
             ParticipantRepository::instance()->delete($participant);
 
             $transaction->commit();
-
             return true;
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $transaction->rollBack();
-
             return false;
         }
     }

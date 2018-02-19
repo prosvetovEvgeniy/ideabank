@@ -2,7 +2,6 @@
 
 namespace common\models\searchmodels\project;
 
-
 use common\components\dataproviders\EntityDataProvider;
 use common\models\entities\ParticipantEntity;
 use common\models\interfaces\ISearchEntityModel;
@@ -120,10 +119,10 @@ class ParticipantSearchForm extends Model implements ISearchEntityModel
         if($this->role !== null){
             if($this->role === ParticipantEntity::ROLE_ON_CONSIDERATION){
                 array_push($condition, ['blocked' => false, 'approved' => false]);
-            }
+            } 
             else if($this->role === ParticipantEntity::ROLE_BLOCKED){
                 array_push($condition, ['blocked' => true]);
-            }
+            } 
             else{
                 array_push($condition, ['item_name' => $this->role]);
             }

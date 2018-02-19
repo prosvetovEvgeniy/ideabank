@@ -7,7 +7,6 @@ use yii\base\Model;
 use Yii;
 use yii\db\Exception;
 
-
 /**
  * Class TaskFileDeleteModel
  * @package frontend\models\taskfile
@@ -28,9 +27,12 @@ class TaskFileDeleteModel extends Model
         ];
     }
 
+    /**
+     * @return bool
+     */
     public function delete()
     {
-        if(!$this->validate()) {
+        if (!$this->validate()) {
             return false;
         }
 
@@ -39,11 +41,11 @@ class TaskFileDeleteModel extends Model
             'task_id' => $this->taskId
         ]);
 
-        if(!$taskFile) {
+        if (!$taskFile) {
             return false;
         }
 
-        if($taskFile->getTask()->getAuthorId() !== Yii::$app->user->identity->getUser()->getId() &&
+        if ($taskFile->getTask()->getAuthorId() !== Yii::$app->user->identity->getUser()->getId() &&
            !Yii::$app->user->isManager($taskFile->getTask()->getProjectId()))
         {
             return false;
@@ -51,10 +53,8 @@ class TaskFileDeleteModel extends Model
 
         try {
             TaskFileRepository::instance()->delete($taskFile);
-
             return true;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

@@ -2,7 +2,6 @@
 
 namespace frontend\models\task;
 
-
 use common\models\activerecords\TaskLike;
 use yii\base\Model;
 use common\models\repositories\task\TaskLikeRepository;
@@ -41,21 +40,16 @@ class TaskVoteModel extends Model
      */
     public function add()
     {
-        if(!$this->validate() || $this->recordExist())
-        {
+        if (!$this->validate() || $this->recordExist()) {
             return false;
         }
 
         $taskLike = new TaskLikeEntity($this->taskId, $this->userId, $this->liked);
 
-        try
-        {
+        try {
             TaskLikeRepository::instance()->add($taskLike);
-
             return true;
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -67,8 +61,7 @@ class TaskVoteModel extends Model
      */
     public function delete()
     {
-        if(!$this->validate())
-        {
+        if (!$this->validate()) {
             return false;
         }
 
@@ -77,19 +70,14 @@ class TaskVoteModel extends Model
             'user_id' => Yii::$app->user->identity->getUserId(),
         ]);
 
-        if(!$taskLike)
-        {
+        if (!$taskLike) {
             return false;
         }
 
-        try
-        {
+        try {
             TaskLikeRepository::instance()->delete($taskLike);
-
             return true;
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -99,8 +87,7 @@ class TaskVoteModel extends Model
      */
     public function reverse()
     {
-        if(!$this->validate())
-        {
+        if (!$this->validate()) {
             return false;
         }
 
@@ -109,21 +96,16 @@ class TaskVoteModel extends Model
             'user_id' => Yii::$app->user->identity->getUserId(),
         ]);
 
-        if(!$taskLike)
-        {
+        if (!$taskLike) {
             return false;
         }
 
         ($taskLike->getLiked() === true) ? $taskLike->dislike() : $taskLike->like();
 
-        try
-        {
+        try {
             TaskLikeRepository::instance()->update($taskLike);
-
             return true;
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -139,8 +121,7 @@ class TaskVoteModel extends Model
             'liked'   => $this->liked
         ]);
 
-        if($taskLike !== null)
-        {
+        if ($taskLike !== null) {
             return true;
         }
 

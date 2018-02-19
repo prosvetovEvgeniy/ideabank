@@ -2,7 +2,6 @@
 
 namespace common\models\entities;
 
-
 use common\models\interfaces\IEntity;
 use common\models\repositories\comment\CommentRepository;
 use common\models\repositories\user\UserRepository;
@@ -100,8 +99,7 @@ class CommentLikeEntity implements IEntity
      */
     public function getUser()
     {
-        if ($this->user === null)
-        {
+        if ($this->user === null) {
             $this->user = UserRepository::instance()->findOne(['id' => $this->getUserId()]);
         }
 
@@ -113,8 +111,7 @@ class CommentLikeEntity implements IEntity
      */
     public function getComment()
     {
-        if($this->comment === null)
-        {
+        if ($this->comment === null) {
             $this->comment = CommentRepository::instance()->findOne(['id' => $this->getCommentId()]);
         }
 

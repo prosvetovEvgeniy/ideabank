@@ -5,7 +5,6 @@ namespace frontend\controllers;
 
 use common\components\dataproviders\EntityDataProvider;
 use common\components\helpers\LinkHelper;
-use common\models\entities\ParticipantEntity;
 use common\models\repositories\comment\CommentViewRepository;
 use common\models\repositories\participant\ParticipantRepository;
 use common\models\repositories\project\ProjectRepository;
@@ -27,7 +26,7 @@ class TaskController extends Controller
     {
         $searchModel = new TaskSearchForm();
 
-        if(!$searchModel->load(Yii::$app->request->queryParams) || !$searchModel->validate()) {
+        if (!$searchModel->load(Yii::$app->request->queryParams) || !$searchModel->validate()) {
             throw new NotFoundHttpException();
         }
 
@@ -47,7 +46,7 @@ class TaskController extends Controller
     {
         $task = TaskRepository::instance()->findOne(['id' => $id]);
 
-        if(!$task) {
+        if (!$task) {
             throw new NotFoundHttpException();
         }
 
@@ -64,7 +63,7 @@ class TaskController extends Controller
         $model = new CommentCreateForm();
         $model->taskId = $task->getId();
 
-        if($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(LinkHelper::getLinkOnComment($model->getComment()));
         }
 
@@ -81,7 +80,7 @@ class TaskController extends Controller
         $model = new CreateTaskForm();
         $model->authorId = Yii::$app->user->identity->getUserId();
 
-        if($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post())) {
             $model->files = UploadedFile::getInstances($model, 'files');
 
             if($model->save()) {
@@ -101,17 +100,17 @@ class TaskController extends Controller
     {
         $task = TaskRepository::instance()->findOne(['id' => $id]);
 
-        if(!$task) {
+        if (!$task) {
             throw new BadRequestHttpException();
         }
 
         $model = new EditTaskForm($task);
 
-        if(Yii::$app->user->isManager($task->getProjectId())){
+        if (Yii::$app->user->isManager($task->getProjectId())){
             $model->scenario = EditTaskForm::SCENARIO_ADMIN_EDIT;
         }
 
-        if($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post())) {
             $model->files = UploadedFile::getInstances($model, 'files');
 
             if($model->update()) {
@@ -129,7 +128,7 @@ class TaskController extends Controller
     {
         $model = new DeleteTaskModel();
 
-        if(!$model->load(Yii::$app->request->post()) || !$model->delete()){
+        if (!$model->load(Yii::$app->request->post()) || !$model->delete()){
             throw new BadRequestHttpException();
         }
 

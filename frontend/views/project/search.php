@@ -42,9 +42,6 @@ $this->title = 'Поиск';
                             'attribute' => 'name',
                             'header' => 'Название',
                             'value' => function(ProjectEntity $project) {
-                                /**
-                                 * @var ProjectEntity $project
-                                 */
                                 return Html::a($project->getName(), ['/project/view/', 'id' => $project->getId()]);
                             },
                             'format' => 'html'
@@ -53,9 +50,6 @@ $this->title = 'Поиск';
                             'attribute' => 'companyName',
                             'header' => 'Название компании',
                             'value' => function(ProjectEntity $project) {
-                                /**
-                                 * @var ProjectEntity $project
-                                 */
                                 return $project->getCompany()->getName();
                             },
                         ],
@@ -63,9 +57,6 @@ $this->title = 'Поиск';
                             'attribute' => 'description',
                             'header' => 'Описание',
                             'value' => function(ProjectEntity $project) {
-                                /**
-                                 * @var ProjectEntity $project
-                                 */
                                 return $project->getDescription();
                             },
                             'format' => 'html'
@@ -74,10 +65,8 @@ $this->title = 'Поиск';
                             'attribute' => 'created_at',
                             'header' => 'Дата регистрации',
                             'value' => function(ProjectEntity $project) {
-                                /**
-                                 * @var ProjectEntity $project
-                                 */
                                 $date = '<code>' . $project->getCreatedAtDate() . '</code>';
+
                                 return $date;
                             },
                             'format' => 'html'
@@ -87,8 +76,7 @@ $this->title = 'Поиск';
                             'header' => '',
                             'value' => function(ProjectEntity $project) {
 
-                                if(Yii::$app->user->isGuest)
-                                {
+                                if (Yii::$app->user->isGuest) {
                                     return Html::a('Вступить', '/site/login');
                                 }
 
@@ -103,20 +91,13 @@ $this->title = 'Поиск';
                                 /**
                                  * @var ParticipantEntity $participant
                                  */
-                                foreach ($participants as $participant)
-                                {
-                                    if($participant->getUserId() === $user->getId())
-                                    {
-                                        if($participant->getApproved() && !$participant->getBlocked())
-                                        {
+                                foreach ($participants as $participant) {
+                                    if ($participant->getUserId() === $user->getId()) {
+                                        if ($participant->getApproved() && !$participant->getBlocked()) {
                                             return Html::a('Перейти', ['/task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskSearchForm::STATUS_ALL]);
-                                        }
-                                        else if(!$participant->getApproved())
-                                        {
+                                        } else if (!$participant->getApproved()) {
                                             return '<code>На рассмотрении </code>';
-                                        }
-                                        else if($participant->getBlocked())
-                                        {
+                                        } else if ($participant->getBlocked()) {
                                             return '<code>Забанен</code>';
                                         }
                                     }

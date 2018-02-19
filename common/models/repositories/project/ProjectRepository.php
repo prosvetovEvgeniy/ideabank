@@ -2,11 +2,9 @@
 
 namespace common\models\repositories\project;
 
-
 use common\models\activerecords\Project;
 use common\models\builders\ProjectEntityBuilder;
 use common\models\entities\ProjectEntity;
-use common\models\entities\UserEntity;
 use common\models\interfaces\IRepository;
 use common\models\repositories\participant\ParticipantRepository;
 use yii\db\Exception;
@@ -52,8 +50,7 @@ class ProjectRepository implements IRepository
     {
         $model = Project::findOne($condition);
 
-        if(!$model || $model->deleted)
-        {
+        if (!$model || $model->deleted) {
             return null;
         }
 
@@ -89,8 +86,7 @@ class ProjectRepository implements IRepository
 
         $this->builderBehavior->assignProperties($model, $project);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot save project with name = ' . $project->getName());
         }
@@ -109,15 +105,13 @@ class ProjectRepository implements IRepository
     {
         $model = Project::findOne(['id' => $project->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('Project with id = ' . $project->getId() . ' does not exists');
         }
 
         $this->builderBehavior->assignProperties($model, $project);
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot update project with id = ' . $project->getId());
         }
@@ -136,20 +130,17 @@ class ProjectRepository implements IRepository
     {
         $model = Project::findOne(['id' => $project->getId()]);
 
-        if(!$model)
-        {
+        if (!$model) {
             throw new Exception('Project with id = ' . $project->getId() . ' does not exists');
         }
 
-        if($model->deleted)
-        {
+        if ($model->deleted) {
             throw new Exception('Project with id = ' . $project->getId() . ' already deleted');
         }
 
         $model->deleted = true;
 
-        if(!$model->save())
-        {
+        if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot delete project with id = ' . $project->getId());
         }
