@@ -2,13 +2,13 @@
 
 namespace common\models\searchmodels\task\searchstrategy;
 
-use common\models\entities\TaskEntity;
-
 interface ITaskSearchStrategy
 {
     /**
-     * @param TaskEntity $task
-     * @return mixed
+     * @param string $status
+     * @param string $title
+     * @param string $content
+     * @param int $projectId
+     * @return array
      */
-    public function buildCondition(TaskEntity $task);
-}
+    public function buildCondition(string $status, int $projectId, string $title, string $content);}

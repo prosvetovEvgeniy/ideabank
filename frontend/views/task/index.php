@@ -26,7 +26,7 @@ $this->title = 'Предложения';
 
                 <?php $project = $participant->getProject(); ?>
 
-                <?= Html::a($project->getName(), ['task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskSearchForm::STATUS_ALL, 'projectId' => $project->getId()], ['class' => 'btn btn-default']) ?>
+                <?= Html::a($project->getName(), ['task/index', 'TaskSearchForm[projectId]' => $project->getId(), 'TaskSearchForm[status]' => TaskSearchForm::STATUS_ALL, 'projectId' => $project->getId()], ['class' => 'btn btn-default']) ?>
 
             <?php endforeach; ?>
         </div>

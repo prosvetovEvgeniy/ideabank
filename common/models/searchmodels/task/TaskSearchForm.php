@@ -126,13 +126,10 @@ class TaskSearchForm extends Model implements ISearchEntityModel
     private function buildCondition()
     {
         return $this->searchStrategyBehavior->buildCondition(
-            new TaskEntity(
-                $this->title,
-                $this->content,
-                null,
-                $this->projectId,
-                $this->status
-            )
+            $this->status,
+            $this->projectId,
+            $this->title,
+            $this->content
         );
     }
 
