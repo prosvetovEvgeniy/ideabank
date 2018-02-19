@@ -25,7 +25,7 @@ class ParticipantHelper
     public function checkOnParticipantInProject(ProjectEntity $project)
     {
         $participant = ParticipantRepository::instance()->findOne([
-            'user_id'    => Yii::$app->user->identity->getUserId(),
+            'user_id'    => Yii::$app->user->identity->getId(),
             'project_id' => $project->getId()
         ]);
 

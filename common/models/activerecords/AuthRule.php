@@ -2,7 +2,7 @@
 
 namespace common\models\activerecords;
 
-use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "auth_rule".
@@ -14,7 +14,7 @@ use Yii;
  *
  * @property AuthItem[] $authItems
  */
-class AuthRule extends \yii\db\ActiveRecord
+class AuthRule extends ActiveRecord
 {
     /**
      * @inheritdoc

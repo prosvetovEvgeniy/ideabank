@@ -30,7 +30,7 @@ class LinkHelper
      */
     public static function getLinkOnComment(CommentEntity $comment, UserEntity $user = null)
     {
-        $user = $user ?? Yii::$app->user->identity->getUser();
+        $user = $user ?? Yii::$app->user->identity;
 
         //расчитываем номер страницы, на которой будет находится комментарий
         $index = CommentHelper::getNewCommentIndex($comment, $user);

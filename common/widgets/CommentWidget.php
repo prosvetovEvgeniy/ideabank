@@ -23,15 +23,12 @@ class CommentWidget extends Widget
     {
         $comments = "";
 
-        foreach ($tree as $node)
-        {
+        foreach ($tree as $node) {
 
             $comments .= '<ul>';
-
             $comments .= '<li>' . $node['object']->getContent() . '</li>';
 
-            if(isset($node['child']))
-            {
+            if(isset($node['child'])) {
                 $comments .= $this->outTree($node['child']);
             }
 
@@ -42,15 +39,14 @@ class CommentWidget extends Widget
     }
 
     /**
-     * @param CommentEntity[] $comments
+     * @param array $comments
      * @return array
      */
     private function buildTree(array $comments)
     {
         $keys = [];
 
-        foreach ($comments as $key => $value)
-        {
+        foreach ($comments as $key => $value) {
             $keys[] = $value->getId();
 
             $comments[$key] = [];
@@ -59,19 +55,14 @@ class CommentWidget extends Widget
 
         $comments = array_combine($keys, $comments);
 
-        foreach ($comments as $key => $line)
-        {
-
-            if($line['object']->getCommentId() !== null)
-            {
+        foreach ($comments as $key => $line) {
+            if($line['object']->getCommentId() !== null) {
                 $comments[$line['object']->getCommentId()]['child'][$line['object']->getId()] = & $comments[$key];
             }
         }
 
-        foreach ($comments as $key => $value)
-        {
-            if($value['object']->getCommentId() !== null)
-            {
+        foreach ($comments as $key => $value) {
+            if($value['object']->getCommentId() !== null) {
                 unset($comments[$key]);
             }
         }

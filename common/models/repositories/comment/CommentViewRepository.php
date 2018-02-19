@@ -66,7 +66,7 @@ class CommentViewRepository implements IRepository
          * (данное поле используется на frontend). Аналогично
          * для поля current_user_disliked_it
          */
-        $userId = Yii::$app->user->identity->getUserId() ?? 'NULL';
+        $userId = Yii::$app->user->identity->getId() ?? 'NULL';
 
         $models = CommentView::find()->addSelect('c.*')
                                      ->addSelect('(SELECT COUNT(*) FROM comment_like WHERE comment_id = c.id AND liked = TRUE) as likes_amount')
@@ -99,7 +99,7 @@ class CommentViewRepository implements IRepository
      */
     public function getTotalCountByCondition(array $condition): int
     {
-        $userId = Yii::$app->user->identity->getUserId() ?? 'NULL';
+        $userId = Yii::$app->user->identity->getId() ?? 'NULL';
 
         $models= CommentView::find()->where($condition);
 

@@ -18,7 +18,7 @@ use yii\db\ActiveRecord;
  * @property Comment $comment
  * @property Users $user
  */
-class CommentLike extends \yii\db\ActiveRecord
+class CommentLike extends ActiveRecord
 {
     /**
      * @inheritdoc

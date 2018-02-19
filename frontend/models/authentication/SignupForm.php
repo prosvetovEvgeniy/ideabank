@@ -2,11 +2,9 @@
 
 namespace frontend\models\authentication;
 
+use common\components\facades\UserFacade;
 use common\models\entities\CompanyEntity;
-use common\models\entities\ParticipantEntity;
 use common\models\entities\UserEntity;
-use common\models\repositories\company\CompanyRepository;
-use common\models\repositories\participant\ParticipantRepository;
 use common\models\repositories\user\UserRepository;
 use yii\base\Model;
 use Yii;
@@ -25,12 +23,12 @@ use yii\db\Exception;
  * @property string $lastName
  * @property string $companyName
  *
- * @property ParticipantEntity $participant
+ * @property UserEntity $user
  */
 class SignupForm extends Model
 {
-    const SCENARIO_USER_SIGNUP = 'user signup';
-    const SCENARIO_DIRECTOR_SIGNUP = 'director sign up';
+    const SCENARIO_USER_SIGN_UP = 'user signup';
+    const SCENARIO_DIRECTOR_SIGN_UP = 'director sign up';
 
     public $username;
     public $email;
@@ -42,13 +40,13 @@ class SignupForm extends Model
     public $companyName;
 
     //сущность юзера
-    protected $participant;
+    protected $user;
 
     public function rules()
     {
         return [
-            [['username', 'email', 'password'], 'required', 'on' => self::SCENARIO_USER_SIGNUP],
-            [['username', 'email', 'password', 'phone', 'firstName', 'secondName', 'lastName', 'companyName'], 'required', 'on' => self::SCENARIO_DIRECTOR_SIGNUP],
+            [['username', 'email', 'password'], 'required', 'on' => self::SCENARIO_USER_SIGN_UP],
+            [['username', 'email', 'password', 'phone', 'firstName', 'secondName', 'lastName', 'companyName'], 'required', 'on' => self::SCENARIO_DIRECTOR_SIGN_UP],
 
             [['username'], 'trim'],
             [['username'], 'unique', 'targetClass' => '\common\models\activerecords\Users', 'message' => 'Такой логин уже занят'],
@@ -85,32 +83,25 @@ class SignupForm extends Model
 
     /**
      * @return bool
-     * @throws Exception
      * @throws \yii\base\Exception
      */
     public function signUpUser()
     {
-        if (!$this->validate() || $this->scenario !== self::SCENARIO_USER_SIGNUP) {
+        if (!$this->validate() || $this->scenario !== self::SCENARIO_USER_SIGN_UP) {
             return false;
         }
 
-        $transaction = Yii::$app->db->beginTransaction();
-
         try {
-            $user = UserRepository::instance()->add(
-                new UserEntity($this->username, $this->password, $this->email)
+            $this->user = UserRepository::instance()->add(
+                new UserEntity(
+                    $this->username,
+                    $this->password,
+                    $this->email
+                )
             );
-
-            $this->participant = ParticipantRepository::instance()->add(
-                new ParticipantEntity($user->getId())
-            );
-
-            $transaction->commit();
 
             return true;
         } catch (Exception $e) {
-
-            $transaction->rollBack();
             return false;
         }
     }
@@ -122,50 +113,35 @@ class SignupForm extends Model
      */
     public function signUpDirector()
     {
-        if (!$this->validate() || $this->scenario !== self::SCENARIO_DIRECTOR_SIGNUP) {
+        if (!$this->validate() || $this->scenario !== self::SCENARIO_DIRECTOR_SIGN_UP) {
             return false;
         }
+
+        $user = new UserEntity(
+            $this->username, $this->password, $this->email,
+            $this->phone, $this->firstName, $this->secondName,
+            $this->lastName
+        );
+
+        $company = new CompanyEntity($this->companyName);
+
+        $userFacade = new UserFacade();
 
         $transaction = Yii::$app->db->beginTransaction();
 
         try {
-            $user = UserRepository::instance()->add(
-                new UserEntity(
-                    $this->username, $this->password, $this->email,
-                    $this->phone, $this->firstName, $this->secondName,
-                    $this->lastName
-                )
-            );
-
-            $company = CompanyRepository::instance()->add(
-                new CompanyEntity($this->companyName)
-            );
-
-            $participant = new ParticipantEntity(
-                $user->getId(), $company->getId()
-            );
-
-            $participant->setApproved(true);
-            $participant->setApprovedAt(time());
-
-            $this->participant = ParticipantRepository::instance()->add($participant);
-
-            ParticipantRepository::instance()->add(
-                new ParticipantEntity($user->getId())
-            );
+            $this->user = $userFacade->signUpDirector($user, $company);
 
             $transaction->commit();
-
             return true;
         } catch (Exception $e) {
-
             $transaction->rollBack();
             return false;
         }
     }
 
     /**
-     * @return ParticipantEntity
+     * @return UserEntity
      */
-    public function getParticipant() { return $this->participant; }
+    public function getUser() { return $this->user; }
 }

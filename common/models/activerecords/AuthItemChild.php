@@ -2,7 +2,7 @@
 
 namespace common\models\activerecords;
 
-use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "auth_item_child".
@@ -13,7 +13,7 @@ use Yii;
  * @property AuthItem $parent0
  * @property AuthItem $child0
  */
-class AuthItemChild extends \yii\db\ActiveRecord
+class AuthItemChild extends ActiveRecord
 {
     /**
      * @inheritdoc

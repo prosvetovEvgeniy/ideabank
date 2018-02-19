@@ -5,12 +5,9 @@ namespace common\models\entities;
 use common\models\interfaces\IEntity;
 use common\models\repositories\rbac\AuthAssignmentRepository;
 use common\models\repositories\company\CompanyRepository;
-use common\models\repositories\participant\ParticipantRepository;
 use common\models\repositories\project\ProjectRepository;
 use common\models\repositories\user\UserRepository;
 use Yii;
-use yii\base\NotSupportedException;
-use yii\web\IdentityInterface;
 use yii\rbac\ManagerInterface;
 
 
@@ -38,7 +35,7 @@ use yii\rbac\ManagerInterface;
  *
  * @property ManagerInterface $auth
  */
-class ParticipantEntity implements IEntity, IdentityInterface
+class ParticipantEntity implements IEntity
 {
     /**
      * эти константы используются в видах для
@@ -133,65 +130,13 @@ class ParticipantEntity implements IEntity, IdentityInterface
     }
 
 
-    // ######## SECTION OF REALIZATION IDENTITY ############
-
-
-    /**
-     * @return int | null
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param string $password
-     * @return bool
-     */
-    public function validatePassword(string $password)
-    {
-        return Yii::$app->security->validatePassword($password, $this->getUser()->getPassword());
-    }
-
-    /**
-     * @param int|string $id
-     * @return ParticipantEntity|null
-     */
-    public static function findIdentity($id)
-    {
-        return ParticipantRepository::instance()->findOne(['id' => $id]);
-    }
-
-    /**
-     * @param mixed $token
-     * @param null $type
-     * @throws NotSupportedException
-     */
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getAuthKey()
-    {
-        return $this->getUser()->getAuthKey();
-    }
-
-    /**
-     * @param string $authKey
-     * @return bool
-     */
-    public function validateAuthKey($authKey)
-    {
-        return $this->getAuthKey() === $authKey;
-    }
-
-
     // #################### SECTION OF GETTERS ######################
 
+
+    /**
+     * @return int
+     */
+    public function getId() { return $this->id; }
 
     /**
      * @return int
@@ -369,6 +314,6 @@ class ParticipantEntity implements IEntity, IdentityInterface
      */
     public function isDirector()
     {
-        return ($this->getRoleName() === AuthAssignmentEntity::ROLE_PROJECT_DIRECTOR) ? true : false ;
+        return $this->getRoleName() === AuthAssignmentEntity::ROLE_PROJECT_DIRECTOR;
     }
 }

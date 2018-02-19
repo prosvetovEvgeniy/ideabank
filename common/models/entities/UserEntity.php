@@ -10,7 +10,10 @@ use common\models\repositories\notice\NoticeRepository;
 use common\models\repositories\participant\ParticipantRepository;
 use common\models\repositories\task\TaskLikeRepository;
 use common\models\repositories\task\TaskRepository;
+use common\models\repositories\user\UserRepository;
 use Yii;
+use yii\base\NotSupportedException;
+use yii\web\IdentityInterface;
 
 /**
  * Class UserEntity
@@ -39,7 +42,7 @@ use Yii;
  * @property NoticeEntity[]      $notices
  * @property MessageEntity[]     $messages
  */
-class UserEntity implements IEntity
+class UserEntity implements IEntity, IdentityInterface
 {
     public const USERNAME_MAX_LENGTH = 50;
     public const EMAIL_MAX_LENGTH = 50;
@@ -113,12 +116,69 @@ class UserEntity implements IEntity
     }
 
 
-    // #################### SECTION OF GETTERS ######################
+    // ######## SECTION OF REALIZATION IDENTITY ############
+
+
+    public function getUser(){
+        return $this;
+    }
 
     /**
      * @return int | null
      */
-    public function getId() { return $this->id; }
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $password
+     * @return bool
+     */
+    public function validatePassword(string $password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->password);
+    }
+
+    /**
+     * @param int|string $id
+     * @return UserEntity|null|IdentityInterface
+     */
+    public static function findIdentity($id)
+    {
+        return UserRepository::instance()->findOne(['id' => $id]);
+    }
+
+    /**
+     * @param mixed $token
+     * @param null $type
+     * @throws NotSupportedException
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getAuthKey()
+    {
+        return $this->authKey;
+    }
+
+    /**
+     * @param string $authKey
+     * @return bool
+     */
+    public function validateAuthKey($authKey)
+    {
+        return $this->getAuthKey() === $authKey;
+    }
+
+
+    // #################### SECTION OF GETTERS ######################
+
 
     /**
      * @return string
@@ -159,11 +219,6 @@ class UserEntity implements IEntity
      * @return string | null
      */
     public function getAvatar() { return $this->avatar; }
-
-    /**
-     * @return string | null
-     */
-    public function getAuthKey() { return $this->authKey; }
 
     /**
      * @return string | null

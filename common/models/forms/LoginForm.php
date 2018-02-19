@@ -1,8 +1,8 @@
 <?php
 namespace common\models\forms;
 
-use common\models\entities\ParticipantEntity;
-use common\models\repositories\participant\ParticipantRepository;
+use common\models\entities\UserEntity;
+use common\models\repositories\user\UserRepository;
 use Yii;
 use yii\base\Model;
 
@@ -14,7 +14,7 @@ use yii\base\Model;
  * @property string $password
  * @property bool   $rememberMe
  *
- * @property ParticipantEntity $user
+ * @property UserEntity $user
  */
 class LoginForm extends Model
 {
@@ -51,10 +51,10 @@ class LoginForm extends Model
      */
     public function validatePassword($attribute)
     {
-        $participantStub = $this->getParticipantStub();
+        $user = $this->getUser();
 
-        if (!$participantStub || !$participantStub->validatePassword($this->$attribute)) {
-            $this->addError($attribute, 'Incorrect username or password.');
+        if (!$user || !$user->validatePassword($this->$attribute)) {
+            $this->addError($attribute, 'Не правильное имя пользователя или пароль.');
         }
     }
 
@@ -67,18 +67,18 @@ class LoginForm extends Model
             return false;
         }
 
-        return Yii::$app->user->login($this->getParticipantStub(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+        return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
     }
 
     /**
-     * Возвращает заглушку из таблицы participant
-     *
-     * @return ParticipantEntity|null
+     * @return UserEntity|null
      */
-    protected function getParticipantStub()
+    private function getUser()
     {
         if ($this->user === null) {
-            $this->user = ParticipantRepository::instance()->findByUserName($this->username);
+            $this->user = UserRepository::instance()->findOne([
+                'username' => $this->username
+            ]);
         }
 
         return $this->user;

@@ -13,6 +13,6 @@ class MessageMenuWidget extends Widget
 
     public function run()
     {
-        return $this->render('messagemenu');
+        return $this->render('message-menu');
     }
 }

@@ -133,10 +133,10 @@ class SiteController extends Controller
     public function actionSignupUser()
     {
         $model = new SignupForm();
-        $model->scenario = SignupForm::SCENARIO_USER_SIGNUP;
+        $model->scenario = SignupForm::SCENARIO_USER_SIGN_UP;
 
         if ($model->load(Yii::$app->request->post()) && $model->signUpUser()) {
-            if(Yii::$app->getUser()->login($model->getParticipant())) {
+            if(Yii::$app->getUser()->login($model->getUser())) {
                 return $this->goHome();
             }
         }
@@ -147,10 +147,10 @@ class SiteController extends Controller
     public function actionSignupDirector()
     {
         $model = new SignupForm();
-        $model->scenario = SignupForm::SCENARIO_DIRECTOR_SIGNUP;
+        $model->scenario = SignupForm::SCENARIO_DIRECTOR_SIGN_UP;
 
         if($model->load(Yii::$app->request->post()) && $model->signUpDirector()) {
-            if(Yii::$app->getUser()->login($model->getParticipant())) {
+            if(Yii::$app->getUser()->login($model->getUser())) {
                 return $this->goHome();
             }
         }

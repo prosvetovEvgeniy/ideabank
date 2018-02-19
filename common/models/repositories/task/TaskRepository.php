@@ -297,7 +297,7 @@ class TaskRepository implements IRepository
 
         return [
             'and',
-            ['author_id' => Yii::$app->user->identity->getUserId()],
+            ['author_id' => Yii::$app->user->identity->getId()],
             ['in', 'project_id', $projectIds],
             ['deleted' => false]
         ];

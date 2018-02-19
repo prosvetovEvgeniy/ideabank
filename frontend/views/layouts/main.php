@@ -50,7 +50,7 @@ AppAsset::register($this);
 
         $menuItems[] = ['label' => 'Проекты', 'url' => '/project/index'];
 
-        $unViewedMessagesCount = MessageRepository::instance()->getAllUnviewedMsgCount();
+        $unViewedMessagesCount = MessageRepository::instance()->getAllUnViewedMsgCount();
 
         if($unViewedMessagesCount !== 0) {
             $unViewedMessagesCount = ' <code>+(' . $unViewedMessagesCount . ') </code>' ;

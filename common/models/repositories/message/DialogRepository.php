@@ -6,7 +6,6 @@ use common\models\builders\MessageEntityBuilder;
 use common\models\entities\MessageEntity;
 use common\models\activerecords\Message;
 use common\models\interfaces\IRepository;
-use yii\base\NotSupportedException;
 
 /**
  * Class DialogRepository
@@ -33,16 +32,6 @@ class DialogRepository implements IRepository
     public static function instance(): IRepository
     {
         return new self();
-    }
-
-    /**
-     * @param array $condition
-     * @return \common\models\interfaces\IEntity|null|void
-     * @throws NotSupportedException
-     */
-    public function findOne(array $condition)
-    {
-        throw new NotSupportedException();
     }
 
     /**

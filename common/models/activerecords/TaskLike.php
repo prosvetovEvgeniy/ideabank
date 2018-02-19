@@ -2,7 +2,6 @@
 
 namespace common\models\activerecords;
 
-use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -19,7 +18,7 @@ use yii\db\ActiveRecord;
  * @property Task $task
  * @property Users $user
  */
-class TaskLike extends \yii\db\ActiveRecord
+class TaskLike extends ActiveRecord
 {
     /**
      * @inheritdoc

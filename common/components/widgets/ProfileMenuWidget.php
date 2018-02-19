@@ -13,6 +13,6 @@ class ProfileMenuWidget extends Widget
 
     public function run()
     {
-        return $this->render('profilemenu');
+        return $this->render('profile-menu');
     }
 }

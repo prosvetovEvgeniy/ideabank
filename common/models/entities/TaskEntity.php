@@ -411,7 +411,7 @@ class TaskEntity implements IEntity
     }
 
     /**
-     * @return null | UserEntity
+     * @return null|\yii\web\IdentityInterface
      */
     public function getCurrentUser()
     {
@@ -419,7 +419,7 @@ class TaskEntity implements IEntity
             return null;
         }
 
-        return Yii::$app->user->identity->getUser();
+        return Yii::$app->user->identity;
     }
 
     /**

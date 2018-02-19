@@ -75,24 +75,24 @@ class DataController extends Controller
         //############### FILLING PARTICIPANTS ###############
 
 
-        $participantIds['evgeniyStub'] = $this->addParticipantStub($userIds['evgeniy']);
+        //$participantIds['evgeniyStub'] = $this->addParticipantStub($userIds['evgeniy']);
         $participantIds['evgeniyGithub'] = $this->addParticipant($userIds['evgeniy'], $companyIds['eCompanyId'], $projectIds['github']);
         $participantIds['evgeniyVk'] = $this->addParticipant($userIds['evgeniy'], $companyIds['eCompanyId'], $projectIds['vk']);
         $participantIds['evgeniyXabr'] = $this->addParticipant($userIds['evgeniy'], $companyIds['eCompanyId'], $projectIds['xabr']);
         $participantIds['evgeniyVulcanm'] = $this->addParticipant($userIds['evgeniy'], $companyIds['infSysId'], $projectIds['vulcan']);
 
-        $participantIds['newLoginStub'] = $this->addParticipantStub($userIds['newLogin']);
+        //$participantIds['newLoginStub'] = $this->addParticipantStub($userIds['newLogin']);
         $participantIds['newLoginVulcan'] = $this->addParticipant($userIds['newLogin'], $companyIds['infSysId'], $projectIds['vulcan']);
 
-        $participantIds['newUserStub'] = $this->addParticipantStub($userIds['newUser']);
+        //$participantIds['newUserStub'] = $this->addParticipantStub($userIds['newUser']);
         $participantIds['newUserGithub'] = $this->addParticipant($userIds['newUser'], $companyIds['eCompanyId'], $projectIds['github']);
         $participantIds['newUserVulcan'] = $this->addParticipant($userIds['newUser'], $companyIds['infSysId'], $projectIds['vulcan']);
 
-        $participantIds['adminStub'] = $this->addParticipantStub($userIds['admin']);
+        //$participantIds['adminStub'] = $this->addParticipantStub($userIds['admin']);
         $participantIds['adminDirector'] = $this->addParticipantDirector($userIds['admin'], $companyIds['infSysId']);
         $participantIds['adminVulcan'] = $this->addParticipant($userIds['admin'], $companyIds['infSysId'], $projectIds['vulcan']);
 
-        $participantIds['edirectorStub'] = $this->addParticipantStub($userIds['edirector']);
+        //$participantIds['edirectorStub'] = $this->addParticipantStub($userIds['edirector']);
         $participantIds['edirectorDirector'] = $this->addParticipantDirector($userIds['edirector'], $companyIds['eCompanyId']);
         $participantIds['edirectorGithub'] = $this->addParticipant($userIds['edirector'], $companyIds['eCompanyId'], $projectIds['github']);
         $participantIds['edirectorVk'] = $this->addParticipant($userIds['edirector'], $companyIds['eCompanyId'], $projectIds['vk']);
@@ -100,7 +100,7 @@ class DataController extends Controller
         $participantIds['edirectorVulcanConsidiration'] = $this->addOnConsidirationParticipant($userIds['edirector'], $companyIds['infSysId'], $projectIds['vulcan']);
 
 
-        $participantIds['blockedUserStub'] = $this->addParticipantStub($userIds['blockedUser']);
+        //$participantIds['blockedUserStub'] = $this->addParticipantStub($userIds['blockedUser']);
         $participantIds['blockedUserGithub'] = $this->addBlockedParticipant($userIds['blockedUser'], $companyIds['eCompanyId'], $projectIds['github']);
         $participantIds['blockedUserVulcan'] = $this->addBlockedParticipant($userIds['blockedUser'], $companyIds['infSysId'], $projectIds['vulcan']);
 

@@ -4,6 +4,7 @@ namespace common\models\searchmodels\task\searchstrategy;
 
 use common\models\entities\TaskEntity;
 use common\models\searchmodels\task\TaskSearchForm;
+use yii\base\NotSupportedException;
 
 class InvitedUserTaskSearchStrategy implements ITaskSearchStrategy
 {
@@ -58,5 +59,7 @@ class InvitedUserTaskSearchStrategy implements ITaskSearchStrategy
                 ['author_id' => -1]
             ];
         }
+
+        throw new NotSupportedException();
     }
 }

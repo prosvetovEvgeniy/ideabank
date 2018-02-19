@@ -20,7 +20,7 @@ class MessageController extends Controller
     {
         $dataProvider = new EntityDataProvider([
             'condition' => [
-                'self_id' => Yii::$app->user->identity->getUserId(),
+                'self_id' => Yii::$app->user->identity->getId(),
                 'deleted' => false
             ],
             'repositoryInstance' => DialogRepository::instance(),
@@ -37,7 +37,7 @@ class MessageController extends Controller
     {
         $dataProvider = new EntityDataProvider([
             'condition' => [
-                'self_id'   => Yii::$app->user->identity->getUserId(),
+                'self_id'   => Yii::$app->user->identity->getId(),
             ],
             'repositoryInstance' => CompanionRepository::instance(),
             'pagination' => [
@@ -54,7 +54,7 @@ class MessageController extends Controller
         /**
          * @var UserEntity $self
          */
-        $self = Yii::$app->user->identity->getUser();
+        $self = Yii::$app->user->identity->getId();
 
         $companion = UserRepository::instance()->findOne(['id' => $companionId]);
 
@@ -93,7 +93,7 @@ class MessageController extends Controller
     {
         $model = new DeleteMessageModel();
         $model->scenario = DeleteMessageModel::SCENARIO_DELETE_MESSAGE;
-        $model->selfId = Yii::$app->user->identity->getUserId();
+        $model->selfId = Yii::$app->user->identity->getId();
 
         $model->load(Yii::$app->request->post());
 
@@ -107,7 +107,7 @@ class MessageController extends Controller
         $model = new DeleteMessageModel();
         $model->scenario = DeleteMessageModel::SCENARIO_DELETE_DIALOG;
 
-        $model->selfId = Yii::$app->user->identity->getUserId();
+        $model->selfId = Yii::$app->user->identity->getId();
 
         $model->load(Yii::$app->request->post());
 
@@ -119,7 +119,7 @@ class MessageController extends Controller
     public function actionSend()
     {
         $model = new SendMessageForm();
-        $model->selfId = Yii::$app->user->identity->getUserId();
+        $model->selfId = Yii::$app->user->identity->getId();
 
         $model->load(Yii::$app->request->post());
 

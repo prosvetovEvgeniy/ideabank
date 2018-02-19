@@ -2,7 +2,6 @@
 
 namespace common\models\activerecords;
 
-use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -21,7 +20,7 @@ use yii\db\ActiveRecord;
  * @property Users $self
  * @property Users $companion
  */
-class Message extends \yii\db\ActiveRecord
+class Message extends ActiveRecord
 {
     /**
      * @inheritdoc

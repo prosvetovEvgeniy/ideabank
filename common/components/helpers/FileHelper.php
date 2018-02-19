@@ -7,7 +7,6 @@ use common\models\interfaces\IRepository;
 use Yii;
 use yii\web\UploadedFile;
 
-
 /**
  * Class FileHelper
  * @package common\components\helpers

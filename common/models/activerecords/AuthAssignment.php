@@ -2,8 +2,7 @@
 
 namespace common\models\activerecords;
 
-use Yii;
-
+use yii\db\ActiveRecord;
 /**
  * This is the model class for table "auth_assignment".
  *
@@ -14,7 +13,7 @@ use Yii;
  * @property AuthItem $itemName
  * @property Participant $user
  */
-class AuthAssignment extends \yii\db\ActiveRecord
+class AuthAssignment extends ActiveRecord
 {
     /**
      * @inheritdoc

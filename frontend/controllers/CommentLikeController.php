@@ -12,7 +12,7 @@ class CommentLikeController extends Controller
     public function actionAddVote()
     {
         $model = new CommentVoteModel();
-        $model->userId = Yii::$app->user->identity->getUserId();
+        $model->userId = Yii::$app->user->identity->getId();
 
         if (!$model->load(Yii::$app->request->post()) || !$model->add()) {
             throw new BadRequestHttpException();
@@ -23,7 +23,7 @@ class CommentLikeController extends Controller
     {
         $model = new CommentVoteModel();
         $model->scenario = CommentVoteModel::SCENARIO_DELETE;
-        $model->userId = Yii::$app->user->identity->getUserId();
+        $model->userId = Yii::$app->user->identity->getId();
 
         if (!$model->load(Yii::$app->request->post()) || !$model->delete()) {
             throw new BadRequestHttpException();
@@ -33,7 +33,7 @@ class CommentLikeController extends Controller
     public function actionReverseVote()
     {
         $model = new CommentVoteModel();
-        $model->userId = Yii::$app->user->identity->getUserId();
+        $model->userId = Yii::$app->user->identity->getId();
 
         if (!$model->load(Yii::$app->request->post()) || !$model->reverse()) {
             throw new BadRequestHttpException();

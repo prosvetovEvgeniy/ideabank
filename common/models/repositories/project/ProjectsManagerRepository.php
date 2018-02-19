@@ -52,7 +52,7 @@ class ProjectsManagerRepository implements IRepository
                                  ->leftJoin('auth_assignment a_u', 'a_u.user_id = pc.id')
                                  ->where([
                                      'and',
-                                     ['pc.user_id'    => Yii::$app->user->identity->getUserId()],
+                                     ['pc.user_id'    => Yii::$app->user->identity->getId()],
                                      ['not', ['a_u.item_name' => AuthAssignmentEntity::ROLE_USER]]
                                  ])
                                  ->offset($offset)
@@ -73,7 +73,7 @@ class ProjectsManagerRepository implements IRepository
                                     ->leftJoin('participant pc ON pc.project_id = p.id')
                                     ->leftJoin('auth_assignment a_u ON a_u.user_id = pc.id')
                                     ->where([
-                                        'p.user_id' => Yii::$app->user->identity->getUserId(),
+                                        'p.user_id' => Yii::$app->user->identity->getId(),
                                         'a_u.item_name' => AuthAssignmentEntity::ROLE_MANAGER
                                      ])
                                     ->count();

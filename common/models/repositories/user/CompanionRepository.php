@@ -8,7 +8,6 @@ use common\models\builders\UserEntityBuilder;
 use common\models\entities\UserEntity;
 use common\models\interfaces\IEntity;
 use common\models\interfaces\IRepository;
-use yii\base\NotSupportedException;
 use yii\helpers\ArrayHelper;
 
 /**

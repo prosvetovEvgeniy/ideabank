@@ -17,7 +17,7 @@ use common\models\repositories\user\UserRepository;
  */
 class AuthAssignmentEntity implements IEntity
 {
-    //Название ролей из RBAC
+    //Название ролей из rbac
     public const ROLE_USER = 'user';
     public const ROLE_MANAGER = 'manager';
     public const ROLE_PROJECT_DIRECTOR = 'projectDirector';

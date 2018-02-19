@@ -28,7 +28,9 @@ class ProfileController extends Controller
             }
         }
 
-        $avatar = Yii::$app->user->identity->getUser()->getAvatarAlias();
+        $user = UserRepository::instance()->findOne(['id' => Yii::$app->user->identity->getId()]);
+
+        $avatar = $user->getAvatarAlias();
 
         return $this->render('change-own-data', [
             'model'  => $model,

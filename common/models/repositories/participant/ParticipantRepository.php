@@ -5,9 +5,7 @@ namespace common\models\repositories\participant;
 use common\models\activerecords\Participant;
 use common\models\builders\ParticipantEntityBuilder;
 use common\models\entities\ParticipantEntity;
-use common\models\entities\UserEntity;
 use common\models\interfaces\IRepository;
-use common\models\repositories\user\UserRepository;
 use yii\db\Exception;
 use Yii;
 
@@ -228,11 +226,9 @@ class ParticipantRepository implements IRepository
      */
     public function getConditionOnParticipantsInProjects()
     {
-        $user = Yii::$app->user->identity->getUser();
-
         return [
             'and',
-            ['user_id' => $user->getId()],
+            ['user_id' => Yii::$app->user->identity->getId()],
             ['not', ['company_id' => null]],
             ['not', ['project_id' => null]],
             ['approved' => true],
@@ -249,64 +245,13 @@ class ParticipantRepository implements IRepository
      */
     public function getConditionOnRelationToProject()
     {
-        $user = Yii::$app->user->identity->getUser();
-
         return [
             'and',
-            ['user_id' => $user->getId()],
+            ['user_id' => Yii::$app->user->identity->getId()],
             ['not', ['company_id' => null]],
             ['not', ['project_id' => null]],
             ['blocked' => false],
             ['deleted' => false]
         ];
-    }
-
-    /**
-     * @param UserEntity|null $user
-     * @return ParticipantEntity[]
-     */
-    public function getDeletedParticipants(UserEntity $user = null)
-    {
-        $user = Yii::$app->user->identity->getUser();
-
-        return $this->findAll([
-            'and',
-            ['user_id' => $user->getId()],
-            ['not', ['company_id'=> null]],
-            ['not', ['project_id'=> null]],
-            ['deleted' => true]
-        ]);
-    }
-
-    /**
-     * @param string $username
-     * @return ParticipantEntity|null
-     */
-    public function findByUserName(string $username)
-    {
-        $user = UserRepository::instance()->findOne(['username' => $username]);
-
-        if (!$user) {
-            return null;
-        }
-
-        return $this->findOne([
-            'user_id'    => $user->getId(),
-            'company_id' => null
-        ]);
-    }
-
-    /**
-     * @return ParticipantEntity
-     */
-    public function getParticipantStub()
-    {
-        $userId = Yii::$app->user->identity->getUserId();
-
-        return $this->findOne([
-            'user_id'    => $userId,
-            'project_id' => null,
-            'company_id' => null
-        ]);
     }
 }

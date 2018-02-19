@@ -2,7 +2,6 @@
 
 namespace common\models\activerecords;
 
-use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -22,7 +21,7 @@ use yii\db\ActiveRecord;
  * @property Company $company
  * @property Task[] $tasks
  */
-class Project extends \yii\db\ActiveRecord
+class Project extends ActiveRecord
 {
     /**
      * @inheritdoc

@@ -84,7 +84,7 @@ class CommentCreateForm extends Model
 
         $comment = new CommentEntity(
             $this->taskId,
-            Yii::$app->user->identity->getUserId(),
+            Yii::$app->user->identity->getId(),
             $this->content,
             $this->parentId
         );

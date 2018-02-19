@@ -1,4 +1,5 @@
 <?php
+
 use common\models\entities\ParticipantEntity;
 use common\models\entities\AuthAssignmentEntity;
 

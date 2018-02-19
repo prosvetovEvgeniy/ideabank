@@ -61,7 +61,7 @@ $this->title = 'Редактировать задачу';
         <?= $form->field($model, 'parentId')->dropDownList(TaskHelper::getParentTasksItems($task), ['prompt' => 'Отсутствует']) ?>
     <?php endif; ?>
 
-    <?php if($task->getAuthorId() !== Yii::$app->user->identity->getUserId()): ?>
+    <?php if($task->getAuthorId() !== Yii::$app->user->identity->getId()): ?>
         <p><b>Создал</b>: <?= Html::a($task->getAuthor()->getUsername(), ['/profile/view', 'id' => $task->getAuthorId()]) ?></p>
     <?php endif; ?>
 

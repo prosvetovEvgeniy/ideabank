@@ -195,21 +195,15 @@ class MessageRepository implements IRepository
     }
 
     /**
-     * @param UserEntity|null $user
-     * @return int|string
+     * @return int
      */
-    public function getAllUnviewedMsgCount(UserEntity $user = null)
+    public function getAllUnViewedMsgCount()
     {
-        /**
-         * @var UserEntity $user
-         */
-        $user = $user ?? Yii::$app->user->identity->getUser();
-
         return $this->getTotalCountByCondition([
             'is_sender' => false,
             'viewed'    => false,
             'deleted'   => false,
-            'self_id'   => $user->getId()
+            'self_id'   => Yii::$app->user->identity->getId()
         ]);
     }
 

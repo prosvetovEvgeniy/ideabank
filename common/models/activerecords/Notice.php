@@ -2,7 +2,6 @@
 
 namespace common\models\activerecords;
 
-use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -19,7 +18,7 @@ use yii\db\ActiveRecord;
  * @property Users $recipient
  * @property Users $sender
  */
-class Notice extends \yii\db\ActiveRecord
+class Notice extends ActiveRecord
 {
     /**
      * @inheritdoc

@@ -5,6 +5,7 @@ namespace common\models\searchmodels\task\searchstrategy;
 use common\models\searchmodels\task\TaskSearchForm;
 use Yii;
 use common\models\entities\TaskEntity;
+use yii\base\NotSupportedException;
 
 class ManagerTaskSearchStrategy implements ITaskSearchStrategy
 {
@@ -54,9 +55,11 @@ class ManagerTaskSearchStrategy implements ITaskSearchStrategy
                 ['project_id' => $projectId],
                 ['like', 'lower(title)', $title],
                 ['like', 'lower(content)', $content],
-                ['author_id' => Yii::$app->user->identity->getUserId()],
+                ['author_id' => Yii::$app->user->identity->getId()],
                 ['deleted' => false]
             ];
         }
+
+        throw new NotSupportedException();
     }
 }

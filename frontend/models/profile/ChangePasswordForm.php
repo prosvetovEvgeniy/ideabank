@@ -85,10 +85,10 @@ class ChangePasswordForm extends Model
     }
 
     /**
-     * @return UserEntity
+     * @return null|\yii\web\IdentityInterface
      */
     public function getUser()
     {
-        return Yii::$app->user->identity->getUser();
+        return Yii::$app->user->identity;
     }
 }

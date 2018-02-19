@@ -17,7 +17,7 @@ return [
         ],
         'user' => [
             'class' => 'common\components\user\ExtendedUser',
-            'identityClass' => 'common\models\entities\ParticipantEntity',
+            'identityClass' => 'common\models\entities\UserEntity',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
