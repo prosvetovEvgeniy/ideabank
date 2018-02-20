@@ -67,7 +67,7 @@ class TaskNoticesFacade
 
             $isManager = Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $task->getProjectId(), $noticedUser->getId());
 
-            if ($task->getAuthorId() === Yii::$app->user->identity->getId() || $isManager) {
+            if ($task->getAuthorId() === Yii::$app->user->getId() || $isManager) {
 
                 $notice = NoticeRepository::instance()->add(
                     new NoticeEntity(

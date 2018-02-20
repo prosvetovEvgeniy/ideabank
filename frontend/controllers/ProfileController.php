@@ -28,7 +28,7 @@ class ProfileController extends Controller
             }
         }
 
-        $user = UserRepository::instance()->findOne(['id' => Yii::$app->user->identity->getId()]);
+        $user = UserRepository::instance()->findOne(['id' => Yii::$app->user->getId()]);
 
         $avatar = $user->getAvatarAlias();
 

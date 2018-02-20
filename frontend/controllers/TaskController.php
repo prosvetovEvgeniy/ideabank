@@ -78,7 +78,7 @@ class TaskController extends Controller
     public function actionCreate()
     {
         $model = new CreateTaskForm();
-        $model->authorId = Yii::$app->user->identity->getId();
+        $model->authorId = Yii::$app->user->getId();
 
         if ($model->load(Yii::$app->request->post())) {
             $model->files = UploadedFile::getInstances($model, 'files');

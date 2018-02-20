@@ -167,7 +167,7 @@ $counter = 1; //счетчик для номера комментария
 
             <?php
             if(Yii::$app->user->isManager($task->getProjectId()) ||
-                Yii::$app->user->identity->getId() === $task->getAuthorId())
+                Yii::$app->user->getId() === $task->getAuthorId())
             {
                 echo Html::a('Редактировать', ['/task/edit', 'id' => $task->getId()], ['class' => 'btn btn-success edit-task-btn']);
             }

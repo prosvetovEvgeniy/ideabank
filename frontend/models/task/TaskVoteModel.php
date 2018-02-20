@@ -67,7 +67,7 @@ class TaskVoteModel extends Model
 
         $taskLike = TaskLikeRepository::instance()->findOne([
             'task_id' => $this->taskId,
-            'user_id' => Yii::$app->user->identity->getId(),
+            'user_id' => Yii::$app->user->getId(),
         ]);
 
         if (!$taskLike) {
@@ -93,7 +93,7 @@ class TaskVoteModel extends Model
 
         $taskLike = TaskLikeRepository::instance()->findOne([
             'task_id' => $this->taskId,
-            'user_id' => Yii::$app->user->identity->getId(),
+            'user_id' => Yii::$app->user->getId(),
         ]);
 
         if (!$taskLike) {

@@ -29,7 +29,7 @@ class UserTaskSearchStrategy implements ITaskSearchStrategy
             [
                 'and',
                 ['visibility_area' => TaskEntity::VISIBILITY_AREA_PRIVATE],
-                ['author_id' => Yii::$app->user->identity->getId()]
+                ['author_id' => Yii::$app->user->getId()]
             ]
         ];
 
@@ -78,7 +78,7 @@ class UserTaskSearchStrategy implements ITaskSearchStrategy
                 ['project_id' => $projectId],
                 ['like', 'lower(title)', $title],
                 ['like', 'lower(content)', $content],
-                ['author_id' => Yii::$app->user->identity->getId()],
+                ['author_id' => Yii::$app->user->getId()],
                 ['deleted' => false]
             ];
         }

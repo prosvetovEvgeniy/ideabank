@@ -16,7 +16,7 @@ class NoticeController extends Controller
     {
         $dataProvider = new EntityDataProvider([
             'condition' => [
-                'recipient_id' => Yii::$app->user->identity->getId(),
+                'recipient_id' => Yii::$app->user->getId(),
             ],
             'repositoryInstance' => NoticeRepository::instance(),
             'orderBy' => 'created_at DESC'
@@ -34,7 +34,7 @@ class NoticeController extends Controller
     public function actionDelete()
     {
         $model = new NoticeDeleteModel();
-        $model->recipientId = Yii::$app->user->identity->getId();
+        $model->recipientId = Yii::$app->user->getId();
         $model->id = Yii::$app->request->get('id');
 
         if (!$model->delete()) {

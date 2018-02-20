@@ -272,7 +272,7 @@ class CommentEntity implements IEntity
             return false;
         }
 
-        return $this->getSenderId() === Yii::$app->user->identity->getId();
+        return $this->getSenderId() === Yii::$app->user->getId();
     }
 }
 

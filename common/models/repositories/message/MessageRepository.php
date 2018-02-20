@@ -203,7 +203,7 @@ class MessageRepository implements IRepository
             'is_sender' => false,
             'viewed'    => false,
             'deleted'   => false,
-            'self_id'   => Yii::$app->user->identity->getId()
+            'self_id'   => Yii::$app->user->getId()
         ]);
     }
 

@@ -25,7 +25,7 @@ class ExtendedUser extends User
             return false;
         }
 
-        $userId = $userId ?? Yii::$app->user->identity->getId();
+        $userId = $userId ?? Yii::$app->user->getId();
 
         $cache = Yii::$app->cache;
 

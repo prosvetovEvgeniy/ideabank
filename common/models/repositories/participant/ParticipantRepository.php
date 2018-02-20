@@ -228,7 +228,7 @@ class ParticipantRepository implements IRepository
     {
         return [
             'and',
-            ['user_id' => Yii::$app->user->identity->getId()],
+            ['user_id' => Yii::$app->user->getId()],
             ['not', ['company_id' => null]],
             ['not', ['project_id' => null]],
             ['approved' => true],
@@ -247,7 +247,7 @@ class ParticipantRepository implements IRepository
     {
         return [
             'and',
-            ['user_id' => Yii::$app->user->identity->getId()],
+            ['user_id' => Yii::$app->user->getId()],
             ['not', ['company_id' => null]],
             ['not', ['project_id' => null]],
             ['blocked' => false],
