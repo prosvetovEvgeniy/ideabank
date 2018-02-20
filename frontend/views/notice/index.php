@@ -4,10 +4,13 @@ use common\components\dataproviders\EntityDataProvider;
 use common\models\entities\NoticeEntity;
 use yii\grid\GridView;
 use yii\helpers\Html;
+use frontend\assets\DeleteNoticeAsset;
 
 /**
  * @var EntityDataProvider $dataProvider
  */
+
+DeleteNoticeAsset::register($this);
 
 $this->title = 'Упоминания';
 ?>
@@ -54,13 +57,12 @@ $this->title = 'Упоминания';
                         'format' => 'html'
                     ],
                     [
-                        'class' => 'yii\grid\ActionColumn',
-                        'template' => '{delete}',
-                        'buttons' => [
-                            'delete' => function($url, NoticeEntity $notice){
-                                return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete', 'id' => $notice->getId()]);
-                            },
-                        ],
+                        'attribute' => '',
+                        'header' => '',
+                        'value' => function(NoticeEntity $notice) {
+                            return Html::tag('span', '', ['class' => 'glyphicon glyphicon-trash notice-delete', 'data' => ['id' => $notice->getId()]]);
+                        },
+                        'format' => 'raw'
                     ]
                 ]
             ])

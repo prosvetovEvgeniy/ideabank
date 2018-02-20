@@ -21,6 +21,7 @@ use yii\web\UploadedFile;
  * @property string $lastName
  * @property string $phone
  * @property UploadedFile $avatar
+ * @property UserEntity $user
  */
 class ChangeOwnDataForm extends Model
 {
@@ -32,13 +33,22 @@ class ChangeOwnDataForm extends Model
     public $phone;
     public $avatar;
 
+    private $user;
+
 
     public function __construct(array $config = [])
     {
         parent::__construct($config);
 
         //устанавливаем значения полей по умолчанию
-        $this->fillFields();
+        $user = $this->getUser();
+
+        $this->username = $user->getUsername();
+        $this->email = $user->getEmail();
+        $this->firstName = $user->getFirstName();
+        $this->secondName = $user->getSecondName();
+        $this->lastName = $user->getLastName();
+        $this->phone = $user->getPhone();
     }
 
     public function rules()
@@ -78,14 +88,12 @@ class ChangeOwnDataForm extends Model
     /**
      * @param $attribute
      */
-    public function validateUsername($attribute, $params)
+    public function validateUsername($attribute)
     {
-        $user = $this->getUser();
-
         $recordExists = UserRepository::instance()->findOne([
             'and',
             ['username' => $this->$attribute],
-            ['not', ['id' => $user->getId()]]
+            ['not', ['id' => Yii::$app->user->getId()]]
         ]);
 
         if ($recordExists) {
@@ -98,12 +106,10 @@ class ChangeOwnDataForm extends Model
      */
     public function validateEmail($attribute)
     {
-        $user = $this->getUser();
-
         $recordExists = UserRepository::instance()->findOne([
             'and',
             ['email' => $this->$attribute],
-            ['not', ['id' => $user->getId()]]
+            ['not', ['id' => Yii::$app->user->getId()]]
         ]);
 
         if ($recordExists) {
@@ -118,12 +124,16 @@ class ChangeOwnDataForm extends Model
     {
         $phoneLength = strlen($this->$attribute);
 
-        if ($phoneLength < 10 || $phoneLength > 12) {
+        if ($phoneLength < 5 || $phoneLength > 12) {
             $errorMsg= 'Номер телефона не корректный';
             $this->addError('phone', $errorMsg);
         }
     }
 
+    /**
+     * @return bool
+     * @throws \yii\base\Exception
+     */
     public function update()
     {
         if (!$this->validate()) {
@@ -160,28 +170,14 @@ class ChangeOwnDataForm extends Model
     }
 
     /**
-     * Заполняет поля формы данными
-     * (в виде поля будут сразу заполнены)
-     */
-    public function fillFields()
-    {
-        $user = $this->getUser();
-
-        if ($user) {
-            $this->username = $user->getUsername();
-            $this->email = $user->getEmail();
-            $this->firstName = $user->getFirstName();
-            $this->secondName = $user->getSecondName();
-            $this->lastName = $user->getLastName();
-            $this->phone = $user->getPhone();
-        }
-    }
-
-    /**
-     * @return UserEntity
+     * @return UserEntity|null
      */
     private function getUser()
     {
-        return Yii::$app->user->identity->getUser();
+        if ($this->user === null) {
+            $this->user = UserRepository::instance()->findOne(['id' => Yii::$app->user->getId()]);
+        }
+
+        return $this->user;
     }
 }

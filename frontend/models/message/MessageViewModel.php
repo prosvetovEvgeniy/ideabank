@@ -37,8 +37,7 @@ class MessageViewModel extends Model
     public function getContent() { return $this->selfMessage->getContent(); }
 
     /**
-     * @return string
-     * @throws \yii\base\InvalidConfigException
+     * @return false|string
      */
     public function getCreationDate() { return $this->selfMessage->getCreationDate(); }
 

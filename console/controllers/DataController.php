@@ -151,7 +151,7 @@ class DataController extends Controller
         //############### FILLING COMMENTS ###############
 
 
-        $commentsIds = $this->generateComments($tasksIds['firstTask'], $userIds['newUser'], 110);
+        //$commentsIds = $this->generateComments($tasksIds['firstTask'], $userIds['newUser'], 110);
 
 
         //############### FILLING TASKLIKES ###############
@@ -163,20 +163,20 @@ class DataController extends Controller
         //############### FILLING COMMENTLIKES ###############
 
 
-        $commentLikeIds = $this->generateCommentLikes($commentsIds, $userIds['evgeniy']);
+        //$commentLikeIds = $this->generateCommentLikes($commentsIds, $userIds['evgeniy']);
 
 
         //############### FILLING MESSAGES ###############
 
 
-        $this->generateMessages($userIds['evgeniy'], $userIds['edirector'],  10);
-        $this->generateMessages($userIds['evgeniy'], $userIds['admin'], 10);
-        $this->generateMessages($userIds['evgeniy'], $userIds['newLogin'], 10);
+        $this->generateMessages($userIds['evgeniy'], $userIds['edirector'],  1);
+        $this->generateMessages($userIds['evgeniy'], $userIds['admin'], 1);
+        $this->generateMessages($userIds['evgeniy'], $userIds['newLogin'], 1);
 
-        $this->generateMessages($userIds['newUser'], $userIds['newLogin'], 10);
+        //$this->generateMessages($userIds['newUser'], $userIds['newLogin'], 10);
 
-        $this->generateMessages($userIds['edirector'], $userIds['admin'], 10);
-        $this->generateMessages($userIds['edirector'], $userIds['newLogin'], 10);
+        //$this->generateMessages($userIds['edirector'], $userIds['admin'], 10);
+        //$this->generateMessages($userIds['edirector'], $userIds['newLogin'], 10);
 
 
         $this->stdout("\nTest data was init\n");

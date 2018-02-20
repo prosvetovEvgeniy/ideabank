@@ -71,8 +71,6 @@ class CommentRepository implements IRepository
     }
 
     /**
-     * Добавляет сущность в БД
-     *
      * @param CommentEntity $comment
      * @return CommentEntity
      * @throws Exception

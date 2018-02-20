@@ -15,12 +15,16 @@ use yii\db\Exception;
  * @property string $oldPassword
  * @property string $newPassword
  * @property string $confirmNewPassword
+ * 
+ * @property UserEntity $user
  */
 class ChangePasswordForm extends Model
 {
     public $oldPassword;
     public $newPassword;
     public $confirmNewPassword;
+    
+    private $user;
 
     public function rules()
     {
@@ -44,11 +48,11 @@ class ChangePasswordForm extends Model
     /**
      * @param $attribute
      */
-    public function validateOldPassword($attribute, $params)
+    public function validateOldPassword($attribute)
     {
         $user = $this->getUser();
 
-        if (!Yii::$app->security->validatePassword($this->oldPassword, $user->getPassword())) {
+        if (!Yii::$app->security->validatePassword($this->$attribute, $user->getPassword())) {
             $this->addError('oldPassword', 'Старый пароль введен не правильно');
         }
     }
@@ -56,7 +60,7 @@ class ChangePasswordForm extends Model
     /**
      * @param $attribute
      */
-    public function validateNewPassword($attribute, $params)
+    public function validateNewPassword($attribute)
     {
         if ($this->$attribute !== $this->confirmNewPassword) {
             $this->addError('newPassword', 'Пароли не совпадают');
@@ -76,6 +80,7 @@ class ChangePasswordForm extends Model
         try {
             $user = $this->getUser();
             $user->setPassword($this->newPassword);
+
             UserRepository::instance()->update($user);
 
             return true;
@@ -85,10 +90,14 @@ class ChangePasswordForm extends Model
     }
 
     /**
-     * @return null|\yii\web\IdentityInterface
+     * @return UserEntity|null
      */
     public function getUser()
     {
-        return Yii::$app->user->identity;
+        if ($this->user === null) {
+            $this->user = UserRepository::instance()->findOne(['id' => Yii::$app->user->getId()]);
+        }
+        
+        return $this->user;
     }
 }

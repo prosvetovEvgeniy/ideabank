@@ -41,8 +41,6 @@ class TaskFileRepository implements IRepository
     }
 
     /**
-     * Возвращает сущность по условию
-     *
      * @param array $condition
      * @return TaskFileEntity|null
      */
@@ -58,13 +56,11 @@ class TaskFileRepository implements IRepository
     }
 
     /**
-     * Возвращает массив сущностей по условию
-     *
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
-     * @return TaskFileEntity[]
+     * @return TaskFileEntity[]|\common\models\interfaces\IEntity[]
      */
     public function findAll(array $condition, int $limit = -1, int $offset = null, string $orderBy = null)
     {
@@ -162,8 +158,8 @@ class TaskFileRepository implements IRepository
 
 
     /**
-     * @param UploadedFile[] $files
-     * @param TaskEntity     $task
+     * @param array $files
+     * @param TaskEntity $task
      * @throws Exception
      * @throws \yii\base\Exception
      */

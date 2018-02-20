@@ -8,7 +8,6 @@ use common\models\repositories\task\TaskRepository;
 use common\models\repositories\user\UserRepository;
 use frontend\models\profile\ChangeOwnDataForm;
 use frontend\models\profile\ChangePasswordForm;
-use frontend\models\profile\DeleteParticipantModel;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use Yii;
@@ -94,19 +93,5 @@ class ProfileController extends Controller
         return $this->render('my-tasks',[
             'dataProvider' => $dataProvider
         ]);
-    }
-
-    
-    //###################### AJAX ACTIONS ######################
-
-
-    //удаление записи в таблице participant
-    public function actionDeleteParticipant()
-    {
-        $model = new DeleteParticipantModel();
-
-        if(!$model->load(Yii::$app->request->post()) || !$model->delete()) {
-            throw new BadRequestHttpException();
-        }
     }
 }

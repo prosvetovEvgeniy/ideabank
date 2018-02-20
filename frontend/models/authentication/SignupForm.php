@@ -83,7 +83,6 @@ class SignupForm extends Model
 
     /**
      * @return bool
-     * @throws \yii\base\Exception
      */
     public function signUpUser()
     {

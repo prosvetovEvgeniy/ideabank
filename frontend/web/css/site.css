@@ -188,6 +188,10 @@ a.desc:after {
     display: block;
 }
 
+.task-creator{
+    margin-top: 20px;
+}
+
 /* ########## COMMENT FORM RULES ##########*/
 
 
@@ -529,6 +533,13 @@ a.desc:after {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+}
+
+/* ########## NOTICE RULES ##########*/
+
+.notice-delete{
+    cursor: pointer;
+    color: #337ab7;;
 }
 
 /* OTHERS */

@@ -52,7 +52,6 @@ class CommentVoteModel extends Model
 
     /**
      * @return bool
-     * @throws \Exception
      * @throws \Throwable
      */
     public function delete()

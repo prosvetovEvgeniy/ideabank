@@ -4,7 +4,6 @@ namespace common\models\entities;
 
 use common\models\interfaces\IEntity;
 use common\models\repositories\user\UserRepository;
-use Yii;
 
 /**
  * Class MessageEntity
@@ -24,7 +23,8 @@ use Yii;
  */
 class MessageEntity implements IEntity
 {
-    protected const DATE_FORMAT = 'd M';
+    protected const DATE_ERROR_MESSAGE = '-';
+    protected const DATE_FORMAT = 'd.m.y';
 
     protected $id;
     protected $selfId;
@@ -53,8 +53,8 @@ class MessageEntity implements IEntity
      * @param UserEntity|null $companion
      */
     public function __construct(int $selfId, int $companionId, string $content, bool $isSender,
-                                int $id = null, bool $viewed = null, int $createdAt = null,
-                                bool $deleted = null, UserEntity $self = null, UserEntity $companion = null)
+                                int $id = null, bool $viewed = false, int $createdAt = null,
+                                bool $deleted = false, UserEntity $self = null, UserEntity $companion = null)
     {
         $this->id = $id;
         $this->selfId = $selfId;
@@ -131,7 +131,7 @@ class MessageEntity implements IEntity
 
 
     /**
-     * @return UserEntity
+     * @return UserEntity|null
      */
     public function getSelf()
     {
@@ -143,7 +143,7 @@ class MessageEntity implements IEntity
     }
 
     /**
-     * @return UserEntity
+     * @return UserEntity|null
      */
     public function getCompanion()
     {
@@ -159,11 +159,10 @@ class MessageEntity implements IEntity
 
 
     /**
-     * @return string
-     * @throws \yii\base\InvalidConfigException
+     * @return false|string
      */
     public function getCreationDate()
     {
-        return Yii::$app->formatter->asDate($this->getCreatedAt(), 'short');
+        return date(self::DATE_FORMAT, $this->createdAt) ?? self::DATE_ERROR_MESSAGE;
     }
 }

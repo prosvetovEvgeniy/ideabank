@@ -88,8 +88,7 @@ class CommentFacade
         $comment->setPrivate(true);
         CommentRepository::instance()->update($comment);
 
-        $this->commentNoticeFacade->deleteNotices($comment);
-        $this->commentNoticeFacade->savePrivateNotices($comment);
+        $this->commentNoticeFacade->deleteAndSaveNotices($comment);
 
         return $comment;
     }

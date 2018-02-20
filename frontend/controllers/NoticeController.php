@@ -34,13 +34,9 @@ class NoticeController extends Controller
     public function actionDelete()
     {
         $model = new NoticeDeleteModel();
-        $model->recipientId = Yii::$app->user->getId();
-        $model->id = Yii::$app->request->get('id');
 
-        if (!$model->delete()) {
+        if (!$model->load(Yii::$app->request->post()) || !$model->delete()) {
             throw new BadRequestHttpException();
         }
-
-        return $this->redirect('index');
     }
 }

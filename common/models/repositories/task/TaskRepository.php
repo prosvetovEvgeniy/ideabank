@@ -60,13 +60,11 @@ class TaskRepository implements IRepository
     }
 
     /**
-     * Возвращает массив сущностей по условию
-     *
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
-     * @return TaskEntity[]|IEntity
+     * @return TaskEntity[]|IEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {

@@ -6,6 +6,7 @@ use common\models\entities\TaskEntity;
 use common\models\repositories\task\TaskFileRepository;
 use common\models\repositories\task\TaskRepository;
 use yii\web\UploadedFile;
+use yii\db\Exception;
 
 /**
  * Class TaskFacade
@@ -27,10 +28,10 @@ class TaskFacade
 
     /**
      * @param TaskEntity $task
-     * @param UploadedFile[] $files
+     * @param array $files
      * @return TaskEntity
+     * @throws Exception
      * @throws \yii\base\Exception
-     * @throws \yii\db\Exception
      */
     public function createTask(TaskEntity $task, array $files)
     {
@@ -45,10 +46,10 @@ class TaskFacade
 
     /**
      * @param TaskEntity $task
-     * @param UploadedFile[] $files
+     * @param array $files
      * @return TaskEntity
+     * @throws Exception
      * @throws \yii\base\Exception
-     * @throws \yii\db\Exception
      */
     public function editTask(TaskEntity $task, array $files)
     {
@@ -65,7 +66,7 @@ class TaskFacade
     /**
      * @param TaskEntity $task
      * @return TaskEntity
-     * @throws \yii\db\Exception
+     * @throws Exception
      */
     public function deleteTask(TaskEntity $task)
     {

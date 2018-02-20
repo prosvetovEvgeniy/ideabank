@@ -96,9 +96,7 @@ class CommentNoticeRepository implements IRepository
      * @param CommentNoticeEntity $commentNotice
      * @return CommentNoticeEntity
      * @throws Exception
-     * @throws \Exception
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
      */
     public function delete(CommentNoticeEntity $commentNotice)
     {

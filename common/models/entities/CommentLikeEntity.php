@@ -95,7 +95,7 @@ class CommentLikeEntity implements IEntity
 
 
     /**
-     * @return UserEntity
+     * @return UserEntity|null
      */
     public function getUser()
     {

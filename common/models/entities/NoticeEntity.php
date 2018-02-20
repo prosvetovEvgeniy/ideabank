@@ -3,6 +3,7 @@
 namespace common\models\entities;
 
 use common\models\interfaces\IEntity;
+use common\models\interfaces\INotice;
 use common\models\repositories\user\UserRepository;
 
 /**
@@ -19,9 +20,9 @@ use common\models\repositories\user\UserRepository;
  * @property UserEntity $sender;
  * @property UserEntity $recipient
  */
-class NoticeEntity implements IEntity
+class NoticeEntity implements IEntity, INotice
 {
-    private const DATE_FORMAT = 'Y-m-d';
+    private const DATE_FORMAT = 'd.m.Y';
 
     protected $id;
     protected $recipientId;
@@ -59,6 +60,15 @@ class NoticeEntity implements IEntity
         $this->sender = $sender;
         $this->recipient = $recipient;
     }
+
+
+    // ############## SECTION OF REALIZATION INotice ################
+
+
+    /**
+     * @return int
+     */
+    public function getNoticeId() { return $this->id; }
 
 
     // #################### SECTION OF GETTERS ######################
@@ -119,6 +129,7 @@ class NoticeEntity implements IEntity
 
 
     // #################### SECTION OF RELATIONS ######################
+
 
     /**
      * @return UserEntity|null

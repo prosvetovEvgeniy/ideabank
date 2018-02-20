@@ -252,7 +252,7 @@ $counter = 1; //счетчик для номера комментария
                                         }
                                         ?>
                                         <?php
-                                        if ($comment->getPrivate()) {
+                                        if ($comment->getPrivate() && !$comment->getDeleted()) {
                                             echo '(Приватный комментарий)';
                                         }
                                         ?>
@@ -311,9 +311,11 @@ $counter = 1; //счетчик для номера комментария
                                 <?php if(!$comment->getDeleted()): ?>
                                     <div class="footer-comment">
                                         <div class="footer-comment-left">
-                                            <span class="comment-date"><?= $comment->getDate() ?></span>
-                                            <?php if(!Yii::$app->user->isGuest): ?>
-                                                <a href="#write-comment" class="comment-reply">Ответить</a>
+                                            <span class="comment-date"><?= $comment->getCreatedAtDate() ?></span>
+                                            <?php if (!Yii::$app->user->isGuest): ?>
+                                                <?php if (!$comment->getPrivate()): ?>
+                                                    <a href="#write-comment" class="comment-reply">Ответить</a>
+                                                <?php endif; ?>
                                             <?php endif; ?>
                                         </div>
                                         <div class="footer-comment-right">

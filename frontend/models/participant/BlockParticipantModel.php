@@ -43,7 +43,7 @@ class BlockParticipantModel extends Model
         $participantFacade = new ParticipantFacade();
 
         try {
-            $participantFacade->block($participant);
+            $participantFacade->blockParticipant($participant);
 
             return true;
         } catch (Exception $e) {

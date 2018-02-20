@@ -62,7 +62,7 @@ $this->title = 'Редактировать задачу';
     <?php endif; ?>
 
     <?php if($task->getAuthorId() !== Yii::$app->user->getId()): ?>
-        <p><b>Создал</b>: <?= Html::a($task->getAuthor()->getUsername(), ['/profile/view', 'id' => $task->getAuthorId()]) ?></p>
+        <div class="task-creator"><b>Создал</b>: <?= Html::a($task->getAuthor()->getUsername(), ['/profile/view', 'id' => $task->getAuthorId()]) ?></div>
     <?php endif; ?>
 
 <?php endif; ?>

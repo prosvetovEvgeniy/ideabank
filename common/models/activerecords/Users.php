@@ -34,13 +34,6 @@ class Users extends ActiveRecord
         return '{{%users}}';
     }
 
-    public function __construct(array $config = [])
-    {
-        parent::__construct($config);
-
-        $this->deleted = false;
-    }
-
     public function behaviors()
     {
         return [

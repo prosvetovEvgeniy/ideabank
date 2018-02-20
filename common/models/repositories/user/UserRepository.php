@@ -40,8 +40,6 @@ class UserRepository implements IRepository
     }
 
     /**
-     * Возвращает сущность по условию
-     *
      * @param array $condition
      * @return UserEntity|null
      */
@@ -60,13 +58,11 @@ class UserRepository implements IRepository
     }
 
     /**
-     * Возвращает массив сущностей по условию
-     *
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
-     * @return UserEntity[]|IEntity
+     * @return UserEntity[]|IEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
@@ -81,7 +77,6 @@ class UserRepository implements IRepository
      * @param UserEntity $user
      * @return UserEntity
      * @throws Exception
-     * @throws \yii\base\Exception
      */
     public function add(UserEntity $user)
     {
@@ -103,7 +98,6 @@ class UserRepository implements IRepository
      * @param UserEntity $user
      * @return UserEntity
      * @throws Exception
-     * @throws \yii\base\Exception
      */
     public function update(UserEntity $user)
     {
@@ -124,8 +118,6 @@ class UserRepository implements IRepository
     }
 
     /**
-     * Помечает сущность как удаленную в БД
-     *
      * @param UserEntity $user
      * @return UserEntity
      * @throws Exception

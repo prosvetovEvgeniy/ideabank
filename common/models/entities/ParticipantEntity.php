@@ -218,6 +218,16 @@ class ParticipantEntity implements IEntity
     public function setApprovedAt (int $value = null) { $this->approvedAt = $value; }
 
     /**
+     * @param bool $value
+     */
+    public function setBlocked (bool $value) { $this->blocked = $value; }
+
+    /**
+     * @param int|null $value
+     */
+    public function setBlockedAt (int $value = null) { $this->blockedAt = $value; }
+
+    /**
      * @param int $value
      */
     public function setDeletedAt (int $value = null) { $this->deletedAt = $value; }
@@ -256,7 +266,7 @@ class ParticipantEntity implements IEntity
     }
 
     /**
-     * @return UserEntity
+     * @return UserEntity|null
      */
     public function getUser()
     {

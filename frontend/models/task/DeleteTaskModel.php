@@ -47,7 +47,7 @@ class DeleteTaskModel extends Model
             return false;
         }
 
-        if ($task->getAuthorId() !== $user->identity->getUserId() && !$user->isManager($task->getProjectId())){
+        if ($task->getAuthorId() !== $user->getId() && !$user->isManager($task->getProjectId())){
             return false;
         }
 

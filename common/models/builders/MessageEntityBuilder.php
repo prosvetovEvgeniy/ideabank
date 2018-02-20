@@ -29,6 +29,7 @@ class MessageEntityBuilder
         $model->is_sender = $message->getIsSender();
         $model->content = Html::encode($message->getContent());
         $model->viewed = $message->getViewed();
+        $model->deleted = $message->getDeleted();
     }
 
     /**
@@ -46,9 +47,7 @@ class MessageEntityBuilder
     }
 
     /**
-     * Создает экземпляры сущностей
-     *
-     * @param Message[] $models
+     * @param array $models
      * @return MessageEntity[]
      */
     public function buildEntities(array $models)

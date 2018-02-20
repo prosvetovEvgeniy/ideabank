@@ -36,11 +36,11 @@ MessageDeleteAsset::register($this);
                                 <p><?= $dialog->getContent() ?></p>
                             </td>
                             <td>
-                                <?php $unviewedMsgCount = MessageRepository::instance()->getUnviewedMsgCount($dialog->getSelf(), $dialog->getCompanion()); ?>
+                                <?php $unViewedMsgCount = MessageRepository::instance()->getUnViewedMsgCount($dialog->getSelf(), $dialog->getCompanion()); ?>
 
-                                <?php if($unviewedMsgCount !== 0): ?>
+                                <?php if($unViewedMsgCount !== 0): ?>
                                     <div class="unviewed-messages">
-                                        + <?= $unviewedMsgCount ?>
+                                        + <?= $unViewedMsgCount ?>
                                     </div>
                                 <?php endif; ?>
                             </td>

@@ -11,8 +11,8 @@ class ProjectHelper
 {
     /**
      * Возвращает ассоциативный массив типа [$projectId => $projectName]
-     *
-     * @param ProjectEntity[] $projects
+     * 
+     * @param array|null $projects
      * @return array
      */
     public static function getProjectItems(array $projects = null)

@@ -76,7 +76,7 @@ $this->title = 'Мои проекты';
                                     'data'  => ['participant-id' => $participant->getId()]
                                 ]);
                             } else {
-                                return Html::a('Покинуть', '/profile/delete-participant', [
+                                return Html::a('Покинуть', '/participant/delete', [
                                     'class' => 'leave-project',
                                     'data'  => ['participant-id' => $participant->getId()]
                                 ]);

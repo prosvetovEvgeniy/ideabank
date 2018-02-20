@@ -3,7 +3,6 @@
 namespace frontend\controllers;
 
 use common\components\dataproviders\EntityDataProvider;
-use common\models\entities\UserEntity;
 use common\models\repositories\user\CompanionRepository;
 use common\models\repositories\message\DialogRepository;
 use common\models\repositories\message\MessageRepository;
@@ -51,11 +50,6 @@ class MessageController extends Controller
 
     public function actionChat(int $companionId)
     {
-        /**
-         * @var UserEntity $self
-         */
-        $self = Yii::$app->user->getId();
-
         $companion = UserRepository::instance()->findOne(['id' => $companionId]);
 
         if (!$companion) {
@@ -66,12 +60,12 @@ class MessageController extends Controller
          * при заходе в чат делаем все сообщения просмотренными
          */
         MessageRepository::instance()->viewAll([
-            'self_id'      => $self->getId(),
+            'self_id'      => Yii::$app->user->getId(),
             'companion_id' => $companion->getId()
         ]);
 
         $messages = MessageRepository::instance()->findAll([
-            'self_id'      => $self->getId(),
+            'self_id'      => Yii::$app->user->getId(),
             'companion_id' => $companionId,
             'deleted'      => false
         ], -1);

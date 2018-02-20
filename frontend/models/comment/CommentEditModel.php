@@ -32,7 +32,6 @@ class CommentEditModel extends Model
 
     /**
      * @return bool
-     * @throws \Exception
      */
     public function update()
     {

@@ -97,9 +97,7 @@ class TaskNoticeRepository implements IRepository
      * @param TaskNoticeEntity $taskNotice
      * @return TaskNoticeEntity
      * @throws Exception
-     * @throws \Exception
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
      */
     public function delete(TaskNoticeEntity $taskNotice)
     {

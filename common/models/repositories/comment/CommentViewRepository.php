@@ -4,11 +4,11 @@ namespace common\models\repositories\comment;
 
 use common\models\builders\CommentViewEntityBuilder;
 use common\models\entities\AuthAssignmentEntity;
+use common\models\entities\CommentEntity;
 use common\models\interfaces\IRepository;
 use common\models\repositories\task\TaskRepository;
 use Yii;
 use common\models\activerecords\CommentView;
-use common\models\entities\CommentEntity;
 
 /**
  * Этот репозиторий используется
@@ -50,13 +50,11 @@ class CommentViewRepository implements IRepository
 
 
     /**
-     * Возвращает массив сущностей по условию
-     *
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
-     * @param string $orderBy
-     * @return CommentEntity[]
+     * @param string|null $orderBy
+     * @return CommentEntity[]|\common\models\interfaces\IEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {

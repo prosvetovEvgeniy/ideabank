@@ -27,6 +27,10 @@ class CommentPublicModel extends Model
         ];
     }
 
+    /**
+     * @return bool
+     * @throws Exception
+     */
     public function update()
     {
         if (!$this->validate()) {

@@ -30,7 +30,6 @@ class CommentReestablishModel extends Model
     /**
      * @return bool
      * @throws Exception
-     * @throws \Exception
      */
     public function update()
     {

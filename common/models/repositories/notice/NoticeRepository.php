@@ -41,8 +41,6 @@ class NoticeRepository implements IRepository
     }
 
     /**
-     * Возвращает сущность по условию
-     *
      * @param array $condition
      * @return NoticeEntity|null
      */
@@ -58,13 +56,11 @@ class NoticeRepository implements IRepository
     }
 
     /**
-     * Возвращает массив сущностей по условию
-     *
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
-     * @return NoticeEntity[]
+     * @return NoticeEntity[]|\common\models\interfaces\IEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
@@ -79,8 +75,6 @@ class NoticeRepository implements IRepository
     }
 
     /**
-     * Добавляет сущность в БД
-     *
      * @param NoticeEntity $notice
      * @return NoticeEntity
      * @throws Exception
@@ -100,8 +94,6 @@ class NoticeRepository implements IRepository
     }
 
     /**
-     * Обновляет сущность в БД
-     *
      * @param NoticeEntity $notice
      * @return NoticeEntity
      * @throws Exception
@@ -125,24 +117,22 @@ class NoticeRepository implements IRepository
     }
 
     /**
-     * @param NoticeEntity $notice
+     * @param INotice $notice
      * @return NoticeEntity
      * @throws Exception
-     * @throws \Exception
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
      */
-    public function delete(NoticeEntity $notice)
+    public function delete(INotice $notice)
     {
-        $model = Notice::findOne(['id' => $notice->getId()]);
+        $model = Notice::findOne(['id' => $notice->getNoticeId()]);
 
         if (!$model) {
-            throw new Exception('Notice with id = ' . $notice->getId() . ' does not exists');
+            throw new Exception('Notice with id = ' . $notice->getNoticeId() . ' does not exists');
         }
 
         if (!$model->delete()) {
             Yii::error($model->errors);
-            throw new Exception('Cannot delete notice with id = ' . $notice->getId());
+            throw new Exception('Cannot delete notice with id = ' . $notice->getNoticeId());
         }
 
         return $this->builderBehavior->buildEntity($model);
@@ -159,6 +149,7 @@ class NoticeRepository implements IRepository
 
 
     // #################### UNIQUE METHODS OF CLASS ######################
+
 
     /**
      * @param INotice[] $notices

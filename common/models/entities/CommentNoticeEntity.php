@@ -69,7 +69,7 @@ class CommentNoticeEntity implements IEntity, INotice
     }
 
     /**
-     * @return NoticeEntity|IEntity|null
+     * @return NoticeEntity|null
      */
     public function getNotice()
     {

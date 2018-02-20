@@ -3,7 +3,6 @@
 namespace frontend\models\project;
 
 use common\models\entities\ParticipantEntity;
-use common\models\entities\UserEntity;
 use yii\base\Model;
 use Yii;
 use common\models\repositories\project\ProjectRepository;
@@ -35,6 +34,7 @@ class JoinToProjectModel extends Model
 
     /**
      * @return bool
+     * @throws \yii\base\Exception
      */
     public function save()
     {
@@ -42,10 +42,7 @@ class JoinToProjectModel extends Model
             return false;
         }
 
-        /**
-         * @var  UserEntity $user
-         */
-        $user = Yii::$app->user->identity->getUser();
+        $user = Yii::$app->user->identity;
         $project = ProjectRepository::instance()->findOne(['id' => $this->projectId]);
 
         if ($this->userId !== $user->getId() || !$project) {

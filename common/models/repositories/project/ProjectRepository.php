@@ -58,13 +58,11 @@ class ProjectRepository implements IRepository
     }
 
     /**
-     * Возвращает массив сущностей по условию
-     *
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
-     * @return ProjectEntity[]
+     * @return ProjectEntity[]|\common\models\interfaces\IEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
@@ -162,7 +160,7 @@ class ProjectRepository implements IRepository
 
 
     /**
-     * @return array
+     * @return ProjectEntity[]
      */
     public function getProjectsForUser()
     {

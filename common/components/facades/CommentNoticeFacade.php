@@ -11,6 +11,7 @@ use common\models\entities\NoticeEntity;
 use common\models\repositories\notice\CommentNoticeRepository;
 use common\models\repositories\notice\NoticeRepository;
 use Yii;
+use yii\db\Exception;
 
 /**
  * Class CommentNoticeFacade
@@ -21,10 +22,15 @@ class CommentNoticeFacade
 
     /**
      * @param CommentEntity $comment
-     * @throws \yii\db\Exception
+     * @throws Exception
      */
     public function saveNotices(CommentEntity $comment)
     {
+        if ($comment->getPrivate()) {
+            $this->savePrivateNotices($comment);
+            return;
+        }
+
         $noticeHelper = new NoticeHelper($comment->getContent());
 
         foreach ($noticeHelper->getNoticedUsers() as $noticedUser)
@@ -46,12 +52,30 @@ class CommentNoticeFacade
             );
         }
     }
+    /**
+     * @param CommentEntity $comment
+     */
+    public function deleteNotices(CommentEntity $comment)
+    {
+        $commentNotices = CommentNoticeRepository::instance()->deleteAll(['comment_id' => $comment->getId()]);
+        NoticeRepository::instance()->deleteAll($commentNotices);
+    }
 
     /**
      * @param CommentEntity $comment
-     * @throws \yii\db\Exception
+     * @throws Exception
      */
-    public function savePrivateNotices(CommentEntity $comment)
+    public function deleteAndSaveNotices(CommentEntity $comment)
+    {
+        $this->deleteNotices($comment);
+        $this->saveNotices($comment);
+    }
+
+    /**
+     * @param CommentEntity $comment
+     * @throws Exception
+     */
+    private function savePrivateNotices(CommentEntity $comment)
     {
         $noticeHelper = new NoticeHelper($comment->getContent());
 
@@ -76,24 +100,5 @@ class CommentNoticeFacade
                 );
             }
         }
-    }
-
-    /**
-     * @param CommentEntity $comment
-     */
-    public function deleteNotices(CommentEntity $comment)
-    {
-        $commentNotices = CommentNoticeRepository::instance()->deleteAll(['comment_id' => $comment->getId()]);
-        NoticeRepository::instance()->deleteAll($commentNotices);
-    }
-
-    /**
-     * @param CommentEntity $comment
-     * @throws \yii\db\Exception
-     */
-    public function deleteAndSaveNotices(CommentEntity $comment)
-    {
-        $this->deleteNotices($comment);
-        $this->saveNotices($comment);
     }
 }

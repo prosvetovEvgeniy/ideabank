@@ -39,7 +39,7 @@ class AddParticipantModel extends Model
         $participantFacade = new ParticipantFacade();
 
         try {
-            $participantFacade->add($participant);
+            $participantFacade->addParticipant($participant);
             return true;
         } catch (Exception $e) {
             return false;

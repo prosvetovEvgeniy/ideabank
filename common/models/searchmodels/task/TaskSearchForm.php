@@ -4,7 +4,6 @@ namespace common\models\searchmodels\task;
 
 use common\components\dataproviders\EntityDataProvider;
 use common\models\entities\AuthAssignmentEntity;
-use common\models\entities\TaskEntity;
 use common\models\interfaces\IEntity;
 use common\models\interfaces\ISearchEntityModel;
 use common\models\repositories\project\ProjectRepository;

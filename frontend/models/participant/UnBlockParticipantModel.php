@@ -39,7 +39,7 @@ class UnBlockParticipantModel extends Model
         $participantFacade = new ParticipantFacade();
         
         try{
-            $participantFacade->unBlock($participant);
+            $participantFacade->unBlockParticipant($participant);
             return true;
         } catch (Exception $e) {
             return false;

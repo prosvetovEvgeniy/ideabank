@@ -8,9 +8,9 @@ $(document).ready(function () {
         if(confirm(question))
         {
             $.ajax({
-                url: '/profile/delete-participant',
+                url: '/participant/delete',
                 type: 'POST',
-                data: {'DeleteParticipantModel[participantId]': participantId},
+                data: {'DeleteParticipantModel[id]': participantId},
                 success: function (response) {
                     location.reload();
                 }

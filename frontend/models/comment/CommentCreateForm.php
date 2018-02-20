@@ -50,13 +50,12 @@ class CommentCreateForm extends Model
 
     /**
      * @param $attribute
-     * @param $params
      *
      * Проверка на то, что родитель комментария указан именно для текущей задачи,
      * а не какой-то другой. Если комментарий с таким id отсутствует у текущей задачи,
      * то валидация не происходит
      */
-    public function checkOnEntrance($attribute, $params)
+    public function checkOnEntrance($attribute)
     {
         $parentComment = Comment::findOne(['id' => $this->$attribute, 'task_id' => $this->taskId]);
 

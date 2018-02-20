@@ -63,8 +63,8 @@ class ExtendedUser extends User
 
     /**
      * @param int $projectId
-     * @param int $userId
-     * @return bool
+     * @param int|null $userId
+     * @return bool|mixed
      */
     public function isManager(int $projectId, int $userId = null)
     {

@@ -17,16 +17,13 @@ class UserEntityBuilder
     }
 
     /**
-     * Присваивает свойства сущности к модели
-     *
      * @param Users $model
      * @param UserEntity $user
-     * @throws \yii\base\Exception
      */
     public function assignProperties(Users &$model, UserEntity &$user)
     {
         $model->username = Html::encode($user->getUsername());
-        $model->password = $user->getPasswordHash();
+        $model->password = $user->getPassword();
         $model->email = Html::encode($user->getEmail());
         $model->phone = Html::encode($user->getPhone());
         $model->first_name = Html::encode($user->getFirstName());
@@ -38,8 +35,6 @@ class UserEntityBuilder
     }
 
     /**
-     * Создает экземпляр сущности
-     *
      * @param Users $model
      * @return UserEntity
      */
@@ -53,9 +48,7 @@ class UserEntityBuilder
     }
 
     /**
-     * Создает экземпляры сущностей
-     *
-     * @param Users[] $models
+     * @param array $models
      * @return UserEntity[]
      */
     public function buildEntities(array $models)

@@ -3,9 +3,9 @@
 namespace common\models\repositories\message;
 
 use common\models\builders\MessageEntityBuilder;
-use common\models\entities\MessageEntity;
 use common\models\activerecords\Message;
 use common\models\interfaces\IRepository;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class DialogRepository
@@ -22,7 +22,9 @@ class DialogRepository implements IRepository
         $this->builderBehavior = new MessageEntityBuilder();
     }
 
+
     // #################### STANDARD METHODS ######################
+
 
     /**
      * Возвращает экземпляр класса
@@ -35,27 +37,26 @@ class DialogRepository implements IRepository
     }
 
     /**
-     * Возвращает массив сущностей по условию
-     *
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
-     * @param string $orderBy
-     * @return MessageEntity[]
+     * @param string|null $orderBy
+     * @return MessageRepository[]|\common\models\interfaces\IEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
-        $dialogIds = Message::find()->select('MAX(id) as id')
-                                    ->where($condition )
-                                    ->offset($offset)
-                                    ->limit($limit)
-                                    ->groupBy('companion_id')
-                                    ->all();
+        $lastMessages = Message::find()->select('MAX(id) as id')
+                                       ->where($condition)
+                                       ->groupBy('companion_id')
+                                       ->limit($limit)
+                                       ->offset($offset)
+                                       ->all();
 
-        $models = Message::find()->with('companion')
-                                 ->where(['in', 'id', $dialogIds])
-                                 ->orderBy($orderBy)
-                                 ->all();
+        $ids = ArrayHelper::getColumn($lastMessages, function (Message $message){
+            return $message->id;
+        });
+
+        $models = Message::find()->where(['in', 'id', $ids])->limit($limit)->offset($offset)->orderBy($orderBy)->all();
 
         return $this->builderBehavior->buildEntities($models);
     }

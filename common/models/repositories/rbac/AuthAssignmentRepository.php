@@ -56,13 +56,11 @@ class AuthAssignmentRepository implements IRepository
     }
 
     /**
-     * Возвращает массив сущностей по условию
-     *
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
-     * @param string $orderBy
-     * @return AuthAssignmentEntity[]
+     * @param string|null $orderBy
+     * @return AuthAssignmentEntity[]|\common\models\interfaces\IEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
@@ -121,9 +119,7 @@ class AuthAssignmentRepository implements IRepository
      * @param AuthAssignmentEntity $authAssignment
      * @return AuthAssignmentEntity
      * @throws Exception
-     * @throws \Exception
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
      */
     public function delete(AuthAssignmentEntity $authAssignment)
     {

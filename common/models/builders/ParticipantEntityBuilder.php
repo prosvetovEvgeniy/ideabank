@@ -52,9 +52,7 @@ class ParticipantEntityBuilder
     }
 
     /**
-     * Создает экземпляры сущностей
-     *
-     * @param Participant[] $models
+     * @param array $models
      * @return ParticipantEntity[]
      */
     public function buildEntities(array $models)

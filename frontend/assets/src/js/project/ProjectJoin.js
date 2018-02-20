@@ -7,11 +7,11 @@ $(document).ready(function () {
         var elem = $(this);
 
         $.ajax({
-            url: '/project/join',
+            url: '/participant/join',
             type: 'POST',
             data: {
-                'JoinToProjectModel[userId]': userId,
-                'JoinToProjectModel[projectId]': projectId
+                'JoinParticipantModel[userId]': userId,
+                'JoinParticipantModel[projectId]': projectId
             },
             success: function (response) {
                 elem.replaceWith('<code>На рассмотрении</code>');

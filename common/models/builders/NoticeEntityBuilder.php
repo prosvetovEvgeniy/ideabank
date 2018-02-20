@@ -42,9 +42,7 @@ class NoticeEntityBuilder
     }
 
     /**
-     * Создает экземпляры сущностей
-     *
-     * @param Notice[] $models
+     * @param array $models
      * @return NoticeEntity[]
      */
     public function buildEntities(array $models)

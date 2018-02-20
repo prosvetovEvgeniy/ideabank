@@ -2,7 +2,6 @@
 
 namespace frontend\models\authentication;
 
-
 use common\models\activerecords\Users;
 use Yii;
 use yii\base\Model;

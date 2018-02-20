@@ -36,7 +36,7 @@ use Yii;
 class CommentEntity implements IEntity
 {
     protected const DATE_ERROR_MESSAGE = 'дата не определена';
-    protected const DATE_FORMAT = 'd-m-Y';
+    protected const DATE_FORMAT = 'd.m.y';
 
     protected $id;
     protected $taskId;
@@ -230,7 +230,7 @@ class CommentEntity implements IEntity
     }
 
     /**
-     * @return CommentLikeEntity[]
+     * @return CommentLikeEntity[]|IEntity[]
      */
     public function getCommentLikes()
     {
@@ -245,12 +245,11 @@ class CommentEntity implements IEntity
     // #################### SECTION OF LOGIC ######################
 
     /**
-     * @return string
-     * @throws \yii\base\InvalidConfigException
+     * @return false|string
      */
-    public function getDate()
+    public function getCreatedAtDate()
     {
-        return  Yii::$app->formatter->asDate($this->getCreatedAt(), 'short');
+        return  date(self::DATE_FORMAT, $this->createdAt) ?? self::DATE_ERROR_MESSAGE;
     }
 
     /**

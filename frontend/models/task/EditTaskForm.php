@@ -112,7 +112,7 @@ class EditTaskForm extends Model
         ];
     }
 
-    public function checkOnStatus($attribute, $params)
+    public function checkOnStatus($attribute)
     {
         if($this->$attribute !== null){
             $this->status = TaskEntity::STATUS_MERGED;

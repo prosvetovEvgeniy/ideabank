@@ -39,7 +39,7 @@ class CancelParticipantModel extends Model
         $participantFacade = new ParticipantFacade();
         
         try {
-            $participantFacade->cancel($participant);
+            $participantFacade->cancelParticipant($participant);
             return true;
         } catch (Exception $e) {
             return false;

@@ -38,8 +38,6 @@ class CompanyRepository implements IRepository
     }
 
     /**
-     * Возвращает сущность по условию
-     *
      * @param array $condition
      * @return CompanyEntity|null
      */
@@ -59,7 +57,7 @@ class CompanyRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
-     * @return CompanyEntity|\common\models\interfaces\IEntity[]
+     * @return CompanyEntity[]|\common\models\interfaces\IEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {

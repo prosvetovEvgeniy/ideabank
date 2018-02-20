@@ -106,7 +106,7 @@ class TaskLikeEntity implements IEntity
     }
 
     /**
-     * @return UserEntity
+     * @return UserEntity|null
      */
     public function getUser()
     {

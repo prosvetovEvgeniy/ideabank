@@ -55,13 +55,11 @@ class CommentLikeRepository implements IRepository
     }
 
     /**
-     * Возвращает массив сущностей по условию
-     *
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
-     * @param string $orderBy
-     * @return CommentLikeEntity[]
+     * @param string|null $orderBy
+     * @return CommentLikeEntity[]|\common\models\interfaces\IEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
@@ -121,9 +119,7 @@ class CommentLikeRepository implements IRepository
      * @param CommentLikeEntity $commentLike
      * @return CommentLikeEntity
      * @throws Exception
-     * @throws \Exception
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
      */
     public function delete(CommentLikeEntity $commentLike)
     {

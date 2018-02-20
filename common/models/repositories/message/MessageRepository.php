@@ -38,8 +38,6 @@ class MessageRepository implements IRepository
     }
 
     /**
-     * Возвращает сущность по условию
-     *
      * @param array $condition
      * @return MessageEntity|null
      */
@@ -55,13 +53,11 @@ class MessageRepository implements IRepository
     }
 
     /**
-     * Возвращает массив сущностей по условию
-     *
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
-     * @return MessageEntity[]
+     * @return MessageEntity[]|\common\models\interfaces\IEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
@@ -77,8 +73,6 @@ class MessageRepository implements IRepository
     }
 
     /**
-     * Добавляет сущность в БД
-     *
      * @param MessageEntity $message
      * @return MessageEntity
      * @throws Exception
@@ -98,8 +92,6 @@ class MessageRepository implements IRepository
     }
 
     /**
-     * Обновляет сущность в БД
-     *
      * @param MessageEntity $message
      * @return MessageEntity
      * @throws Exception
@@ -123,8 +115,6 @@ class MessageRepository implements IRepository
     }
 
     /**
-     * Помечает сущность как удаленную в БД
-     *
      * @param MessageEntity $message
      * @return MessageEntity
      * @throws Exception
@@ -207,7 +197,7 @@ class MessageRepository implements IRepository
         ]);
     }
 
-    public function getUnviewedMsgCount(UserEntity $self, UserEntity $companion)
+    public function getUnViewedMsgCount(UserEntity $self, UserEntity $companion)
     {
         return $this->getTotalCountByCondition([
             'is_sender'    => false,

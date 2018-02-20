@@ -67,6 +67,7 @@ class CreateTaskForm extends Model
 
     /**
      * @return bool
+     * @throws Exception
      * @throws \yii\base\Exception
      */
     public function save()

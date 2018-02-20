@@ -14,6 +14,7 @@ use common\models\repositories\user\UserRepository;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
+use yii\base\Exception;
 
 /**
  * Class UserEntity
@@ -82,7 +83,6 @@ class UserEntity implements IEntity, IdentityInterface
      * @param string $username
      * @param string $password
      * @param string $email
-     * @param int|null $id
      * @param string|null $phone
      * @param string|null $firstName
      * @param string|null $secondName
@@ -90,6 +90,7 @@ class UserEntity implements IEntity, IdentityInterface
      * @param string|null $avatar
      * @param string|null $authKey
      * @param string|null $passwordResetToken
+     * @param int|null $id
      * @param int|null $createdAt
      * @param int|null $updatedAt
      * @param bool|null $deleted
@@ -101,7 +102,18 @@ class UserEntity implements IEntity, IdentityInterface
     {
         $this->id = $id;
         $this->username = $username;
-        $this->password = $password;
+
+        //если сущность уже была создана, то пароль генерировать не нужно
+        if ($id){
+            $this->password = $password;
+        } else {
+            try {
+                $this->password = Yii::$app->security->generatePasswordHash($password);
+            } catch (Exception $exception) {
+
+            }
+        }
+
         $this->email = $email;
         $this->phone = $phone;
         $this->firstName = $firstName;
@@ -112,7 +124,7 @@ class UserEntity implements IEntity, IdentityInterface
         $this->passwordResetToken = $passwordResetToken;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
-        $this->deleted = $deleted;
+        $this->deleted = $deleted ?? false;
     }
 
 
@@ -251,8 +263,12 @@ class UserEntity implements IEntity, IdentityInterface
 
     /**
      * @param string $value
+     * @throws \yii\base\Exception
      */
-    public function setPassword(string $value) { $this->password = $value; }
+    public function setPassword(string $value)
+    {
+        $this->password = Yii::$app->security->generatePasswordHash($value);
+    }
 
     /**
      * @param string $value
@@ -385,15 +401,6 @@ class UserEntity implements IEntity, IdentityInterface
 
     // #################### SECTION OF LOGIC ######################
 
-
-    /**
-     * @return string
-     * @throws \yii\base\Exception
-     */
-    public function getPasswordHash()
-    {
-        return Yii::$app->security->generatePasswordHash($this->password);
-    }
 
     /**
      * Возвращает путь к аватару,

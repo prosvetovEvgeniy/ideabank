@@ -57,13 +57,11 @@ class TaskLikeRepository implements IRepository
     }
 
     /**
-     * Возвращает массив сущностей по условию
-     *
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
-     * @return TaskLikeEntity[]
+     * @return TaskLikeEntity[]|\common\models\interfaces\IEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
@@ -123,9 +121,7 @@ class TaskLikeRepository implements IRepository
      * @param TaskLikeEntity $taskLike
      * @return TaskLikeEntity
      * @throws Exception
-     * @throws \Exception
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
      */
     public function delete(TaskLikeEntity $taskLike)
     {

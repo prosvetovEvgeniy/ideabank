@@ -11,6 +11,7 @@ use common\models\entities\TaskNoticeEntity;
 use common\models\repositories\notice\NoticeRepository;
 use common\models\repositories\notice\TaskNoticeRepository;
 use Yii;
+use yii\db\Exception;
 
 /**
  * Class TaskNoticesFacade
@@ -20,7 +21,7 @@ class TaskNoticesFacade
 {
     /**
      * @param TaskEntity $task
-     * @throws \yii\db\Exception
+     * @throws Exception
      */
     public function saveNotices(TaskEntity $task)
     {
@@ -55,7 +56,7 @@ class TaskNoticesFacade
 
     /**
      * @param TaskEntity $task
-     * @throws \yii\db\Exception
+     * @throws Exception
      */
     private function savePrivateNotices(TaskEntity $task)
     {

@@ -45,7 +45,7 @@ class TaskFileDeleteModel extends Model
             return false;
         }
 
-        if ($taskFile->getTask()->getAuthorId() !== Yii::$app->user->identity->getUser()->getId() &&
+        if ($taskFile->getTask()->getAuthorId() !== Yii::$app->user->getId() &&
            !Yii::$app->user->isManager($taskFile->getTask()->getProjectId()))
         {
             return false;

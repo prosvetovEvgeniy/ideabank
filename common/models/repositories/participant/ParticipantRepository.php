@@ -39,8 +39,6 @@ class ParticipantRepository implements IRepository
     }
 
     /**
-     * Возвращает сущность по условию
-     *
      * @param array $condition
      * @return ParticipantEntity|null
      */
@@ -56,13 +54,11 @@ class ParticipantRepository implements IRepository
     }
 
     /**
-     * Возвращает массив сущностей по условию
-     *
      * @param array $condition
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
-     * @return ParticipantEntity[]
+     * @return ParticipantEntity[]|\common\models\interfaces\IEntity[]
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
@@ -77,11 +73,10 @@ class ParticipantRepository implements IRepository
     }
 
     /**
-     * Добавляет сущность в БД
-     *
      * @param ParticipantEntity $participant
      * @return ParticipantEntity
      * @throws Exception
+     * @throws \yii\base\Exception
      */
     public function add(ParticipantEntity $participant)
     {
@@ -98,11 +93,10 @@ class ParticipantRepository implements IRepository
     }
 
     /**
-     * Обновляет сущность в БД
-     *
      * @param ParticipantEntity $participant
      * @return ParticipantEntity
      * @throws Exception
+     * @throws \yii\base\Exception
      */
     public function update(ParticipantEntity $participant)
     {
@@ -123,11 +117,10 @@ class ParticipantRepository implements IRepository
     }
 
     /**
-     * Помечает сущность как удаленную в БД
-     *
      * @param ParticipantEntity $participant
      * @return ParticipantEntity
      * @throws Exception
+     * @throws \yii\base\Exception
      */
     public function block(ParticipantEntity $participant)
     {
@@ -156,6 +149,7 @@ class ParticipantRepository implements IRepository
      * @param ParticipantEntity $participant
      * @return ParticipantEntity
      * @throws Exception
+     * @throws \yii\base\Exception
      */
     public function delete(ParticipantEntity $participant)
     {
@@ -195,9 +189,7 @@ class ParticipantRepository implements IRepository
 
 
     /**
-     * Возвращает проекты, в которым присоединен пользователь
-     *
-     * @return ParticipantEntity[]
+     * @return ParticipantEntity[]|\common\models\interfaces\IEntity[]
      */
     public function getParticipantsInProjects()
     {
@@ -207,10 +199,7 @@ class ParticipantRepository implements IRepository
     }
 
     /**
-     * Возвращает пользователя с любым отношением
-     * к проету(участник, на рассмотрении)
-     *
-     * @return ParticipantEntity[]
+     * @return ParticipantEntity[]|\common\models\interfaces\IEntity[]
      */
     public function getRelationToProjects()
     {

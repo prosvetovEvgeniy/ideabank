@@ -280,7 +280,7 @@ class TaskEntity implements IEntity
     }
 
     /**
-     * @return UserEntity
+     * @return UserEntity|null
      */
     public function getAuthor()
     {

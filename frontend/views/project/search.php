@@ -5,11 +5,9 @@ use yii\grid\GridView;
 use common\components\widgets\ProjectSearchWidget;
 use common\models\entities\ProjectEntity;
 use yii\helpers\Html;
-use common\models\entities\ParticipantEntity;
 use common\models\entities\UserEntity;
-use common\models\searchmodels\task\TaskSearchForm;
+use common\models\repositories\participant\ParticipantRepository;
 use frontend\assets\ProjectJoinAsset;
-
 
 ProjectJoinAsset::register($this);
 
@@ -80,30 +78,26 @@ $this->title = 'Поиск';
                                     return Html::a('Вступить', '/site/login');
                                 }
 
-                                /**
-                                 * @var ParticipantEntity $participants
-                                 * @var UserEntity        $user
-                                 */
-                                $participants = $project->getParticipants();
-                                $user = Yii::$app->user->identity->getUser();
+                                $participant = ParticipantRepository::instance()->findOne([
+                                    'project_id' => $project->getId(),
+                                    'user_id'    => Yii::$app->user->getId()
+                                ]);
 
 
-                                /**
-                                 * @var ParticipantEntity $participant
-                                 */
-                                foreach ($participants as $participant) {
-                                    if ($participant->getUserId() === $user->getId()) {
-                                        if ($participant->getApproved() && !$participant->getBlocked()) {
-                                            return Html::a('Перейти', ['/task/index', 'TaskEntitySearch[projectId]' => $project->getId(), 'TaskEntitySearch[status]' => TaskSearchForm::STATUS_ALL]);
-                                        } else if (!$participant->getApproved()) {
-                                            return '<code>На рассмотрении </code>';
-                                        } else if ($participant->getBlocked()) {
-                                            return '<code>Забанен</code>';
-                                        }
+
+                                if (!$participant || $participant->getDeleted()) {
+                                    return Html::a('Вступить', '/participant/join', ['class' => 'project-join','data' => ['user-id' => Yii::$app->user->getId(), 'project-id' => $project->getId()]]);
+                                } else {
+                                    if ($participant->getApproved() && !$participant->getBlocked()) {
+                                        return Html::a('Перейти', ['/task/index', 'TaskSearchForm[projectId]' => $participant->getProjectId(), 'TaskSearchForm[status]' => 'all']);
+                                    } elseif (!$participant->getApproved()) {
+                                        return '<code>На рассмотрении </code>';
+                                    } elseif ($participant->getBlocked()) {
+                                        return '<code>Забанен</code>';
                                     }
                                 }
 
-                                return Html::a('Вступить', '/project/join', ['class' => 'project-join','data' => ['user-id' => $user->getId(), 'project-id' => $project->getId()]]);
+                                return '<code>Ошибка</code>';
                             },
                             'format' => 'raw'
                         ]

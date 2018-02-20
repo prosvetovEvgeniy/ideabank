@@ -16,8 +16,6 @@ class CommentViewEntityBuilder
     }
 
     /**
-     * Создает экземпляр сущности
-     *
      * @param CommentView $model
      * @return CommentEntity
      */
@@ -37,9 +35,7 @@ class CommentViewEntityBuilder
 
 
     /**
-     * Создает экземпляры сущностей
-     *
-     * @param CommentView[] $models
+     * @param array $models
      * @return CommentEntity[]
      */
     public function buildEntities(array $models)
