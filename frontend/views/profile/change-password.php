@@ -41,6 +41,10 @@ $this->title = 'Изменить пароль';
 
         <?= $form->errorSummary($model); ?>
 
+        <div style="color:#999;margin:1em 0">
+            <?= Html::a('Забыли пароль?', ['site/request-password-reset']) ?>.
+        </div>
+
         <?= Html::submitButton('Изменить', ['class' => 'btn btn-primary']) ?>
 
         <?php ActiveForm::end() ?>

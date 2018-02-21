@@ -6,6 +6,7 @@ use common\models\interfaces\IEntity;
 use common\models\repositories\company\CompanyRepository;
 use common\models\repositories\participant\ParticipantRepository;
 use common\models\repositories\task\TaskRepository;
+use yii\helpers\Html;
 
 /**
  * Class ProjectEntity
@@ -87,9 +88,13 @@ class ProjectEntity implements IEntity
     public function getId() { return $this->id; }
 
     /**
+     * @param bool $encode
      * @return string
      */
-    public function getName() { return $this->name; }
+    public function getName(bool $encode = false)
+    {
+        return ($encode) ? Html::encode($this->name) : $this->name;
+    }
 
     /**
      * @return int
@@ -97,9 +102,13 @@ class ProjectEntity implements IEntity
     public function getCompanyId() { return $this->companyId; }
 
     /**
+     * @param bool $encode
      * @return string
      */
-    public function getDescription() { return $this->description; }
+    public function getDescription(bool $encode = false)
+    {
+        return ($encode) ? Html::encode($this->description) : $this->description;
+    }
 
     /**
      * @return int | null

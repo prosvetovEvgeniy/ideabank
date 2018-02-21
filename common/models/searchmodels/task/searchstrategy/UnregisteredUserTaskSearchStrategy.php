@@ -6,7 +6,7 @@ use common\models\entities\TaskEntity;
 use common\models\searchmodels\task\TaskSearchForm;
 use yii\base\NotSupportedException;
 
-class InvitedUserTaskSearchStrategy implements ITaskSearchStrategy
+class UnregisteredUserTaskSearchStrategy implements ITaskSearchStrategy
 {
     public function buildCondition(string $status, int $projectId, string $title, string $content)
     {
@@ -56,10 +56,10 @@ class InvitedUserTaskSearchStrategy implements ITaskSearchStrategy
             return [
                 'and',
                 ['project_id' => $projectId],
-                ['author_id' => -1]
+                ['author_id' => null]
             ];
+        } else {
+            throw new NotSupportedException();
         }
-
-        throw new NotSupportedException();
     }
 }

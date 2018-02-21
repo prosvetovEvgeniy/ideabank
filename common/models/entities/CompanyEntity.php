@@ -5,6 +5,7 @@ namespace common\models\entities;
 use common\models\interfaces\IEntity;
 use common\models\repositories\participant\ParticipantRepository;
 use common\models\repositories\project\ProjectRepository;
+use yii\helpers\Html;
 
 /**
  * Class CompanyEntity
@@ -58,9 +59,13 @@ class CompanyEntity implements IEntity
     public function getId(){ return $this->id; }
 
     /**
+     * @param bool $encode
      * @return string
      */
-    public function getName() { return $this->name; }
+    public function getName(bool $encode = false) 
+    { 
+        return ($encode) ? Html::encode($this->name) : $this->name;
+    }
 
     /**
      * @return int | null

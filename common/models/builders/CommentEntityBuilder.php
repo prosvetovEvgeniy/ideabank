@@ -26,7 +26,7 @@ class CommentEntityBuilder
     {
         $model->task_id = $comment->getTaskId();
         $model->sender_id = $comment->getSenderId();
-        $model->content = Html::encode($comment->getContent());
+        $model->content = $comment->getContent();
         $model->parent_id = $comment->getParentId();
         $model->private = $comment->getPrivate();
         $model->deleted = $comment->getDeleted();
@@ -40,9 +40,17 @@ class CommentEntityBuilder
      */
     public function buildEntity(Comment $model)
     {
-        return new CommentEntity($model->task_id, $model->sender_id,$model->content, $model->parent_id,
-                                 $model->private, $model->id, $model->created_at, $model->updated_at,
-                                 $model->deleted);
+        return new CommentEntity(
+            $model->task_id,
+            $model->sender_id,
+            $model->content,
+            $model->parent_id,
+            $model->private,
+            $model->id,
+            $model->created_at,
+            $model->updated_at,
+            $model->deleted
+        );
     }
 
     /**

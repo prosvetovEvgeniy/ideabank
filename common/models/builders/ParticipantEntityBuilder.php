@@ -45,10 +45,24 @@ class ParticipantEntityBuilder
         $company = ($model->company) ? CompanyEntityBuilder::instance()->buildEntity($model->company) : null ;
         $authAssignment = ($model->authAssignment) ? AuthAssignmentEntityBuilder::instance()->buildEntity($model->authAssignment) : null;
 
-        return new ParticipantEntity($model->user_id, $model->company_id, $model->project_id,
-                                     $model->approved, $model->approved_at, $model->blocked, $model->blocked_at,
-                                     $model->id, $model->created_at, $model->updated_at, $model->deleted_at,
-                                     $model->deleted, $project, $user, $company, $authAssignment);
+        return new ParticipantEntity(
+            $model->user_id, 
+            $model->company_id, 
+            $model->project_id,
+            $model->approved, 
+            $model->approved_at,
+            $model->blocked, 
+            $model->blocked_at,
+            $model->id, 
+            $model->created_at, 
+            $model->updated_at, 
+            $model->deleted_at,
+            $model->deleted, 
+            $project,
+            $user, 
+            $company, 
+            $authAssignment
+        );
     }
 
     /**

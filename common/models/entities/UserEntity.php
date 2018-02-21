@@ -13,6 +13,7 @@ use common\models\repositories\task\TaskRepository;
 use common\models\repositories\user\UserRepository;
 use Yii;
 use yii\base\NotSupportedException;
+use yii\helpers\Html;
 use yii\web\IdentityInterface;
 use yii\base\Exception;
 
@@ -191,51 +192,86 @@ class UserEntity implements IEntity, IdentityInterface
 
     // #################### SECTION OF GETTERS ######################
 
-
     /**
+     * @param bool $encode
      * @return string
      */
-    public function getUsername() { return $this->username; }
+    public function getUsername(bool $encode = false) 
+    {
+        return ($encode) ? Html::encode($this->username) : $this->username;
+    }
 
     /**
+     * @param bool $encode
      * @return string
      */
-    public function getPassword() { return $this->password; }
+    public function getPassword(bool $encode = false) 
+    {
+        return ($encode) ? Html::encode($this->password) : $this->password;
+    }
 
     /**
+     * @param bool $encode
      * @return string
      */
-    public function getEmail() { return $this->email; }
+    public function getEmail(bool $encode = false) 
+    {
+        return ($encode) ? Html::encode($this->email) : $this->email;
+    }
 
     /**
+     * @param bool $encode
      * @return string | null
      */
-    public function getPhone() { return $this->phone; }
+    public function getPhone(bool $encode = false)
+    {
+        return ($encode) ? Html::encode($this->phone) : $this->phone;
+    }
 
     /**
+     * @param bool $encode
      * @return string | null
      */
-    public function getFirstName() { return $this->firstName; }
+    public function getFirstName(bool $encode = false)
+    {
+        return ($encode) ? Html::encode($this->firstName) : $this->firstName;
+    }
 
     /**
+     * @param bool $encode
      * @return string | null
      */
-    public function getSecondName() { return $this->secondName; }
+    public function getSecondName(bool $encode = false) 
+    {
+        return ($encode) ? Html::encode($this->secondName) : $this->secondName;
+    }
 
     /**
+     * @param bool $encode
      * @return string | null
      */
-    public function getLastName() { return $this->lastName; }
+    public function getLastName(bool $encode = false)
+    {
+        return ($encode) ? Html::encode($this->lastName) : $this->lastName;
+    }
 
     /**
+     * @param bool $encode
      * @return string | null
      */
-    public function getAvatar() { return $this->avatar; }
+    public function getAvatar(bool $encode = false) 
+    {
+        return ($encode) ? Html::encode($this->avatar) : $this->avatar;
+    }
 
     /**
+     * @param bool $encode
      * @return string | null
      */
-    public function getPasswordResetToken() { return $this->passwordResetToken; }
+    public function getPasswordResetToken(bool $encode = false) 
+    {
+        return ($encode) ? Html::encode($this->passwordResetToken) : $this->passwordResetToken;
+    }
 
     /**
      * @return int | null
@@ -419,10 +455,13 @@ class UserEntity implements IEntity, IdentityInterface
     }
 
     /**
+     * @param bool $encode
      * @return string
      */
-    public function getFio()
+    public function getFio(bool $encode = false)
     {
-        return $this->getSecondName() . ' ' . $this->getFirstName() . ' ' . $this->getLastName();
+        $fio = $this->getSecondName() . ' ' . $this->getFirstName() . ' ' . $this->getLastName();
+        
+        return ($encode) ? Html::encode($fio) : $fio;
     }
 }

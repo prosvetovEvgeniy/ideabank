@@ -34,7 +34,7 @@ $this->title = 'My Yii Application';
                                 'attribute' => 'title',
                                 'header' => 'Проект',
                                 'value' => function (TaskEntity $task) {
-                                    return $task->getProject()->getName();
+                                    return $task->getProject()->getName(true);
                                 },
                                 'format' => 'html'
                             ],
@@ -42,7 +42,7 @@ $this->title = 'My Yii Application';
                                 'attribute' => 'title',
                                 'header' => 'Наиболее обсуждаемые',
                                 'value' => function (TaskEntity $task) {
-                                    return Html::a($task->getTitle(), ['/task/view', 'id' => $task->getId()]);
+                                    return Html::a($task->getTitle(true), ['/task/view', 'id' => $task->getId()]);
                                 },
                                 'format' => 'html'
                             ],
@@ -63,7 +63,7 @@ $this->title = 'My Yii Application';
                                 'attribute' => 'title',
                                 'header' => 'Проект',
                                 'value' => function (TaskEntity $task) {
-                                    return $task->getProject()->getName();
+                                    return $task->getProject()->getName(true);
                                 },
                                 'format' => 'html'
                             ],
@@ -71,7 +71,7 @@ $this->title = 'My Yii Application';
                                 'attribute' => 'title',
                                 'header' => 'Последние',
                                 'value' => function (TaskEntity $task) {
-                                    return Html::a($task->getTitle(), ['/task/view', 'id' => $task->getId()]);
+                                    return Html::a($task->getTitle(true), ['/task/view', 'id' => $task->getId()]);
                                 },
                                 'format' => 'html'
                             ],

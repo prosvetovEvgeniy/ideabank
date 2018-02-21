@@ -34,7 +34,13 @@ class CompanyEntityBuilder
      */
     public function buildEntity(Company $model)
     {
-        return new CompanyEntity($model->name, $model->id, $model->created_at, $model->updated_at, $model->deleted);
+        return new CompanyEntity(
+            $model->name, 
+            $model->id, 
+            $model->created_at, 
+            $model->updated_at, 
+            $model->deleted
+        );
     }
 
     /**

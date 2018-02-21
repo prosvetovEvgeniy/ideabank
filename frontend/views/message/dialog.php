@@ -30,10 +30,10 @@ MessageDeleteAsset::register($this);
 
                     <?php foreach ($dataProvider->getModels() as $dialog) :?>
                         <tr class="dialog-row" data-companion-id="<?= $dialog->getCompanionId() ?>"
-                                               data-companion-username="<?= $dialog->getCompanion()->getUsername() ?>">
+                                               data-companion-username="<?= $dialog->getCompanion()->getUsername(true) ?>">
                             <td><i class="glyphicon glyphicon-envelope"></i></td>
                             <td class="message-content" onclick="window.location.href='/message/chat?companionId=<?= $dialog->getCompanionId() ?>'; return false">
-                                <p><?= $dialog->getContent() ?></p>
+                                <p><?= $dialog->getContent(true) ?></p>
                             </td>
                             <td>
                                 <?php $unViewedMsgCount = MessageRepository::instance()->getUnViewedMsgCount($dialog->getSelf(), $dialog->getCompanion()); ?>
@@ -45,7 +45,7 @@ MessageDeleteAsset::register($this);
                                 <?php endif; ?>
                             </td>
                             <td><?= $dialog->getCreationDate() ?></td>
-                            <td><?= Html::a( $dialog->getCompanion()->getUsername(),  ['/profile/view', 'id' => $dialog->getCompanion()->getId()]) ?></td>
+                            <td><?= Html::a( $dialog->getCompanion()->getUsername(true),  ['/profile/view', 'id' => $dialog->getCompanion()->getId()]) ?></td>
                             <td><i class="glyphicon glyphicon-trash delete-button delete-dialog"></i></td>
                         </tr>
                     <?php endforeach; ?>

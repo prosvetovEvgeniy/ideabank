@@ -145,7 +145,7 @@ a.desc:after {
 }
 
 .task-files-block{
-    margin-top: 20px;
+    margin-top: 30px;
     margin-bottom: 10px;
 }
 
@@ -189,7 +189,8 @@ a.desc:after {
 }
 
 .task-creator{
-    margin-top: 20px;
+    margin-top: 10px;
+    margin-bottom: 15px;
 }
 
 /* ########## COMMENT FORM RULES ##########*/

@@ -31,7 +31,11 @@ class TaskNoticeBuilder
      */
     public function buildEntity(TaskNotice $model)
     {
-        return new TaskNoticeEntity($model->task_id, $model->notice_id, $model->id);
+        return new TaskNoticeEntity(
+            $model->task_id, 
+            $model->notice_id, 
+            $model->id
+        );
     }
 
     /**

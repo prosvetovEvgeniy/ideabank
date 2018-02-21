@@ -100,6 +100,7 @@ class EditTaskForm extends Model
                 return ($value != '') ? (int) $value : null ;
             }],
 
+            [['plannedEndAt'], 'default', 'value' => null],
             [['plannedEndAt'], 'date', 'format' => self::DATE_FORMAT, 'timestampAttribute' => 'plannedEndAt'],
 
             [['parentId'], 'integer'],

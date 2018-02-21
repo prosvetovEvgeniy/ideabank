@@ -5,6 +5,7 @@ namespace common\models\entities;
 use common\models\interfaces\IEntity;
 use common\models\interfaces\INotice;
 use common\models\repositories\user\UserRepository;
+use yii\helpers\Html;
 
 /**
  * Class NoticeEntity
@@ -90,14 +91,22 @@ class NoticeEntity implements IEntity, INotice
     public function getSenderId() { return $this->senderId; }
 
     /**
+     * @param bool $encode
      * @return string
      */
-    public function getContent() { return $this->content; }
+    public function getContent(bool $encode = false)
+    {
+        return ($encode) ? Html::encode($this->content) : $this->content;
+    }
 
     /**
+     * @param bool $encode
      * @return string
      */
-    public function getLink() { return $this->link; }
+    public function getLink(bool $encode = false)
+    {
+        return ($encode) ? Html::encode($this->link) : $this->link;
+    }
 
     /**
      * @return int | null

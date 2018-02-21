@@ -31,7 +31,11 @@ class CommentNoticeBuilder
      */
     public function buildEntity(CommentNotice $model)
     {
-        return new CommentNoticeEntity($model->comment_id, $model->notice_id, $model->id);
+        return new CommentNoticeEntity(
+            $model->comment_id, 
+            $model->notice_id, 
+            $model->id
+        );
     }
 
     /**

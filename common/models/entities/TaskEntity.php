@@ -9,6 +9,7 @@ use common\models\repositories\task\TaskFileRepository;
 use common\models\repositories\task\TaskLikeRepository;
 use common\models\repositories\task\TaskRepository;
 use common\models\repositories\user\UserRepository;
+use yii\helpers\Html;
 use Yii;
 
 /**
@@ -76,12 +77,13 @@ class TaskEntity implements IEntity
 
     public const LIST_VISIBILITY_AREAS = [
         self::VISIBILITY_AREA_ALL        => 'доступна для всех',
-        self::VISIBILITY_AREA_REGISTERED => 'доступна только для зарегистрированных',
+        self::VISIBILITY_AREA_REGISTERED => 'для зарегистрированных',
         self::VISIBILITY_AREA_PRIVATE    => 'приватная'
     ];
 
     protected const DATE_ERROR_MESSAGE = 'дата не определена';
     protected const STATUS_ERROR_MESSAGE = 'статус не определен';
+    protected const VISIBILITY_AREA_ERROR_MESSAGE = 'не определена';
 
     protected const DATE_FORMAT = 'd.m.Y';
 
@@ -155,14 +157,22 @@ class TaskEntity implements IEntity
     public function getId() { return $this->id; }
 
     /**
+     * @param bool $encode
      * @return string
      */
-    public function getTitle() { return $this->title; }
+    public function getTitle(bool $encode = false)
+    {
+        return ($encode) ? Html::encode($this->title) : $this->title;
+    }
 
     /**
+     * @param bool $encode
      * @return string
      */
-    public function getContent() { return $this->content; }
+    public function getContent(bool $encode = false)
+    {
+        return ($encode) ? Html::encode($this->content) : $this->content;
+    }
 
     /**
      * @return int
@@ -392,6 +402,11 @@ class TaskEntity implements IEntity
     public function getStatusAsText()
     {
         return self::LIST_STATUSES[$this->status] ?? self::STATUS_ERROR_MESSAGE;
+    }
+
+    public function getVisibilityAreaAsText()
+    {
+        return self::LIST_VISIBILITY_AREAS[$this->visibilityArea] ?? self::VISIBILITY_AREA_ERROR_MESSAGE;
     }
 
     /**

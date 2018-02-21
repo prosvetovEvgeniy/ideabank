@@ -33,9 +33,9 @@ $this->title = 'Упоминания';
                         'value' => function (NoticeEntity $notice) {
                             if(Yii::$app->user->identity->getUser()->getid() === $notice->getSenderId())
                             {
-                                return Html::a($notice->getSender()->getUsername(), ['/profile/my-tasks']);
+                                return Html::a($notice->getSender()->getUsername(true), ['/profile/my-tasks']);
                             }
-                            return Html::a($notice->getSender()->getUsername(), ['/profile/view', 'id' => $notice->getSenderId()]);
+                            return Html::a($notice->getSender()->getUsername(true), ['/profile/view', 'id' => $notice->getSenderId()]);
                         },
                         'format' => 'html'
                     ],
@@ -44,7 +44,7 @@ $this->title = 'Упоминания';
                         'contentOptions' => ['class' => 'text-left'],
                         'header' => 'Содержание',
                         'value' => function(NoticeEntity $notice) {
-                            return Html::a($notice->getContent(), $notice->getLink(), ['class' => 'text-hidden']);
+                            return Html::a($notice->getContent(true), $notice->getLink(), ['class' => 'text-hidden']);
                         },
                         'format' => 'raw'
                     ],

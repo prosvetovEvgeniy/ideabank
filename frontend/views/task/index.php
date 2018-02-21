@@ -26,7 +26,7 @@ $this->title = 'Предложения';
 
                 <?php $project = $participant->getProject(); ?>
 
-                <?= Html::a($project->getName(), ['task/index', 'TaskSearchForm[projectId]' => $project->getId(), 'TaskSearchForm[status]' => TaskSearchForm::STATUS_ALL, 'projectId' => $project->getId()], ['class' => 'btn btn-default']) ?>
+                <?= Html::a($project->getName(true), ['task/index', 'TaskSearchForm[projectId]' => $project->getId(), 'TaskSearchForm[status]' => TaskSearchForm::STATUS_ALL, 'projectId' => $project->getId()], ['class' => 'btn btn-default']) ?>
 
             <?php endforeach; ?>
         </div>
@@ -34,7 +34,7 @@ $this->title = 'Предложения';
 
     <div class="col-md-10 col-sm-12">
 
-        <h2 class="no-margin-top margin-bottom"><?= $currentProject->getName() ?></h2>
+        <h2 class="no-margin-top margin-bottom"><?= $currentProject->getName(true) ?></h2>
 
         <?= $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -51,7 +51,7 @@ $this->title = 'Предложения';
                     'attribute' => 'title',
                     'header' => 'Заголовок',
                     'value' => function(TaskEntity $task) {
-                        return Html::a($task->getTitle(), ['task/view', 'id' => $task->getId(), 'projectId' => $task->getProjectId()]);
+                        return Html::a($task->getTitle(true), ['task/view', 'id' => $task->getId(), 'projectId' => $task->getProjectId()]);
                     },
                     'format' => 'html'
                 ],

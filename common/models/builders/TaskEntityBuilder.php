@@ -4,7 +4,6 @@ namespace common\models\builders;
 
 use common\models\activerecords\Task;
 use common\models\entities\TaskEntity;
-use yii\helpers\Html;
 
 class TaskEntityBuilder
 {
@@ -24,8 +23,8 @@ class TaskEntityBuilder
      */
     public function assignProperties(Task &$model, TaskEntity &$task)
     {
-        $model->title = Html::encode($task->getTitle());
-        $model->content = Html::encode($task->getContent());
+        $model->title = $task->getTitle();
+        $model->content = $task->getContent();
         $model->author_id = $task->getAuthorId();
         $model->project_id = $task->getProjectId();
         $model->status = $task->getStatus();
@@ -43,10 +42,20 @@ class TaskEntityBuilder
      */
     public function buildEntity(Task $model)
     {
-        return new TaskEntity($model->title, $model->content, $model->author_id, $model->project_id,
-                              $model->status, $model->visibility_area, $model->parent_id,
-                              $model->planned_end_at, $model->end_at, $model->id, $model->created_at,
-                              $model->updated_at, $model->deleted);
+        return new TaskEntity(
+            $model->title,
+            $model->content,
+            $model->author_id,
+            $model->project_id,
+            $model->status,
+            $model->visibility_area,
+            $model->parent_id,
+            $model->planned_end_at,
+            $model->end_at, $model->id,
+            $model->created_at,
+            $model->updated_at,
+            $model->deleted
+        );
     }
 
     /**

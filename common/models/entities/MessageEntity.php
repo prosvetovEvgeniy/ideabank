@@ -4,6 +4,7 @@ namespace common\models\entities;
 
 use common\models\interfaces\IEntity;
 use common\models\repositories\user\UserRepository;
+use yii\helpers\Html;
 
 /**
  * Class MessageEntity
@@ -89,9 +90,13 @@ class MessageEntity implements IEntity
     public function getCompanionId() { return $this->companionId; }
 
     /**
+     * @param bool $encode
      * @return string
      */
-    public function getContent() { return  $this->content; }
+    public function getContent(bool $encode = false)
+    {
+        return ($encode) ? Html::encode($this->content) : $this->content;
+    }
 
     /**
      * @return bool

@@ -52,7 +52,7 @@ class TaskRepository implements IRepository
     {
         $model = Task::findOne($condition);
 
-        if (!$model || $model->deleted) {
+        if (!$model) {
             return null;
         }
 

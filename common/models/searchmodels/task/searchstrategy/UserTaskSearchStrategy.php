@@ -81,8 +81,8 @@ class UserTaskSearchStrategy implements ITaskSearchStrategy
                 ['author_id' => Yii::$app->user->getId()],
                 ['deleted' => false]
             ];
+        } else {
+            throw new NotSupportedException();
         }
-
-        throw new NotSupportedException();
     }
 }

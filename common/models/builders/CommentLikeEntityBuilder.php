@@ -37,8 +37,14 @@ class CommentLikeEntityBuilder
      */
     public function buildEntity(CommentLike $model)
     {
-        return new CommentLikeEntity($model->comment_id, $model->user_id, $model->liked,$model->id,
-                                     $model->created_at, $model->updated_at);
+        return new CommentLikeEntity(
+            $model->comment_id,
+            $model->user_id, 
+            $model->liked,
+            $model->id, 
+            $model->created_at, 
+            $model->updated_at
+        );
     }
 
     /**

@@ -4,7 +4,6 @@ namespace common\models\builders;
 
 use common\models\activerecords\Users;
 use common\models\entities\UserEntity;
-use yii\helpers\Html;
 
 class UserEntityBuilder
 {
@@ -22,13 +21,13 @@ class UserEntityBuilder
      */
     public function assignProperties(Users &$model, UserEntity &$user)
     {
-        $model->username = Html::encode($user->getUsername());
+        $model->username = $user->getUsername();
         $model->password = $user->getPassword();
-        $model->email = Html::encode($user->getEmail());
-        $model->phone = Html::encode($user->getPhone());
-        $model->first_name = Html::encode($user->getFirstName());
-        $model->second_name = Html::encode($user->getSecondName());
-        $model->last_name = Html::encode($user->getLastName());
+        $model->email = $user->getEmail();
+        $model->phone = $user->getPhone();
+        $model->first_name = $user->getFirstName();
+        $model->second_name = $user->getSecondName();
+        $model->last_name = $user->getLastName();
         $model->avatar = $user->getAvatar();
         $model->auth_key = $user->getAuthKey();
         $model->password_reset_token = $user->getPasswordResetToken();
@@ -40,11 +39,22 @@ class UserEntityBuilder
      */
     public function buildEntity(Users $model)
     {
-        return new UserEntity($model->username, $model->password, $model->email,
-                              $model->phone, $model->first_name, $model->second_name,
-                              $model->last_name, $model->avatar, $model->auth_key,
-                              $model->password_reset_token, $model->id, $model->created_at,
-                              $model->updated_at, $model->deleted);
+        return new UserEntity(
+            $model->username, 
+            $model->password,
+            $model->email,
+            $model->phone,
+            $model->first_name, 
+            $model->second_name,
+            $model->last_name, 
+            $model->avatar, 
+            $model->auth_key,
+            $model->password_reset_token, 
+            $model->id, 
+            $model->created_at,
+            $model->updated_at, 
+            $model->deleted
+        );
     }
 
     /**

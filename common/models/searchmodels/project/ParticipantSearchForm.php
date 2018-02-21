@@ -93,37 +93,37 @@ class ParticipantSearchForm extends Model implements ISearchEntityModel
     {
         $condition = [
             'and',
-            ['project_id' => $this->projectId]
+            ['project_id' => $this->projectId],
+            ['participant.deleted' => false],
+            ['users.deleted' => false]
         ];
 
-        if($this->username){
+        if ($this->username) {
             array_push($condition, ['like', 'lower(username)', strtolower($this->username)]);
         }
 
-        if($this->firstName){
+        if ($this->firstName) {
             array_push($condition, ['like', 'lower(first_name)', strtolower($this->firstName)]);
         }
 
-        if($this->secondName){
+        if ($this->secondName) {
             array_push($condition, ['like', 'lower(second_name)', strtolower($this->secondName)]);
         }
 
-        if($this->email){
+        if ($this->email) {
             array_push($condition, ['like', 'lower(email)', strtolower($this->email)]);
         }
 
-        if($this->phone){
+        if ($this->phone) {
             array_push($condition, ['like', 'phone', $this->phone]);
         }
 
-        if($this->role !== null){
-            if($this->role === ParticipantEntity::ROLE_ON_CONSIDERATION){
+        if ($this->role !== null) {
+            if ($this->role === ParticipantEntity::ROLE_ON_CONSIDERATION){
                 array_push($condition, ['blocked' => false, 'approved' => false]);
-            } 
-            else if($this->role === ParticipantEntity::ROLE_BLOCKED){
+            } else if ($this->role === ParticipantEntity::ROLE_BLOCKED) {
                 array_push($condition, ['blocked' => true]);
-            } 
-            else{
+            } else {
                 array_push($condition, ['item_name' => $this->role]);
             }
         }

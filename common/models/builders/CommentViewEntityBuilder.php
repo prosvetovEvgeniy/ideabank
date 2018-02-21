@@ -26,11 +26,23 @@ class CommentViewEntityBuilder
         //если у комментария нет родителя
         $parentCommentEntity = ($model->parent) ? CommentEntityBuilder::instance()->buildEntity($model->parent) : null;
 
-        return new CommentEntity($model->task_id, $model->sender_id,$model->content, $model->parent_id,
-                                 $model->private, $model->id, $model->created_at, $model->updated_at,
-                                 $model->deleted, $model->likes_amount, $model->dislikes_amount,
-                                 $userEntity, $parentCommentEntity, $model->current_user_liked_it,
-                                 $model->current_user_disliked_it);
+        return new CommentEntity(
+            $model->task_id, 
+            $model->sender_id,
+            $model->content, 
+            $model->parent_id,
+            $model->private, 
+            $model->id, 
+            $model->created_at, 
+            $model->updated_at,
+            $model->deleted, 
+            $model->likes_amount, 
+            $model->dislikes_amount,
+            $userEntity, 
+            $parentCommentEntity, 
+            $model->current_user_liked_it,
+            $model->current_user_disliked_it
+        );
     }
 
 

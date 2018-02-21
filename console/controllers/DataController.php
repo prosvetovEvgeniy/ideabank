@@ -151,8 +151,11 @@ class DataController extends Controller
         //############### FILLING COMMENTS ###############
 
 
-        //$commentsIds = $this->generateComments($tasksIds['firstTask'], $userIds['newUser'], 110);
+        $commentsIds = $this->generateComments($tasksIds['firstTask'], $userIds['newUser'], 15);
 
+        $commentsIds = $this->generateComments($tasksIds['vulcanTask1'], $userIds['evgeniy'], 12);
+
+        $commentsIds = $this->generateComments($tasksIds['vulcanTask2'], $userIds['newUser'], 10);
 
         //############### FILLING TASKLIKES ###############
 
@@ -163,7 +166,7 @@ class DataController extends Controller
         //############### FILLING COMMENTLIKES ###############
 
 
-        //$commentLikeIds = $this->generateCommentLikes($commentsIds, $userIds['evgeniy']);
+        $commentLikeIds = $this->generateCommentLikes($commentsIds, $userIds['evgeniy']);
 
 
         //############### FILLING MESSAGES ###############

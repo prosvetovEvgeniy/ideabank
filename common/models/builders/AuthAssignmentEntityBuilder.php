@@ -4,7 +4,6 @@ namespace common\models\builders;
 
 use common\models\activerecords\AuthAssignment;
 use common\models\entities\AuthAssignmentEntity;
-use yii\helpers\Html;
 
 class AuthAssignmentEntityBuilder
 {
@@ -24,7 +23,7 @@ class AuthAssignmentEntityBuilder
      */
     public function assignProperties(&$model, &$authAssignment)
     {
-        $model->itemName = Html::encode($authAssignment->getItemName());
+        $model->itemName = $authAssignment->getItemName();
         $model->user_id = $authAssignment->getUserId();
     }
 
@@ -36,7 +35,11 @@ class AuthAssignmentEntityBuilder
      */
     public function buildEntity(AuthAssignment $model)
     {
-        return new AuthAssignmentEntity($model->item_name, $model->user_id, $model->created_at);
+        return new AuthAssignmentEntity(
+            $model->item_name, 
+            $model->user_id, 
+            $model->created_at
+        );
     }
 
     /**

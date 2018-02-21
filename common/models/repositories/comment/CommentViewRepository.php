@@ -78,11 +78,11 @@ class CommentViewRepository implements IRepository
 
         $task = TaskRepository::instance()->findOne(['id' => $condition['task_id']]);
 
-        if (!Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $task->getProjectId())) {
+        if (!Yii::$app->user->isManager($task->getProjectId())) {
             $models = $models->andWhere([
                 'or',
                 ['private' => false],
-                ['sender_id' => $userId]
+                ['sender_id' => Yii::$app->user->getId()]
             ]);
         }
 
@@ -97,17 +97,15 @@ class CommentViewRepository implements IRepository
      */
     public function getTotalCountByCondition(array $condition): int
     {
-        $userId = Yii::$app->user->getId() ?? 'NULL';
-
         $models= CommentView::find()->where($condition);
 
         $task = TaskRepository::instance()->findOne(['id' => $condition['task_id']]);
 
-        if (!Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $task->getProjectId())) {
+        if (!Yii::$app->user->isManager($task->getProjectId())) {
             $models = $models->andWhere([
                 'or',
                 ['private' => false],
-                ['sender_id' => $userId]
+                ['sender_id' => Yii::$app->user->getId()]
             ]);
         }
 

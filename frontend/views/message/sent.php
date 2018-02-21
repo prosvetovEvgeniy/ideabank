@@ -30,9 +30,9 @@ MessageDeleteAsset::register($this);
                 <?php foreach ($dataProvider->getModels() as $sentMessage) :?>
                     <tr class="dialog-row" data-message-id="<?= $sentMessage->getId() ?>">
                         <td><i class="glyphicon glyphicon-envelope"></i></td>
-                        <td class="message-content" onclick="window.location.href='/message/chat?companionId=<?= $sentMessage->getCompanionId() ?>'; return false"><p><?= $sentMessage->getContent() ?></p></td>
+                        <td class="message-content" onclick="window.location.href='/message/chat?companionId=<?= $sentMessage->getCompanionId() ?>'; return false"><p><?= $sentMessage->getContent(true) ?></p></td>
                         <td><?= $sentMessage->getCreationDate() ?></td>
-                        <td><?= Html::a( $sentMessage->getCompanion()->getUsername(), '#') ?></td>
+                        <td><?= Html::a( $sentMessage->getCompanion()->getUsername(true), '#') ?></td>
                         <td><i class="glyphicon glyphicon-trash delete-button delete-message"></i></td>
                     </tr>
                 <?php endforeach; ?>

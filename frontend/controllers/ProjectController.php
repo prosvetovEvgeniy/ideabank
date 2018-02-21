@@ -24,7 +24,7 @@ class ProjectController extends Controller
     {
         $project = ProjectRepository::instance()->findOne(['id' => $id]);
 
-        if (!$project){
+        if (!$project) {
             throw new BadRequestHttpException();
         }
 
@@ -55,7 +55,7 @@ class ProjectController extends Controller
     {
         $searchModel = new ParticipantSearchForm();
 
-        if (!$searchModel->load(Yii::$app->request->queryParams) || !$searchModel->validate()){
+        if (!$searchModel->load(Yii::$app->request->queryParams) || !$searchModel->validate()) {
             throw new BadRequestHttpException();
         }
 
@@ -72,7 +72,7 @@ class ProjectController extends Controller
     {
         $model = new JoinToProjectModel();
 
-        if(!$model->load(Yii::$app->request->post()) || !$model->save()) {
+        if (!$model->load(Yii::$app->request->post()) || !$model->save()) {
             throw new BadRequestHttpException();
         }
     }

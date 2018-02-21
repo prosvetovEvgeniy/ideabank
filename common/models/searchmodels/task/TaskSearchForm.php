@@ -10,6 +10,7 @@ use common\models\repositories\project\ProjectRepository;
 use common\models\repositories\task\TaskRepository;
 use common\models\searchmodels\task\searchstrategy\ITaskSearchStrategy;
 use common\models\searchmodels\task\searchstrategy\ManagerTaskSearchStrategy;
+use common\models\searchmodels\task\searchstrategy\UnregisteredUserTaskSearchStrategy;
 use common\models\searchmodels\task\searchstrategy\UserTaskSearchStrategy;
 use yii\base\Model;
 use common\models\entities\ProjectEntity;
@@ -86,9 +87,10 @@ class TaskSearchForm extends Model implements ISearchEntityModel
 
         if (Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $this->projectId)) {
             $this->searchStrategyBehavior = new ManagerTaskSearchStrategy();
-        }
-        elseif (Yii::$app->user->is(AuthAssignmentEntity::ROLE_USER, $this->projectId)) {
+        } elseif (Yii::$app->user->is(AuthAssignmentEntity::ROLE_USER, $this->projectId)) {
             $this->searchStrategyBehavior = new UserTaskSearchStrategy();
+        } else {
+            $this->searchStrategyBehavior = new UnregisteredUserTaskSearchStrategy();
         }
     }
 

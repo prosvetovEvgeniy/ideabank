@@ -41,7 +41,7 @@ $counter = 1; //счетчик для номера комментария
 
                 <h2 class="no-margin-top"><?= $task->getTitle() ?></h2>
 
-                <p><?= $task->getContent() ?></p>
+                <p><?= $task->getContent(true) ?></p>
 
                 <div class="footer-comment">
                     <span class="vote-up" title="Нравится">
@@ -87,7 +87,7 @@ $counter = 1; //счетчик для номера комментария
                             <div class="file">
                                 <?php
                                 $fileStubImg = Html::img($file->getFileStub(), ['class' => 'file-view']);
-                                echo Html::a($fileStubImg, ['task-file/download', 'id' => $file->getId()], ['target' => '_blank', 'title' => $file->getOriginalName()]);
+                                echo Html::a($fileStubImg, ['task-file/download', 'id' => $file->getId()], ['target' => '_blank', 'title' => $file->getOriginalName(true)]);
                                 ?>
                             </div>
 
@@ -103,7 +103,7 @@ $counter = 1; //счетчик для номера комментария
                 <tr>
                     <td>Проект</td>
                     <td>
-                        <?= Html::a($task->getProject()->getName(), ['project/view', 'id' => $task->getProject()->getId()]); ?>
+                        <?= Html::a($task->getProject()->getName(true), ['project/view', 'id' => $task->getProject()->getId()]); ?>
                     </td>
                 </tr>
                 <tr>
@@ -111,12 +111,12 @@ $counter = 1; //счетчик для номера комментария
                     <td>
                         <?php
                         if (Yii::$app->user->isGuest) {
-                            echo Html::a($task->getAuthor()->getUsername(), ['/site/login']);
+                            echo Html::a($task->getAuthor()->getUsername(true), ['/site/login']);
                         } else {
-                            if (Yii::$app->user->identity->getUser()->getId() === $task->getAuthorId()) {
-                                echo Html::a($task->getAuthor()->getUsername(), '/profile/my-tasks');
+                            if (Yii::$app->user->getId() === $task->getAuthorId()) {
+                                echo Html::a($task->getAuthor()->getUsername(true), '/profile/my-tasks');
                             } else {
-                                echo Html::a($task->getAuthor()->getUsername(), ['/profile/view', 'id' => $task->getAuthorId()]);
+                                echo Html::a($task->getAuthor()->getUsername(true), ['/profile/view', 'id' => $task->getAuthorId()]);
                             }
                         }
                         ?>
@@ -135,6 +135,13 @@ $counter = 1; //счетчик для номера комментария
                     <td> <?= $task->getStatusAsText() ?> </td>
                 </tr>
 
+                <?php if(Yii::$app->user->isManager($task->getProjectId())): ?>
+                    <tr>
+                        <td>Область видимости</td>
+                        <td> <?= $task->getVisibilityAreaAsText() ?> </td>
+                    </tr>
+                <?php endif; ?>
+
                 <?php if($task->getStatus() === TaskEntity::STATUS_ON_CONSIDERATION || $task->getStatus() === TaskEntity::STATUS_IN_PROGRESS): ?>
 
                     <tr>
@@ -151,13 +158,9 @@ $counter = 1; //счетчик для номера комментария
 
                 <?php elseif ($task->getStatus() === TaskEntity::STATUS_MERGED): ?>
 
-                    <?php
-                        $parentTask = $task->getParent();
-                    ?>
-
                     <tr>
-                        <td>Задача</td>
-                        <td> <?= Html::a($task->getParent()->getTitle(), ['task/view', 'id' => $task->getParent()->getId()]) ?> </td>
+                        <td>Родительская задача</td>
+                        <td> <?= Html::a($task->getParent()->getTitle(true), ['task/view', 'id' => $task->getParent()->getId()]) ?> </td>
                     </tr>
 
                 <?php endif; ?>
@@ -241,12 +244,12 @@ $counter = 1; //счетчик для номера комментария
                                         <?php
                                         if (!$comment->getDeleted()) {
                                             if (Yii::$app->user->isGuest) {
-                                                echo Html::a($comment->getUser()->getUsername(), ['/site/login'], ['name' => $comment->getId()]);
+                                                echo Html::a($comment->getUser()->getUsername(true), ['/site/login'], ['name' => $comment->getId()]);
                                             } else {
-                                                if ($comment->getSenderId() === Yii::$app->user->identity->getUser()->getId()) {
-                                                    echo Html::a($comment->getUser()->getUsername(), ['/profile/my-projects'], ['name' => $comment->getId()]);
+                                                if ($comment->getSenderId() === Yii::$app->user->getId()) {
+                                                    echo Html::a($comment->getUser()->getUsername(true), ['/profile/my-projects'], ['name' => $comment->getId()]);
                                                 } else {
-                                                    echo Html::a($comment->getUser()->getUsername(), ['/profile/view', 'id' => $comment->getUser()->getId()], ['name' => $comment->getId()]);
+                                                    echo Html::a($comment->getUser()->getUsername(true), ['/profile/view', 'id' => $comment->getUser()->getId()], ['name' => $comment->getId()]);
                                                 }
                                             }
                                         }
@@ -281,18 +284,20 @@ $counter = 1; //счетчик для номера комментария
 
                                         <?php $parent = $comment->getParent(); ?>
                                         <div class="comment-parent">
-                                            <?php if(!$parent->getDeleted()): ?>
+                                            <?php if(!$parent->getDeleted() && !$parent->getPrivate()): ?>
                                                 <div class="comment-parent-username">
-                                                    <?= Html::a($parent->getUser()->getUsername(), ['/profile/view', 'id' => $parent->getUser()->getId()]) ?>
+                                                    <?= Html::a($parent->getUser()->getUsername(true), ['/profile/view', 'id' => $parent->getUser()->getId()]) ?>
                                                 </div>
-                                                <div class="comment-parent-content"> <?= $parent->getContent() ?> </div>
-                                            <?php else: ?>
+                                                <div class="comment-parent-content"> <?= $parent->getContent(true) ?> </div>
+                                            <?php elseif ($parent->getDeleted()): ?>
                                                 Комментарий удален
+                                            <?php elseif ($parent->getPrivate()): ?>
+                                                Комментарий был помечен как приватный
                                             <?php endif; ?>
                                         </div>
                                     <?php endif; ?>
                                     <div class="comment-content" data-comment-id="<?= $comment->getId() ?>">
-                                        <?= $comment->getContent(); ?>
+                                        <?= $comment->getContent(true); ?>
                                     </div>
 
                                     <?php if($isManager): ?>

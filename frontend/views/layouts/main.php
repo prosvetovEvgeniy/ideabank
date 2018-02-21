@@ -58,7 +58,7 @@ AppAsset::register($this);
             $unViewedMessagesCount = null;
         }
 
-        $menuItems[] = ['label' => 'Аккаунт (' . Yii::$app->user->identity->getUser()->getUserName() . ')', 'items' => [
+        $menuItems[] = ['label' => 'Аккаунт (' . Yii::$app->user->identity->getUserName(true) . ')', 'items' => [
             ['label' => 'Личный кабинет', 'url' => ['/profile/change-own-data']],
             ['label' => 'Сообщения' . $unViewedMessagesCount, 'url' => ['/message/dialog']],
             ['label' => 'Создать задачу', 'url' => ['/task/create']],

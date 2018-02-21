@@ -18,7 +18,7 @@ class ParticipantController extends Controller
     {
         $model = new AddParticipantModel();
 
-        if (!$model->load(Yii::$app->request->post()) || !$model->save()){
+        if (!$model->load(Yii::$app->request->post()) || !$model->save()) {
             throw new BadRequestHttpException();
         }
     }
@@ -27,7 +27,7 @@ class ParticipantController extends Controller
     {
         $model = new CancelParticipantModel();
 
-        if (!$model->load(Yii::$app->request->post()) || !$model->save()){
+        if (!$model->load(Yii::$app->request->post()) || !$model->save()) {
             throw new BadRequestHttpException();
         }
     }
@@ -36,7 +36,7 @@ class ParticipantController extends Controller
     {
         $model = new BlockParticipantModel();
 
-        if (!$model->load(Yii::$app->request->post()) || !$model->save()){
+        if (!$model->load(Yii::$app->request->post()) || !$model->save()) {
             throw new BadRequestHttpException();
         }
     }
@@ -45,7 +45,7 @@ class ParticipantController extends Controller
     {
         $model = new UnBlockParticipantModel();
 
-        if (!$model->load(Yii::$app->request->post()) || !$model->save()){
+        if (!$model->load(Yii::$app->request->post()) || !$model->save()) {
             throw new BadRequestHttpException();
         }
     }

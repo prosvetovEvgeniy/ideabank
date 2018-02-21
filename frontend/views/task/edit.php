@@ -52,19 +52,19 @@ $this->title = 'Редактировать задачу';
         'options' => ['class' => 'form-control']
     ]) ?>
 
-    <?php if($task->hasChildren()): ?>
-        <p><b>Дочерние задачи</b></p>
-        <?php foreach ($task->getChildren() as $child): ?>
-            <?= Html::a($child->getTitle(), ['/task/view', 'id' => $child->getId()], ['class' => 'child-task']); ?>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <?= $form->field($model, 'parentId')->dropDownList(TaskHelper::getParentTasksItems($task), ['prompt' => 'Отсутствует']) ?>
-    <?php endif; ?>
-
     <?php if($task->getAuthorId() !== Yii::$app->user->getId()): ?>
-        <div class="task-creator"><b>Создал</b>: <?= Html::a($task->getAuthor()->getUsername(), ['/profile/view', 'id' => $task->getAuthorId()]) ?></div>
+        <div class="task-creator"><b>Создал</b>: <?= Html::a($task->getAuthor()->getUsername(true), ['/profile/view', 'id' => $task->getAuthorId()]) ?></div>
     <?php endif; ?>
 
+<?php endif; ?>
+
+<?php if($task->hasChildren()): ?>
+    <p><b>Дочерние задачи</b></p>
+    <?php foreach ($task->getChildren() as $child): ?>
+        <?= Html::a($child->getTitle(true), ['/task/view', 'id' => $child->getId()], ['class' => 'child-task']); ?>
+    <?php endforeach; ?>
+<?php elseif (Yii::$app->user->isManager($task->getProjectId())): ?>
+    <?= $form->field($model, 'parentId')->dropDownList(TaskHelper::getParentTasksItems($task), ['prompt' => 'Отсутствует']) ?>
 <?php endif; ?>
 
 <div class="task-files-block">
@@ -101,7 +101,7 @@ $this->title = 'Редактировать задачу';
             <i class="glyphicon glyphicon-remove delete-file-btn" data-file-id="<?= $file->getId() ?>" data-task-id="<?= $file->getTaskId() ?>"></i>
             <?php
                 $fileStubImg = Html::img($file->getFileStub(), ['class' => 'file-view']);
-                echo Html::a($fileStubImg, ['task-file/download', 'id' => $file->getId()], ['target' => '_blank', 'title' => $file->getOriginalName()]);
+                echo Html::a($fileStubImg, ['task-file/download', 'id' => $file->getId()], ['target' => '_blank', 'title' => $file->getOriginalName(true)]);
             ?>
         </div>
 
@@ -113,6 +113,8 @@ $this->title = 'Редактировать задачу';
 
 <?= Html::submitButton('Изменить', ['class' => 'btn btn-primary']) ?>
 
-<button class="btn btn-danger delete-task-btn" data-task-id="<?= $task->getId() ?>">Удалить</button>
+<?php if(!$task->hasChildren() || Yii::$app->user->isManager($task->getProjectId())): ?>
+    <button class="btn btn-danger delete-task-btn" data-task-id="<?= $task->getId() ?>">Удалить</button>
+<?php endif; ?>
 
 <?php ActiveForm::end() ?>

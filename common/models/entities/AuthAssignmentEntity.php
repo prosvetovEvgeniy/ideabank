@@ -4,6 +4,7 @@ namespace common\models\entities;
 
 use common\models\interfaces\IEntity;
 use common\models\repositories\user\UserRepository;
+use yii\helpers\Html;
 
 /**
  * Class AuthAssignmentEntity
@@ -50,9 +51,13 @@ class AuthAssignmentEntity implements IEntity
 
 
     /**
+     * @param bool $encode
      * @return string
      */
-    public function getItemName() { return $this->itemName; }
+    public function getItemName(bool $encode = false)
+    {
+        return ($encode) ? Html::encode($this->itemName) : $this->itemName;
+    }
 
     /**
      * @return int

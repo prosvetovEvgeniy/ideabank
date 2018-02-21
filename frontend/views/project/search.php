@@ -40,7 +40,7 @@ $this->title = 'Поиск';
                             'attribute' => 'name',
                             'header' => 'Название',
                             'value' => function(ProjectEntity $project) {
-                                return Html::a($project->getName(), ['/project/view/', 'id' => $project->getId()]);
+                                return Html::a($project->getName(true), ['/project/view/', 'id' => $project->getId()]);
                             },
                             'format' => 'html'
                         ],
@@ -48,14 +48,14 @@ $this->title = 'Поиск';
                             'attribute' => 'companyName',
                             'header' => 'Название компании',
                             'value' => function(ProjectEntity $project) {
-                                return $project->getCompany()->getName();
+                                return $project->getCompany()->getName(true);
                             },
                         ],
                         [
                             'attribute' => 'description',
                             'header' => 'Описание',
                             'value' => function(ProjectEntity $project) {
-                                return $project->getDescription();
+                                return $project->getDescription(true);
                             },
                             'format' => 'html'
                         ],

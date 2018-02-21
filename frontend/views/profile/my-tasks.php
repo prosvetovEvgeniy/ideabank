@@ -33,14 +33,14 @@ $this->title = 'Мои задачи';
                 [
                     'header' => 'Задача',
                     'value' => function(TaskEntity $task) {
-                        return Html::a($task->getTitle(),['/task/view', 'id' => $task->getId()]);
+                        return Html::a($task->getTitle(true),['/task/view', 'id' => $task->getId()]);
                     },
                     'format' => 'html'
                 ],
                 [
                     'header' => 'Проект',
                     'value' => function(TaskEntity $task) {
-                        return $task->getProject()->getName();
+                        return $task->getProject()->getName(true);
                     },
                     'format' => 'html'
                 ],

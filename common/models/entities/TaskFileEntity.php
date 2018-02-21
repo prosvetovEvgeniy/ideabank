@@ -76,14 +76,22 @@ class TaskFileEntity implements IEntity
     public function getTaskId() { return $this->taskId; }
 
     /**
+     * @param bool $encode
      * @return string
      */
-    public function getHashName() { return $this->hashName; }
+    public function getHashName(bool $encode = false)
+    {
+        return ($encode) ? Html::encode($this->hashName) : $this->hashName;
+    }
 
     /**
+     * @param bool $encode
      * @return string
      */
-    public function getOriginalName() { return $this->originalName; }
+    public function getOriginalName(bool $encode = false)
+    {
+        return ($encode) ? Html::encode($this->originalName) : $this->originalName;
+    }
 
     /**
      * @return int|null
@@ -189,8 +197,6 @@ class TaskFileEntity implements IEntity
      */
     public function isImage()
     {
-        $mimeType = $this->getMimeType();
-
-        return (strpos($mimeType, 'image') !== false) ? true : false ;
+        return (strpos($this->getMimeType(), 'image') !== false) ? true : false ;
     }
 }

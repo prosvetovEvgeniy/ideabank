@@ -30,7 +30,7 @@ $this->title = 'Проекты';
         <div class="col-lg-3">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <?= Html::a(HTML::encode($project->getName()), ['project/view', 'id' => $project->getId()]) ?>
+                    <?= Html::a(HTML::encode($project->getName(true)), ['project/view', 'id' => $project->getId()]) ?>
                     <?= RoleViewWidget::widget(['participant' => $participant]) ?>
                 </div>
                 <?php if($participant->getApproved() || $project->getDefaultVisibilityArea() === ProjectEntity::VISIBILITY_AREA_ALL): ?>

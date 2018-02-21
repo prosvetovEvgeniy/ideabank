@@ -28,7 +28,7 @@ SubMenuAsset::register($this);
                     <tr class="dialog-row" onclick="window.location.href='/message/chat?companionId=<?= $companion->getId() ?>'; return false"
                         data-companion-id="<?= $companion->getId() ?>">
                         <td><i class="glyphicon glyphicon-user"></i></td>
-                        <td class="message-content"><p><?= $companion->getUsername() ?></p></td>
+                        <td class="message-content"><p><?= $companion->getUsername(true) ?></p></td>
                     </tr>
                 <?php endforeach; ?>
 

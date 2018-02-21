@@ -4,7 +4,6 @@ namespace common\models\builders;
 
 use common\models\activerecords\TaskFile;
 use common\models\entities\TaskFileEntity;
-use yii\helpers\Html;
 
 class TaskFileEntityBuilder
 {
@@ -26,7 +25,7 @@ class TaskFileEntityBuilder
     {
         $model->task_id = $taskFile->getTaskId();
         $model->hash_name = $taskFile->getHashName();
-        $model->original_name = Html::encode($taskFile->getOriginalName());
+        $model->original_name = $taskFile->getOriginalName();
     }
 
     /**
@@ -35,8 +34,14 @@ class TaskFileEntityBuilder
      */
     public function buildEntity(TaskFile $model)
     {
-        return new TaskFileEntity($model->task_id, $model->hash_name, $model->original_name, $model->id,
-                                  $model->created_at, $model->deleted);
+        return new TaskFileEntity(
+            $model->task_id, 
+            $model->hash_name, 
+            $model->original_name, 
+            $model->id,
+            $model->created_at, 
+            $model->deleted
+        );
     }
 
     /**

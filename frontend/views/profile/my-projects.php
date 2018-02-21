@@ -40,7 +40,7 @@ $this->title = 'Мои проекты';
                         'attribute' => 'company',
                         'header' => 'Компания',
                         'value' => function(ParticipantEntity $participant) {
-                            return $participant->getCompany()->getName();
+                            return $participant->getCompany()->getName(true);
                         },
                         'format' => 'html'
                     ],
@@ -48,7 +48,7 @@ $this->title = 'Мои проекты';
                         'attribute' => 'project',
                         'header' => 'Проект',
                         'value' => function(ParticipantEntity $participant) {
-                            return $participant->getProject()->getName();
+                            return $participant->getProject()->getName(true);
                         },
                         'format' => 'html'
                     ],

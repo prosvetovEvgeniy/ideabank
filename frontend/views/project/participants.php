@@ -77,7 +77,7 @@ ProjectParticipantsAsset::register($this);
                     'attribute' => 'username',
                     'header' => 'Логин',
                     'value' => function(ParticipantEntity $participant) {
-                        return Html::a($participant->getUser()->getUsername(), ['/profile/view', 'id' => $participant->getUser()->getId()]);
+                        return Html::a($participant->getUser()->getUsername(true), ['/profile/view', 'id' => $participant->getUser()->getId()]);
                     },
                     'format' => 'html'
                 ],

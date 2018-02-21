@@ -8,6 +8,7 @@ use common\models\repositories\comment\CommentRepository;
 use common\models\repositories\task\TaskRepository;
 use common\models\repositories\user\UserRepository;
 use Yii;
+use yii\helpers\Html;
 
 /**
  * Class CommentEntity
@@ -126,9 +127,13 @@ class CommentEntity implements IEntity
     public function getSenderId() { return $this->senderId; }
 
     /**
+     * @param bool $encode
      * @return string
      */
-    public function getContent() { return $this->content; }
+    public function getContent(bool $encode = false)
+    {
+        return ($encode) ? Html::encode($this->content) : $this->content;
+    }
 
     /**
      * @return int | null

@@ -28,7 +28,7 @@ ChatAsset::register($this);
         <div class="chat-block">
             <div class="chat-header">
                 <?= Html::img($companion->getAvatarAlias(), ['class' => 'comment-avatar']) ?>
-                <?= Html::a($companion->getUsername(), ['/profile/view', 'id' => $companion->getId()], ['class' => 'companion-link']) ?>
+                <?= Html::a($companion->getUsername(true), ['/profile/view', 'id' => $companion->getId(true)], ['class' => 'companion-link']) ?>
                 <button type="button" class="btn btn-outline-danger">Удалить диалог</button>
             </div>
             <div class="chat">
@@ -44,7 +44,7 @@ ChatAsset::register($this);
                             }
                         ?>
                         <div class="chat-message-content">
-                            <p><?= $message->getContent() ?></p>
+                            <p><?= $message->getContent(true) ?></p>
                         </div>
                         <div class="message-date">
                             <span><?= $message->getCreationDate() ?></span>
