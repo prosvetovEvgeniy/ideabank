@@ -5,6 +5,10 @@ namespace common\models\builders;
 use common\models\activerecords\CommentView;
 use common\models\entities\CommentEntity;
 
+/**
+ * Class CommentViewEntityBuilder
+ * @package common\models\builders
+ */
 class CommentViewEntityBuilder
 {
     /**
@@ -21,25 +25,43 @@ class CommentViewEntityBuilder
      */
     public function buildEntity(CommentView $model)
     {
-        $userEntity = UserEntityBuilder::instance()->buildEntity($model->user);
+        $sender = null;
+        $parent = null;
+        $task = null;
+        $commentLikes = null;
 
-        //если у комментария нет родителя
-        $parentCommentEntity = ($model->parent) ? CommentEntityBuilder::instance()->buildEntity($model->parent) : null;
+        if ($model->isRelationPopulated('sender')) {
+            $sender = ($model->sender) ? UserEntityBuilder::instance()->buildEntity($model->sender) : null;
+        }
+
+        if ($model->isRelationPopulated('parent')) {
+            $parent = ($model->parent) ? CommentEntityBuilder::instance()->buildEntity($model->parent) : null;
+        }
+
+        if ($model->isRelationPopulated('task')) {
+            $task = ($model->task) ? TaskEntityBuilder::instance()->buildEntity($model->task) : null;
+        }
+
+        if ($model->isRelationPopulated('commentLikes')) {
+            $commentLikes = ($model->commentLikes) ? CommentLikeEntityBuilder::instance()->buildEntities($model->commentLikes) : null;
+        }
 
         return new CommentEntity(
-            $model->task_id, 
+            $model->task_id,
             $model->sender_id,
-            $model->content, 
+            $model->content,
             $model->parent_id,
-            $model->private, 
-            $model->id, 
-            $model->created_at, 
+            $model->private,
+            $model->id,
+            $model->created_at,
             $model->updated_at,
-            $model->deleted, 
-            $model->likes_amount, 
+            $model->deleted,
+            $sender,
+            $parent,
+            $task,
+            $commentLikes,
+            $model->likes_amount,
             $model->dislikes_amount,
-            $userEntity, 
-            $parentCommentEntity, 
             $model->current_user_liked_it,
             $model->current_user_disliked_it
         );

@@ -21,6 +21,8 @@ use yii\db\ActiveRecord;
  * @property integer created_at
  * @property integer updated_at
  * @property boolean deleted
+ *
+ * @property Participant[] $participants
  */
 class Users extends ActiveRecord
 {
@@ -46,5 +48,13 @@ class Users extends ActiveRecord
                 'value' => time(),
             ],
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParticipants()
+    {
+        return $this->hasMany(Participant::className(), ['user_id' => 'id']);
     }
 }

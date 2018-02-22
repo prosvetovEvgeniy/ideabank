@@ -3,7 +3,6 @@
 namespace common\models\entities;
 
 use common\models\interfaces\IEntity;
-use common\models\repositories\user\UserRepository;
 use yii\helpers\Html;
 
 /**
@@ -14,7 +13,7 @@ use yii\helpers\Html;
  * @property int    $userId
  * @property int    $createdAt
  *
- * @property UserEntity $user
+ * @property ParticipantEntity $user
  */
 class AuthAssignmentEntity implements IEntity
 {
@@ -30,7 +29,7 @@ class AuthAssignmentEntity implements IEntity
     protected $createdAt;
 
     //кеш связанных сущностей
-    protected $user;
+    protected $participant;
 
 
     /**
@@ -38,12 +37,19 @@ class AuthAssignmentEntity implements IEntity
      * @param string $itemName
      * @param int $userId
      * @param int $createdAt
+     * @param ParticipantEntity|null $participant
      */
-    public function __construct(string $itemName, int $userId, int $createdAt)
-    {
+    public function __construct(
+        string $itemName,
+        int $userId,
+        int $createdAt,
+        ParticipantEntity $participant = null
+    ) {
         $this->itemName = $itemName;
         $this->userId = $userId;
         $this->createdAt = $createdAt;
+
+        $this->user = $participant;
     }
 
 
@@ -92,7 +98,7 @@ class AuthAssignmentEntity implements IEntity
     public function getUser()
     {
         if($this->user === null) {
-            $this->user = UserRepository::instance()->findOne(['id' => $this->getUserId()]);
+            $this->user = ParticipantEntity::instance()->findOne(['id' => $this->getUserId()]);
         }
 
         return $this->user;

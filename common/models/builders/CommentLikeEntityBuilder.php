@@ -6,6 +6,10 @@ namespace common\models\builders;
 use common\models\activerecords\CommentLike;
 use common\models\entities\CommentLikeEntity;
 
+/**
+ * Class CommentLikeEntityBuilder
+ * @package common\models\builders
+ */
 class CommentLikeEntityBuilder
 {
     /**
@@ -37,13 +41,26 @@ class CommentLikeEntityBuilder
      */
     public function buildEntity(CommentLike $model)
     {
+        $user = null;
+        $comment = null;
+
+        if ($model->isRelationPopulated('sender')) {
+            $user = ($model->user) ? UserEntityBuilder::instance()->buildEntity($model->user) : null;
+        }
+
+        if ($model->isRelationPopulated('parent')) {
+            $comment = ($model->comment) ? CommentEntityBuilder::instance()->buildEntity($model->comment) : null;
+        }
+
         return new CommentLikeEntity(
             $model->comment_id,
             $model->user_id, 
             $model->liked,
             $model->id, 
             $model->created_at, 
-            $model->updated_at
+            $model->updated_at,
+            $user,
+            $comment
         );
     }
 

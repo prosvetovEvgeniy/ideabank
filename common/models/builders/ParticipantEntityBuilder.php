@@ -5,6 +5,10 @@ namespace common\models\builders;
 use common\models\activerecords\Participant;
 use common\models\entities\ParticipantEntity;
 
+/**
+ * Class ParticipantEntityBuilder
+ * @package common\models\builders
+ */
 class ParticipantEntityBuilder
 {
     /**
@@ -40,10 +44,26 @@ class ParticipantEntityBuilder
      */
     public function buildEntity(Participant $model)
     {
-        $project = ($model->project) ? ProjectEntityBuilder::instance()->buildEntity($model->project) : null ;
-        $user = ($model->user) ? UserEntityBuilder::instance()->buildEntity($model->user) : null ;
-        $company = ($model->company) ? CompanyEntityBuilder::instance()->buildEntity($model->company) : null ;
-        $authAssignment = ($model->authAssignment) ? AuthAssignmentEntityBuilder::instance()->buildEntity($model->authAssignment) : null;
+        $project = null;
+        $user = null ;
+        $company = null;
+        $authAssignment = null;
+
+        if ($model->isRelationPopulated('project')) {
+            $project = ($model->project) ? ProjectEntityBuilder::instance()->buildEntity($model->project) : null;
+        }
+
+        if ($model->isRelationPopulated('user')) {
+            $user = ($model->user) ? UserEntityBuilder::instance()->buildEntity($model->user) : null;
+        }
+
+        if ($model->isRelationPopulated('company')) {
+            $company = ($model->company) ? CompanyEntityBuilder::instance()->buildEntity($model->company) : null;
+        }
+
+        if ($model->isRelationPopulated('authAssignment')) {
+            $authAssignment = ($model->authAssignment) ? AuthAssignmentEntityBuilder::instance()->buildEntity($model->authAssignment) : null;
+        }
 
         return new ParticipantEntity(
             $model->user_id, 

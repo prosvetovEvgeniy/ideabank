@@ -83,7 +83,8 @@ class TaskController extends Controller
             'repositoryInstance' => CommentViewRepository::instance(),
             'pagination' => [
                 'pageSize' => CommentViewRepository::COMMENTS_PER_PAGE
-            ]
+            ],
+            'with' => ['sender', 'parent', 'task']
         ]);
 
         $model = new CommentCreateForm();
@@ -97,7 +98,6 @@ class TaskController extends Controller
             'task'         => $task,
             'dataProvider' => $dataProvider,
             'model'        => $model,
-            'isManager'    => Yii::$app->user->isManager($task->getProjectId())
         ]);
     }
 

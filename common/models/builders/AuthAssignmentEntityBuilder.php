@@ -5,6 +5,11 @@ namespace common\models\builders;
 use common\models\activerecords\AuthAssignment;
 use common\models\entities\AuthAssignmentEntity;
 
+/**
+ * Class AuthAssignmentEntityBuilder
+ * @package common\models\builders
+ *
+ */
 class AuthAssignmentEntityBuilder
 {
     /**
@@ -35,10 +40,18 @@ class AuthAssignmentEntityBuilder
      */
     public function buildEntity(AuthAssignment $model)
     {
+        $user = null;
+
+        if($model->isRelationPopulated('user'))
+        {
+            $user = ($model->user) ? ParticipantEntityBuilder::instance()->buildEntity($user) : null;
+        }
+
         return new AuthAssignmentEntity(
             $model->item_name, 
             $model->user_id, 
-            $model->created_at
+            $model->created_at,
+            $user
         );
     }
 

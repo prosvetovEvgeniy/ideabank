@@ -150,7 +150,7 @@ class CommentEntityTest extends \Codeception\Test\Unit
     {
         $comment = CommentRepository::instance()->findOne(['id' => 1]);
 
-        $this->assertEquals(get_class($comment->getUser()), UserEntity::class);
+        $this->assertEquals(get_class($comment->getSender()), UserEntity::class);
     }
 
     public function testGetCommentLikesCheckOnArray()

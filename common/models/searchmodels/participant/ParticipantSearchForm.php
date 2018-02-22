@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models\searchmodels\project;
+namespace common\models\searchmodels\participant;
 
 use common\components\dataproviders\EntityDataProvider;
 use common\models\entities\ParticipantEntity;
@@ -82,7 +82,8 @@ class ParticipantSearchForm extends Model implements ISearchEntityModel
             'repositoryInstance' => ParticipantViewRepository::instance(),
             'pagination' => [
                 'pageSize' => $pageSize
-            ]
+            ],
+            'with' => ['user', 'project', 'authAssignment']
         ]);
     }
 
@@ -99,19 +100,19 @@ class ParticipantSearchForm extends Model implements ISearchEntityModel
         ];
 
         if ($this->username) {
-            array_push($condition, ['like', 'lower(username)', strtolower($this->username)]);
+            array_push($condition, ['like', 'lower(username)', mb_strtolower($this->username)]);
         }
 
         if ($this->firstName) {
-            array_push($condition, ['like', 'lower(first_name)', strtolower($this->firstName)]);
+            array_push($condition, ['like', 'lower(first_name)', mb_strtolower($this->firstName)]);
         }
 
         if ($this->secondName) {
-            array_push($condition, ['like', 'lower(second_name)', strtolower($this->secondName)]);
+            array_push($condition, ['like', 'lower(second_name)', mb_strtolower($this->secondName)]);
         }
 
         if ($this->email) {
-            array_push($condition, ['like', 'lower(email)', strtolower($this->email)]);
+            array_push($condition, ['like', 'lower(email)', mb_strtolower($this->email)]);
         }
 
         if ($this->phone) {

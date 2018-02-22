@@ -59,11 +59,22 @@ class CommentLikeRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
+     * @param array $with
      * @return CommentLikeEntity[]|\common\models\interfaces\IEntity[]
      */
-    public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
-    {
-        $models = CommentLike::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
+    public function findAll(
+        array $condition,
+        int $limit = 20,
+        int $offset = null,
+        string $orderBy = null,
+        array $with = []
+    ) {
+        $models = CommentLike::find()->where($condition)
+                                     ->with($with)
+                                     ->offset($offset)
+                                     ->limit($limit)
+                                     ->orderBy($orderBy)
+                                     ->all();
 
         return $this->builderBehavior->buildEntities($models);
     }

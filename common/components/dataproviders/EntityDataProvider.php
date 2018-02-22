@@ -12,12 +12,14 @@ use yii\data\BaseDataProvider;
  * @property array       $condition
  * @property IRepository $repositoryInstance
  * @property string      $orderBy
+ * @property array       $with
  */
 class EntityDataProvider extends BaseDataProvider
 {
     public $condition;
     public $repositoryInstance;
     public $orderBy = 'id ASC';
+    public $with = [];
 
     /**
      * @return array|\common\models\interfaces\IEntity[]
@@ -37,7 +39,8 @@ class EntityDataProvider extends BaseDataProvider
         return $this->repositoryInstance->findAll($this->condition,
                                                   $pagination->getLimit(),
                                                   $pagination->getOffset(),
-                                                  $this->orderBy);
+                                                  $this->orderBy,
+                                                  $this->with);
 
     }
 

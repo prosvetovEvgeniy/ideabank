@@ -5,6 +5,10 @@ namespace common\models\builders;
 use common\models\activerecords\Message;
 use common\models\entities\MessageEntity;
 
+/**
+ * Class MessageEntityBuilder
+ * @package common\models\builders
+ */
 class MessageEntityBuilder
 {
     /**
@@ -37,8 +41,16 @@ class MessageEntityBuilder
      */
     public function buildEntity(Message $model)
     {
-        $self = UserEntityBuilder::instance()->buildEntity($model->self);
-        $companion = UserEntityBuilder::instance()->buildEntity($model->companion);
+        $self = null;
+        $companion = null;
+
+        if ($model->isRelationPopulated('self')) {
+            $self = ($model->self) ? UserEntityBuilder::instance()->buildEntity($model->self) : null;
+        }
+
+        if ($model->isRelationPopulated('companion')) {
+            $companion = ($model->companion) ? UserEntityBuilder::instance()->buildEntity($model->companion) : null;
+        }
 
         return new MessageEntity(
             $model->self_id, 
@@ -48,7 +60,8 @@ class MessageEntityBuilder
             $model->id, 
             $model->viewed, 
             $model->created_at, 
-            $model->deleted, $self,
+            $model->deleted,
+            $self,
             $companion
         );
     }

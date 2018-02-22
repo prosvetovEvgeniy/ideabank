@@ -44,10 +44,16 @@ class CompanionRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
+     * @param array $with
      * @return UserEntity[]|IEntity[]
      */
-    public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
-    {
+    public function findAll(
+        array $condition,
+        int $limit = 20,
+        int $offset = null,
+        string $orderBy = null,
+        array $with = []
+    ) {
         $companionIds = Message::find()->select('companion_id')
                                        ->where($condition )
                                        ->distinct('companion_id')
@@ -56,7 +62,9 @@ class CompanionRepository implements IRepository
                                        ->orderBy($orderBy)
                                        ->all();
 
-        $models = Users::find()->where(['in', 'id', ArrayHelper::getColumn($companionIds,'companion_id')])->all();
+        $models = Users::find()->where(['in', 'id', ArrayHelper::getColumn($companionIds,'companion_id')])
+                               ->with($with)
+                               ->all();
 
         return $this->builderBehavior->buildEntities($models);
     }

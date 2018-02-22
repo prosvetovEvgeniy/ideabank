@@ -57,13 +57,18 @@ class MessageRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
+     * @param array $with
      * @return MessageEntity[]|\common\models\interfaces\IEntity[]
      */
-    public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
-    {
+    public function findAll(
+        array $condition,
+        int $limit = 20,
+        int $offset = null,
+        string $orderBy = null,
+        array $with = []
+    ) {
         $models = Message::find()->where($condition)
-                                 ->with('self')
-                                 ->with('companion')
+                                 ->with($with)
                                  ->offset($offset)
                                  ->limit($limit)
                                  ->orderBy($orderBy)

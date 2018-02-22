@@ -18,8 +18,8 @@ use yii\db\ActiveRecord;
  * @property boolean $deleted
  *
  * @property Participant[] $participants
- * @property Company $company
- * @property Task[] $tasks
+ * @property Company       $company
+ * @property Task[]        $tasks
  */
 class Project extends ActiveRecord
 {
@@ -65,5 +65,29 @@ class Project extends ActiveRecord
             [['deleted'], 'boolean'],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Company::className(), 'targetAttribute' => ['company_id' => 'id']],
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParticipants()
+    {
+        return $this->hasMany(Participant::className(), ['project_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCompany()
+    {
+        return $this->hasOne(Company::className(), ['id' => 'company_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTasks()
+    {
+        return $this->hasMany(Task::className(), ['project_id' => 'id']);
     }
 }

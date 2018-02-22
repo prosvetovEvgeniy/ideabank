@@ -95,6 +95,7 @@ class UserEntity implements IEntity, IdentityInterface
      * @param int|null $createdAt
      * @param int|null $updatedAt
      * @param bool|null $deleted
+     * @param array|null $participants
      */
     public function __construct(
         string $username,
@@ -109,7 +110,8 @@ class UserEntity implements IEntity, IdentityInterface
         string $passwordResetToken = null,
         int $id = null, int $createdAt = null,
         int $updatedAt = null,
-        bool $deleted = null
+        bool $deleted = null,
+        array $participants = null
     ) {
         $this->id = $id;
         $this->username = $username;
@@ -136,6 +138,8 @@ class UserEntity implements IEntity, IdentityInterface
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->deleted = $deleted ?? false;
+
+        $this->participants = $participants;
     }
 
 

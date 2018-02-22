@@ -54,10 +54,16 @@ class CommentViewRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
+     * @param array $with
      * @return CommentEntity[]|\common\models\interfaces\IEntity[]
      */
-    public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
-    {
+    public function findAll(
+        array $condition,
+        int $limit = 20,
+        int $offset = null,
+        string $orderBy = null,
+        array $with = []
+    ) {
         /*
          * если пользователь не зарегистрирован, то он и не оставлял
          * комментарий => поле current_user_liked_it будет FALSE
@@ -66,15 +72,14 @@ class CommentViewRepository implements IRepository
          */
         $userId = Yii::$app->user->getId() ?? 'NULL';
 
+
         $models = CommentView::find()->addSelect('c.*')
                                      ->addSelect('(SELECT COUNT(*) FROM comment_like WHERE comment_id = c.id AND liked = TRUE) as likes_amount')
                                      ->addSelect('(SELECT COUNT(*) FROM comment_like WHERE comment_id = c.id AND liked = FALSE) as dislikes_amount')
                                      ->addSelect('EXISTS(SELECT id FROM comment_like WHERE comment_id = c.id AND liked = TRUE AND user_id = ' . $userId . ') as current_user_liked_it')
                                      ->addSelect('EXISTS(SELECT id FROM comment_like WHERE comment_id = c.id AND liked = FALSE AND user_id = ' . $userId . ') as current_user_disliked_it')
                                      ->from('comment c')
-                                     ->where($condition)
-                                     ->with('user')
-                                     ->with('parent');
+                                     ->where($condition);
 
         $task = TaskRepository::instance()->findOne(['id' => $condition['task_id']]);
 
@@ -86,7 +91,11 @@ class CommentViewRepository implements IRepository
             ]);
         }
 
-        $models = $models->orderBy($orderBy)->limit($limit)->offset($offset)->all();
+        $models = $models->with($with)
+                         ->orderBy($orderBy)
+                         ->limit($limit)
+                         ->offset($offset)
+                         ->all();
 
         return $this->builderBehavior->buildEntities($models);
     }

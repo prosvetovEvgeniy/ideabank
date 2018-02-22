@@ -5,6 +5,10 @@ namespace common\models\builders;
 use common\models\activerecords\TaskNotice;
 use common\models\entities\TaskNoticeEntity;
 
+/**
+ * Class TaskNoticeBuilder
+ * @package common\models\builders
+ */
 class TaskNoticeBuilder
 {
     /**
@@ -31,10 +35,23 @@ class TaskNoticeBuilder
      */
     public function buildEntity(TaskNotice $model)
     {
+        $notice = null;
+        $task = null;
+
+        if ($model->isRelationPopulated('notice')) {
+            $notice = ($model->notice) ? NoticeEntityBuilder::instance()->buildEntity($model->notice) : null;
+        }
+
+        if ($model->isRelationPopulated('task')) {
+            $task = ($model->task) ? TaskEntityBuilder::instance()->buildEntity($model->task) : null;
+        }
+
         return new TaskNoticeEntity(
             $model->task_id, 
             $model->notice_id, 
-            $model->id
+            $model->id,
+            $task,
+            $notice
         );
     }
 

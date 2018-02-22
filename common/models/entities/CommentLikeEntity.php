@@ -41,6 +41,8 @@ class CommentLikeEntity implements IEntity
      * @param int|null $id
      * @param int|null $createdAt
      * @param int|null $updatedAt
+     * @param UserEntity|null $user
+     * @param CommentEntity|null $comment
      */
     public function __construct(
         int $commentId,
@@ -48,7 +50,9 @@ class CommentLikeEntity implements IEntity
         bool $liked,
         int $id = null,
         int $createdAt = null,
-        int $updatedAt = null
+        int $updatedAt = null,
+        UserEntity $user = null,
+        CommentEntity $comment = null
     ) {
         $this->id = $id;
         $this->commentId = $commentId;
@@ -56,6 +60,9 @@ class CommentLikeEntity implements IEntity
         $this->liked = $liked;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+
+        $this->user = $user;
+        $this->comment = $comment;
     }
 
 

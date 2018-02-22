@@ -5,9 +5,12 @@ namespace common\models\builders;
 use common\models\activerecords\Users;
 use common\models\entities\UserEntity;
 
+/**
+ * Class UserEntityBuilder
+ * @package common\models\builders
+ */
 class UserEntityBuilder
-{
-    /**
+{/**
      * @return UserEntityBuilder
      */
     public static function instance()
@@ -39,6 +42,12 @@ class UserEntityBuilder
      */
     public function buildEntity(Users $model)
     {
+        $participants = null;
+
+        if ($model->isRelationPopulated('participants')) {
+            $participants = ($model->participants) ? ParticipantEntityBuilder::instance()->buildEntities($model->participants) : null;
+        }
+
         return new UserEntity(
             $model->username, 
             $model->password,
@@ -53,7 +62,8 @@ class UserEntityBuilder
             $model->id, 
             $model->created_at,
             $model->updated_at, 
-            $model->deleted
+            $model->deleted,
+            $participants
         );
     }
 

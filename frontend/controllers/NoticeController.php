@@ -34,7 +34,8 @@ class NoticeController extends Controller
                 'recipient_id' => Yii::$app->user->getId(),
             ],
             'repositoryInstance' => NoticeRepository::instance(),
-            'orderBy' => 'created_at DESC'
+            'orderBy' => 'created_at DESC',
+            'with' => ['sender']
         ]);
 
         return $this->render('index',[

@@ -32,12 +32,22 @@ class TaskNoticeEntity implements IEntity, INotice
      * @param int $taskId
      * @param int $noticeId
      * @param int|null $id
+     * @param TaskEntity|null $task
+     * @param NoticeEntity|null $notice
      */
-    public function __construct(int $taskId, int $noticeId, int $id = null)
-    {
+    public function __construct(
+        int $taskId,
+        int $noticeId,
+        int $id = null,
+        TaskEntity $task = null,
+        NoticeEntity $notice = null
+    ) {
         $this->id = $id;
         $this->taskId = $taskId;
         $this->noticeId = $noticeId;
+
+        $this->task = $task;
+        $this->notice = $notice;
     }
 
     /**

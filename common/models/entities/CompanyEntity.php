@@ -39,19 +39,26 @@ class CompanyEntity implements IEntity
      * @param int|null $createdAt
      * @param int|null $updatedAt
      * @param bool|null $deleted
+     * @param array|null $projects
+     * @param array|null $participants
      */
     public function __construct(
         string $name,
         int $id = null,
         int $createdAt = null,
         int $updatedAt = null,
-        bool $deleted = null
+        bool $deleted = null,
+        array $projects = null,
+        array $participants = null
     ) {
         $this->id = $id;
         $this->name = $name;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->deleted = $deleted;
+
+        $this->projects = $projects;
+        $this->participants = $participants;
     }
 
 

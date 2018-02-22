@@ -55,11 +55,22 @@ class CommentNoticeRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
+     * @param array $with
      * @return CommentNoticeEntity[]|IEntity[]|INotice[]
      */
-    public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
-    {
-        $models = CommentNotice::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
+    public function findAll(
+        array $condition,
+        int $limit = 20,
+        int $offset = null,
+        string $orderBy = null,
+        array $with = []
+    ) {
+        $models = CommentNotice::find()->where($condition)
+                                       ->with($with)
+                                       ->offset($offset)
+                                       ->limit($limit)
+                                       ->orderBy($orderBy)
+                                       ->all();
 
         return $this->builderBehavior->buildEntities($models);
     }

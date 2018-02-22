@@ -5,6 +5,10 @@ namespace common\models\builders;
 use common\models\activerecords\TaskLike;
 use common\models\entities\TaskLikeEntity;
 
+/**
+ * Class TaskLikeEntityBuilder
+ * @package common\models\builders
+ */
 class TaskLikeEntityBuilder
 {
     /**
@@ -36,13 +40,26 @@ class TaskLikeEntityBuilder
      */
     public function buildEntity(TaskLike $model)
     {
+        $task = null;
+        $user = null;
+
+        if ($model->isRelationPopulated('task')) {
+            $task = ($model->task) ? TaskEntityBuilder::instance()->buildEntity($model->task) : null;
+        }
+
+        if ($model->isRelationPopulated('user')) {
+            $user = ($model->user) ? UserEntityBuilder::instance()->buildEntity($model->user) : null;
+        }
+
         return new TaskLikeEntity(
             $model->task_id, 
             $model->user_id, 
             $model->liked,
             $model->id,
             $model->created_at, 
-            $model->updated_at
+            $model->updated_at,
+            $task,
+            $user
         );
     }
 

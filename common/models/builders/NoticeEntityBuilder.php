@@ -5,6 +5,10 @@ namespace common\models\builders;
 use common\models\activerecords\Notice;
 use common\models\entities\NoticeEntity;
 
+/**
+ * Class NoticeEntityBuilder
+ * @package common\models\builders
+ */
 class NoticeEntityBuilder
 {
     /**
@@ -35,7 +39,16 @@ class NoticeEntityBuilder
      */
     public function buildEntity(Notice $model)
     {
-        $sender = UserEntityBuilder::instance()->buildEntity($model->sender);
+        $sender = null;
+        $recipient = null;
+
+        if ($model->isRelationPopulated('sender')) {
+            $sender = ($model->sender) ? UserEntityBuilder::instance()->buildEntity($model->sender) : null;
+        }
+
+        if ($model->isRelationPopulated('recipient')) {
+            $recipient = ($model->recipient) ? UserEntityBuilder::instance()->buildEntity($model->recipient) : null;
+        }
 
         return new NoticeEntity(
             $model->recipient_id,
@@ -44,7 +57,8 @@ class NoticeEntityBuilder
             $model->sender_id,
             $model->id, 
             $model->created_at, 
-            $sender
+            $sender,
+            $recipient
         );
     }
 

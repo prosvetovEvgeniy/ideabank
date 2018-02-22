@@ -5,10 +5,9 @@ namespace frontend\controllers;
 use common\components\dataproviders\EntityDataProvider;
 use common\models\repositories\participant\ParticipantRepository;
 use common\models\repositories\project\ProjectRepository;
-use frontend\models\project\JoinToProjectModel;
 use yii\filters\AccessControl;
 use yii\web\BadRequestHttpException;
-use common\models\searchmodels\project\ParticipantSearchForm;
+use common\models\searchmodels\participant\ParticipantSearchForm;
 use yii\web\Controller;
 use Yii;
 

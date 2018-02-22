@@ -5,6 +5,10 @@ namespace common\models\builders;
 use common\models\activerecords\Project;
 use common\models\entities\ProjectEntity;
 
+/**
+ * Class ProjectEntityBuilder
+ * @package common\models\builders
+ */
 class ProjectEntityBuilder
 {
     /**
@@ -35,6 +39,22 @@ class ProjectEntityBuilder
      */
     public function buildEntity(Project $model)
     {
+        $company = null;
+        $tasks = null;
+        $participants = null;
+
+        if ($model->isRelationPopulated('company')) {
+            $company = ($model->company) ? CompanyEntityBuilder::instance()->buildEntity($model->company) : null;
+        }
+
+        if ($model->isRelationPopulated('tasks')) {
+            $tasks = ($model->tasks) ? TaskEntityBuilder::instance()->buildEntities($model->tasks) : null;
+        }
+
+        if ($model->isRelationPopulated('participants')) {
+            $participants = ($model->participants) ? ParticipantEntityBuilder::instance()->buildEntities($model->participants) : null;
+        }
+
         return new ProjectEntity(
             $model->name,
             $model->company_id, 
@@ -43,7 +63,10 @@ class ProjectEntityBuilder
             $model->id,
             $model->created_at,
             $model->updated_at, 
-            $model->deleted
+            $model->deleted,
+            $company,
+            $tasks,
+            $participants
         );
     }
 

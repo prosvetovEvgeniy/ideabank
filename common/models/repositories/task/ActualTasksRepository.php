@@ -34,14 +34,20 @@ class ActualTasksRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
+     * @param array $with
      * @return TaskEntity[]|IEntity[]
      */
-    public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
-    {
+    public function findAll(
+        array $condition,
+        int $limit = 20,
+        int $offset = null,
+        string $orderBy = null,
+        array $with = []
+    ) {
         $models = Task::find()->where(['visibility_area' => TaskEntity::VISIBILITY_AREA_ALL])
                               ->andWhere(['deleted' => false])
                               ->andWhere('id IN (SELECT task_id FROM comment WHERE private = FALSE AND deleted = FALSE GROUP BY task_id ORDER BY COUNT(*) DESC)')
-                              ->with('project')
+                              ->with($with)
                               ->all();
 
         return $this->builderBehavior->buildEntities($models);

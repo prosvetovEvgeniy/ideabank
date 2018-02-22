@@ -47,7 +47,8 @@ class SiteController extends Controller
             'repositoryInstance' => ActualTasksRepository::instance(),
             'pagination' => [
                 'pageSizeLimit' => [TaskEntity::ACTUAL_TASKS_COUNT, TaskEntity::ACTUAL_TASKS_COUNT]
-            ]
+            ],
+            'with' => ['project']
         ]);
 
         $lastTasksDataProvider = new EntityDataProvider([
@@ -60,7 +61,8 @@ class SiteController extends Controller
             'pagination' => [
                 'pageSizeLimit' => [TaskEntity::ACTUAL_TASKS_COUNT, TaskEntity::ACTUAL_TASKS_COUNT]
             ],
-            'orderBy' => 'created_at DESC'
+            'orderBy' => 'created_at DESC',
+            'with' => ['project']
         ]);
 
         return $this->render('index', [

@@ -11,6 +11,7 @@ use yii\db\ActiveRecord;
  * @property integer $id
  * @property integer $comment_id;
  * @property integer $notice_id
+ *
  * @property Comment $comment
  * @property Notice  $notice
  */

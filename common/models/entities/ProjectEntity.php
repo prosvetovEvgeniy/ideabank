@@ -55,12 +55,15 @@ class ProjectEntity implements IEntity
      * ProjectEntity constructor.
      * @param string $name
      * @param int $companyId
-     * @param string $description
+     * @param string|null $description
      * @param int|null $defaultVisibilityArea
      * @param int|null $id
      * @param int|null $createdAt
      * @param int|null $updatedAt
      * @param bool|null $deleted
+     * @param CompanyEntity|null $company
+     * @param TaskEntity[]|null $tasks
+     * @param ParticipantEntity[]|null $participant
      */
     public function __construct(
         string $name,
@@ -70,7 +73,10 @@ class ProjectEntity implements IEntity
         int $id = null,
         int $createdAt = null,
         int $updatedAt = null,
-        bool $deleted = null
+        bool $deleted = null,
+        CompanyEntity $company = null,
+        array $tasks = null,
+        array $participant = null
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -80,6 +86,10 @@ class ProjectEntity implements IEntity
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->deleted = $deleted;
+
+        $this->company = $company;
+        $this->tasks = $tasks;
+        $this->participants = $participant;
 
         $this->taskRepository = new TaskRepository();
     }

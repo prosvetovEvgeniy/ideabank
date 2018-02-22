@@ -26,7 +26,7 @@ use yii\helpers\Html;
 
  * @property CommentEntity       $parent
  * @property TaskEntity          $task
- * @property UserEntity          $user
+ * @property UserEntity          $sender
  * @property CommentLikeEntity[] $commentLikes
  *
  * @property int $likesAmount
@@ -50,9 +50,9 @@ class CommentEntity implements IEntity
     protected $deleted;
 
     //кеш связанных сущностей
+    protected $sender;
     protected $parent;
     protected $task;
-    protected $user;
     protected $commentLikes;
 
     /**
@@ -70,15 +70,17 @@ class CommentEntity implements IEntity
      * @param int $senderId
      * @param string $content
      * @param int|null $parentId
-     * @param bool|null $private
+     * @param bool $private
      * @param int|null $id
      * @param int|null $createdAt
      * @param int|null $updatedAt
      * @param bool $deleted
+     * @param UserEntity|null $sender
+     * @param CommentEntity|null $parent
+     * @param array|null $commentLikes
+     * @param TaskEntity|null $task
      * @param int $likesAmount
      * @param int $dislikesAmount
-     * @param UserEntity|null $user
-     * @param CommentEntity|null $parent
      * @param bool|null $currentUserLikedIt
      * @param bool|null $currentUserDislikedIt
      */
@@ -92,10 +94,12 @@ class CommentEntity implements IEntity
         int $createdAt = null,
         int $updatedAt = null,
         bool $deleted = false,
+        UserEntity $sender = null,
+        CommentEntity $parent = null,
+        TaskEntity $task = null,
+        array $commentLikes = null,
         int $likesAmount = 0,
         int $dislikesAmount = 0,
-        UserEntity $user = null,
-        CommentEntity $parent = null,
         bool $currentUserLikedIt = null,
         bool $currentUserDislikedIt = null
     ) {
@@ -109,11 +113,13 @@ class CommentEntity implements IEntity
         $this->updatedAt = $updatedAt;
         $this->deleted = $deleted;
 
+        $this->sender = $sender;
+        $this->parent = $parent;
+        $this->task = $task;
+        $this->commentLikes = $commentLikes;
+
         $this->likesAmount = $likesAmount;
         $this->dislikesAmount = $dislikesAmount;
-
-        $this->user = $user;
-        $this->parent = $parent;
 
         $this->currentUserLikedIt = $currentUserLikedIt;
         $this->currentUserDislikedIt = $currentUserDislikedIt;
@@ -236,13 +242,13 @@ class CommentEntity implements IEntity
     /**
      * @return UserEntity|null
      */
-    public function getUser()
+    public function getSender()
     {
-        if ($this->user === null) {
-            $this->user = UserRepository::instance()->findOne(['id' => $this->getSenderId()]);
+        if ($this->sender === null) {
+            $this->sender = UserRepository::instance()->findOne(['id' => $this->getSenderId()]);
         }
 
-        return $this->user;
+        return $this->sender;
     }
 
     /**

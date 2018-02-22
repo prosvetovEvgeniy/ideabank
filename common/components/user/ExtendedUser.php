@@ -17,7 +17,7 @@ class ExtendedUser extends User
      * @param string $permissionName
      * @param int $projectId
      * @param int|null $userId
-     * @return bool|mixed
+     * @return bool
      */
     public function is(string $permissionName, int $projectId, int $userId = null)
     {
@@ -37,8 +37,8 @@ class ExtendedUser extends User
 
         $cacheValue = $cache->get($key);
 
-        if($cacheValue) {
-            return $cacheValue;
+        if ($cacheValue !== false) {
+            return (bool) $cacheValue;
         }
 
         $participant = ParticipantRepository::instance()->findOne([
@@ -50,13 +50,16 @@ class ExtendedUser extends User
             return false;
         }
 
+        /**
+         * @var bool $access
+         */
         $access = $this->getAccessChecker()->checkAccess($participant->getId(), $permissionName);
 
         Yii::$app->cache->set([
             $userId,
             $projectId,
             $permissionName
-        ], $access);
+        ], (int) $access);
 
         return $access;
     }

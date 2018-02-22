@@ -5,6 +5,10 @@ namespace common\models\builders;
 use common\models\activerecords\TaskFile;
 use common\models\entities\TaskFileEntity;
 
+/**
+ * Class TaskFileEntityBuilder
+ * @package common\models\builders
+ */
 class TaskFileEntityBuilder
 {
     /**
@@ -34,13 +38,20 @@ class TaskFileEntityBuilder
      */
     public function buildEntity(TaskFile $model)
     {
+        $task = null;
+
+        if ($model->isRelationPopulated('task')) {
+            $task = ($model->task) ? TaskEntityBuilder::instance()->buildEntity($model->task) : null;
+        }
+
         return new TaskFileEntity(
             $model->task_id, 
             $model->hash_name, 
             $model->original_name, 
             $model->id,
             $model->created_at, 
-            $model->deleted
+            $model->deleted,
+            $task
         );
     }
 

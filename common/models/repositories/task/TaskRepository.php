@@ -64,15 +64,22 @@ class TaskRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
+     * @param array $with
      * @return TaskEntity[]|IEntity[]
      */
-    public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
-    {
+    public function findAll(
+        array $condition,
+        int $limit = 20,
+        int $offset = null,
+        string $orderBy = null,
+        array $with = []
+    ) {
         $models = Task::find()->where($condition)
+                              ->with($with)
                               ->offset($offset)
                               ->limit($limit)
                               ->orderBy($orderBy)
-                              ->with()
+                              ->with($with)
                               ->all();
 
         return $this->builderBehavior->buildEntities($models);

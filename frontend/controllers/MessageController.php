@@ -42,7 +42,8 @@ class MessageController extends Controller
             'pagination' => [
                 'pageSize' => 20
             ],
-            'orderBy' => 'id DESC'
+            'orderBy' => 'id DESC',
+            'with' => ['companion']
         ]);
 
         return $this->render('dialog', ['dataProvider' => $dataProvider]);

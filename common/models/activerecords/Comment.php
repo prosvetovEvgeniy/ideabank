@@ -18,10 +18,8 @@ use yii\db\ActiveRecord;
  * @property integer $updated_at
  * @property boolean $deleted
  *
- * @property Comment $comment
- * @property Comment[] $comments
  * @property Task $task
- * @property Users $user
+ * @property Users $sender
  * @property Comment $parent
  * @property CommentLike[] $commentLikes
  *
@@ -65,18 +63,35 @@ class Comment extends ActiveRecord
         ];
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getParent()
     {
         return $this->hasOne(Comment::className(), ['id' => 'parent_id']);
     }
 
-    public function getUser()
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSender()
     {
         return $this->hasOne(Users::className(), ['id' => 'sender_id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getCommentLikes()
     {
         return $this->hasMany(CommentLike::className(), ['comment_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTask()
+    {
+        return $this->hasOne(Task::className(), ['id' => 'task_id']);
     }
 }

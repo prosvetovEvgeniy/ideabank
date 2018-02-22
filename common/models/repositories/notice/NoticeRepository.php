@@ -60,12 +60,18 @@ class NoticeRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
+     * @param array $with
      * @return NoticeEntity[]|\common\models\interfaces\IEntity[]
      */
-    public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
-    {
+    public function findAll(
+        array $condition,
+        int $limit = 20,
+        int $offset = null,
+        string $orderBy = null,
+        array $with = []
+    ) {
         $models = Notice::find()->where($condition)
-                                ->with('sender')
+                                ->with($with)
                                 ->offset($offset)
                                 ->limit($limit)
                                 ->orderBy($orderBy)

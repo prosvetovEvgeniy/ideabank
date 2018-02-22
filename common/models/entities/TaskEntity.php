@@ -16,8 +16,6 @@ use Yii;
  * Class TaskEntity
  * @package common\models\entities
  *
- * @property array $listStatusesAsText
- *
  * @property int $id
  * @property string $title
  * @property string $content
@@ -36,7 +34,7 @@ use Yii;
  * @property UserEntity       $author
  * @property TaskLikeEntity[] $taskLikes
  * @property CommentEntity[]  $comments
- * @propery  TaskEntity       $parent
+ * @property TaskEntity       $parent
  * @property TaskFileEntity[] $files
  * @property TaskEntity[]     $children
  */
@@ -127,6 +125,8 @@ class TaskEntity implements IEntity
      * @param int|null $updatedAt
      * @param bool|null $deleted
      * @param ProjectEntity|null $project
+     * @param TaskEntity|null $parent
+     * @param UserEntity|null $author
      */
     public function __construct(
         string $title,
@@ -142,7 +142,9 @@ class TaskEntity implements IEntity
         int $createdAt = null,
         int $updatedAt = null,
         bool $deleted = null,
-        ProjectEntity $project = null
+        ProjectEntity $project = null,
+        TaskEntity $parent = null,
+        UserEntity $author = null
     ) {
         $this->id = $id;
         $this->title = $title;
@@ -159,6 +161,8 @@ class TaskEntity implements IEntity
         $this->deleted = $deleted;
 
         $this->project = $project;
+        $this->parent = $parent;
+        $this->author = $author;
     }
 
 

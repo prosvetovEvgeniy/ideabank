@@ -5,6 +5,10 @@ namespace common\models\builders;
 use common\models\activerecords\CommentNotice;
 use common\models\entities\CommentNoticeEntity;
 
+/**
+ * Class CommentNoticeBuilder
+ * @package common\models\builders
+ */
 class CommentNoticeBuilder
 {
     /**
@@ -31,10 +35,23 @@ class CommentNoticeBuilder
      */
     public function buildEntity(CommentNotice $model)
     {
+        $comment = null;
+        $notice = null;
+
+        if ($model->isRelationPopulated('comment')) {
+            $comment = ($model->comment) ? CommentEntityBuilder::instance()->buildEntity($model->comment) : null;
+        }
+
+        if ($model->isRelationPopulated('notice')) {
+            $notice = ($model->notice) ? NoticeEntityBuilder::instance()->buildEntity($model->notice) : null;
+        }
+
         return new CommentNoticeEntity(
             $model->comment_id, 
             $model->notice_id, 
-            $model->id
+            $model->id,
+            $comment,
+            $notice
         );
     }
 

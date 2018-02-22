@@ -4,8 +4,11 @@ namespace common\models\builders;
 
 use common\models\activerecords\Comment;
 use common\models\entities\CommentEntity;
-use yii\helpers\Html;
 
+/**
+ * Class CommentEntityBuilder
+ * @package common\models\builders
+ */
 class CommentEntityBuilder
 {
     /**
@@ -40,6 +43,27 @@ class CommentEntityBuilder
      */
     public function buildEntity(Comment $model)
     {
+        $sender = null;
+        $parent = null;
+        $task = null;
+        $commentLikes = null;
+
+        if ($model->isRelationPopulated('sender')) {
+            $sender = ($model->sender) ? UserEntityBuilder::instance()->buildEntity($model->sender) : null;
+        }
+
+        if ($model->isRelationPopulated('parent')) {
+            $parent = ($model->parent) ? CommentEntityBuilder::instance()->buildEntity($model->parent) : null;
+        }
+
+        if ($model->isRelationPopulated('task')) {
+            $task = ($model->task) ? TaskEntityBuilder::instance()->buildEntity($model->task) : null;
+        }
+
+        if ($model->isRelationPopulated('commentLikes')) {
+            $commentLikes = ($model->commentLikes) ? CommentLikeEntityBuilder::instance()->buildEntities($model->commentLikes) : null;
+        }
+
         return new CommentEntity(
             $model->task_id,
             $model->sender_id,
@@ -49,7 +73,11 @@ class CommentEntityBuilder
             $model->id,
             $model->created_at,
             $model->updated_at,
-            $model->deleted
+            $model->deleted,
+            $sender,
+            $parent,
+            $task,
+            $commentLikes
         );
     }
 

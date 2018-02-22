@@ -33,12 +33,22 @@ class CommentNoticeEntity implements IEntity, INotice
      * @param int $commentId
      * @param int $noticeId
      * @param int|null $id
+     * @param CommentEntity $comment
+     * @param NoticeEntity $notice
      */
-    public function __construct(int $commentId, int $noticeId, int $id = null)
-    {
+    public function __construct(
+        int $commentId,
+        int $noticeId,
+        int $id = null,
+        CommentEntity $comment = null,
+        NoticeEntity $notice = null
+    ) {
         $this->id = $id;
         $this->commentId = $commentId;
         $this->noticeId = $noticeId;
+
+        $this->comment = $comment;
+        $this->notice = $notice;
     }
 
     /**

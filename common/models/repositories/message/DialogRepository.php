@@ -41,9 +41,16 @@ class DialogRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
+     * @param array $with
      * @return MessageRepository[]|\common\models\interfaces\IEntity[]
      */
-    public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
+    public function findAll(
+        array $condition,
+        int $limit = 20,
+        int $offset = null,
+        string $orderBy = null,
+        array $with = []
+    )
     {
         $lastMessages = Message::find()->select('MAX(id) as id')
                                        ->where($condition)
@@ -56,7 +63,12 @@ class DialogRepository implements IRepository
             return $message->id;
         });
 
-        $models = Message::find()->where(['in', 'id', $ids])->limit($limit)->offset($offset)->orderBy($orderBy)->all();
+        $models = Message::find()->where(['in', 'id', $ids])
+                                 ->with($with)
+                                 ->limit($limit)
+                                 ->offset($offset)
+                                 ->orderBy($orderBy)
+                                 ->all();
 
         return $this->builderBehavior->buildEntities($models);
     }

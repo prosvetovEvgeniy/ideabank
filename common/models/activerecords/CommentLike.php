@@ -55,4 +55,20 @@ class CommentLike extends ActiveRecord
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getComment()
+    {
+        return $this->hasOne(Comment::className(), ['id' => 'comment_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(Users::className(), ['id' => 'user+id']);
+    }
 }

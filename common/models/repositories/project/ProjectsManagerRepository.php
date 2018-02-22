@@ -43,10 +43,16 @@ class ProjectsManagerRepository implements IRepository
      * @param int $limit
      * @param int|null $offset
      * @param string|null $orderBy
+     * @param array $with
      * @return ProjectEntity[]|IEntity[]
      */
-    public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
-    {
+    public function findAll(
+        array $condition,
+        int $limit = 20,
+        int $offset = null,
+        string $orderBy = null,
+        array $with = []
+    ) {
         $models = Project::find()->from('project p')
                                  ->leftJoin('participant pc', 'pc.project_id = p.id')
                                  ->leftJoin('auth_assignment a_u', 'a_u.user_id = pc.id')
@@ -55,6 +61,7 @@ class ProjectsManagerRepository implements IRepository
                                      ['pc.user_id'    => Yii::$app->user->getId()],
                                      ['not', ['a_u.item_name' => AuthAssignmentEntity::ROLE_USER]]
                                  ])
+                                 ->with($with)
                                  ->offset($offset)
                                  ->limit($limit)
                                  ->orderBy('p.id ASC')

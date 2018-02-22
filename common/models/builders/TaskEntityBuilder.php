@@ -4,6 +4,7 @@ namespace common\models\builders;
 
 use common\models\activerecords\Task;
 use common\models\entities\TaskEntity;
+use yii\db\ActiveRecord;
 
 class TaskEntityBuilder
 {
@@ -42,7 +43,21 @@ class TaskEntityBuilder
      */
     public function buildEntity(Task $model)
     {
-        $project = ($model->project) ? ProjectEntityBuilder::instance()->buildEntity($model->project) : null;
+        $project = null;
+        $parent = null;
+        $author = null;
+
+        if ($model->isRelationPopulated('project')) {
+            $project = ($model->project) ? ProjectEntityBuilder::instance()->buildEntity($model->project) : null;
+        }
+
+        if ($model->isRelationPopulated('parent')) {
+            $parent = ($model->parent) ? TaskEntityBuilder::instance()->buildEntity($model->parent) : null;
+        }
+
+        if ($model->isRelationPopulated('author')) {
+            $author = ($model->author) ? UserEntityBuilder::instance()->buildEntity($model->author) : null;
+        }
 
         return new TaskEntity(
             $model->title,
@@ -57,7 +72,9 @@ class TaskEntityBuilder
             $model->created_at,
             $model->updated_at,
             $model->deleted,
-            $project
+            $project,
+            $parent,
+            $author
         );
     }
 
