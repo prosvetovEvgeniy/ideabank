@@ -11,6 +11,23 @@ use Yii;
 
 class TaskFileController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['delete'],
+                'rules' => [
+                    [
+                        'actions' => ['delete'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ]
+        ];
+    }
+
     public function actionDownload(int $id)
     {
         $file = TaskFileRepository::instance()->findOne(['id' => $id]);

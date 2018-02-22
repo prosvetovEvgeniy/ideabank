@@ -46,7 +46,7 @@ class TaskEntity implements IEntity
      * количество актуальных задач,
      * которые оторбражаются на странице /index
      */
-    public const ACTUAL_TASKS_COUNT = 5;
+    public const ACTUAL_TASKS_COUNT = 10;
 
     public const TITLE_MAX_LENGTH = 100;
     public const CONTENT_MAX_LENGTH = 10000;
@@ -117,21 +117,33 @@ class TaskEntity implements IEntity
      * @param string $content
      * @param int $authorId
      * @param int $projectId
-     * @param int|null $id
      * @param int|null $status
      * @param int|null $visibilityArea
      * @param int|null $parentId
      * @param int|null $plannedEndAt
      * @param int|null $endAt
+     * @param int|null $id
      * @param int|null $createdAt
      * @param int|null $updatedAt
      * @param bool|null $deleted
+     * @param ProjectEntity|null $project
      */
-    public function __construct(string $title, string $content, int $authorId, int $projectId,
-                                int $status = null, int $visibilityArea = null, int $parentId = null,
-                                int $plannedEndAt = null, int $endAt = null, int $id = null,
-                                int $createdAt = null, int $updatedAt = null, bool $deleted = null)
-    {
+    public function __construct(
+        string $title,
+        string $content,
+        int $authorId,
+        int $projectId,
+        int $status = null,
+        int $visibilityArea = null,
+        int $parentId = null,
+        int $plannedEndAt = null,
+        int $endAt = null,
+        int $id = null,
+        int $createdAt = null,
+        int $updatedAt = null,
+        bool $deleted = null,
+        ProjectEntity $project = null
+    ) {
         $this->id = $id;
         $this->title = $title;
         $this->content = $content;
@@ -145,6 +157,8 @@ class TaskEntity implements IEntity
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->deleted = $deleted;
+
+        $this->project = $project;
     }
 
 
@@ -542,7 +556,7 @@ class TaskEntity implements IEntity
     /**
      * @return bool
      */
-    public function isPrivate()
+    public function private()
     {
         return ($this->visibilityArea === self::VISIBILITY_AREA_PRIVATE) ? true : false ;
     }
@@ -553,6 +567,34 @@ class TaskEntity implements IEntity
     public function hasFiles()
     {
         return (empty($this->getFiles())) ? false : true ;
+    }
+
+    /**
+     * @return bool
+     */
+    public function forAll()
+    {
+        return $this->visibilityArea === self::VISIBILITY_AREA_ALL;
+    }
+
+    /**
+     * @return bool
+     */
+    public function forRegistered()
+    {
+        return $this->visibilityArea === self::VISIBILITY_AREA_REGISTERED;
+    }
+
+    /**
+     * @return bool
+     */
+    public function own()
+    {
+        if (Yii::$app->user->isGuest) {
+            return false;
+        }
+
+        return $this->authorId === Yii::$app->user->getId();
     }
 }
 

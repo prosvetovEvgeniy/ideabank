@@ -160,7 +160,17 @@ $counter = 1; //счетчик для номера комментария
 
                     <tr>
                         <td>Родительская задача</td>
-                        <td> <?= Html::a($task->getParent()->getTitle(true), ['task/view', 'id' => $task->getParent()->getId()]) ?> </td>
+                        <td>
+                            <?php
+                            if (Yii::$app->user->isGuest && !$task->getParent()->forAll()) {
+                                echo '<code>для зарегистрированных</code>';
+                            } else if ($task->getParent()->private() && !$task->getParent()->own() && !Yii::$app->user->isManager($task->getPr)) {
+                                echo '<code>приватная</code>';
+                            } else {
+                                echo Html::a($task->getParent()->getTitle(true), ['task/view', 'id' => $task->getParent()->getId()]);
+                            }
+                            ?>
+                        </td>
                     </tr>
 
                 <?php endif; ?>

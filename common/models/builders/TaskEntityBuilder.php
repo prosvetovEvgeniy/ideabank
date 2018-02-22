@@ -42,6 +42,8 @@ class TaskEntityBuilder
      */
     public function buildEntity(Task $model)
     {
+        $project = ($model->project) ? ProjectEntityBuilder::instance()->buildEntity($model->project) : null;
+
         return new TaskEntity(
             $model->title,
             $model->content,
@@ -54,7 +56,8 @@ class TaskEntityBuilder
             $model->end_at, $model->id,
             $model->created_at,
             $model->updated_at,
-            $model->deleted
+            $model->deleted,
+            $project
         );
     }
 

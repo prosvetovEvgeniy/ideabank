@@ -34,7 +34,7 @@ $this->title = 'My Yii Application';
                                 'attribute' => 'title',
                                 'header' => 'Проект',
                                 'value' => function (TaskEntity $task) {
-                                    return $task->getProject()->getName(true);
+                                    return Html::a($task->getProject()->getName(true), ['/project/view', 'id' => $task->getProjectId()]);
                                 },
                                 'format' => 'html'
                             ],
@@ -63,7 +63,7 @@ $this->title = 'My Yii Application';
                                 'attribute' => 'title',
                                 'header' => 'Проект',
                                 'value' => function (TaskEntity $task) {
-                                    return $task->getProject()->getName(true);
+                                    return Html::a($task->getProject()->getName(true), ['/project/view', 'id' => $task->getProjectId()]);
                                 },
                                 'format' => 'html'
                             ],

@@ -42,9 +42,14 @@ class TaskLikeEntity implements IEntity
      * @param int|null $createdAt
      * @param int|null $updatedAt
      */
-    public function __construct(int $taskId, int $userId, bool $liked, int $id = null,
-                                int $createdAt = null, int $updatedAt = null)
-    {
+    public function __construct(
+        int $taskId,
+        int $userId,
+        bool $liked,
+        int $id = null,
+        int $createdAt = null,
+        int $updatedAt = null
+    ) {
         $this->id = $id;
         $this->taskId = $taskId;
         $this->userId = $userId;

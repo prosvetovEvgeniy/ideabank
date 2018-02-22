@@ -53,10 +53,18 @@ class MessageEntity implements IEntity
      * @param UserEntity|null $self
      * @param UserEntity|null $companion
      */
-    public function __construct(int $selfId, int $companionId, string $content, bool $isSender,
-                                int $id = null, bool $viewed = false, int $createdAt = null,
-                                bool $deleted = false, UserEntity $self = null, UserEntity $companion = null)
-    {
+    public function __construct(
+        int $selfId,
+        int $companionId,
+        string $content,
+        bool $isSender,
+        int $id = null,
+        bool $viewed = false,
+        int $createdAt = null,
+        bool $deleted = false,
+        UserEntity $self = null,
+        UserEntity $companion = null
+    ) {
         $this->id = $id;
         $this->selfId = $selfId;
         $this->companionId = $companionId;

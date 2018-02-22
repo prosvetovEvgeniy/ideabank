@@ -43,7 +43,7 @@ class CommentReestablishModel extends Model
             return false;
         }
 
-        if (!Yii::$app->user->is(AuthAssignmentEntity::ROLE_MANAGER, $comment->getTask()->getProjectId())) {
+        if (!Yii::$app->user->isManager($comment->getTask()->getProjectId())) {
             return false;
         }
 

@@ -62,10 +62,16 @@ class ProjectEntity implements IEntity
      * @param int|null $updatedAt
      * @param bool|null $deleted
      */
-    public function __construct(string $name, int $companyId, string $description = null,
-                                int $defaultVisibilityArea = null, int $id = null,
-                                int $createdAt = null, int $updatedAt = null, bool $deleted = null)
-    {
+    public function __construct(
+        string $name,
+        int $companyId,
+        string $description = null,
+        int $defaultVisibilityArea = null,
+        int $id = null,
+        int $createdAt = null,
+        int $updatedAt = null,
+        bool $deleted = null
+    ) {
         $this->id = $id;
         $this->name = $name;
         $this->companyId = $companyId;

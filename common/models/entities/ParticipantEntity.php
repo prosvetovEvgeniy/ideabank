@@ -101,13 +101,24 @@ class ParticipantEntity implements IEntity
      * @param CompanyEntity|null $company
      * @param AuthAssignmentEntity|null $authAssignment
      */
-    public function __construct(int $userId, int $companyId = null, int $projectId = null, bool $approved = false,
-                                int $approvedAt = null, bool $blocked = false, int $blockedAt = null,
-                                int $id = null, int $createdAt = null, int $updatedAt = null,
-                                int $deletedAt = null, bool $deleted = false, ProjectEntity $project = null,
-                                UserEntity $user = null, CompanyEntity $company = null,
-                                AuthAssignmentEntity $authAssignment = null)
-    {
+    public function __construct(
+        int $userId,
+        int $companyId = null,
+        int $projectId = null,
+        bool $approved = false,
+        int $approvedAt = null,
+        bool $blocked = false,
+        int $blockedAt = null,
+        int $id = null,
+        int $createdAt = null,
+        int $updatedAt = null,
+        int $deletedAt = null,
+        bool $deleted = false,
+        ProjectEntity $project = null,
+        UserEntity $user = null,
+        CompanyEntity $company = null,
+        AuthAssignmentEntity $authAssignment = null
+    ) {
         $this->id = $id;
         $this->userId = $userId;
         $this->companyId = $companyId;

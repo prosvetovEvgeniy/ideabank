@@ -6,6 +6,7 @@ use common\components\dataproviders\EntityDataProvider;
 use common\models\repositories\participant\ParticipantRepository;
 use common\models\repositories\project\ProjectRepository;
 use frontend\models\project\JoinToProjectModel;
+use yii\filters\AccessControl;
 use yii\web\BadRequestHttpException;
 use common\models\searchmodels\project\ParticipantSearchForm;
 use yii\web\Controller;
@@ -13,6 +14,23 @@ use Yii;
 
 class ProjectController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index', 'participants'],
+                'rules' => [
+                    [
+                        'actions' => ['index', 'participants'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ]
+        ];
+    }
+
     public function actionIndex()
     {
         $participants = ParticipantRepository::instance()->getRelationToProjects();
@@ -63,18 +81,6 @@ class ProjectController extends Controller
             'model'        => $searchModel,
             'dataProvider' => $searchModel->search()
         ]);
-    }
-
-    //############### AJAX ACTIONS ##################
-
-
-    public function actionJoin()
-    {
-        $model = new JoinToProjectModel();
-
-        if (!$model->load(Yii::$app->request->post()) || !$model->save()) {
-            throw new BadRequestHttpException();
-        }
     }
 }
 

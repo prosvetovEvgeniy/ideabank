@@ -68,7 +68,12 @@ class TaskRepository implements IRepository
      */
     public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null)
     {
-        $models = Task::find()->where($condition)->offset($offset)->limit($limit)->orderBy($orderBy)->all();
+        $models = Task::find()->where($condition)
+                              ->offset($offset)
+                              ->limit($limit)
+                              ->orderBy($orderBy)
+                              ->with()
+                              ->all();
 
         return $this->builderBehavior->buildEntities($models);
     }

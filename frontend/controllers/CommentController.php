@@ -7,12 +7,28 @@ use frontend\models\comment\CommentEditModel;
 use frontend\models\comment\CommentPrivateModel;
 use frontend\models\comment\CommentPublicModel;
 use frontend\models\comment\CommentReestablishModel;
+use yii\filters\AccessControl;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use Yii;
 
 class CommentController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ]
+        ];
+    }
+
     public function actionEdit()
     {
         $model = new CommentEditModel();

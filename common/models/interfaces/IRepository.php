@@ -17,7 +17,10 @@ interface IRepository
      * @param string|null $orderBy
      * @return IEntity[]
      */
-    public function findAll(array $condition, int $limit = 20, int $offset = null, string $orderBy = null);
+    public function findAll(array $condition,
+                            int $limit = 20,
+                            int $offset = null,
+                            string $orderBy = null);
 
     /**
      * @param array $condition

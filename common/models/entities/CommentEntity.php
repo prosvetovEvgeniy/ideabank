@@ -82,12 +82,23 @@ class CommentEntity implements IEntity
      * @param bool|null $currentUserLikedIt
      * @param bool|null $currentUserDislikedIt
      */
-    public function __construct(int $taskId, int $senderId, string $content,int $parentId = null,
-                                bool $private = false, int $id = null, int $createdAt = null,
-                                int $updatedAt = null, bool $deleted = false, int $likesAmount = 0,
-                                int $dislikesAmount = 0, UserEntity $user = null, CommentEntity $parent = null,
-                                bool $currentUserLikedIt = null, bool $currentUserDislikedIt = null)
-    {
+    public function __construct(
+        int $taskId,
+        int $senderId,
+        string $content,
+        int $parentId = null,
+        bool $private = false,
+        int $id = null,
+        int $createdAt = null,
+        int $updatedAt = null,
+        bool $deleted = false,
+        int $likesAmount = 0,
+        int $dislikesAmount = 0,
+        UserEntity $user = null,
+        CommentEntity $parent = null,
+        bool $currentUserLikedIt = null,
+        bool $currentUserDislikedIt = null
+    ) {
         $this->id = $id;
         $this->taskId = $taskId;
         $this->senderId = $senderId;

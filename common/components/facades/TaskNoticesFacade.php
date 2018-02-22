@@ -26,7 +26,7 @@ class TaskNoticesFacade
     public function saveNotices(TaskEntity $task)
     {
         //если задача приватная
-        if ($task->isPrivate()) {
+        if ($task->private()) {
             $this->savePrivateNotices($task);
             return;
         }

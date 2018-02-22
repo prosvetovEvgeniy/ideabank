@@ -47,10 +47,16 @@ class NoticeEntity implements IEntity, INotice
      * @param UserEntity|null $sender
      * @param UserEntity|null $recipient
      */
-    public function __construct(int $recipientId, string $content,string $link, int $senderId = null,
-                                int $id = null, int $createdAt = null,
-                                UserEntity $sender = null, UserEntity $recipient = null)
-    {
+    public function __construct(
+        int $recipientId,
+        string $content,
+        string $link,
+        int $senderId = null,
+        int $id = null,
+        int $createdAt = null,
+        UserEntity $sender = null,
+        UserEntity $recipient = null
+    ) {
         $this->id = $id;
         $this->recipientId = $recipientId;
         $this->senderId = $senderId;

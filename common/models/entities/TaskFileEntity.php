@@ -48,9 +48,15 @@ class TaskFileEntity implements IEntity
      * @param bool|null $deleted
      * @param TaskEntity|null $task
      */
-    public function __construct(int $taskId, string $hashName, string $originalName, int $id = null,
-                                int $createdAt = null, bool $deleted = null, TaskEntity $task = null)
-    {
+    public function __construct(
+        int $taskId,
+        string $hashName,
+        string $originalName,
+        int $id = null,
+        int $createdAt = null,
+        bool $deleted = null,
+        TaskEntity $task = null
+    ) {
         $this->id = $id;
         $this->taskId = $taskId;
         $this->hashName = $hashName;

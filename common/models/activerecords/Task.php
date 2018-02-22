@@ -22,9 +22,10 @@ use yii\db\ActiveRecord;
  * @property integer $updated_at
  * @property boolean $deleted
  *
- * @property Comment[] $comments
- * @property Project $project
- * @property Users $author
+ * @property Project    $project
+ * @property Users      $author
+ * @property Task       $parent
+ * @property Comment[]  $comments
  * @property TaskLike[] $taskLikes
  */
 class Task extends ActiveRecord
@@ -74,8 +75,43 @@ class Task extends ActiveRecord
         ];
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getProject()
     {
         return $this->hasOne(Project::className(), ['id' => 'project_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAuthor()
+    {
+        return $this->hasOne(Users::className(), ['id' => 'author_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParent()
+    {
+        return $this->hasOne(Task::className(), ['id' => 'parent_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getComments()
+    {
+        return $this->hasMany(Comment::className(), ['task_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTaskLikes()
+    {
+        return $this->hasMany(TaskLike::className(), ['task_id' => 'id']);
     }
 }

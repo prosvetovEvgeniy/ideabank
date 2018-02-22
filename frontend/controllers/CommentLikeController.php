@@ -3,12 +3,28 @@
 namespace frontend\controllers;
 
 use frontend\models\comment\CommentVoteModel;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use Yii;
 use yii\web\BadRequestHttpException;
 
 class CommentLikeController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ]
+        ];
+    }
+
     public function actionAddVote()
     {
         $model = new CommentVoteModel();

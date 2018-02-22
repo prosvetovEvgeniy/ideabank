@@ -8,6 +8,7 @@ use common\models\repositories\task\TaskRepository;
 use common\models\repositories\user\UserRepository;
 use frontend\models\profile\ChangeOwnDataForm;
 use frontend\models\profile\ChangePasswordForm;
+use yii\filters\AccessControl;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use Yii;
@@ -15,6 +16,21 @@ use yii\web\UploadedFile;
 
 class ProfileController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ]
+        ];
+    }
+
     public function actionChangeOwnData()
     {
         $model = new ChangeOwnDataForm();

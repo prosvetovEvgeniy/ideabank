@@ -9,12 +9,28 @@ use common\models\repositories\message\MessageRepository;
 use common\models\repositories\user\UserRepository;
 use frontend\models\message\DeleteMessageModel;
 use frontend\models\message\SendMessageForm;
+use yii\filters\AccessControl;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use Yii;
 
 class MessageController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ]
+        ];
+    }
+
     public function actionDialog()
     {
         $dataProvider = new EntityDataProvider([

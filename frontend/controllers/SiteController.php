@@ -18,38 +18,7 @@ use frontend\models\authentication\SignupForm;
  * Site controller
  */
 class SiteController extends Controller
-     
 {
-    /**
-     * @inheritdoc
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
-                'rules' => [
-                    [
-                        'actions' => ['signup'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['get', 'post'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * @inheritdoc
      */
@@ -85,8 +54,7 @@ class SiteController extends Controller
             'condition' => [
                 'and',
                 ['visibility_area' => TaskEntity::VISIBILITY_AREA_ALL],
-                ['deleted' => false],
-                ['not', ['status' => TaskEntity::STATUS_MERGED]]
+                ['deleted' => false]
             ],
             'repositoryInstance' => TaskRepository::instance(),
             'pagination' => [

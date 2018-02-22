@@ -2,7 +2,6 @@
 
 namespace frontend\controllers;
 
-
 use common\components\dataproviders\EntityDataProvider;
 use common\components\helpers\LinkHelper;
 use common\models\repositories\comment\CommentViewRepository;
@@ -14,14 +13,33 @@ use frontend\models\comment\CommentCreateForm;
 use frontend\models\task\CreateTaskForm;
 use frontend\models\task\DeleteTaskModel;
 use frontend\models\task\EditTaskForm;
+use yii\filters\AccessControl;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use Yii;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 
 class TaskController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['create', 'edit', 'delete'],
+                'rules' => [
+                    [
+                        'actions' => ['create', 'edit', 'delete'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ]
+        ];
+    }
+
     public function actionIndex()
     {
         $searchModel = new TaskSearchForm();
@@ -48,6 +66,14 @@ class TaskController extends Controller
 
         if (!$task) {
             throw new NotFoundHttpException();
+        }
+
+        if (($task->forRegistered() || $task->private()) && Yii::$app->user->isGuest) {
+            throw new ForbiddenHttpException();
+        }
+
+        if (($task->private() && !$task->own()) && !Yii::$app->user->isManager($task->getProjectId())) {
+            throw new ForbiddenHttpException();
         }
 
         $dataProvider = new EntityDataProvider([
