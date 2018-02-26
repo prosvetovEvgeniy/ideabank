@@ -6,6 +6,7 @@ use common\components\facades\ParticipantFacade;
 use common\models\repositories\participant\ParticipantRepository;
 use yii\base\Model;
 use Exception;
+use Yii;
 
 /**
  * Class BlockParticipantModel
@@ -27,6 +28,7 @@ class BlockParticipantModel extends Model
 
     /**
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function save()
     {
@@ -36,17 +38,41 @@ class BlockParticipantModel extends Model
 
         $participant = ParticipantRepository::instance()->findOne(['id' => $this->id]);
 
-        if (!$participant || $participant->getBlocked() || $participant->getDeleted()){
+        if (!$participant ||
+            $participant->getBlocked() ||
+            $participant->getDeleted() ||
+            !$participant->getApproved())
+        {
             return false;
         }
-        
+
+        if (!Yii::$app->user->isManager($participant->getProjectId())) {
+            return false;
+        }
+
+        if (Yii::$app->user->isManager($participant->getProjectId(), $participant->getUserId()) &&
+            !Yii::$app->user->isProjectDirector($participant->getProjectId()))
+        {
+            return false;
+        }
+
+        if (Yii::$app->user->isProjectDirector($participant->getProjectId(), $participant->getUserId()) &&
+            !Yii::$app->user->isCompanyDirector($participant->getProjectId()))
+        {
+            return false;
+        }
+
         $participantFacade = new ParticipantFacade();
+
+        $transaction = Yii::$app->db->beginTransaction();
 
         try {
             $participantFacade->blockParticipant($participant);
 
+            $transaction->commit();
             return true;
         } catch (Exception $e) {
+            $transaction->rollBack();
             return false;
         }
     }

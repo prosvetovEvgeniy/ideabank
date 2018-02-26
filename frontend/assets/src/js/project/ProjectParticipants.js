@@ -8,7 +8,7 @@ $(document).ready(function () {
             type: 'POST',
             data: {'BlockParticipantModel[id]': participantId},
             success: function (response) {
-
+                location.reload();
             }
         });
     });
@@ -21,7 +21,7 @@ $(document).ready(function () {
             type: 'POST',
             data: {'AddParticipantModel[id]': participantId},
             success: function (response) {
-
+                location.reload();
             }
         });
     });
@@ -34,7 +34,7 @@ $(document).ready(function () {
             type: 'POST',
             data: {'UnBlockParticipantModel[id]': participantId},
             success: function (response) {
-
+                location.reload();
             }
         });
     });
@@ -47,7 +47,7 @@ $(document).ready(function () {
             type: 'POST',
             data: {'CancelParticipantModel[id]': participantId},
             success: function (response) {
-
+                location.reload();
             }
         });
     });

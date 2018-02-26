@@ -3,6 +3,7 @@
 namespace common\models\entities;
 
 use common\models\interfaces\IEntity;
+use common\models\repositories\participant\ParticipantRepository;
 use yii\helpers\Html;
 
 /**
@@ -23,14 +24,12 @@ class AuthAssignmentEntity implements IEntity
     public const ROLE_PROJECT_DIRECTOR = 'projectDirector';
     public const ROLE_COMPANY_DIRECTOR = 'companyDirector';
 
-
     protected $itemName;
     protected $userId;
     protected $createdAt;
 
     //кеш связанных сущностей
     protected $participant;
-
 
     /**
      * AuthAssignmentEntity constructor.
@@ -42,7 +41,7 @@ class AuthAssignmentEntity implements IEntity
     public function __construct(
         string $itemName,
         int $userId,
-        int $createdAt,
+        int $createdAt = null,
         ParticipantEntity $participant = null
     ) {
         $this->itemName = $itemName;
@@ -93,12 +92,12 @@ class AuthAssignmentEntity implements IEntity
 
 
     /**
-     * @return UserEntity|null
+     * @return ParticipantEntity|null
      */
     public function getUser()
     {
         if($this->user === null) {
-            $this->user = ParticipantEntity::instance()->findOne(['id' => $this->getUserId()]);
+            $this->user = ParticipantRepository::instance()->findOne(['id' => $this->getUserId()]);
         }
 
         return $this->user;

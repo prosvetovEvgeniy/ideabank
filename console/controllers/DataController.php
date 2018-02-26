@@ -71,6 +71,9 @@ class DataController extends Controller
         $userIds['blockedUser'] = $this->addUser('blockedUser', '123456', 'blockedUser@mail.ru',
             '89131841102', 'blocked_user_first_name', 'blocked_user_second_name','blocked_user_last_name');
 
+        $userIds['projectDirector'] = $this->addUser('projectDirector', '123456', 'projectDirector@mail.ru',
+            '89131841102', 'projectDirector', 'projectDirector','projectDirector');
+
 
         //############### FILLING PARTICIPANTS ###############
 
@@ -104,6 +107,9 @@ class DataController extends Controller
         $participantIds['blockedUserGithub'] = $this->addBlockedParticipant($userIds['blockedUser'], $companyIds['eCompanyId'], $projectIds['github']);
         $participantIds['blockedUserVulcan'] = $this->addBlockedParticipant($userIds['blockedUser'], $companyIds['infSysId'], $projectIds['vulcan']);
 
+        $participantIds['projectDirectorVulcan'] = $this->addParticipant($userIds['projectDirector'], $companyIds['infSysId'], $projectIds['vulcan']);
+        $participantIds['projectDirectorGit'] = $this->addParticipant($userIds['projectDirector'], $companyIds['eCompanyId'], $projectIds['github']);
+
 
 
         //############### FILLING AUTH ###############
@@ -111,24 +117,31 @@ class DataController extends Controller
 
         $user = $auth->getRole('user');
         $manager = $auth->getRole('manager');
-        $director = $auth->getRole('projectDirector');
+        $projectDirector = $auth->getRole('projectDirector');
+        $companyDirector = $auth->getRole('companyDirector');
+
 
         $auth->assign($manager,$participantIds['evgeniyGithub']);
         $auth->assign($user,$participantIds['evgeniyVk']);
         $auth->assign($user,$participantIds['evgeniyXabr']);
         $auth->assign($manager, $participantIds['evgeniyVulcanm']);
 
-        $auth->assign($director,$participantIds['adminVulcan']);
+        $auth->assign($companyDirector,$participantIds['adminVulcan']);
 
-        $auth->assign($director,$participantIds['edirectorGithub']);
-        $auth->assign($director,$participantIds['edirectorVk']);
-        $auth->assign($director,$participantIds['edirectorXabr']);
+        $auth->assign($companyDirector,$participantIds['edirectorGithub']);
+        $auth->assign($companyDirector,$participantIds['edirectorVk']);
+        $auth->assign($companyDirector,$participantIds['edirectorXabr']);
 
         $auth->assign($user, $participantIds['newUserGithub']);
         $auth->assign($user, $participantIds['newUserVulcan']);
 
         $auth->assign($user, $participantIds['newLoginVulcan']);
 
+        $auth->assign($user, $participantIds['blockedUserGithub']);
+        $auth->assign($user, $participantIds['blockedUserVulcan']);
+
+        $auth->assign($projectDirector, $participantIds['projectDirectorVulcan']);
+        $auth->assign($projectDirector, $participantIds['projectDirectorGit']);
 
         //############### FILLING TASKS ###############
 

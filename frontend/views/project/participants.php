@@ -2,23 +2,20 @@
 
 use common\models\entities\ProjectEntity;
 use yii\widgets\ActiveForm;
-use common\models\searchmodels\project\ParticipantSearchForm;
+use common\models\searchmodels\participant\ParticipantSearchForm;
 use common\components\helpers\ProjectHelper;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use common\models\entities\ParticipantEntity;
 use common\components\dataproviders\EntityDataProvider;
 use common\components\widgets\RoleViewWidget;
-use common\models\entities\AuthAssignmentEntity;
-use frontend\assets\ProjectParticipantsAsset;
+use common\components\widgets\ParticipantActionWidget;
 
 /**
  * @var ProjectEntity $project
  * @var EntityDataProvider $dataProvider;
  * @var ParticipantSearchForm $model
  */
-
-ProjectParticipantsAsset::register($this);
 
 ?>
 
@@ -55,15 +52,9 @@ ProjectParticipantsAsset::register($this);
         <?php ActiveForm::end(); ?>
     </div>
     <div class="col-lg-9">
+
         <h4>Найдено: <?= $dataProvider->getTotalCount() ?></h4>
 
-        <?php
-        $viewTag = Html::tag('i', '', ['class' => 'glyphicon glyphicon-user participant-action-tag', 'title' => 'Просмотр']);
-        $blockTag = Html::tag('i', '', ['class' => 'glyphicon glyphicon-ban-circle participant-action-tag block-tag', 'title' => 'Заблокировать']);
-        $addTag = Html::tag('i', '', ['class' => 'glyphicon glyphicon-ok participant-action-tag add-tag', 'title' => 'Добавить']);
-        $unBlockTag = Html::tag('i', '', ['class' => 'glyphicon glyphicon-ok-circle participant-action-tag un-block-tag', 'title' => 'Разблокировать']);
-        $cancelTag = Html::tag('i', '', ['class' => 'glyphicon glyphicon-remove participant-action-tag cancel-tag', 'title' => 'Не добавлять']);
-        ?>
         <?=
         GridView::widget([
             'dataProvider' => $dataProvider,
@@ -100,24 +91,20 @@ ProjectParticipantsAsset::register($this);
                 [
                     'attribute' => '',
                     'header' => '',
-                    'value' => function(ParticipantEntity $participant) use ($addTag, $blockTag, $unBlockTag, $cancelTag){
-                        if($participant->getRoleName() === ParticipantEntity::ROLE_BLOCKED){
-                            return Html::tag('div', $unBlockTag, ['data' => ['participant-id' => $participant->getId()]]);
-                        } elseif($participant->getRoleName() === ParticipantEntity::ROLE_ON_CONSIDERATION) {
-                            return Html::tag('div', $addTag . $cancelTag, ['data' => ['participant-id' => $participant->getId()]]);
-                        } elseif($participant->getRoleName() === AuthAssignmentEntity::ROLE_USER) {
-                            return Html::tag('div', $blockTag, ['data' => ['participant-id' => $participant->getId()]]);
-                        }
-
-                        return '';
+                    'value' => function(ParticipantEntity $participant) {
+                        return ParticipantActionWidget::widget([
+                            'participant' => $participant
+                        ]);
                     },
                     'format' => 'raw'
                 ],
                 [
                     'attribute' => '',
                     'header' => '',
-                    'value' => function(ParticipantEntity $participant) use ($viewTag){
-                        if ($participant->getRoleName() !== ParticipantEntity::ROLE_ON_CONSIDERATION){
+                    'value' => function(ParticipantEntity $participant){
+                        $viewTag = Html::tag('i', '', ['class' => 'glyphicon glyphicon-user participant-action-tag', 'title' => 'Просмотр']);
+
+                        if (!$participant->onConsideration()){
                             return Html::a($viewTag, ['/project/participant-view', 'id' => $participant->getId()]);
                         }
 

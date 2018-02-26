@@ -2,10 +2,10 @@
 
 namespace frontend\models\participant;
 
+use common\components\facades\ParticipantFacade;
 use yii\base\Model;
 use Yii;
 use common\models\repositories\project\ProjectRepository;
-use common\models\repositories\participant\ParticipantRepository;
 use Exception;
 use common\models\entities\ParticipantEntity;
 
@@ -48,36 +48,16 @@ class JoinParticipantModel extends Model
             return false;
         }
 
-        $participantExist = ParticipantRepository::instance()->findOne([
-            'user_id'    => $user->getId(),
-            'project_id' => $project->getId(),
-        ]);
+        $participant = new ParticipantEntity(
+            $this->userId,
+            $project->getCompanyId(),
+            $project->getId()
+        );
 
-        //если пользователь уже был присоединен к проекту, но покинул его
-        if ($participantExist) {
-            if($participantExist->getDeleted()) {
-
-                $participantExist->setApproved(false);
-                $participantExist->setApprovedAt(time());
-                $participantExist->setDeleted(false);
-                $participantExist->setDeletedAt();
-
-                try {
-                    ParticipantRepository::instance()->update($participantExist);
-                    return true;
-                } catch (Exception $e) {
-                    return false;
-                }
-            }
-
-            return false;
-        }
-
-        //если пользователь присоединяется к проекту впервые
-        $participant = new ParticipantEntity($user->getId(), $project->getCompanyId(), $project->getId());
+        $participantFacade = new ParticipantFacade();
 
         try {
-            ParticipantRepository::instance()->add($participant);
+            $participantFacade->joinParticipant($participant);
             return true;
         } catch (Exception $e) {
             return false;

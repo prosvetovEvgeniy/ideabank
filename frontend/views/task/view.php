@@ -11,7 +11,7 @@ use frontend\assets\TaskAsset;
 use yii\widgets\LinkPager;
 use common\models\entities\TaskFileEntity;
 
-//TaskAsset::register($this);
+TaskAsset::register($this);
 CommentAsset::register($this);
 
 /**
@@ -49,7 +49,7 @@ $counter = 1; //счетчик для номера комментария
                     </span>
                 <span class="vote-down" title="Не нравится">
                         <i class="glyphicon glyphicon-thumbs-down" data-user-guest="<?= Yii::$app->user->isGuest ?>"><?= $task->getAmountDislikes() ?></i>
-                    </span>
+                </span>
             </div>
         </div>
 

@@ -6,6 +6,7 @@ use common\components\facades\ParticipantFacade;
 use common\models\repositories\participant\ParticipantRepository;
 use yii\base\Model;
 use Exception;
+use Yii;
 
 /**
  * Class AddParticipantModel
@@ -27,6 +28,7 @@ class AddParticipantModel extends Model
 
     /**
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function save()
     {
@@ -36,12 +38,28 @@ class AddParticipantModel extends Model
 
         $participant = ParticipantRepository::instance()->findOne(['id' => $this->id]);
 
+        if (!$participant ||
+            $participant->getBlocked() ||
+            $participant->getDeleted())
+        {
+            return false;
+        }
+
+        if (!Yii::$app->user->isManager($participant->getProjectId())) {
+            return false;
+        }
+
         $participantFacade = new ParticipantFacade();
+
+        $transaction = Yii::$app->db->beginTransaction();
 
         try {
             $participantFacade->addParticipant($participant);
+
+            $transaction->commit();
             return true;
         } catch (Exception $e) {
+            $transaction->rollBack();
             return false;
         }
     }

@@ -51,7 +51,7 @@ $this->title = 'Предложения';
                     'attribute' => 'title',
                     'header' => 'Заголовок',
                     'value' => function(TaskEntity $task) {
-                        return Html::a($task->getTitle(true), ['task/view', 'id' => $task->getId(), 'projectId' => $task->getProjectId()]);
+                        return Html::a($task->getTitle(true), ['task/view', 'id' => $task->getId()]);
                     },
                     'format' => 'html'
                 ],

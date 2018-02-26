@@ -90,7 +90,7 @@ $this->title = 'Поиск';
                                 } else {
                                     if ($participant->getApproved() && !$participant->getBlocked()) {
                                         return Html::a('Перейти', ['/task/index', 'TaskSearchForm[projectId]' => $participant->getProjectId(), 'TaskSearchForm[status]' => 'all']);
-                                    } elseif (!$participant->getApproved()) {
+                                    } elseif (!$participant->getApproved() && !$participant->getBlocked()) {
                                         return '<code>На рассмотрении </code>';
                                     } elseif ($participant->getBlocked()) {
                                         return '<code>Забанен</code>';

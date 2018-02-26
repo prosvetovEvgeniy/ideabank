@@ -83,7 +83,6 @@ class ParticipantRepository implements IRepository
      * @param ParticipantEntity $participant
      * @return ParticipantEntity
      * @throws Exception
-     * @throws \yii\base\Exception
      */
     public function add(ParticipantEntity $participant)
     {
@@ -103,7 +102,6 @@ class ParticipantRepository implements IRepository
      * @param ParticipantEntity $participant
      * @return ParticipantEntity
      * @throws Exception
-     * @throws \yii\base\Exception
      */
     public function update(ParticipantEntity $participant)
     {
@@ -127,36 +125,6 @@ class ParticipantRepository implements IRepository
      * @param ParticipantEntity $participant
      * @return ParticipantEntity
      * @throws Exception
-     * @throws \yii\base\Exception
-     */
-    public function block(ParticipantEntity $participant)
-    {
-        $model = Participant::findOne(['id' => $participant->getId()]);
-
-        if (!$model) {
-            throw new Exception('Participant with id = ' . $participant->getId() . ' does not exists');
-        }
-
-        if ($model->blocked) {
-            throw new Exception('Participant with id = ' . $participant->getId() . ' already blocked');
-        }
-
-        $model->blocked = true;
-        $model->blocked_at = time();
-
-        if (!$model->save()) {
-            Yii::error($model->errors);
-            throw new Exception('Cannot block participant with id = ' . $participant->getId());
-        }
-
-        return $this->builderBehavior->buildEntity($model);
-    }
-
-    /**
-     * @param ParticipantEntity $participant
-     * @return ParticipantEntity
-     * @throws Exception
-     * @throws \yii\base\Exception
      */
     public function delete(ParticipantEntity $participant)
     {

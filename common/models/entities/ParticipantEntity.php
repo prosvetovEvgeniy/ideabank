@@ -50,11 +50,12 @@ class ParticipantEntity implements IEntity
      * список ролей и состояний
      */
     public const LIST_ROLES = [
-        AuthAssignmentEntity::ROLE_USER             => 'Участник',
-        AuthAssignmentEntity::ROLE_MANAGER          => 'Менеджер',
+        AuthAssignmentEntity::ROLE_USER => 'Участник',
+        AuthAssignmentEntity::ROLE_MANAGER => 'Менеджер',
         AuthAssignmentEntity::ROLE_PROJECT_DIRECTOR => 'Директор проекта',
-        self::ROLE_BLOCKED                          => 'Заблокирован',
-        self::ROLE_ON_CONSIDERATION                 => 'На рассмотрении',
+        AuthAssignmentEntity::ROLE_COMPANY_DIRECTOR => 'Директор компании',
+        self::ROLE_BLOCKED => 'Заблокирован',
+        self::ROLE_ON_CONSIDERATION => 'На рассмотрении',
     ];
 
     protected const DATE_ERROR_MESSAGE = '-';
@@ -147,62 +148,98 @@ class ParticipantEntity implements IEntity
     /**
      * @return int
      */
-    public function getId() { return $this->id; }
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @return int
      */
-    public function getUserId() { return $this->userId; }
+    public function getUserId()
+    {
+        return $this->userId;
+    }
 
     /**
      * @return int | null
      */
-    public function getCompanyId() { return $this->companyId; }
+    public function getCompanyId()
+    {
+        return $this->companyId;
+    }
 
     /**
      * @return int | null
      */
-    public function getProjectId() { return $this->projectId; }
+    public function getProjectId()
+    {
+        return $this->projectId;
+    }
 
     /**
      * @return bool | null
      */
-    public function getApproved() { return $this->approved; }
+    public function getApproved()
+    {
+        return $this->approved;
+    }
 
     /**
      * @return int | null
      */
-    public function getApprovedAt() { return $this->approvedAt; }
+    public function getApprovedAt()
+    {
+        return $this->approvedAt;
+    }
 
     /**
      * @return bool | null
      */
-    public function getBlocked() { return $this->blocked; }
+    public function getBlocked()
+    {
+        return $this->blocked;
+    }
 
     /**
      * @return int | null
      */
-    public function getBlockedAt() { return $this->blockedAt; }
+    public function getBlockedAt()
+    {
+        return $this->blockedAt;
+    }
 
     /**
      * @return int | null
      */
-    public function getCreatedAt() { return $this->createdAt; }
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
 
     /**
      * @return int | null
      */
-    public function getUpdatedAt() { return $this->updatedAt; }
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
 
     /**
      * @return mixed
      */
-    public function getDeletedAt() { return $this->deletedAt; }
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
 
     /**
      * @return bool
      */
-    public function getDeleted() { return $this->deleted; }
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
 
 
     // #################### SECTION OF SETTERS ######################
@@ -211,42 +248,66 @@ class ParticipantEntity implements IEntity
     /**
      * @param int $value
      */
-    public function setCompanyId (int $value) { $this->companyId = $value; }
+    public function setCompanyId(int $value)
+    {
+        $this->companyId = $value;
+    }
 
     /**
      * @param int $value
      */
-    public function setProjectId (int $value) { $this->projectId = $value; }
+    public function setProjectId(int $value)
+    {
+        $this->projectId = $value;
+    }
 
     /**
      * @param bool $value
      */
-    public function setApproved (bool $value) { $this->approved = $value; }
+    public function setApproved(bool $value)
+    {
+        $this->approved = $value;
+    }
 
     /**
      * @param int $value
      */
-    public function setApprovedAt (int $value = null) { $this->approvedAt = $value; }
+    public function setApprovedAt(int $value = null)
+    {
+        $this->approvedAt = $value;
+    }
 
     /**
      * @param bool $value
      */
-    public function setBlocked (bool $value) { $this->blocked = $value; }
+    public function setBlocked(bool $value)
+    {
+        $this->blocked = $value;
+    }
 
     /**
      * @param int|null $value
      */
-    public function setBlockedAt (int $value = null) { $this->blockedAt = $value; }
+    public function setBlockedAt(int $value = null)
+    {
+        $this->blockedAt = $value;
+    }
 
     /**
      * @param int $value
      */
-    public function setDeletedAt (int $value = null) { $this->deletedAt = $value; }
+    public function setDeletedAt(int $value = null)
+    {
+        $this->deletedAt = $value;
+    }
 
     /**
      * @param bool $value
      */
-    public function setDeleted (bool $value) { $this->deleted = $value; }
+    public function setDeleted(bool $value)
+    {
+        $this->deleted = $value;
+    }
 
 
     // #################### SECTION OF RELATIONS ######################
@@ -314,12 +375,25 @@ class ParticipantEntity implements IEntity
     {
         if ($this->blocked) {
             return self::ROLE_BLOCKED;
-        }
-        else if(!$this->approved && !$this->blocked) {
-            return self::ROLE_ON_CONSIDERATION;
+        } else {
+            if (!$this->approved && !$this->blocked) {
+                return self::ROLE_ON_CONSIDERATION;
+            }
         }
 
         return $this->getAuthAssignment()->getItemName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuthRoleName()
+    {
+        if ($this->getAuthAssignment() !== null) {
+            return $this->getAuthAssignment()->getItemName();
+        }
+
+        return null;
     }
 
     /**
@@ -333,8 +407,40 @@ class ParticipantEntity implements IEntity
     /**
      * @return bool
      */
-    public function isDirector()
+    public function isCompanyDirector()
     {
-        return $this->getRoleName() === AuthAssignmentEntity::ROLE_PROJECT_DIRECTOR;
+        return $this->getAuthRoleName() === AuthAssignmentEntity::ROLE_COMPANY_DIRECTOR;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProjectDirector()
+    {
+        return $this->getAuthRoleName() === AuthAssignmentEntity::ROLE_PROJECT_DIRECTOR;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isManager()
+    {
+        return $this->getAuthRoleName() === AuthAssignmentEntity::ROLE_MANAGER;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUser()
+    {
+        return $this->getAuthRoleName() === AuthAssignmentEntity::ROLE_USER;
+    }
+
+    /**
+     * @return bool
+     */
+    public function onConsideration()
+    {
+        return (!$this->approved && !$this->blocked) ? true : false;
     }
 }

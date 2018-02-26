@@ -28,7 +28,7 @@ class AuthAssignmentEntityBuilder
      */
     public function assignProperties(&$model, &$authAssignment)
     {
-        $model->itemName = $authAssignment->getItemName();
+        $model->item_name = $authAssignment->getItemName();
         $model->user_id = $authAssignment->getUserId();
     }
 

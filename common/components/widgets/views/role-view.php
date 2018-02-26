@@ -12,23 +12,27 @@ use common\models\entities\AuthAssignmentEntity;
 
     <?php $role = $participant->getRoleName(); ?>
 
-    <?php if ($role === AuthAssignmentEntity::ROLE_USER): ?>
+    <?php if ($participant->isUser()): ?>
 
         <span class="label label-success"><?= ParticipantEntity::LIST_ROLES[$role] ?></span>
 
-    <?php elseif ($role === AuthAssignmentEntity::ROLE_MANAGER): ?>
+    <?php elseif ($participant->isManager()): ?>
 
         <span class="label label-warning"><?= ParticipantEntity::LIST_ROLES[$role] ?></span>
 
-    <?php elseif ($role === AuthAssignmentEntity::ROLE_PROJECT_DIRECTOR): ?>
+    <?php elseif ($participant->isProjectDirector()): ?>
 
         <span class="label label-primary"><?= ParticipantEntity::LIST_ROLES[$role] ?></span>
 
-    <?php elseif ($role === ParticipantEntity::ROLE_ON_CONSIDERATION): ?>
+    <?php elseif ($participant->isCompanyDirector()): ?>
+
+        <span class="label label-info"><?= ParticipantEntity::LIST_ROLES[$role] ?></span>
+
+    <?php elseif ($participant->onConsideration()): ?>
 
         <span class="label label-default"><?= ParticipantEntity::LIST_ROLES[$role] ?></span>
 
-    <?php elseif ($role === ParticipantEntity::ROLE_BLOCKED): ?>
+    <?php elseif ($participant->getBlocked()): ?>
 
         <span class="label label-danger"><?= ParticipantEntity::LIST_ROLES[$role] ?></span>
 

@@ -2,7 +2,9 @@
 
 namespace common\models\activerecords;
 
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+
 /**
  * This is the model class for table "auth_assignment".
  *
@@ -21,6 +23,19 @@ class AuthAssignment extends ActiveRecord
     public static function tableName()
     {
         return 'auth_assignment';
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at'],
+                ],
+                'value' => time(),
+            ],
+        ];
     }
 
     /**

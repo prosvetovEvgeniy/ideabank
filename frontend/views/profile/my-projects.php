@@ -71,7 +71,7 @@ $this->title = 'Мои проекты';
                     [
                         'header' => '',
                         'value' => function(ParticipantEntity $participant){
-                            if ($participant->isDirector()) {
+                            if ($participant->isProjectDirector()) {
                                 return Html::a('Закрыть', '#', [
                                     'data'  => ['participant-id' => $participant->getId()]
                                 ]);

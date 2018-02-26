@@ -69,8 +69,38 @@ class ExtendedUser extends User
      * @param int|null $userId
      * @return bool|mixed
      */
+    public function isUser(int $projectId, int $userId = null)
+    {
+        return $this->is(AuthAssignmentEntity::ROLE_USER, $projectId, $userId);
+    }
+
+    /**
+     * @param int $projectId
+     * @param int|null $userId
+     * @return bool|mixed
+     */
     public function isManager(int $projectId, int $userId = null)
     {
         return $this->is(AuthAssignmentEntity::ROLE_MANAGER, $projectId, $userId);
+    }
+
+    /**
+     * @param int $projectId
+     * @param int|null $userId
+     * @return bool
+     */
+    public function isProjectDirector(int $projectId, int $userId = null)
+    {
+        return $this->is(AuthAssignmentEntity::ROLE_PROJECT_DIRECTOR, $projectId, $userId);
+    }
+
+    /**
+     * @param int $projectId
+     * @param int|null $userId
+     * @return bool
+     */
+    public function isCompanyDirector(int $projectId, int $userId = null)
+    {
+        return $this->is(AuthAssignmentEntity::ROLE_COMPANY_DIRECTOR, $projectId, $userId);
     }
 }

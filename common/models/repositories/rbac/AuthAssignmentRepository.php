@@ -69,8 +69,7 @@ class AuthAssignmentRepository implements IRepository
         int $offset = null,
         string $orderBy = null,
         array $with = []
-    )
-    {
+    ) {
         $models = AuthAssignment::find()->where($condition)
                                         ->with($with)
                                         ->offset($offset)
