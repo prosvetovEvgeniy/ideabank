@@ -12,7 +12,7 @@ use common\models\repositories\participant\ParticipantRepository;
  * @property int    $id
  * @property int    $changerId
  * @property int    $changeableId
- * @property string $newRoleName
+ * @property string $roleName
  * @property int    $createdAt
  *
  * @property ParticipantEntity $changer
@@ -23,7 +23,7 @@ class AuthLogEntity implements IEntity
     protected $id;
     protected $changerId;
     protected $changeableId;
-    protected $newRoleName;
+    protected $roleName;
     protected $createdAt;
 
     //кеш связанных сущностей
@@ -32,18 +32,18 @@ class AuthLogEntity implements IEntity
 
     /**
      * AuthLogEntity constructor.
+     * @param $changerId
      * @param $changeableId
-     * @param $newRoleName
-     * @param null $changerId
+     * @param $roleName
      * @param null $id
      * @param null $createdAt
      * @param ParticipantEntity|null $changer
      * @param ParticipantEntity|null $changeable
      */
     public function __construct(
+        $changerId,
         $changeableId,
-        $newRoleName,
-        $changerId = null,
+        $roleName,
         $id = null,
         $createdAt = null,
         ParticipantEntity $changer = null,
@@ -52,7 +52,7 @@ class AuthLogEntity implements IEntity
         $this->id = $id;
         $this->changerId = $changerId;
         $this->changeableId = $changeableId;
-        $this->newRoleName = $newRoleName;
+        $this->roleName = $roleName;
         $this->createdAt = $createdAt;
 
         $this->changer = $changer;
@@ -69,7 +69,7 @@ class AuthLogEntity implements IEntity
     public function getId() { return $this->id; }
 
     /**
-     * @return int|null
+     * @return int
      */
     public function getChangerId() { return $this->changerId; }
 
@@ -81,7 +81,7 @@ class AuthLogEntity implements IEntity
     /**
      * @return string
      */
-    public function getNewRoleName() { return $this->newRoleName; }
+    public function getRoleName() { return $this->roleName; }
 
     /**
      * @return int
@@ -95,7 +95,7 @@ class AuthLogEntity implements IEntity
     /**
      * @param int $value
      */
-    public function setChangerId(int $value = null) { $this->changerId = $value; }
+    public function setChangerId(int $value) { $this->changerId = $value; }
 
     /**
      * @param int $value
@@ -105,7 +105,7 @@ class AuthLogEntity implements IEntity
     /**
      * @param string $value
      */
-    public function setNewRoleName(string $value) { $this->newRoleName = $value; }
+    public function setRoleName(string $value) { $this->roleName = $value; }
 
 
     // #################### SECTION OF RELATIONS ######################

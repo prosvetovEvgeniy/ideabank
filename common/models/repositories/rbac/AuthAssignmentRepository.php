@@ -127,28 +127,6 @@ class AuthAssignmentRepository implements IRepository
     }
 
     /**
-     * @param AuthAssignmentEntity $authAssignment
-     * @return AuthAssignmentEntity
-     * @throws Exception
-     * @throws \Throwable
-     */
-    public function delete(AuthAssignmentEntity $authAssignment)
-    {
-        $model = AuthAssignment::findOne(['user_id' => $authAssignment->getUserId()]);
-
-        if (!$model) {
-            throw new Exception('auth_assignment with user_id = ' . $authAssignment->getUserId() . ' does not exists');
-        }
-
-        if (!$model->delete()) {
-            Yii::error($model->errors);
-            throw new Exception('Cannot delete auth_assignment with user_id = ' . $authAssignment->getUserId());
-        }
-
-        return $this->builderBehavior->buildEntity($model);
-    }
-
-    /**
      * @param array $condition
      * @return int
      */

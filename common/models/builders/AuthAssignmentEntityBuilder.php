@@ -51,6 +51,7 @@ class AuthAssignmentEntityBuilder
             $model->item_name, 
             $model->user_id, 
             $model->created_at,
+            $model->updated_at,
             $user
         );
     }

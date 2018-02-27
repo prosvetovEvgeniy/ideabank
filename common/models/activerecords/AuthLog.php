@@ -12,7 +12,7 @@ use yii\db\ActiveRecord;
  * @property int    $id
  * @property int    $changer_id
  * @property int    $changeable_id
- * @property string $new_role_name
+ * @property string $role_name
  * @property int    $created_at
  *
  * @property Participant $changer
@@ -47,9 +47,9 @@ class AuthLog extends ActiveRecord
     public function rules()
     {
         return [
-            [['changeable_id', 'new_role_name'], 'required'],
+            [['changeable_id', 'role_name'], 'required'],
             [['changer_id', 'changeable_id', 'created_at'], 'integer'],
-            [['new_role_name'], 'string']
+            [['role_name'], 'string']
         ];
     }
 

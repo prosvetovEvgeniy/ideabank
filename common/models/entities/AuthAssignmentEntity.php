@@ -13,6 +13,7 @@ use yii\helpers\Html;
  * @property string $itemName
  * @property int    $userId
  * @property int    $createdAt
+ * @property int    $updatedAt
  *
  * @property ParticipantEntity $user
  */
@@ -43,6 +44,7 @@ class AuthAssignmentEntity implements IEntity
     protected $itemName;
     protected $userId;
     protected $createdAt;
+    protected $updatedAt;
 
     //кеш связанных сущностей
     protected $participant;
@@ -51,18 +53,21 @@ class AuthAssignmentEntity implements IEntity
      * AuthAssignmentEntity constructor.
      * @param string $itemName
      * @param int $userId
-     * @param int $createdAt
+     * @param int|null $createdAt
+     * @param int|null $updatedAt
      * @param ParticipantEntity|null $participant
      */
     public function __construct(
         string $itemName,
         int $userId,
         int $createdAt = null,
+        int $updatedAt = null,
         ParticipantEntity $participant = null
     ) {
         $this->itemName = $itemName;
         $this->userId = $userId;
         $this->createdAt = $createdAt;
+        $this->updatedAt = null;
 
         $this->user = $participant;
     }

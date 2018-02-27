@@ -42,6 +42,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        Yii::$app->db->schema->refresh();
         $actualTasksDataProvider = new EntityDataProvider([
             'condition' => [],
             'repositoryInstance' => ActualTasksRepository::instance(),

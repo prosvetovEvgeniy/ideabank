@@ -93,10 +93,8 @@ class DataController extends Controller
         $participantIds['newUserGithub'] = $this->addParticipant($userIds['newUser'], $companyIds['eCompanyId'], $projectIds['github']);
         $participantIds['newUserVulcan'] = $this->addParticipant($userIds['newUser'], $companyIds['infSysId'], $projectIds['vulcan']);
 
-        $participantIds['adminDirector'] = $this->addParticipantDirector($userIds['admin'], $companyIds['infSysId']);
         $participantIds['adminVulcan'] = $this->addParticipant($userIds['admin'], $companyIds['infSysId'], $projectIds['vulcan']);
 
-        $participantIds['edirectorDirector'] = $this->addParticipantDirector($userIds['edirector'], $companyIds['eCompanyId']);
         $participantIds['edirectorGithub'] = $this->addParticipant($userIds['edirector'], $companyIds['eCompanyId'], $projectIds['github']);
         $participantIds['edirectorVk'] = $this->addParticipant($userIds['edirector'], $companyIds['eCompanyId'], $projectIds['vk']);
         $participantIds['edirectorXabr'] = $this->addParticipant($userIds['edirector'], $companyIds['eCompanyId'], $projectIds['xabr']);
@@ -119,28 +117,33 @@ class DataController extends Controller
         $projectDirector = $auth->getRole(AuthAssignmentEntity::ROLE_PROJECT_DIRECTOR);
         $companyDirector = $auth->getRole(AuthAssignmentEntity::ROLE_COMPANY_DIRECTOR);
 
-        $this->assign($manager,$participantIds['evgeniyGithub']);
-        $this->assign($user,$participantIds['evgeniyVk']);
-        $this->assign($user,$participantIds['evgeniyXabr']);
-        $this->assign($manager, $participantIds['evgeniyVulcanm']);
 
-        $this->assign($companyDirector,$participantIds['adminVulcan']);
+        //############### ASSIGNS ###############
 
-        $this->assign($companyDirector,$participantIds['edirectorGithub']);
-        $this->assign($companyDirector,$participantIds['edirectorVk']);
-        $this->assign($companyDirector,$participantIds['edirectorXabr']);
-        $this->assign($onConsideration, $participantIds['edirectorVulcanConsideration']);
 
-        $this->assign($user, $participantIds['newUserGithub']);
-        $this->assign($user, $participantIds['newUserVulcan']);
+        $this->assign($companyDirector, $participantIds['edirectorGithub'], $participantIds['edirectorGithub']);
+        $this->assign($companyDirector, $participantIds['edirectorVk'], $participantIds['edirectorVk']);
+        $this->assign($companyDirector, $participantIds['edirectorXabr'], $participantIds['edirectorXabr']);
 
-        $this->assign($user, $participantIds['newLoginVulcan']);
+        $this->assign($companyDirector, $participantIds['adminVulcan'], $participantIds['adminVulcan']);
 
-        $this->assign($blocked, $participantIds['blockedUserGithub']);
-        $this->assign($blocked, $participantIds['blockedUserVulcan']);
+        $this->assign($manager, $participantIds['evgeniyGithub'], $participantIds['edirectorGithub']);
+        $this->assign($manager, $participantIds['evgeniyVulcanm'], $participantIds['adminVulcan']);
+        $this->assign($user, $participantIds['evgeniyVk'], $participantIds['edirectorVk']);
+        $this->assign($user, $participantIds['evgeniyXabr'], $participantIds['edirectorXabr']);
 
-        $this->assign($projectDirector, $participantIds['projectDirectorVulcan']);
-        $this->assign($projectDirector, $participantIds['projectDirectorGit']);
+        $this->assign($onConsideration, $participantIds['edirectorVulcanConsideration'], $participantIds['adminVulcan']);
+
+        $this->assign($user, $participantIds['newLoginVulcan'], $participantIds['adminVulcan']);
+
+        $this->assign($user, $participantIds['newUserGithub'], $participantIds['evgeniyGithub']);
+        $this->assign($user, $participantIds['newUserVulcan'], $participantIds['adminVulcan']);
+
+        $this->assign($blocked, $participantIds['blockedUserGithub'], $participantIds['edirectorGithub']);
+        $this->assign($blocked, $participantIds['blockedUserVulcan'], $participantIds['adminVulcan']);
+
+        $this->assign($projectDirector, $participantIds['projectDirectorGit'], $participantIds['edirectorGithub']);
+        $this->assign($projectDirector, $participantIds['projectDirectorVulcan'], $participantIds['adminVulcan']);
 
 
         //############### FILLING TASKS ###############
@@ -198,12 +201,14 @@ class DataController extends Controller
         $this->stdout("\nTest data was init\n");
     }
 
-    private function assign(Role $role, $participantId)
+    private function assign(Role $role, $participantId, $changerId = null)
     {
         Yii::$app->authManager->assign($role, $participantId);
 
-        $this->db->createCommand("INSERT INTO auth_log (changeable_id, new_role_name, created_at) VALUES 
-                                ({$participantId}, '{$role->name}', {$this->getTime()})")->execute();
+        $changerId = $changerId ?? 'NULL';
+
+        $this->db->createCommand("INSERT INTO auth_log (changeable_id, new_role_name, changer_id, created_at) VALUES 
+                                ({$participantId}, '{$role->name}', {$changerId},{$this->getTime()})")->execute();
     }
 
     private function generateMessages(int $firstParticipantId, int $secondParticipantId, int $amount)

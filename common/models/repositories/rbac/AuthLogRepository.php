@@ -2,13 +2,12 @@
 
 namespace common\models\repositories\rbac;
 
-
 use common\models\activerecords\AuthLog;
 use common\models\builders\AuthLogEntityBuilder;
 use common\models\interfaces\IRepository;
 use common\models\entities\AuthLogEntity;
 use common\models\interfaces\IEntity;
-use Exception;
+use yii\db\Exception;
 use Yii;
 
 /**
@@ -97,51 +96,6 @@ class AuthLogRepository implements IRepository
         if (!$model->save()) {
             Yii::error($model->errors);
             throw new Exception('Cannot save auth_log with id = ' . $authLog->getId());
-        }
-
-        return $this->builderBehavior->buildEntity($model);
-    }
-
-    /**
-     * @param AuthLogEntity $authLog
-     * @return AuthLogEntity
-     * @throws Exception
-     */
-    public function update(AuthLogEntity $authLog)
-    {
-        $model = AuthLog::findOne(['id' => $authLog->getId()]);
-
-        if (!$model) {
-            throw new Exception('auth_log with id = ' . $authLog->getId() . ' does not exists');
-        }
-
-        $this->builderBehavior->assignProperties($model, $authLog);
-
-        if (!$model->save()) {
-            Yii::error($model->errors);
-            throw new Exception('Cannot save auth_log with id = ' . $authLog->getId());
-        }
-
-        return $this->builderBehavior->buildEntity($model);
-    }
-
-    /**
-     * @param AuthLogEntity $authLog
-     * @return AuthLogEntity
-     * @throws Exception
-     * @throws \Throwable
-     */
-    public function delete(AuthLogEntity $authLog)
-    {
-        $model = AuthLog::findOne(['id' => $authLog->getId()]);
-
-        if (!$model) {
-            throw new Exception('auth_log with id = ' . $authLog->getId() . ' does not exists');
-        }
-
-        if (!$model->delete()) {
-            Yii::error($model->errors);
-            throw new Exception('Cannot delete auth_log with id = ' . $authLog->getId());
         }
 
         return $this->builderBehavior->buildEntity($model);

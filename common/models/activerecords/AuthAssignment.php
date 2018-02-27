@@ -11,6 +11,7 @@ use yii\db\ActiveRecord;
  * @property string $item_name
  * @property integer $user_id
  * @property integer $created_at
+ * @property integer $updated_at
  *
  * @property AuthItem $itemName
  * @property Participant $user
@@ -31,7 +32,8 @@ class AuthAssignment extends ActiveRecord
             [
                 'class' => TimestampBehavior::className(),
                 'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at'],
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at']
                 ],
                 'value' => time(),
             ],
@@ -45,7 +47,7 @@ class AuthAssignment extends ActiveRecord
     {
         return [
             [['item_name', 'user_id'], 'required'],
-            [['user_id', 'created_at'], 'integer'],
+            [['user_id', 'created_at', 'updated_at'], 'integer'],
             [['item_name'], 'string', 'max' => 64],
             [['item_name'], 'exist', 'skipOnError' => true, 'targetClass' => AuthItem::className(), 'targetAttribute' => ['item_name' => 'name']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Participant::className(), 'targetAttribute' => ['user_id' => 'id']],

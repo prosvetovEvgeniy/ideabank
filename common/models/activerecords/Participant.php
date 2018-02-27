@@ -26,6 +26,7 @@ use yii\behaviors\TimestampBehavior;
  * @property Users          $user
  * @property Project        $project
  * @property AuthAssignment $authAssignment
+ * @property AuthLog        $authLog
  *
  * @property UserEntity $userEntity
  */
@@ -104,5 +105,10 @@ class Participant extends ActiveRecord
     public function getAuthAssignment()
     {
         return $this->hasOne(AuthAssignment::className(), ['user_id' => 'id']);
+    }
+
+    public function getAuthLog()
+    {
+        return $this->hasMany(AuthLog::className(), ['changeable_id' => 'id']);
     }
 }

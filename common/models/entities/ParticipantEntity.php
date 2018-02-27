@@ -6,6 +6,7 @@ use common\models\interfaces\IEntity;
 use common\models\repositories\rbac\AuthAssignmentRepository;
 use common\models\repositories\company\CompanyRepository;
 use common\models\repositories\project\ProjectRepository;
+use common\models\repositories\rbac\AuthLogRepository;
 use common\models\repositories\user\UserRepository;
 use Yii;
 use yii\rbac\ManagerInterface;
@@ -32,6 +33,7 @@ use yii\rbac\ManagerInterface;
  * @property ProjectEntity        $project
  * @property UserEntity           $user
  * @property AuthAssignmentEntity $authAssignment
+ * @property AuthLogEntity[]      $authLog
  *
  * @property ManagerInterface $auth
  */
@@ -59,6 +61,7 @@ class ParticipantEntity implements IEntity
     protected $project;
     protected $user;
     protected $authAssignment;
+    protected $authLog;
 
     protected $auth;
 
@@ -80,6 +83,7 @@ class ParticipantEntity implements IEntity
      * @param UserEntity|null $user
      * @param CompanyEntity|null $company
      * @param AuthAssignmentEntity|null $authAssignment
+     * @param AuthLogEntity[]|null $authLog
      */
     public function __construct(
         int $userId,
@@ -97,7 +101,8 @@ class ParticipantEntity implements IEntity
         ProjectEntity $project = null,
         UserEntity $user = null,
         CompanyEntity $company = null,
-        AuthAssignmentEntity $authAssignment = null
+        AuthAssignmentEntity $authAssignment = null,
+        array $authLog = null
     ) {
         $this->id = $id;
         $this->userId = $userId;
@@ -118,6 +123,7 @@ class ParticipantEntity implements IEntity
         $this->user = $user;
         $this->company = $company;
         $this->authAssignment = $authAssignment;
+        $this->authLog = $authLog;
     }
 
 
@@ -340,9 +346,31 @@ class ParticipantEntity implements IEntity
         return $this->authAssignment;
     }
 
+    /**
+     * @return AuthLogEntity[]|IEntity[]
+     */
+    public function getAuthLog()
+    {
+        if ($this->authLog === null) {
+            $this->authLog = AuthLogRepository::instance()->findAll([
+                'changeable_id' => $this->id
+            ], -1, -1, 'created_at ASC');
+        }
+
+        return $this->authLog;
+    }
 
     // #################### SECTION OF LOGIC ######################
 
+    /**
+     * @return AuthLogEntity|IEntity|null
+     */
+    public function getPreviousAuthLog()
+    {
+        $authLog = $this->getAuthLog();
+
+        return (count($authLog) > 1) ? $authLog[count($authLog) - 2]: null;
+    }
 
     /**
      * Возвращает значение роли пользователя (из RBAC)
@@ -409,5 +437,19 @@ class ParticipantEntity implements IEntity
     public function blocked()
     {
         return $this->getRoleName() === AuthAssignmentEntity::ROLE_BLOCKED;
+    }
+
+    /**
+     * @return bool
+     */
+    public function wasUser()
+    {
+        $previousLog = $this->getPreviousAuthLog();
+
+        if ($previousLog !== null) {
+            return $previousLog->getRoleName() === AuthAssignmentEntity::ROLE_USER;
+        }
+
+        return false;
     }
 }

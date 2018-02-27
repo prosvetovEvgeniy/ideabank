@@ -15,7 +15,8 @@ class m171114_061413_create_auth_assignment_table extends Migration
         $this->createTable('auth_assignment', [
             'item_name' => $this->string(64)->notNull(),
             'user_id' => $this->integer()->notNull(),
-            'created_at' => $this->integer(),
+            'created_at' => $this->integer()->notNull(),
+            'updated_at' => $this->integer(),
             'PRIMARY KEY ([[item_name]], [[user_id]])',
         ]);
 

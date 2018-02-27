@@ -25,7 +25,7 @@ class AuthLogEntityBuilder
     {
         $model->changer_id = $authLog->getChangerId();
         $model->changeable_id = $authLog->getChangeableId();
-        $model->new_role_name = $authLog->getNewRoleName();
+        $model->role_name = $authLog->getRoleName();
     }
 
     /**
@@ -48,9 +48,9 @@ class AuthLogEntityBuilder
         }
 
         return new AuthLogEntity(
-            $model->changeable_id,
-            $model->new_role_name,
             $model->changer_id,
+            $model->changeable_id,
+            $model->role_name,
             $model->id,
             $model->created_at,
             $changer,
