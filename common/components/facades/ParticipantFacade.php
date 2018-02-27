@@ -35,11 +35,27 @@ class ParticipantFacade
                 $participantExist->setDeleted(false);
                 $participantExist->setDeletedAt();
 
+                AuthAssignmentRepository::instance()->add(
+                    new AuthAssignmentEntity(
+                        AuthAssignmentEntity::ROLE_ON_CONSIDERATION,
+                        $participantExist->getId()
+                    )
+                );
+
                 return ParticipantRepository::instance()->update($participantExist);
             }
         }
 
-        return ParticipantRepository::instance()->add($participant);
+        $participant = ParticipantRepository::instance()->add($participant);
+
+        AuthAssignmentRepository::instance()->add(
+            new AuthAssignmentEntity(
+                AuthAssignmentEntity::ROLE_ON_CONSIDERATION,
+                $participant->getId()
+            )
+        );
+
+        return $participant;
     }
 
     /**
@@ -49,12 +65,11 @@ class ParticipantFacade
      */
     public function addParticipant(ParticipantEntity $participant)
     {
-        AuthAssignmentRepository::instance()->add(
-            new AuthAssignmentEntity(
-                AuthAssignmentEntity::ROLE_USER,
-                $participant->getId()
-            )
-        );
+        $auth = $participant->getAuthAssignment();
+
+        $auth->setItemName(AuthAssignmentEntity::ROLE_USER);
+
+        AuthAssignmentRepository::instance()->update($auth);
 
         $participant->setApproved(true);
         $participant->setApprovedAt(time());
@@ -66,9 +81,12 @@ class ParticipantFacade
      * @param ParticipantEntity $participant
      * @return ParticipantEntity
      * @throws Exception
+     * @throws \Throwable
      */
     public function cancelParticipant(ParticipantEntity $participant)
     {
+        AuthAssignmentRepository::instance()->delete($participant->getAuthAssignment());
+
         return ParticipantRepository::instance()->delete($participant);
     }
 

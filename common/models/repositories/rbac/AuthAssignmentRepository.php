@@ -116,7 +116,7 @@ class AuthAssignmentRepository implements IRepository
             throw new Exception('auth_assignment with user_id = ' . $authAssignment->getUserId() . ' does not exists');
         }
 
-        $this->builderBehavior->assignProperties($model, $commentLike);
+        $this->builderBehavior->assignProperties($model, $authAssignment);
 
         if (!$model->save()) {
             Yii::error($model->errors);

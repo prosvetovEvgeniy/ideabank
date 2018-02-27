@@ -3,6 +3,7 @@
 namespace common\models\searchmodels\participant;
 
 use common\components\dataproviders\EntityDataProvider;
+use common\models\entities\AuthAssignmentEntity;
 use common\models\entities\ParticipantEntity;
 use common\models\interfaces\ISearchEntityModel;
 use common\models\repositories\participant\ParticipantViewRepository;
@@ -49,7 +50,7 @@ class ParticipantSearchForm extends Model implements ISearchEntityModel
 
             [['role'], 'string'],
             [['role'], 'default', 'value' => null],
-            [['role'], 'in', 'range' => array_keys(ParticipantEntity::LIST_ROLES)],
+            [['role'], 'in', 'range' => array_keys(AuthAssignmentEntity::LIST_ROLES)],
 
             [['phone'], 'string'],
             [['phone'], 'default', 'value' => null],
@@ -120,9 +121,9 @@ class ParticipantSearchForm extends Model implements ISearchEntityModel
         }
 
         if ($this->role !== null) {
-            if ($this->role === ParticipantEntity::ROLE_ON_CONSIDERATION){
+            if ($this->role === AuthAssignmentEntity::ROLE_ON_CONSIDERATION){
                 array_push($condition, ['blocked' => false, 'approved' => false]);
-            } else if ($this->role === ParticipantEntity::ROLE_BLOCKED) {
+            } else if ($this->role === AuthAssignmentEntity::ROLE_BLOCKED) {
                 array_push($condition, ['blocked' => true]);
             } else {
                 array_push($condition, ['item_name' => $this->role]);

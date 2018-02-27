@@ -37,27 +37,6 @@ use yii\rbac\ManagerInterface;
  */
 class ParticipantEntity implements IEntity
 {
-    /**
-     * эти константы используются в видах для
-     * отображения статуса пользователя, если
-     * он не имеет роли, но вступил в проект
-     * или был заблокирован в нем
-     */
-    public const ROLE_BLOCKED = 'blocked';
-    public const ROLE_ON_CONSIDERATION = 'on consideration';
-
-    /**
-     * список ролей и состояний
-     */
-    public const LIST_ROLES = [
-        AuthAssignmentEntity::ROLE_USER => 'Участник',
-        AuthAssignmentEntity::ROLE_MANAGER => 'Менеджер',
-        AuthAssignmentEntity::ROLE_PROJECT_DIRECTOR => 'Директор проекта',
-        AuthAssignmentEntity::ROLE_COMPANY_DIRECTOR => 'Директор компании',
-        self::ROLE_BLOCKED => 'Заблокирован',
-        self::ROLE_ON_CONSIDERATION => 'На рассмотрении',
-    ];
-
     protected const DATE_ERROR_MESSAGE = '-';
 
     private const DATE_FORMAT = 'd.m.Y';
@@ -373,27 +352,7 @@ class ParticipantEntity implements IEntity
      */
     public function getRoleName()
     {
-        if ($this->blocked) {
-            return self::ROLE_BLOCKED;
-        } else {
-            if (!$this->approved && !$this->blocked) {
-                return self::ROLE_ON_CONSIDERATION;
-            }
-        }
-
         return $this->getAuthAssignment()->getItemName();
-    }
-
-    /**
-     * @return string
-     */
-    public function getAuthRoleName()
-    {
-        if ($this->getAuthAssignment() !== null) {
-            return $this->getAuthAssignment()->getItemName();
-        }
-
-        return null;
     }
 
     /**
@@ -409,7 +368,7 @@ class ParticipantEntity implements IEntity
      */
     public function isCompanyDirector()
     {
-        return $this->getAuthRoleName() === AuthAssignmentEntity::ROLE_COMPANY_DIRECTOR;
+        return $this->getRoleName() === AuthAssignmentEntity::ROLE_COMPANY_DIRECTOR;
     }
 
     /**
@@ -417,7 +376,7 @@ class ParticipantEntity implements IEntity
      */
     public function isProjectDirector()
     {
-        return $this->getAuthRoleName() === AuthAssignmentEntity::ROLE_PROJECT_DIRECTOR;
+        return $this->getRoleName() === AuthAssignmentEntity::ROLE_PROJECT_DIRECTOR;
     }
 
     /**
@@ -425,7 +384,7 @@ class ParticipantEntity implements IEntity
      */
     public function isManager()
     {
-        return $this->getAuthRoleName() === AuthAssignmentEntity::ROLE_MANAGER;
+        return $this->getRoleName() === AuthAssignmentEntity::ROLE_MANAGER;
     }
 
     /**
@@ -433,7 +392,7 @@ class ParticipantEntity implements IEntity
      */
     public function isUser()
     {
-        return $this->getAuthRoleName() === AuthAssignmentEntity::ROLE_USER;
+        return $this->getRoleName() === AuthAssignmentEntity::ROLE_USER;
     }
 
     /**
@@ -441,6 +400,14 @@ class ParticipantEntity implements IEntity
      */
     public function onConsideration()
     {
-        return (!$this->approved && !$this->blocked) ? true : false;
+        return $this->getRoleName() === AuthAssignmentEntity::ROLE_ON_CONSIDERATION;
+    }
+
+    /**
+     * @return bool
+     */
+    public function blocked()
+    {
+        return $this->getRoleName() === AuthAssignmentEntity::ROLE_BLOCKED;
     }
 }

@@ -37,7 +37,7 @@ class AddParticipantModel extends Model
         }
 
         $participant = ParticipantRepository::instance()->findOne(['id' => $this->id]);
-
+        $a = $participant->getAuthAssignment();
         if (!$participant ||
             $participant->getBlocked() ||
             $participant->getDeleted())

@@ -14,27 +14,27 @@ use common\models\entities\AuthAssignmentEntity;
 
     <?php if ($participant->isUser()): ?>
 
-        <span class="label label-success"><?= ParticipantEntity::LIST_ROLES[$role] ?></span>
+        <span class="label label-success"><?= AuthAssignmentEntity::LIST_ROLES[$role] ?></span>
 
     <?php elseif ($participant->isManager()): ?>
 
-        <span class="label label-warning"><?= ParticipantEntity::LIST_ROLES[$role] ?></span>
+        <span class="label label-warning"><?= AuthAssignmentEntity::LIST_ROLES[$role] ?></span>
 
     <?php elseif ($participant->isProjectDirector()): ?>
 
-        <span class="label label-primary"><?= ParticipantEntity::LIST_ROLES[$role] ?></span>
+        <span class="label label-primary"><?= AuthAssignmentEntity::LIST_ROLES[$role] ?></span>
 
     <?php elseif ($participant->isCompanyDirector()): ?>
 
-        <span class="label label-info"><?= ParticipantEntity::LIST_ROLES[$role] ?></span>
+        <span class="label label-info"><?= AuthAssignmentEntity::LIST_ROLES[$role] ?></span>
 
     <?php elseif ($participant->onConsideration()): ?>
 
-        <span class="label label-default"><?= ParticipantEntity::LIST_ROLES[$role] ?></span>
+        <span class="label label-default"><?= AuthAssignmentEntity::LIST_ROLES[$role] ?></span>
 
-    <?php elseif ($participant->getBlocked()): ?>
+    <?php elseif ($participant->blocked()): ?>
 
-        <span class="label label-danger"><?= ParticipantEntity::LIST_ROLES[$role] ?></span>
+        <span class="label label-danger"><?= AuthAssignmentEntity::LIST_ROLES[$role] ?></span>
 
     <?php endif; ?>
 </div>

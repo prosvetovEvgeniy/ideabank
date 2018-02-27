@@ -34,6 +34,7 @@ class JoinParticipantModel extends Model
 
     /**
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function save()
     {
@@ -56,10 +57,15 @@ class JoinParticipantModel extends Model
 
         $participantFacade = new ParticipantFacade();
 
+        $transaction = Yii::$app->db->beginTransaction();
+
         try {
             $participantFacade->joinParticipant($participant);
+
+            $transaction->commit();
             return true;
         } catch (Exception $e) {
+            $transaction->rollBack();
             return false;
         }
     }

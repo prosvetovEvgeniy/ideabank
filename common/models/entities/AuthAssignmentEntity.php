@@ -19,10 +19,26 @@ use yii\helpers\Html;
 class AuthAssignmentEntity implements IEntity
 {
     //Название ролей из rbac
-    public const ROLE_USER = 'user';
-    public const ROLE_MANAGER = 'manager';
-    public const ROLE_PROJECT_DIRECTOR = 'projectDirector';
-    public const ROLE_COMPANY_DIRECTOR = 'companyDirector';
+    public const ROLE_USER = 'USER';
+    public const ROLE_MANAGER = 'MANAGER';
+    public const ROLE_PROJECT_DIRECTOR = 'PROJECT_DIRECTOR';
+    public const ROLE_COMPANY_DIRECTOR = 'COMPANY_DIRECTOR';
+    public const ROLE_BLOCKED = 'BLOCKED';
+    public const ROLE_ON_CONSIDERATION = 'ON_CONSIDERATION';
+    public const ROLE_DELETED = 'DELETED';
+
+    /**
+     * список ролей
+     */
+    public const LIST_ROLES = [
+        self::ROLE_USER             => 'Участник',
+        self::ROLE_MANAGER          => 'Менеджер',
+        self::ROLE_PROJECT_DIRECTOR => 'Директор проекта',
+        self::ROLE_COMPANY_DIRECTOR => 'Директор компании',
+        self::ROLE_BLOCKED          => 'Заблокирован',
+        self::ROLE_ON_CONSIDERATION => 'На рассмотрении',
+        self::ROLE_DELETED          => 'Удаленный'
+    ];
 
     protected $itemName;
     protected $userId;

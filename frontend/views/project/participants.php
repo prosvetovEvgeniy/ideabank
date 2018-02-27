@@ -6,6 +6,7 @@ use common\models\searchmodels\participant\ParticipantSearchForm;
 use common\components\helpers\ProjectHelper;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use common\models\entities\AuthAssignmentEntity;
 use common\models\entities\ParticipantEntity;
 use common\components\dataproviders\EntityDataProvider;
 use common\components\widgets\RoleViewWidget;
@@ -43,7 +44,7 @@ use common\components\widgets\ParticipantActionWidget;
 
         <?= $form->field($model, 'phone')->textInput() ?>
 
-        <?= $form->field($model, 'role')->dropDownList(ParticipantEntity::LIST_ROLES, ['prompt' => 'Все']) ?>
+        <?= $form->field($model, 'role')->dropDownList(AuthAssignmentEntity::LIST_ROLES, ['prompt' => 'Все']) ?>
 
         <?= $form->field($model, 'projectId')->dropDownList(ProjectHelper::getProjectForManagerItems()) ?>
 

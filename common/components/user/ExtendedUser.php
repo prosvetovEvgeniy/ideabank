@@ -67,6 +67,26 @@ class ExtendedUser extends User
     /**
      * @param int $projectId
      * @param int|null $userId
+     * @return bool
+     */
+    public function onConsideration(int $projectId, int $userId = null)
+    {
+        return $this->is(AuthAssignmentEntity::ROLE_ON_CONSIDERATION, $projectId, $userId);
+    }
+
+    /**
+     * @param int $projectId
+     * @param int|null $userId
+     * @return bool
+     */
+    public function blocked(int $projectId, int $userId = null)
+    {
+        return $this->is(AuthAssignmentEntity::ROLE_BLOCKED, $projectId, $userId);
+    }
+
+    /**
+     * @param int $projectId
+     * @param int|null $userId
      * @return bool|mixed
      */
     public function isUser(int $projectId, int $userId = null)

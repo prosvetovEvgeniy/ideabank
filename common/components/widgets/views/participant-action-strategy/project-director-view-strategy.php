@@ -14,7 +14,7 @@ use frontend\assets\ProjectParticipantsAsset;
 
 ProjectParticipantsAsset::register($this);
 
-if ($participant->getBlocked() && ($participant->isUser() || $participant->isManager())) {
+if ($participant->blocked() && ($participant->isUser() || $participant->isManager())) {
     echo Html::tag('div', $unBlockTag, ['data' => ['participant-id' => $participant->getId()]]);
 } elseif ($participant->isUser() || $participant->isManager()) {
     echo Html::tag('div', $blockTag, ['data' => ['participant-id' => $participant->getId()]]);

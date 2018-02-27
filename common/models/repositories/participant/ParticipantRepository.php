@@ -146,7 +146,6 @@ class ParticipantRepository implements IRepository
             throw new Exception('Cannot delete participant with id = ' . $participant->getId());
         }
 
-
         return $this->builderBehavior->buildEntity($model);
     }
 
