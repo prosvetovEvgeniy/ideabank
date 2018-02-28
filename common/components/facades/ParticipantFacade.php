@@ -86,7 +86,7 @@ class ParticipantFacade
 
         AuthLogRepository::instance()->add(
             new AuthLogEntity(
-                Yii::$app->user->getId(),
+                Yii::$app->user->getParticipantId($participant->getProjectId()),
                 $participant->getId(),
                 AuthAssignmentEntity::ROLE_USER
             )
@@ -113,7 +113,7 @@ class ParticipantFacade
 
         AuthLogRepository::instance()->add(
             new AuthLogEntity(
-                Yii::$app->user->getId(),
+                Yii::$app->user->getParticipantId($participant->getProjectId()),
                 $participant->getId(),
                 AuthAssignmentEntity::ROLE_DELETED
             )
@@ -136,7 +136,7 @@ class ParticipantFacade
 
         AuthLogRepository::instance()->add(
             new AuthLogEntity(
-                Yii::$app->user->getId(),
+                Yii::$app->user->getParticipantId($participant->getProjectId()),
                 $participant->getId(),
                 AuthAssignmentEntity::ROLE_BLOCKED
             )
@@ -156,6 +156,18 @@ class ParticipantFacade
      */
     public function unBlockParticipant(ParticipantEntity $participant)
     {
+        $auth = $participant->getAuthAssignment();
+        $auth->setItemName($participant->getPreviousAuthLog()->getRoleName());
+        AuthAssignmentRepository::instance()->update($auth);
+
+        AuthLogRepository::instance()->add(
+            new AuthLogEntity(
+                Yii::$app->user->getParticipantId($participant->getProjectId()),
+                $participant->getId(),
+                $participant->getPreviousAuthLog()->getRoleName()
+            )
+        );
+
         $participant->setBlocked(false);
         $participant->setBlockedAt();
         $participant->setApproved(true);
@@ -172,13 +184,17 @@ class ParticipantFacade
      */
     public function deleteParticipant(ParticipantEntity $participant)
     {
-        $authAssignment = AuthAssignmentRepository::instance()->findOne([
-            'user_id' => $participant->getId()
-        ]);
+        $authAssignment = $participant->getAuthAssignment();
+        $authAssignment->setItemName(AuthAssignmentEntity::ROLE_DELETED);
+        AuthAssignmentRepository::instance()->update($authAssignment);
 
-        if ($authAssignment) {
-            AuthAssignmentRepository::instance()->delete($authAssignment);
-        }
+        AuthLogRepository::instance()->add(
+            new AuthLogEntity(
+                Yii::$app->user->getParticipantId($participant->getProjectId()),
+                $participant->getId(),
+                AuthAssignmentEntity::ROLE_DELETED
+            )
+        );
 
         $participant->setApproved(false);
         $participant->setApprovedAt();

@@ -59,7 +59,12 @@ class ProjectsManagerRepository implements IRepository
                                  ->where([
                                      'and',
                                      ['pc.user_id'    => Yii::$app->user->getId()],
-                                     ['not', ['a_u.item_name' => AuthAssignmentEntity::ROLE_USER]]
+                                     [
+                                         'or',
+                                         ['a_u.item_name' => AuthAssignmentEntity::ROLE_MANAGER],
+                                         ['a_u.item_name' => AuthAssignmentEntity::ROLE_PROJECT_DIRECTOR],
+                                         ['a_u.item_name' => AuthAssignmentEntity::ROLE_COMPANY_DIRECTOR],
+                                     ]
                                  ])
                                  ->with($with)
                                  ->offset($offset)

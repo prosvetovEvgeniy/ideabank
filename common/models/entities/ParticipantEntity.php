@@ -63,6 +63,9 @@ class ParticipantEntity implements IEntity
     protected $authAssignment;
     protected $authLog;
 
+    //кеш предыдущей роли
+    protected $previousAuthLog;
+
     protected $auth;
 
     /**
@@ -354,22 +357,36 @@ class ParticipantEntity implements IEntity
         if ($this->authLog === null) {
             $this->authLog = AuthLogRepository::instance()->findAll([
                 'changeable_id' => $this->id
-            ], -1, -1, 'created_at ASC');
+            ], -1, -1, 'created_at ASC, id ASC');
         }
 
         return $this->authLog;
     }
 
+
     // #################### SECTION OF LOGIC ######################
+
 
     /**
      * @return AuthLogEntity|IEntity|null
      */
     public function getPreviousAuthLog()
     {
-        $authLog = $this->getAuthLog();
+        if ($this->previousAuthLog === null) {
+            $authLog = $this->getAuthLog();
 
-        return (count($authLog) > 1) ? $authLog[count($authLog) - 2]: null;
+            $this->previousAuthLog = (count($authLog) > 1) ? $authLog[count($authLog) - 2]: null;
+        }
+
+        return $this->previousAuthLog;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasPreviousAuthLog()
+    {
+        return ($this->getPreviousAuthLog() === null) ? false : true;
     }
 
     /**
@@ -434,7 +451,7 @@ class ParticipantEntity implements IEntity
     /**
      * @return bool
      */
-    public function blocked()
+    public function isBlocked()
     {
         return $this->getRoleName() === AuthAssignmentEntity::ROLE_BLOCKED;
     }
@@ -448,6 +465,20 @@ class ParticipantEntity implements IEntity
 
         if ($previousLog !== null) {
             return $previousLog->getRoleName() === AuthAssignmentEntity::ROLE_USER;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function wasManager()
+    {
+        $previousLog = $this->getPreviousAuthLog();
+
+        if ($previousLog !== null) {
+            return $previousLog->getRoleName() === AuthAssignmentEntity::ROLE_MANAGER;
         }
 
         return false;

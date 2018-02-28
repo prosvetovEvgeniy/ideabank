@@ -79,7 +79,7 @@ class ExtendedUser extends User
      * @param int|null $userId
      * @return bool
      */
-    public function blocked(int $projectId, int $userId = null)
+    public function isBlocked(int $projectId, int $userId = null)
     {
         return $this->is(AuthAssignmentEntity::ROLE_BLOCKED, $projectId, $userId);
     }
@@ -122,5 +122,19 @@ class ExtendedUser extends User
     public function isCompanyDirector(int $projectId, int $userId = null)
     {
         return $this->is(AuthAssignmentEntity::ROLE_COMPANY_DIRECTOR, $projectId, $userId);
+    }
+
+    /**
+     * @param int $projectId
+     * @return int
+     */
+    public function getParticipantId(int $projectId)
+    {
+        $participant = ParticipantRepository::instance()->findOne([
+           'user_id' => Yii::$app->user->getId(),
+           'project_id' => $projectId
+        ]);
+
+        return $participant->getId();
     }
 }

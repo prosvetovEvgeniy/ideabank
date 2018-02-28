@@ -14,7 +14,7 @@ use frontend\assets\ProjectParticipantsAsset;
 
 ProjectParticipantsAsset::register($this);
 
-if ($participant->blocked()) {
+if ($participant->isBlocked()) {
     echo Html::tag('div', $unBlockTag, ['data' => ['participant-id' => $participant->getId()]]);
 } elseif (!$participant->isCompanyDirector() && !$participant->onConsideration()) {
     echo Html::tag('div', $blockTag, ['data' => ['participant-id' => $participant->getId()]]);

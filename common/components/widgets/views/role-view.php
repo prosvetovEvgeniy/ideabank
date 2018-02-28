@@ -32,7 +32,7 @@ use common\models\entities\AuthAssignmentEntity;
 
         <span class="label label-default"><?= AuthAssignmentEntity::LIST_ROLES[$role] ?></span>
 
-    <?php elseif ($participant->blocked()): ?>
+    <?php elseif ($participant->getBlocked()): ?>
 
         <span class="label label-danger"><?= AuthAssignmentEntity::LIST_ROLES[$role] ?></span>
 

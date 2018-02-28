@@ -3,6 +3,7 @@
 namespace frontend\models\participant;
 
 use common\components\facades\ParticipantFacade;
+use common\components\helpers\ParticipantHelper;
 use yii\base\Model;
 use Yii;
 use common\models\repositories\project\ProjectRepository;
@@ -60,7 +61,13 @@ class JoinParticipantModel extends Model
         $transaction = Yii::$app->db->beginTransaction();
 
         try {
-            $participantFacade->joinParticipant($participant);
+            $participant = $participantFacade->joinParticipant($participant);
+
+            $participantHelper = new ParticipantHelper();
+
+            if (!$participantHelper->addOrUpdateRoleCache($participant)) {
+                throw new Exception();
+            }
 
             $transaction->commit();
             return true;

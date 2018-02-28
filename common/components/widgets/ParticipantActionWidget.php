@@ -70,7 +70,7 @@ class ParticipantActionWidget extends Widget
      */
     private function getAddTag()
     {
-        return Html::tag('i', '', ['class' => 'glyphicon glyphicon-ok participant-action-tag add-tag', 'title' => 'Разблокировать']);
+        return Html::tag('i', '', ['class' => 'glyphicon glyphicon-ok participant-action-tag add-tag', 'title' => 'Добавить']);
     }
 
     /**

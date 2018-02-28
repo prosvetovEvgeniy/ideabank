@@ -14,9 +14,9 @@ use frontend\assets\ProjectParticipantsAsset;
 
 ProjectParticipantsAsset::register($this);
 
-$a = $participant->getPreviousAuthLog();
+$a = $participant->wasUser();
 
-if ($participant->blocked() && $participant->isUser()) {
+if ($participant->isBlocked() && $participant->wasUser()) {
     echo Html::tag('div', $unBlockTag, ['data' => ['participant-id' => $participant->getId()]]);
 } elseif ($participant->isUser()) {
     echo Html::tag('div', $blockTag, ['data' => ['participant-id' => $participant->getId()]]);
