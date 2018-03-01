@@ -8,31 +8,31 @@ use common\models\entities\AuthAssignmentEntity;
  */
 ?>
 
-<div>
+<div class="role_view">
 
     <?php $role = $participant->getRoleName(); ?>
 
-    <?php if ($participant->isUser()): ?>
+    <?php if ($participant->hasUserRole()): ?>
 
         <span class="label label-success"><?= AuthAssignmentEntity::LIST_ROLES[$role] ?></span>
 
-    <?php elseif ($participant->isManager()): ?>
+    <?php elseif ($participant->hasManagerRole()): ?>
 
         <span class="label label-warning"><?= AuthAssignmentEntity::LIST_ROLES[$role] ?></span>
 
-    <?php elseif ($participant->isProjectDirector()): ?>
+    <?php elseif ($participant->hasProjectDirectorRole()): ?>
 
         <span class="label label-primary"><?= AuthAssignmentEntity::LIST_ROLES[$role] ?></span>
 
-    <?php elseif ($participant->isCompanyDirector()): ?>
+    <?php elseif ($participant->hasCompanyDirectorRole()): ?>
 
         <span class="label label-info"><?= AuthAssignmentEntity::LIST_ROLES[$role] ?></span>
 
-    <?php elseif ($participant->onConsideration()): ?>
+    <?php elseif ($participant->hasOnConsiderationRole()): ?>
 
         <span class="label label-default"><?= AuthAssignmentEntity::LIST_ROLES[$role] ?></span>
 
-    <?php elseif ($participant->getBlocked()): ?>
+    <?php elseif ($participant->hasBlockedRole()): ?>
 
         <span class="label label-danger"><?= AuthAssignmentEntity::LIST_ROLES[$role] ?></span>
 

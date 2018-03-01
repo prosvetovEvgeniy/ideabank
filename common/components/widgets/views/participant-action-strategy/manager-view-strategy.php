@@ -14,12 +14,12 @@ use frontend\assets\ProjectParticipantsAsset;
 
 ProjectParticipantsAsset::register($this);
 
-$a = $participant->wasUser();
+$a = $participant->hadUserRole();
 
-if ($participant->isBlocked() && $participant->wasUser()) {
+if ($participant->hasBlockedRole() && $participant->hadUserRole()) {
     echo Html::tag('div', $unBlockTag, ['data' => ['participant-id' => $participant->getId()]]);
-} elseif ($participant->isUser()) {
+} elseif ($participant->hasUserRole()) {
     echo Html::tag('div', $blockTag, ['data' => ['participant-id' => $participant->getId()]]);
-} elseif ($participant->onConsideration()) {
+} elseif ($participant->hasOnConsiderationRole()) {
     echo Html::tag('div', $addTag . $cancelTag, ['data' => ['participant-id' => $participant->getId()]]);
 }

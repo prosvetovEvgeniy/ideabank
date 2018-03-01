@@ -27,6 +27,8 @@ class m180227_024757_create_auth_log_table extends Migration
         $this->createIndex('auth_log_changer_id_index', 'auth_log', 'changer_id');
         $this->createIndex('auth_log_changeable_id_index', 'auth_log', 'changeable_id');
         $this->createIndex('auth_log_role_name_index', 'auth_log', 'role_name');
+        $this->createIndex('auth_log_created_at_index', 'auth_log', 'created_at');
+
     }
 
     /**
@@ -34,6 +36,7 @@ class m180227_024757_create_auth_log_table extends Migration
      */
     public function down()
     {
+        $this->dropIndex('auth_log_created_at_index', 'auth_log');
         $this->dropIndex('auth_log_role_name_index', 'auth_log');
         $this->dropIndex('auth_log_changeable_id_index', 'auth_log');
         $this->dropIndex('auth_log_changer_id_index', 'auth_log');

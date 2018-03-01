@@ -3,10 +3,11 @@
 namespace frontend\models\participant;
 
 use common\components\facades\ParticipantFacade;
+use common\components\helpers\ParticipantHelper;
 use common\models\repositories\participant\ParticipantRepository;
 use yii\base\Model;
 use Yii;
-use yii\db\Exception;
+use Exception;
 
 /**
  * Class DeleteParticipantModel
@@ -39,7 +40,7 @@ class DeleteParticipantModel extends Model
 
         $participant = ParticipantRepository::instance()->findOne(['id' => $this->id]);
 
-        if (!$participant || $participant->getDeleted() || $participant->getBlocked()) {
+        if (!$participant || $participant->getDeleted()) {
             return false;
         }
 
@@ -48,7 +49,11 @@ class DeleteParticipantModel extends Model
         $transaction = Yii::$app->db->beginTransaction();
 
         try {
-            $participantFacade->deleteParticipant($participant);
+            $participant = $participantFacade->deleteParticipant($participant);
+
+            if (!ParticipantHelper::instance()->addOrUpdateRoleCache($participant)) {
+               throw new Exception();
+            }
 
             $transaction->commit();
             return true;

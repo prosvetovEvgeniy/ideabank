@@ -40,11 +40,15 @@ class ParticipantRepository implements IRepository
 
     /**
      * @param array $condition
+     * @param array $with
      * @return ParticipantEntity|null
      */
-    public function findOne(array $condition)
+    public function findOne(array $condition, array $with = [])
     {
-        $model = Participant::findOne($condition);
+        /**
+         * @var Participant $model
+         */
+        $model = Participant::find()->where($condition)->with($with)->one();
 
         if (!$model) {
             return null;
@@ -163,58 +167,31 @@ class ParticipantRepository implements IRepository
 
 
     /**
+     * Возвращает только участников проекта
+     *
      * @return ParticipantEntity[]|\common\models\interfaces\IEntity[]
      */
     public function getParticipantsInProjects()
     {
-        $condition = $this->getConditionOnParticipantsInProjects();
-
-        return $this->findAll($condition);
-    }
-
-    /**
-     * @return ParticipantEntity[]|\common\models\interfaces\IEntity[]
-     */
-    public function getRelationToProjects()
-    {
-        $condition = $this->getConditionOnRelationToProject();
-
-        return $this->findAll($condition);
-    }
-
-    /**
-     * Позвращает условия только для участников проектов
-     *
-     * @return array
-     */
-    public function getConditionOnParticipantsInProjects()
-    {
-        return [
-            'and',
-            ['user_id' => Yii::$app->user->getId()],
-            ['not', ['company_id' => null]],
-            ['not', ['project_id' => null]],
-            ['approved' => true],
-            ['blocked' => false],
-            ['deleted' => false]
-        ];
+        return $this->findAll([
+            'user_id' => Yii::$app->user->getId(),
+            'approved' => true,
+            'blocked' => false,
+            'deleted' => false
+        ]);
     }
 
     /**
      * Возвращает условия для любого отношения
-     * к проету(участник, на рассмотрении)
+     * к проету(участник, на рассмотрении, забанен итд.)
      *
-     * @return array
+     * @return ParticipantEntity[]|\common\models\interfaces\IEntity[]
      */
-    public function getConditionOnRelationToProject()
+    public function getRelationToProjects()
     {
-        return [
-            'and',
-            ['user_id' => Yii::$app->user->getId()],
-            ['not', ['company_id' => null]],
-            ['not', ['project_id' => null]],
-            ['blocked' => false],
-            ['deleted' => false]
-        ];
+        return $this->findAll([
+            'user_id' => Yii::$app->user->getId(),
+            'deleted' => false
+        ]);
     }
 }

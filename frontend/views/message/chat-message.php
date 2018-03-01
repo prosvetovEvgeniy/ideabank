@@ -1,6 +1,7 @@
 <?php
 
 use common\models\entities\MessageEntity;
+use yii\helpers\Html;
 
 /**
  * @var MessageEntity $message
@@ -8,7 +9,7 @@ use common\models\entities\MessageEntity;
 ?>
 
 <div class="message <?= ($message->getIsSender()) ? null : 'message-from-companion' ?>">
-    <div class="message-img-block"><img class="comment-avatar" src="/images/stub-img.png"></div>
+    <div class="message-img-block"><?= Html::img($message->getSelf()->getAvatarAlias(), ['class' => 'comment-avatar']) ?></div>
     <div class="chat-message-content">
         <p><?= $message->getContent(true) ?></p>
     </div>

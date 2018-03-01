@@ -28,40 +28,42 @@ class ExtendedUser extends User
         $userId = $userId ?? Yii::$app->user->getId();
 
         $cache = Yii::$app->cache;
+        $authManager = Yii::$app->authManager;
 
-        $key = [
-            $userId,
-            $projectId,
-            $permissionName
-        ];
-
-        $cacheValue = $cache->get($key);
+        $cacheValue = $cache->get([$userId, $projectId]);
 
         if ($cacheValue !== false) {
-            return (bool) $cacheValue;
+            return in_array($permissionName, $cacheValue);
         }
 
         $participant = ParticipantRepository::instance()->findOne([
             'user_id' => $userId,
             'project_id' => $projectId
-        ]);
+        ], ['authAssignment']);
 
+        /**
+         * если пользователь не участник проекта,
+         * то положить в кеш пустой массив
+         * (всегда будет давать false на in_array())
+         */
         if (!$participant) {
+            $cache->add([$userId, $projectId], []);
             return false;
         }
 
         /**
-         * @var bool $access
+         * получаем список дочерних ролей,
+         * вместе с текущей ролью в виде массива
          */
-        $access = $this->getAccessChecker()->checkAccess($participant->getId(), $permissionName);
+        $childRoles = array_keys(
+            $authManager->getChildRoles(
+                $participant->getAuthAssignment()->getRoleName()
+            )
+        );
 
-        Yii::$app->cache->set([
-            $userId,
-            $projectId,
-            $permissionName
-        ], (int) $access);
+        $cache->add([$userId, $projectId], $childRoles);
 
-        return $access;
+        return in_array($permissionName, $childRoles);
     }
 
     /**
@@ -126,15 +128,42 @@ class ExtendedUser extends User
 
     /**
      * @param int $projectId
+     * @return \common\models\entities\ParticipantEntity|null
+     */
+    public function getParticipant(int $projectId)
+    {
+        return ParticipantRepository::instance()->findOne([
+            'user_id' => Yii::$app->user->getId(),
+            'project_id' => $projectId
+        ]);
+    }
+
+    /**
+     * @param int $projectId
      * @return int
      */
     public function getParticipantId(int $projectId)
     {
-        $participant = ParticipantRepository::instance()->findOne([
-           'user_id' => Yii::$app->user->getId(),
-           'project_id' => $projectId
-        ]);
+        $participant = $this->getParticipant($projectId);
 
-        return $participant->getId();
+        return ($participant) ? $participant->getId() : null;
+    }
+
+    /**
+     * true, если участник удалился из проекта,
+     * но перед этим был забанен
+     *
+     * @param int $projectId
+     * @return bool
+     */
+    public function participantHadBlockedRole(int $projectId)
+    {
+        $participant = $this->getParticipant($projectId);
+
+        if (!$participant) {
+            return false;
+        }
+
+        return ($participant->hadBlockedRole() && $participant->getDeleted()) ? true : false;
     }
 }

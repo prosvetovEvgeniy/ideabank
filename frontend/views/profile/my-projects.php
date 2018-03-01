@@ -40,6 +40,7 @@ $this->title = 'Мои проекты';
                         'attribute' => 'company',
                         'header' => 'Компания',
                         'value' => function(ParticipantEntity $participant) {
+
                             return $participant->getCompany()->getName(true);
                         },
                         'format' => 'html'
@@ -48,7 +49,7 @@ $this->title = 'Мои проекты';
                         'attribute' => 'project',
                         'header' => 'Проект',
                         'value' => function(ParticipantEntity $participant) {
-                            return $participant->getProject()->getName(true);
+                            return Html::a($participant->getProject()->getName(true), ['/project/view', 'id' => $participant->getProjectId()]);
                         },
                         'format' => 'html'
                     ],
@@ -71,8 +72,8 @@ $this->title = 'Мои проекты';
                     [
                         'header' => '',
                         'value' => function(ParticipantEntity $participant){
-                            if ($participant->isProjectDirector()) {
-                                return Html::a('Закрыть', '#', [
+                            if ($participant->hasCompanyDirectorRole()) {
+                                return Html::a('Закрыть проект', '#', [
                                     'data'  => ['participant-id' => $participant->getId()]
                                 ]);
                             } else {

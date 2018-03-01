@@ -105,7 +105,7 @@ use common\components\widgets\ParticipantActionWidget;
                     'value' => function(ParticipantEntity $participant){
                         $viewTag = Html::tag('i', '', ['class' => 'glyphicon glyphicon-user participant-action-tag', 'title' => 'Просмотр']);
 
-                        if (!$participant->onConsideration()){
+                        if (!$participant->hasOnConsiderationRole()){
                             return Html::a($viewTag, ['/project/participant-view', 'id' => $participant->getId()]);
                         }
 

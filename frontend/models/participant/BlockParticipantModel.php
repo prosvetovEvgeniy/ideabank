@@ -3,6 +3,7 @@
 namespace frontend\models\participant;
 
 use common\components\facades\ParticipantFacade;
+use common\components\helpers\ParticipantHelper;
 use common\models\repositories\participant\ParticipantRepository;
 use yii\base\Model;
 use Exception;
@@ -67,7 +68,11 @@ class BlockParticipantModel extends Model
         $transaction = Yii::$app->db->beginTransaction();
 
         try {
-            $participantFacade->blockParticipant($participant);
+            $participant = $participantFacade->blockParticipant($participant);
+
+            if (!ParticipantHelper::instance()->addOrUpdateRoleCache($participant)) {
+                throw new Exception();
+            }
 
             $transaction->commit();
             return true;

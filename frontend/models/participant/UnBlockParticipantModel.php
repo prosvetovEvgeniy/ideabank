@@ -3,6 +3,7 @@
 namespace frontend\models\participant;
 
 use common\components\facades\ParticipantFacade;
+use common\components\helpers\ParticipantHelper;
 use common\models\repositories\participant\ParticipantRepository;
 use yii\base\Model;
 use Exception;
@@ -28,6 +29,7 @@ class UnBlockParticipantModel extends Model
 
     /**
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function save()
     {
@@ -62,11 +64,20 @@ class UnBlockParticipantModel extends Model
         }
 
         $participantFacade = new ParticipantFacade();
+
+        $transaction = Yii::$app->db->beginTransaction();
         
         try{
-            $participantFacade->unBlockParticipant($participant);
+            $participant = $participantFacade->unBlockParticipant($participant);
+
+            if (!ParticipantHelper::instance()->addOrUpdateRoleCache($participant)) {
+                throw new Exception();
+            }
+
+            $transaction->commit();
             return true;
         } catch (Exception $e) {
+            $transaction->rollBack();
             return false;
         }
     }

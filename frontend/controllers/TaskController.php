@@ -18,6 +18,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use Yii;
 use yii\web\ForbiddenHttpException;
+use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 
@@ -48,6 +49,10 @@ class TaskController extends Controller
             throw new NotFoundHttpException();
         }
 
+        if (Yii::$app->user->isBlocked($searchModel->projectId)) {
+            throw new ForbiddenHttpException();
+        }
+
         $dataProvider = $searchModel->search();
 
         $participants = ParticipantRepository::instance()->getRelationToProjects();
@@ -68,12 +73,20 @@ class TaskController extends Controller
             throw new NotFoundHttpException();
         }
 
-        if (($task->forRegistered() || $task->private()) && Yii::$app->user->isGuest) {
+        if (Yii::$app->user->participantHadBlockedRole($task->getProjectId())) {
             throw new ForbiddenHttpException();
         }
 
-        if (($task->private() && !$task->own()) && !Yii::$app->user->isManager($task->getProjectId())) {
+        if (Yii::$app->user->isBlocked($task->getProjectId())) {
             throw new ForbiddenHttpException();
+        }
+
+        if (($task->forRegistered() || $task->private()) && Yii::$app->user->isGuest) {
+            throw new NotAcceptableHttpException();
+        }
+
+        if ($task->private() && !$task->own() && !Yii::$app->user->isManager($task->getProjectId())) {
+            throw new NotAcceptableHttpException();
         }
 
         $dataProvider = new EntityDataProvider([
@@ -128,6 +141,10 @@ class TaskController extends Controller
 
         if (!$task) {
             throw new BadRequestHttpException();
+        }
+
+        if (!Yii::$app->user->isUser($task->getProjectId())) {
+            throw new NotAcceptableHttpException();
         }
 
         $model = new EditTaskForm($task);

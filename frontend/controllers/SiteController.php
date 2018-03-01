@@ -13,6 +13,8 @@ use common\models\forms\LoginForm;
 use frontend\models\authentication\PasswordResetRequestForm;
 use frontend\models\authentication\ResetPasswordForm;
 use frontend\models\authentication\SignupForm;
+use yii\web\ForbiddenHttpException;
+use yii\web\NotAcceptableHttpException;
 
 /**
  * Site controller
@@ -25,9 +27,6 @@ class SiteController extends Controller
     public function actions()
     {
         return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
@@ -35,11 +34,6 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return mixed
-     */
     public function actionIndex()
     {
         $actualTasksDataProvider = new EntityDataProvider([
@@ -175,5 +169,18 @@ class SiteController extends Controller
         return $this->render('resetPassword', [
             'model' => $model,
         ]);
+    }
+
+    public function actionError()
+    {
+        $className = get_class(Yii::$app->errorHandler->exception);
+
+        if ($className === ForbiddenHttpException::class) {
+            return $this->render("forbidden");
+        } elseif ($className === NotAcceptableHttpException::class) {
+            return $this->render("not-acceptable");
+        } else {
+            return $this->render("error");
+        }
     }
 }

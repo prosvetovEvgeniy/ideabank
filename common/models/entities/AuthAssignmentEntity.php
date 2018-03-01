@@ -127,4 +127,12 @@ class AuthAssignmentEntity implements IEntity
 
     // #################### SECTION OF LOGIC ######################
 
+    /**
+     * @param bool $encode
+     * @return string
+     */
+    public function getRoleName(bool $encode = false)
+    {
+        return $this->getItemName($encode);
+    }
 }

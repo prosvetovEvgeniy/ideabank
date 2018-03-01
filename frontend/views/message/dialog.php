@@ -28,6 +28,10 @@ MessageDeleteAsset::register($this);
             <table class="table dialogs">
                 <tbody>
 
+                    <?php if (empty($dataProvider->getModels())): ?>
+                        <h3 class="text-center">Список диалогов пуст</h3>
+                    <?php endif; ?>
+
                     <?php foreach ($dataProvider->getModels() as $dialog) :?>
                         <tr class="dialog-row" data-companion-id="<?= $dialog->getCompanionId() ?>"
                                                data-companion-username="<?= $dialog->getCompanion()->getUsername(true) ?>">

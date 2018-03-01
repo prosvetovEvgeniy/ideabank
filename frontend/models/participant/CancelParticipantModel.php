@@ -3,6 +3,7 @@
 namespace frontend\models\participant;
 
 use common\components\facades\ParticipantFacade;
+use common\components\helpers\ParticipantHelper;
 use common\models\repositories\participant\ParticipantRepository;
 use yii\base\Model;
 use Exception;
@@ -28,6 +29,7 @@ class CancelParticipantModel extends Model
 
     /**
      * @return bool
+     * @throws \Throwable
      */
     public function save()
     {
@@ -38,9 +40,7 @@ class CancelParticipantModel extends Model
         $participant = ParticipantRepository::instance()->findOne(['id' => $this->id]);
 
         if (!$participant ||
-            $participant->getBlocked() ||
-            $participant->getDeleted() ||
-            $participant->getApproved())
+            $participant->getDeleted())
         {
             return false;
         }
@@ -50,11 +50,20 @@ class CancelParticipantModel extends Model
         }
 
         $participantFacade = new ParticipantFacade();
-        
+
+        $transaction = Yii::$app->db->beginTransaction();
+
         try {
-            $participantFacade->cancelParticipant($participant);
+            $participant = $participantFacade->deleteParticipant($participant);
+
+            if (!ParticipantHelper::instance()->addOrUpdateRoleCache($participant)) {
+                throw new Exception();
+            }
+
+            $transaction->commit();
             return true;
         } catch (Exception $e) {
+            $transaction->rollBack();
             return false;
         }
     }

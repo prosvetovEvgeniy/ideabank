@@ -3,6 +3,7 @@
 namespace frontend\models\participant;
 
 use common\components\facades\ParticipantFacade;
+use common\components\helpers\ParticipantHelper;
 use common\models\repositories\participant\ParticipantRepository;
 use yii\base\Model;
 use Exception;
@@ -37,7 +38,7 @@ class AddParticipantModel extends Model
         }
 
         $participant = ParticipantRepository::instance()->findOne(['id' => $this->id]);
-        $a = $participant->getAuthAssignment();
+
         if (!$participant ||
             $participant->getBlocked() ||
             $participant->getDeleted())
@@ -54,7 +55,11 @@ class AddParticipantModel extends Model
         $transaction = Yii::$app->db->beginTransaction();
 
         try {
-            $participantFacade->addParticipant($participant);
+            $participant = $participantFacade->addParticipant($participant);
+
+            if (!ParticipantHelper::instance()->addOrUpdateRoleCache($participant)) {
+                throw new Exception();
+            }
 
             $transaction->commit();
             return true;

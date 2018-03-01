@@ -9,7 +9,6 @@ use common\models\repositories\project\ProjectRepository;
 use common\models\repositories\rbac\AuthLogRepository;
 use common\models\repositories\user\UserRepository;
 use Yii;
-use yii\rbac\ManagerInterface;
 
 
 /**
@@ -35,7 +34,6 @@ use yii\rbac\ManagerInterface;
  * @property AuthAssignmentEntity $authAssignment
  * @property AuthLogEntity[]      $authLog
  *
- * @property ManagerInterface $auth
  */
 class ParticipantEntity implements IEntity
 {
@@ -65,8 +63,6 @@ class ParticipantEntity implements IEntity
 
     //кеш предыдущей роли
     protected $previousAuthLog;
-
-    protected $auth;
 
     /**
      * ParticipantEntity constructor.
@@ -119,8 +115,6 @@ class ParticipantEntity implements IEntity
         $this->updatedAt = $updatedAt;
         $this->deletedAt = $deletedAt;
         $this->deleted = $deleted;
-
-        $this->auth = Yii::$app->authManager;
 
         $this->project = $project;
         $this->user = $user;
@@ -409,57 +403,78 @@ class ParticipantEntity implements IEntity
     }
 
     /**
+     * @see hasManagerRole()
      * @return bool
      */
-    public function isCompanyDirector()
+    public function hasCompanyDirectorRole()
     {
         return $this->getRoleName() === AuthAssignmentEntity::ROLE_COMPANY_DIRECTOR;
     }
 
     /**
+     * @see hasManagerRole()
      * @return bool
      */
-    public function isProjectDirector()
+    public function hasProjectDirectorRole()
     {
         return $this->getRoleName() === AuthAssignmentEntity::ROLE_PROJECT_DIRECTOR;
     }
 
     /**
+     * Метод возращает true, если участник проекта
+     * ИМЕЕТ роль менеджера проекта, метод никак не связан
+     * с дочерними ролями, то есть менеджер проекта
+     * НЕ ЯВЛЯЕТСЯ пользователем,
+     * за дочерние роли отвечает метод
+     * @see isManager()
+     *
      * @return bool
      */
-    public function isManager()
+    public function hasManagerRole()
     {
         return $this->getRoleName() === AuthAssignmentEntity::ROLE_MANAGER;
     }
 
     /**
+     * @see hasManagerRole()
      * @return bool
      */
-    public function isUser()
+    public function hasUserRole()
     {
         return $this->getRoleName() === AuthAssignmentEntity::ROLE_USER;
     }
 
     /**
+     * @see hasManagerRole()
      * @return bool
      */
-    public function onConsideration()
+    public function hasOnConsiderationRole()
     {
         return $this->getRoleName() === AuthAssignmentEntity::ROLE_ON_CONSIDERATION;
     }
 
     /**
+     * @see hasManagerRole()
      * @return bool
      */
-    public function isBlocked()
+    public function hasBlockedRole()
     {
         return $this->getRoleName() === AuthAssignmentEntity::ROLE_BLOCKED;
     }
 
     /**
+     * @see hasManagerRole()
      * @return bool
      */
-    public function wasUser()
+    public function hasDeletedRole()
+    {
+        return $this->getRoleName() === AuthAssignmentEntity::ROLE_DELETED;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hadUserRole()
     {
         $previousLog = $this->getPreviousAuthLog();
 
@@ -473,7 +488,7 @@ class ParticipantEntity implements IEntity
     /**
      * @return bool
      */
-    public function wasManager()
+    public function hadManagerRole()
     {
         $previousLog = $this->getPreviousAuthLog();
 
@@ -482,5 +497,51 @@ class ParticipantEntity implements IEntity
         }
 
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hadBlockedRole()
+    {
+        $previousLog = $this->getPreviousAuthLog();
+
+        if ($previousLog !== null) {
+            return $previousLog->getRoleName() === AuthAssignmentEntity::ROLE_BLOCKED;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUser()
+    {
+        return Yii::$app->user->isUser($this->projectId, $this->userId);
+    }
+
+    /**
+     * @return bool
+     */
+    public function onConsideration()
+    {
+        return Yii::$app->user->onConsideration($this->projectId, $this->userId);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBlocked()
+    {
+        return Yii::$app->user->isBlocked($this->projectId, $this->userId);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isManager()
+    {
+        return Yii::$app->user->isManager($this->projectId, $this->userId);
     }
 }

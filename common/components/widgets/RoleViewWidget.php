@@ -19,14 +19,14 @@ class RoleViewWidget extends Widget
     public function init()
     {
         parent::init();
-
-        if ($this->participant === null) {
-            throw new Exception('Participant must be set');
-        }
     }
 
     public function run()
     {
+        if ($this->participant === null) {
+            return;
+        }
+
         return $this->render('role-view',['participant' => $this->participant]);
     }
 }

@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use common\components\helpers\LinkHelper;
 use common\models\searchmodels\task\TaskSearchForm;
+use common\components\widgets\RoleViewWidget;
 
 /**
  * @var \common\models\entities\ProjectEntity $project
@@ -14,6 +15,7 @@ $this->title = $project->getName(true);
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="center-block">
+            <?= RoleViewWidget::widget(['participant' => Yii::$app->user->getParticipant($project->getId())]) ?>
             <div><h2><?= $project->getName(true) ?></h2></div>
             <div><?= $project->getDescription(true) ?></div>
             <div><?= Html::a('Количество задач : ' . $project->getAmountTasks(), LinkHelper::getLinkOnActionTaskIndex($project, TaskSearchForm::STATUS_ALL)) ?></div>

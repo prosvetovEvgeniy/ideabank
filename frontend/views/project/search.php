@@ -83,21 +83,19 @@ $this->title = 'Поиск';
                                     'user_id'    => Yii::$app->user->getId()
                                 ]);
 
-
-
-                                if (!$participant || $participant->getDeleted()) {
+                                if (!$participant) {
                                     return Html::a('Вступить', '/participant/join', ['class' => 'project-join','data' => ['user-id' => Yii::$app->user->getId(), 'project-id' => $project->getId()]]);
-                                } else {
-                                    if ($participant->getApproved() && !$participant->getBlocked()) {
-                                        return Html::a('Перейти', ['/task/index', 'TaskSearchForm[projectId]' => $participant->getProjectId(), 'TaskSearchForm[status]' => 'all']);
-                                    } elseif (!$participant->getApproved() && !$participant->getBlocked()) {
-                                        return '<code>На рассмотрении </code>';
-                                    } elseif ($participant->getBlocked()) {
-                                        return '<code>Забанен</code>';
-                                    }
                                 }
 
-                                return '<code>Ошибка</code>';
+                                if ($participant->isUser()) {
+                                    return Html::a('Перейти', ['/task/index', 'TaskSearchForm[projectId]' => $participant->getProjectId(), 'TaskSearchForm[status]' => 'all']);
+                                } elseif ($participant->isBlocked()) {
+                                    return '<code>Заблокирован</code>';
+                                } elseif ($participant->onConsideration()) {
+                                    return '<code>На рассмотрении </code>';
+                                } else {
+                                    return Html::a('Вступить', '/participant/join', ['class' => 'project-join','data' => ['user-id' => Yii::$app->user->getId(), 'project-id' => $project->getId()]]);
+                                }
                             },
                             'format' => 'raw'
                         ]

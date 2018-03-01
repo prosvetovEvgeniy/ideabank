@@ -85,7 +85,7 @@ class MessageController extends Controller
             'self_id'      => Yii::$app->user->getId(),
             'companion_id' => $companionId,
             'deleted'      => false
-        ], -1);
+        ], -1, -1, null, ['self', 'companion']);
 
         $model = new SendMessageForm();
 

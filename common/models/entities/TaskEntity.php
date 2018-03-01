@@ -562,7 +562,7 @@ class TaskEntity implements IEntity
      */
     public function private()
     {
-        return ($this->visibilityArea === self::VISIBILITY_AREA_PRIVATE) ? true : false ;
+        return $this->visibilityArea === self::VISIBILITY_AREA_PRIVATE;
     }
 
     /**

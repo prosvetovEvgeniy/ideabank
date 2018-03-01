@@ -43,37 +43,23 @@ class ParticipantHelper
      */
     public function addOrUpdateRoleCache(ParticipantEntity $participant)
     {
-//        $cache = Yii::$app->cache;
-//
-//        $key = [
-//            $participant->getUserId(),
-//            $participant->getProjectId(),
-//            $participant->getRoleName()
-//        ];
-//
-//        $cacheVal = $cache->get($key);
-//
-//        if ($cacheVal !== false) {
-//            //изменить
-//            if (!$cache->set($key, (int) !$cacheVal)) {
-//                return false;
-//            }
-//        } else {
-//            //добавить
-//            if (!$cache->add($key, 1)) {
-//                return false;
-//            }
-//        }
-//
-//        if ($participant->hasPreviousAuthLog()) {
-//            //имеется
-//            $key = [
-//                $participant->getUserId(),
-//                $participant->getProjectId(),
-//                $participant->getPreviousAuthLog()->getRoleName()
-//            ];
-//        }
+        $cache = Yii::$app->cache;
 
-        return true;
+        $key = [
+            $participant->getUserId(),
+            $participant->getProjectId()
+        ];
+
+        $childRoles = array_keys(
+            Yii::$app->authManager->getChildRoles(
+                $participant->getAuthAssignment()->getRoleName()
+            )
+        );
+
+        if ($cache->get($key) !== false) {
+            return $cache->set($key, $childRoles);
+        }
+
+        return $cache->add($key, $childRoles);
     }
 }

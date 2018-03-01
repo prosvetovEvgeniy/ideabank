@@ -10,6 +10,8 @@ use yii\web\BadRequestHttpException;
 use common\models\searchmodels\participant\ParticipantSearchForm;
 use yii\web\Controller;
 use Yii;
+use yii\web\ForbiddenHttpException;
+use yii\web\NotAcceptableHttpException;
 
 class ProjectController extends Controller
 {
@@ -30,9 +32,10 @@ class ProjectController extends Controller
         ];
     }
 
+
     public function actionIndex()
     {
-        $participants = ParticipantRepository::instance()->getRelationToProjects();
+        $participants = ParticipantRepository::instance()->getParticipantsInProjects();
 
         return $this->render('index', ['participants' => $participants]);
     }
@@ -43,6 +46,14 @@ class ProjectController extends Controller
 
         if (!$project) {
             throw new BadRequestHttpException();
+        }
+
+        if (Yii::$app->user->participantHadBlockedRole($project->getId())) {
+            throw new ForbiddenHttpException();
+        }
+
+        if (Yii::$app->user->isBlocked($id)) {
+            throw new ForbiddenHttpException();
         }
 
         return $this->render('view', ['project' => $project]);
@@ -59,7 +70,8 @@ class ProjectController extends Controller
             'repositoryInstance' => ProjectRepository::instance(),
             'pagination' => [
                 'pageSize' => 20
-            ]
+            ],
+            'with' => ['company']
         ]);
 
         return $this->render('search', [
@@ -76,9 +88,30 @@ class ProjectController extends Controller
             throw new BadRequestHttpException();
         }
 
+        if (!Yii::$app->user->isManager($searchModel->projectId)) {
+            throw new NotAcceptableHttpException();
+        }
+
         return $this->render('participants', [
             'model'        => $searchModel,
             'dataProvider' => $searchModel->search()
+        ]);
+    }
+
+    public function actionParticipantView(int $id)
+    {
+        $participant = ParticipantRepository::instance()->findOne(['id' => $id]);
+
+        if (!$participant) {
+            throw new BadRequestHttpException();
+        }
+
+        if (!Yii::$app->user->isManager($participant->getProjectId())) {
+            throw new NotAcceptableHttpException();
+        }
+
+        return $this->render('participant-view', [
+            'participant' => $participant
         ]);
     }
 }

@@ -14,7 +14,7 @@ $(document).ready(function () {
                 'JoinParticipantModel[projectId]': projectId
             },
             success: function (response) {
-                elem.replaceWith('<code>На рассмотрении</code>');
+                location.reload();
             },
         });
 

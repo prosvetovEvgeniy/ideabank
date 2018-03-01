@@ -70,11 +70,15 @@ class ProfileController extends Controller
     public function actionMyProjects()
     {
         $dataProvider = new EntityDataProvider([
-            'condition' => ParticipantRepository::instance()->getConditionOnRelationToProject(),
+            'condition' => [
+                'user_id' => Yii::$app->user->getId(),
+                'deleted' => false
+            ],
             'repositoryInstance' => ParticipantRepository::instance(),
             'pagination' => [
                 'pageSize' => 25
             ],
+            'with' => ['company', 'project', 'authAssignment']
         ]);
 
         return $this->render('my-projects',[

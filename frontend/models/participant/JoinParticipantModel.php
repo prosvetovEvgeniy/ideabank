@@ -63,9 +63,7 @@ class JoinParticipantModel extends Model
         try {
             $participant = $participantFacade->joinParticipant($participant);
 
-            $participantHelper = new ParticipantHelper();
-
-            if (!$participantHelper->addOrUpdateRoleCache($participant)) {
+            if (!ParticipantHelper::instance()->addOrUpdateRoleCache($participant)) {
                 throw new Exception();
             }
 

@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use common\models\repositories\task\TaskFileRepository;
 use frontend\models\taskfile\TaskFileDeleteModel;
+use yii\filters\AccessControl;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;

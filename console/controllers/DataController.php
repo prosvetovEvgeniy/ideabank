@@ -42,6 +42,10 @@ class DataController extends Controller
 
         $this->stdout("\ntables were truncated\n");
 
+//        Yii::$app->cache->flush();
+
+//        $this->stdout("\ncache was cleared\n");
+
         $auth = Yii::$app->authManager;
 
         $companyIds = [];
@@ -76,6 +80,7 @@ class DataController extends Controller
 
         //############### FILLING USERS ###############
 
+        $this->stdout("\n");
 
         $userIds['evgeniy'] = $this->addUser('evgeniy','123456','evgeniy@mail.ru',
                                                 '89131841102','Евгений', 'Просветов', 'Игоревич');
@@ -101,7 +106,7 @@ class DataController extends Controller
         $userIds['empryUser'] = $this->addUser('emptyUser', '123456', 'emptyUser@mail.ru',
             '89131841102', 'emptyUser', 'emptyUser','emptyUser');
 
-        $this->stdout("users were filled\n");
+        $this->stdout("\nusers were filled\n");
 
         //############### FILLING PARTICIPANTS ###############
 
@@ -143,6 +148,7 @@ class DataController extends Controller
 
 
         $this->stdout("auth was filled\n");
+
 
         //############### ASSIGNS ###############
 
@@ -271,8 +277,6 @@ class DataController extends Controller
 
     private function addLog(Role $role, $changeableId, $changerId = null)
     {
-        //Yii::$app->authManager->assign($role, $participantId);
-
         $changerId = $changerId ?? 'NULL';
 
         $this->db->createCommand("INSERT INTO auth_log (changeable_id, role_name, changer_id, created_at) VALUES 
@@ -431,7 +435,7 @@ class DataController extends Controller
     private function addUser($username, $password, $email, $phone, $firstName, $secondName, $lastName)
     {
         $password = Yii::$app->security->generatePasswordHash($password);
-
+        $this->stdout($username . " was added\n");
         $this->db->createCommand("INSERT INTO users (username, password, email, phone, first_name, second_name, last_name, created_at, updated_at)
                                        VALUES ('{$username}', '{$password}', '{$email}', '{$phone}', '{$firstName}', '{$secondName}', '{$lastName}',
                                                {$this->getTime()}, {$this->getTime()})")->execute();
