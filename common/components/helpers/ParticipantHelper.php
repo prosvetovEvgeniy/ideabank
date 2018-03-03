@@ -10,27 +10,23 @@ use Yii;
 class ParticipantHelper
 {
     /**
-     * @return ParticipantHelper
-     */
-    public static function instance()
-    {
-        return new self();
-    }
-
-    /**
      * Проверяем является ли пользователем участником проекта
      *
      * @param ProjectEntity $project
      * @return bool
      */
-    public function checkOnParticipantInProject(ProjectEntity $project)
+    public static function checkOnParticipantInProject(ProjectEntity $project)
     {
         $participant = ParticipantRepository::instance()->findOne([
             'user_id'    => Yii::$app->user->getId(),
             'project_id' => $project->getId()
         ]);
 
-        if (!$participant || $participant->getDeleted() || !$participant->getApproved() || $participant->getBlocked()) {
+        if (!$participant ||
+            $participant->getDeleted() ||
+            !$participant->getApproved() ||
+            $participant->getBlocked())
+        {
             return false;
         }
 
@@ -41,7 +37,7 @@ class ParticipantHelper
      * @param ParticipantEntity $participant
      * @return bool
      */
-    public function addOrUpdateRoleCache(ParticipantEntity $participant)
+    public static function addOrUpdateRoleCache(ParticipantEntity $participant)
     {
         $cache = Yii::$app->cache;
 
@@ -61,5 +57,26 @@ class ParticipantHelper
         }
 
         return $cache->add($key, $childRoles);
+    }
+
+    /**
+     * Проверяет разрешение на то, может ли participant
+     * изменять роль у другого participant
+     *
+     * @param ParticipantEntity $whoChange
+     * @param ParticipantEntity $changeable
+     * @return bool
+     */
+    public static function canChangeRole(ParticipantEntity $whoChange, ParticipantEntity $changeable)
+    {
+//        $auth = Yii::$app->authManager;
+//
+//
+//
+//        if () {
+//
+//        }
+
+        return true;
     }
 }

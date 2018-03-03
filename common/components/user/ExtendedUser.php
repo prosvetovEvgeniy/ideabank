@@ -21,11 +21,11 @@ class ExtendedUser extends User
      */
     public function is(string $permissionName, int $projectId, int $userId = null)
     {
-        if (Yii::$app->user->isGuest) {
+        if (parent::getIsGuest()) {
             return false;
         }
 
-        $userId = $userId ?? Yii::$app->user->getId();
+        $userId = $userId ?? parent::getId();
 
         $cache = Yii::$app->cache;
         $authManager = Yii::$app->authManager;
@@ -140,7 +140,7 @@ class ExtendedUser extends User
 
     /**
      * @param int $projectId
-     * @return int
+     * @return int|null
      */
     public function getParticipantId(int $projectId)
     {

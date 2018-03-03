@@ -81,7 +81,7 @@ class CreateTaskForm extends Model
         /**
          * если пользователь не является участником проекта
          */
-        if (!ParticipantHelper::instance()->checkOnParticipantInProject($project)) {
+        if (!ParticipantHelper::checkOnParticipantInProject($project)) {
             return false;
         }
 

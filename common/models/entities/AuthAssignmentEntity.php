@@ -28,6 +28,9 @@ class AuthAssignmentEntity implements IEntity
     public const ROLE_ON_CONSIDERATION = 'ON_CONSIDERATION';
     public const ROLE_DELETED = 'DELETED';
 
+    public const PERMISSION_ADD_MANAGERS = 'ADD_MANAGERS';
+    public const PERMISSION_ADD_PROJECT_DIRECTORS = 'ADD_PROJECT_DIRECTORS';
+
     /**
      * список ролей
      */

@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use common\components\dataproviders\EntityDataProvider;
+use common\models\entities\AuthAssignmentEntity;
 use common\models\repositories\participant\ParticipantRepository;
 use common\models\repositories\project\ProjectRepository;
 use yii\filters\AccessControl;
@@ -110,8 +111,17 @@ class ProjectController extends Controller
             throw new NotAcceptableHttpException();
         }
 
+        /**
+         * participant того кто сейчас на странице
+         */
+        $selfParticipant = ParticipantRepository::instance()->findOne([
+            'user_id' => Yii::$app->user->getId(),
+            'project_id' => $participant->getProjectId()
+        ]);
+
         return $this->render('participant-view', [
-            'participant' => $participant
+            'participant'     => $participant,
+            'selfParticipant' => $selfParticipant
         ]);
     }
 }

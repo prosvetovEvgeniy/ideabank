@@ -3,9 +3,11 @@
 use common\models\entities\ParticipantEntity;
 use yii\helpers\Html;
 use common\components\widgets\RoleViewWidget;
+use common\components\helpers\ParticipantHelper;
 
 /**
  * @var ParticipantEntity $participant
+ * @var ParticipantEntity $selfParticipant
  */
 ?>
 
@@ -20,6 +22,25 @@ use common\components\widgets\RoleViewWidget;
                 <div class="inf-block">
                     <h4>Логин: <?= $participant->getUser()->getUsername(true) ?></h4>
                 </div>
+
+
+                <?php if ($participant->hasBlockedRole()): ?>
+
+                <?php elseif ($participant->hasOnConsiderationRole()): ?>
+
+                <?php else: ?>
+
+                    <?php if ($participant->hasUserRole() && $selfParticipant->hasManagerRole()): ?>
+
+                    <?php elseif (ParticipantHelper::canChangeRole($selfParticipant, $participant)): ?>
+
+                    <?php else: ?>
+
+                    <?php endif; ?>
+
+                <?php endif; ?>
+
+
                 <div class="inf-block">
                     <h4>ФИО: <?= $participant->getUser()->getFio(true) ?></h4>
                 </div>

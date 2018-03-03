@@ -51,7 +51,7 @@ class DeleteParticipantModel extends Model
         try {
             $participant = $participantFacade->deleteParticipant($participant);
 
-            if (!ParticipantHelper::instance()->addOrUpdateRoleCache($participant)) {
+            if (!ParticipantHelper::addOrUpdateRoleCache($participant)) {
                throw new Exception();
             }
 

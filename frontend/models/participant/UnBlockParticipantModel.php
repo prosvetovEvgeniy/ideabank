@@ -70,7 +70,7 @@ class UnBlockParticipantModel extends Model
         try{
             $participant = $participantFacade->unBlockParticipant($participant);
 
-            if (!ParticipantHelper::instance()->addOrUpdateRoleCache($participant)) {
+            if (!ParticipantHelper::addOrUpdateRoleCache($participant)) {
                 throw new Exception();
             }
 

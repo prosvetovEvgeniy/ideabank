@@ -57,7 +57,7 @@ class AddParticipantModel extends Model
         try {
             $participant = $participantFacade->addParticipant($participant);
 
-            if (!ParticipantHelper::instance()->addOrUpdateRoleCache($participant)) {
+            if (!ParticipantHelper::addOrUpdateRoleCache($participant)) {
                 throw new Exception();
             }
 

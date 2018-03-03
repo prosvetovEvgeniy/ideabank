@@ -29,10 +29,17 @@ class RbacController extends Controller
         $auth->add($blocked);
         $auth->add($deleted);
 
+        $addManagers = $auth->createPermission(AuthAssignmentEntity::PERMISSION_ADD_MANAGERS);
+        $addProjectDirectors = $auth->createPermission(AuthAssignmentEntity::PERMISSION_ADD_PROJECT_DIRECTORS);
+
+        $auth->add($addManagers);
+        $auth->add($addProjectDirectors);
 
         $auth->addChild($manager, $user);
         $auth->addChild($projectDirector, $manager);
+        $auth->addChild($projectDirector, $addManagers);
         $auth->addChild($companyDirector, $projectDirector);
+        $auth->addChild($companyDirector, $addProjectDirectors);
 
         $this->stdout("\nRbac was init\n");
     }
